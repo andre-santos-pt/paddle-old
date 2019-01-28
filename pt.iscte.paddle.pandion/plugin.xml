@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="pt.iscte.paddle.pandion.PandionJView"
+            icon="images/pandionj.gif"
+            id="pt.iscte.paddle.pandion"
+            name="Execution"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="pt.iscte.paddle.perspective">
+         <view
+               id="pt.iscte.paddle.pandion"
+               minimized="false"
+               ratio="0.4"
+               relationship="right"
+               relative="org.eclipse.ui.editorss">
+         </view>
+      </perspectiveExtension>
+   </extension>
+
+</plugin>

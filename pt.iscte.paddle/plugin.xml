@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            icon="icons/eclipse32.png">
+         <run
+               class="pt.iscte.paddle.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="pt.iscte.paddle.Perspective"
+            name="RCP Perspective"
+            id="pt.iscte.paddle.perspective">
+      </perspective>
+   </extension>
+   <extension
+         id="ide"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="pt.iscte.paddle.application"
+            name="PADDLE IDE">
+         <property
+               name="appName"
+               value="PADDLE IDE">
+         </property>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            class="pt.iscte.paddle.DebugView"
+            icon="icons/pandionj.gif"
+            id="pt.iscte.paddle.debugview"
+            name="Execution"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>
