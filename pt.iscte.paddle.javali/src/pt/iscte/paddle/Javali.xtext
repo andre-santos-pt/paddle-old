@@ -1,0 +1,164 @@
+grammar pt.iscte.paddle.Javali hidden(WS, SL_COMMENT, ML_COMMENT)
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+
+generate javali "http://www.iscte.pt/paddle/Javali"
+
+Module:
+	//'class' id=IDENTIFIER '{'
+//	('main' singleBlock=Block)? 
+	(
+		constants+=Constant |
+		types+=TypeDef |
+		procedures+=Procedure |
+		('run' singleBlock+=Block)
+	)*
+	//'}'
+;
+
+Constant:
+	'const' type=Type id=Id '=' exp=Literal ';'
+;
+
+TypeDef:
+	'type' id=Id '{'
+		('field' fields+=VarDeclaration ';')*
+		
+		(operations+=Procedure)*
+	'}'
+;
+	
+Procedure:
+	(comment=ML_COMMENT_DOC)?
+	kind=('func'|'proc') retType=Type id=Id '(' (params+=VarDeclaration (',' params+=VarDeclaration)*)? ')' body=Block
+;
+
+
+Block:
+	{Block} '{' (statements+=Statement)* '}'
+;
+
+Statement:
+	(Return ';' | Break ';' | Continue ';' | VarDeclaration ';' | VarAssign ';' | Increment ';' | Decrement ';' | ProcCall ';' | IfElse | While | For | DoWhile ';')  //| Block)
+;
+
+Return:
+	'return' exp=Expression
+;
+
+Break: {Break}
+	'break'
+;
+
+Continue: {Continue}
+	'continue'
+;
+
+VarDeclaration:
+	type=Type id=Id (annotation=Annotation)? ('=' exp=Expression)?
+;
+
+VarAssign:
+	id=Id ('['arrayIndexes += Expression ']')* '=' exp=Expression
+;
+
+
+IfElse:
+	'if' '(' guard=Expression ')' selectionBlock=Block
+	('else' alternativeBlock=Block)?
+;
+
+While:
+	'while' '(' guard=Expression ')' block=Block
+;
+
+For:
+	'for' '(' (initStatements+=ForStatementInit (',' vars+=VarDeclaration)*)? ';' guard=Expression ';' (statements+=ForStatement (',' progressStatements+=ForStatement)*)? ')' block=Block
+;
+
+DoWhile:
+	'do' block=Block 'while' '(' guard=Expression ')'
+;
+
+ForStatementInit returns Statement:
+	VarDeclaration | VarAssign
+;
+
+ForStatement returns Statement:
+	VarAssign | Increment | Decrement
+;
+
+Increment:
+	(id=Id '++') // | ('++' id=IDENTIFIER)
+;
+
+Decrement:
+	(id=Id '--') // | ('--' id=IDENTIFIER)
+;
+
+Expression:
+	Relation
+;
+
+Relation returns Expression:
+	Addition ({Relation.left=current} operator=('=='|'!='|'<'|'>') right=Addition)?
+;
+
+Addition returns Expression:
+  Multiplication ({Addition.left=current} operator=('+'|'-') right=Multiplication)*
+;
+ 
+Multiplication returns Expression:
+  Primary ({Multiplication.left=current} operator=('*'|'/') right=Primary)*;
+ 
+Primary returns Expression:
+  Literal | ProcCall | VarExpression | NewArray | NewObject | '(' Expression ')';
+ 
+Literal:
+	(value=INTEGER|value=DOUBLE|value=BOOLEAN)
+;
+
+VarExpression:
+	id=Id ('['arrayIndexes += Expression ']')*
+;
+
+ProcCall:
+	id=Id '(' (args+=Expression (',' args+=Expression)* )? ')'
+;
+
+Type:
+	id=('int' | 'double' | 'boolean' | 'char' | 'void' | IDENTIFIER) (arrayDims+='['']')*
+;
+
+NewArray:
+	'new' type=('int' | 'double' | 'boolean' | IDENTIFIER) (arrayDims+='[' dims+=Expression ']')+
+;
+
+NewObject:
+	'new' type=Id '(' ')'
+;
+
+Annotation:
+	'@' id=IDENTIFIER
+;
+
+Id:
+	id=IDENTIFIER
+;
+//ConditionalExpression:
+//	exp=Expression '?' trueValue=Expression ':' falseValue=Expression
+//;
+
+terminal INTEGER: '-'?('0'..'9')+;
+terminal DOUBLE: INTEGER '.' ('0'..'9')+ ;
+terminal BOOLEAN: 'true'|'false' ;
+//terminal PRIMITIVE: 'int' | 'double' | 'boolean';
+terminal IDENTIFIER: ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+
+terminal ML_COMMENT_DOC : '/**' -> '*/';
+terminal ML_COMMENT : '/*'!'*' -> '*/';
+terminal SL_COMMENT : '//' !('\n'|'\r')* ('\r'? '\n')?;
+
+terminal WS         : (' '|'\t'|'\r'|'\n')+;
+
