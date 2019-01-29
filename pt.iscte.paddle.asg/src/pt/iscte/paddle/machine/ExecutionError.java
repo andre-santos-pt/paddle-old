@@ -10,7 +10,8 @@ public class ExecutionError extends Exception {
 		ARRAY_INDEX_BOUNDS,
 		NEGATIVE_ARRAY_SIZE,
 		VALUE_OVERFLOW,
-		INFINTE_CYCLE;
+		INFINTE_CYCLE, 
+		BUILT_IN_PROCEDURE;
 	}
 	
 	private static final long serialVersionUID = 1L;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface IArrayElementAssignment extends IVariableAssignment {
-	List<IExpression> getIndexes(); // not null, length == getDimensions
+	List<IExpression> getIndexes(); // not null, length > 0 && length <= getDimensions
 	default int getDimensions() {
 		return getIndexes().size();
 	}

@@ -8,7 +8,7 @@ import pt.iscte.paddle.asg.IValueType;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IValue;
 
-class Literal extends Expression implements ILiteral {
+public class Literal extends Expression implements ILiteral {
 
 	private final IDataType type;
 	private final String value;
@@ -49,5 +49,5 @@ class Literal extends Expression implements ILiteral {
 		return obj != null && getClass() == obj.getClass() && value.equals(((Literal) obj).value);
 	}
 	
-	static final ILiteral NULL = new Literal(null, "null");
+	public static final ILiteral NULL = new Literal(null, "null");
 }

@@ -12,7 +12,7 @@ public class AsgSemanticChecks implements ISemanticChecker {
 		return ImmutableList.of(
 				Args.class,
 				BreakContinueLocation.class,
-				Typing.class
+				Types.class
 				);
 	}
 

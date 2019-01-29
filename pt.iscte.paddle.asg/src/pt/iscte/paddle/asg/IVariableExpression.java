@@ -26,4 +26,6 @@ public interface IVariableExpression extends IExpression {
 		return false;
 	}
 	
+	
+	
 }

@@ -1,6 +1,6 @@
 package pt.iscte.paddle.asg;
 
-public interface IConstant extends IIdentifiableElement {
+public interface IConstant extends IIdentifiableElement, IExpression {
 
 	IModule getProgram();
 	
@@ -8,5 +8,5 @@ public interface IConstant extends IIdentifiableElement {
 	
 	ILiteral getValue();
 	
-	IConstantExpression expression();
+//	IConstantExpression expression();
 }

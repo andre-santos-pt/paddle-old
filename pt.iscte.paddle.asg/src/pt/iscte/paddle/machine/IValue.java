@@ -1,6 +1,7 @@
 package pt.iscte.paddle.machine;
 
 import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.machine.impl.Value;
 
 public interface IValue {
 	// TODO value overflow error
@@ -43,4 +44,8 @@ public interface IValue {
 			return this;
 		}
 	};
+	
+	static IValue create(IDataType type, Object value) {
+		return Value.create(type, value);
+	}
 }

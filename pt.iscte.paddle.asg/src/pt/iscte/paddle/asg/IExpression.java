@@ -66,10 +66,16 @@ public interface IExpression extends IProgramElement {
 				part.decompose().forEach(p -> visitPart(visitor, p));
 		}
 
-		else if(part instanceof IConstantExpression) {
-			IConstantExpression con = (IConstantExpression) part; 
+//		else if(part instanceof IConstantExpression) {
+//			IConstantExpression con = (IConstantExpression) part; 
+//			visitor.visit(con);
+//		}
+		
+		else if(part instanceof IConstant) {
+			IConstant con = (IConstant) part; 
 			visitor.visit(con);
 		}
+		
 		else if(part instanceof ILiteral) {
 			ILiteral lit = (ILiteral) part; 
 			visitor.visit(lit);
@@ -85,10 +91,14 @@ public interface IExpression extends IProgramElement {
 			visitor.visit(sm);
 		}
 		
-		else if(part instanceof IVariableExpression) {
-			IVariableExpression var = (IVariableExpression) part; 
+		else if(part instanceof IVariable) {
+			IVariable var = (IVariable) part; 
 			visitor.visit(var);
 		}
+//		else if(part instanceof IVariableExpression) {
+//			IVariableExpression var = (IVariableExpression) part; 
+//			visitor.visit(var);
+//		}
 		else if(part instanceof IVariableAddress) {
 			IVariableAddress varadd = (IVariableAddress) part; 
 			visitor.visit(varadd);
@@ -102,6 +112,7 @@ public interface IExpression extends IProgramElement {
 			assert false: "missing case " + part.getClass().getName();
 	}
 
+	// TODO include parent in visit(...) ?
 	interface IVisitor {
 		default boolean visit(IArrayAllocation exp) 		{ return true; }
 		default boolean visit(IArrayLengthExpression exp) 	{ return true; }
@@ -112,13 +123,15 @@ public interface IExpression extends IProgramElement {
 		
 		default boolean visit(IProcedureCallExpression exp) { return true; }
 
-		default void 	visit(IConstantExpression exp) 		{ }
+//		default void 	visit(IConstantExpression exp) 		{ }
+		default void 	visit(IConstant exp) 				{ }
 		default void 	visit(ILiteral exp) 				{ }
 		
 		default void 	visit(IStructAllocation exp) 		{ }
 		default void 	visit(IStructMemberExpression exp) 	{ }
 	
-		default void 	visit(IVariableExpression exp) 		{ }
+//		default void 	visit(IVariableExpression exp) 		{ }
+		default void 	visit(IVariable exp)		 		{ }
 		default void	visit(IVariableAddress exp) 		{ }
 		default void	visit(IVariableReferenceValue exp) 	{ }
 	}

@@ -11,54 +11,41 @@ import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProgramElement;
-import pt.iscte.paddle.asg.IReferenceType;
 import pt.iscte.paddle.asg.IStructMemberAssignment;
 import pt.iscte.paddle.asg.IStructMemberExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
 import pt.iscte.paddle.asg.IVariableAssignment;
-import pt.iscte.paddle.asg.IVariableExpression;
 import pt.iscte.paddle.asg.IVariableReferenceValue;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ExecutionError.Type;
 import pt.iscte.paddle.machine.IArray;
 import pt.iscte.paddle.machine.ICallStack;
+import pt.iscte.paddle.machine.IEvaluable;
 import pt.iscte.paddle.machine.IReference;
+import pt.iscte.paddle.machine.IStackFrame;
 import pt.iscte.paddle.machine.IValue;
 
-class Variable extends ProgramElement implements IVariable {
+class Variable extends ProgramElement implements IVariable, IEvaluable {
 
 	private final IProgramElement parent;
-	private final String name;
+	private final String id;
 	private final IDataType type;
-//	private final boolean isPointer;
-	
-//	protected Variable(IProgramElement parent, String name, IDataType type, boolean isPointer) {
-//		this.parent = parent;
-//		assert IIdentifiableElement.isValidIdentifier(name);
-//		this.name = name;
-//		this.type = type;
-//		this.isPointer = isPointer;
-//	}
 	
 	public Variable(IProgramElement parent, String name, IDataType type) {
 		this.parent = parent;
-		this.name = name;
+		this.id = name;
 		this.type = type;
 	}
 
-//	public static Variable pointer(Block block, String name, IDataType type) {
-//		return new Variable(block, name, type, true);
+//	@Override
+//	public boolean isPointer() {
+//		return type instanceof IReferenceType;
 //	}
-	
-	@Override
-	public boolean isPointer() {
-		return type instanceof IReferenceType;
-	}
 
 	@Override
 	public String getId() {
-		return name;
+		return id;
 	}
 
 	@Override
@@ -73,7 +60,7 @@ class Variable extends ProgramElement implements IVariable {
 
 	@Override
 	public String toString() {
-		return type.getId() + " " + name;
+		return id;
 	}
 
 	@Override
@@ -87,19 +74,19 @@ class Variable extends ProgramElement implements IVariable {
 		return VariableAssignment.onTarget((IBlock) parent, this, expression);
 	}
 
+//	@Override
+//	public IVariableExpression expression() {
+//		return new VariableExpression(this);
+//	}
+	
 	@Override
-	public IVariableExpression expression() {
-		return new VariableExpression(this);
+	public IVariableAddress address() {
+		return new VariableAddress(this);
 	}
 	
 	@Override
-	public IVariableAddress expressionAddress() {
-		return new VariableAddress(new VariableExpression(this));
-	}
-	
-	@Override
-	public IVariableReferenceValue referenceValue() {
-		return new VariableReferenceValue(new VariableExpression(this));
+	public IVariableReferenceValue valueOf() {
+		return new VariableReferenceValue(this);
 	}
 	
 	@Override
@@ -114,21 +101,23 @@ class Variable extends ProgramElement implements IVariable {
 	}
 
 	@Override
-	public IArrayLengthExpression lengthExpression(List<IExpression> indexes) {
+	public IArrayLengthExpression arrayLength(List<IExpression> indexes) {
 		return new ArrayLengthExpression(indexes);
 	}
 
 	@Override
-	public IArrayElementExpression elementExpression(List<IExpression> indexes) {
+	public IArrayElementExpression arrayElement(List<IExpression> indexes) {
 		return new ArrayElementExpression(this, indexes);
 	}
 
 	@Override
-	public IArrayElementAssignment elementAssignment(IExpression expression, List<IExpression> indexes) {
+	public IArrayElementAssignment addArrayAssignment(IExpression expression, List<IExpression> indexes) {
 		IProgramElement parent = getParent();
 		assert parent instanceof IBlock;
 		return new ArrayElementAssignment((IBlock) parent, this, indexes, expression);
 	}
+	
+
 	
 	private class ArrayLengthExpression extends Expression implements IArrayLengthExpression {
 		private ImmutableList<IExpression> indexes;
@@ -154,7 +143,7 @@ class Variable extends ProgramElement implements IVariable {
 
 		@Override
 		public String toString() {
-			String text = getVariable().getId();
+			String text = getVariable().toString();
 			for(IExpression e : indexes)
 				text += "[" + e + "]";
 			return text + ".length";
@@ -187,4 +176,27 @@ class Variable extends ProgramElement implements IVariable {
 		}
 	}
 
+
+
+	@Override
+	public boolean isDecomposable() {
+		return false;
+	}
+
+	@Override
+	public List<IExpression> decompose() {
+		return ImmutableList.of();
+	}
+
+	@Override
+	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
+		IStackFrame topFrame = stack.getTopFrame();
+		IValue val = topFrame.getVariableStore(getId()).getTarget();
+		return val;
+	}
+
+//	@Override
+//	public IVariable getVariable() {
+//		return this;
+//	}
 }

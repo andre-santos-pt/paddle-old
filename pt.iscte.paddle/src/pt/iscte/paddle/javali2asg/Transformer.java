@@ -20,6 +20,7 @@ import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.IInstruction;
+import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IOperator;
@@ -27,7 +28,6 @@ import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.ISelectionWithAlternative;
 import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.javali.Addition;
 import pt.iscte.paddle.javali.Block;
 import pt.iscte.paddle.javali.Break;
 import pt.iscte.paddle.javali.Continue;
@@ -37,9 +37,7 @@ import pt.iscte.paddle.javali.For;
 import pt.iscte.paddle.javali.IfElse;
 import pt.iscte.paddle.javali.Literal;
 import pt.iscte.paddle.javali.Module;
-import pt.iscte.paddle.javali.Multiplication;
 import pt.iscte.paddle.javali.Procedure;
-import pt.iscte.paddle.javali.Relation;
 import pt.iscte.paddle.javali.Return;
 import pt.iscte.paddle.javali.Statement;
 import pt.iscte.paddle.javali.Type;
@@ -49,7 +47,6 @@ import pt.iscte.paddle.javali.VarExpression;
 import pt.iscte.paddle.javali.While;
 
 public class Transformer {
-	IFactory fact = IFactory.INSTANCE;
 	Map<String, IVariable> varTable;
 	private Resource resource;
 
@@ -65,7 +62,7 @@ public class Transformer {
 	public IModule createProgram() {
 		Module module = (Module) resource.getContents().get(0);
 		ICompositeNode node = NodeModelUtils.getNode(module);
-		IModule program = fact.createModule("test");
+		IModule program = IModule.create("test");
 		for (Procedure p : module.getProcedures()) {
 			varTable = new HashMap<>();
 			IProcedure proc = program.addProcedure(p.getId().getId(), toModelType(p.getRetType()));
@@ -92,7 +89,7 @@ public class Transformer {
 	void map(Statement s, IBlock block) {
 		IInstruction instr = null;
 		if(s instanceof Return) {
-			instr = block.addReturnStatement(map(((Return) s).getExp()));
+			instr = block.addReturn(map(((Return) s).getExp()));
 		}
 		else if(s instanceof VarDeclaration) {
 			VarDeclaration varDec = (VarDeclaration) s;
@@ -141,10 +138,10 @@ public class Transformer {
 			
 		}
 		else if(s instanceof Break) {
-			instr = block.addBreakStatement();
+			instr = block.addBreak();
 		}
 		else if(s instanceof Continue) {
-			instr = block.addContinueStatement();
+			instr = block.addContinue();
 		}
 		
 		if(instr != null) {
@@ -156,25 +153,26 @@ public class Transformer {
 
 	IExpression map(Expression e) {
 		if(e instanceof Literal)
-			return fact.literalMatch(((Literal) e).getValue());
+			return ILiteral.matchValue(((Literal) e).getValue());
 
 		else if(e instanceof VarExpression) {
-			System.out.println(((VarExpression) e).getId());
-			return varTable.get(((VarExpression) e).getId()).expression();
+			return varTable.get(((VarExpression) e).getId().getId());
 		}
 
-		else if(e instanceof Relation) {
-			Relation r = (Relation) e;
-			return fact.binaryExpression(map(r.getOperator()), map(r.getLeft()), map(r.getRight()));
-		}
-		else if(e instanceof Addition) {
-			Addition add = (Addition) e;
-			return fact.binaryExpression(map(add.getOperator()), map(add.getLeft()), map(add.getRight()));
-		}
-		else if(e instanceof Multiplication) {
-			Multiplication mul = (Multiplication) e;
-			return fact.binaryExpression(map(mul.getOperator()), map(mul.getLeft()), map(mul.getRight()));
-		}
+		// TODO repor : um unico tipo?
+
+//		else if(e instanceof Relation) {
+//			Relation r = (Relation) e;
+//			return fact.binaryExpression(map(r.getOperator()), map(r.getLeft()), map(r.getRight()));
+//		}
+//		else if(e instanceof Addition) {
+//			Addition add = (Addition) e;
+//			return fact.binaryExpression(map(add.getOperator()), map(add.getLeft()), map(add.getRight()));
+//		}
+//		else if(e instanceof Multiplication) {
+//			Multiplication mul = (Multiplication) e;
+//			return fact.binaryExpression(map(mul.getOperator()), map(mul.getLeft()), map(mul.getRight()));
+//		}
 		return null;
 	}
 

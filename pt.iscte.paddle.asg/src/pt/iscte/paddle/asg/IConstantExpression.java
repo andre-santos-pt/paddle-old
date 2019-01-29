@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+// TODO remove?
 public interface IConstantExpression extends IExpression {
 
 	IConstant getConstant();

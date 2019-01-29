@@ -9,19 +9,21 @@ import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
 
+import static pt.iscte.paddle.asg.IOperator.*;
+import static pt.iscte.paddle.asg.ILiteral.*;
+
 public class Test {
 
 	public static void main(String[] args) throws ExecutionError {
-		IFactory factory = IFactory.INSTANCE;
 
-		IModule program = factory.createModule("test");
+		IModule program = IModule.create("test");
 
 		IProcedure proc = program.addProcedure("inc", IDataType.DOUBLE);
 		IVariable nParam = proc.addParameter("n", IDataType.INT);
 
 //		IProcedureCallExpression randomCall = program.getProcedure("random").callExpression();
 
-		proc.getBody().addReturnStatement(factory.literal(3.2));
+		proc.getBody().addReturn(TRUNCATE.on(literal(3.2)));
 
 		//		IVariableDeclaration rVar = proc.variableDeclaration("r", program.getDataType("double"));
 		//		IVariableAssignment rAss = rVar.assignment(randomCall);
@@ -37,12 +39,12 @@ public class Test {
 //		IVariableDeclaration var2 = main.addVariableDeclaration("b", IDataType.INT);	
 //		IVariableAssignment ass3 = var2.addAssignment(proc.callExpression(factory.literal(2)));
 //		var2.addAssignment(factory.literal(4))
-		IVariable a = main.getBody().addVariable("a", IDataType.INT);
-		ISelection iff = main.getBody().addSelection(factory.literal(true));
-		ISelection iff2 = iff.addSelection(factory.binaryExpression(IOperator.GREATER, factory.literal(4), factory.literal(2)));
-		iff2.addReturnStatement(factory.literal(-1));
-		a.addAssignment(factory.literal(2));
-		main.getBody().addReturnStatement(a.expression());
+		IVariable a = main.getBody().addVariable("a", IDataType.DOUBLE);
+		ISelection iff = main.getBody().addSelection(literal(true));
+		ISelection iff2 = iff.addSelection(GREATER.on(literal(4), literal(true)));
+		iff2.addReturn(literal(-1));
+		a.addAssignment(proc.call());
+		main.getBody().addReturn(a);
 
 		System.out.println(program);
 		

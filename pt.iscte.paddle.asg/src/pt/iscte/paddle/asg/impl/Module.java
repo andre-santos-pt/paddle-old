@@ -16,7 +16,7 @@ import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureDeclaration;
 import pt.iscte.paddle.asg.IStructType;
 
-class Module extends ProgramElement implements IModule {
+public class Module extends ProgramElement implements IModule {
 	private final String id;
 	private final List<IConstant> constants;
 	private final List<IStructType> structs;
@@ -36,6 +36,8 @@ class Module extends ProgramElement implements IModule {
 		for (Method method : staticClass.getDeclaredMethods()) {
 			if(BuiltinProcedure.isValidForBuiltin(method))
 				builtinProcedures.add(new BuiltinProcedure(method));
+			else
+				System.err.println("not valid for built-in procedure: " + method);
 		}
 	}
 
@@ -110,6 +112,10 @@ class Module extends ProgramElement implements IModule {
 		for(IStructType s : structs)
 			text += s + "\n";
 
+		for (IProcedure p : builtinProcedures) {
+			System.out.println(p.longSignature() + "\t(built-in)\n");
+		}
+		
 		for (IProcedure p : procedures)
 			text += p + "\n\n";
 		
@@ -118,20 +124,4 @@ class Module extends ProgramElement implements IModule {
 		text = text.replaceAll("\\}", "}\n");
 		return text;
 	}
-
-	//	@Override
-	//	public IConstantDeclaration getConstant(String id) {
-	//		return constants.get(id);
-	//	}
-
-	//	@Override
-	//	public Collection<IDataType> getDataTypes() {
-	//		return Collections.unmodifiableCollection(types.values());
-	//	}
-
-	//	@Override
-	//	public IDataType getDataType(String id) {
-	//		assert types.containsKey(id);
-	//		return types.get(id);
-	//	}
 }

@@ -12,7 +12,6 @@ import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IBreak;
 import pt.iscte.paddle.asg.IConstant;
-import pt.iscte.paddle.asg.IConstantExpression;
 import pt.iscte.paddle.asg.IContinue;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.ILoop;
@@ -30,7 +29,6 @@ import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
 import pt.iscte.paddle.asg.IVariableAssignment;
-import pt.iscte.paddle.asg.IVariableExpression;
 import pt.iscte.paddle.asg.IVariableReferenceValue;
 
 public class SemanticChecker {
@@ -67,9 +65,8 @@ public class SemanticChecker {
 		}
 
 		@Override
-		public boolean visit(IConstant constant) {
+		public void visit(IConstant constant) {
 			rules.forEach(r -> r.visit(constant));
-			return true;
 		}
 		
 		@Override
@@ -142,12 +139,6 @@ public class SemanticChecker {
 			return true;	
 		}
 
-//		@Override
-//		public boolean visit(IExpression expression) {
-//			rules.forEach(r -> r.visit(expression));
-//			return true;
-//		}
-
 		@Override
 		public boolean visit(IArrayAllocation exp) {
 			rules.forEach(r -> r.visit(exp));
@@ -166,10 +157,10 @@ public class SemanticChecker {
 			return true;
 		}
 
-		@Override
-		public void visit(IConstantExpression exp) {
-			rules.forEach(r -> r.visit(exp));
-		}
+//		@Override
+//		public void visit(IConstantExpression exp) {
+//			rules.forEach(r -> r.visit(exp));
+//		}
 
 		@Override
 		public boolean visit(IProcedureCallExpression exp) {
@@ -193,11 +184,15 @@ public class SemanticChecker {
 			return true;
 		}
 
-		@Override
-		public void visit(IVariableExpression exp) {
-			rules.forEach(r -> r.visit(exp));
-		}
-
+//		@Override
+//		public void visit(IVariableExpression exp) {
+//			rules.forEach(r -> r.visit(exp));
+//		}
+//		@Override
+//		public void visit(IVariable exp) {
+//			rules.forEach(r -> r.visit(exp));
+//		}
+		
 		@Override
 		public void visit(IVariableAddress exp) {
 			rules.forEach(r -> r.visit(exp));

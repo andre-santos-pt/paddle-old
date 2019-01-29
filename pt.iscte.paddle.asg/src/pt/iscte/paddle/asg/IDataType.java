@@ -3,6 +3,7 @@ package pt.iscte.paddle.asg;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.asg.impl.ArrayType;
 import pt.iscte.paddle.asg.impl.PrimitiveType;
 
 public interface IDataType extends IIdentifiableElement {
@@ -18,8 +19,20 @@ public interface IDataType extends IIdentifiableElement {
 	default boolean isVoid() {
 		return this == VOID;
 	}
+	
+	default boolean isNumber() {
+		return this == INT || this == DOUBLE;
+	}
 
-	IReferenceType referenceType();
+	default boolean isBoolean() {
+		return this == BOOLEAN;
+	}
+	
+	default boolean isReference() {
+		return this instanceof IReferenceType;
+	}
+	
+	IReferenceType reference();
 	
 	IValueType INT = PrimitiveType.INT;
 	IValueType DOUBLE = PrimitiveType.DOUBLE;
@@ -28,6 +41,26 @@ public interface IDataType extends IIdentifiableElement {
 
 	ImmutableCollection<IValueType> VALUE_TYPES = ImmutableList.of(INT, DOUBLE, BOOLEAN);
 
+	class Singletons {
+		private static final IArrayType INT_ARRAY = new ArrayType(INT);
+		private static final IArrayType INT_ARRAY2D = new ArrayType(new ArrayType(INT));
+		
+	}
+	default IArrayType array() {
+		if(this == INT)
+			return Singletons.INT_ARRAY;
+		else if(this == Singletons.INT_ARRAY)
+			return Singletons.INT_ARRAY2D;
+		else
+			return new ArrayType(this);
+	}
+	
+	default IArrayType array2D() {
+		if(this == INT)
+			return Singletons.INT_ARRAY2D;
+		else
+			return new ArrayType(new ArrayType(this));
+	}
 	
 	IDataType VOID = new IDataType() {
 
@@ -47,30 +80,10 @@ public interface IDataType extends IIdentifiableElement {
 		}
 
 		@Override
-		public IReferenceType referenceType() {
+		public IReferenceType reference() {
 			throw new RuntimeException("not valid");
 		}
 		
-//		@Override
-//		public boolean matchesPrimitiveType(Class<?> clazz) {
-//			return clazz.equals(void.class);
-//		}
-//
-//		@Override
-//		public boolean matches(Object object) {
-//			return false;
-//		}
-//
-//		@Override
-//		public boolean matchesLiteral(String literal) {
-//			return false;
-//		}
-//
-//		@Override
-//		public Object create(String literal) {
-//			return null;
-//		}
-
 		@Override
 		public Object getDefaultValue() {
 			return null;
@@ -85,6 +98,11 @@ public interface IDataType extends IIdentifiableElement {
 		public String toString() {
 			return "void";
 		}
+		
+		@Override
+		public IArrayType array() {
+			throw new UnsupportedOperationException();
+		}
 	};
 
 
@@ -93,23 +111,6 @@ public interface IDataType extends IIdentifiableElement {
 		public String getId() {
 			return "unknown";
 		}
-//		@Override
-//		public boolean matchesPrimitiveType(Class<?> clazz) {
-//			return false;
-//		}
-//
-//		@Override
-//		public boolean matches(Object object) {
-//			return false;
-//		}
-//		@Override
-//		public boolean matchesLiteral(String literal) {
-//			return false;
-//		}
-//		@Override
-//		public Object create(String literal) {
-//			return null;
-//		}
 
 		@Override
 		public Object getDefaultValue() {
@@ -135,8 +136,13 @@ public interface IDataType extends IIdentifiableElement {
 		}
 		
 		@Override
-		public IReferenceType referenceType() {
+		public IReferenceType reference() {
 			throw new RuntimeException("not valid");
+		}
+		
+		@Override
+		public IArrayType array() {
+			throw new UnsupportedOperationException();
 		}
 	};
 }

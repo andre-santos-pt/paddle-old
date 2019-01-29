@@ -60,14 +60,14 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 	public boolean execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
 		assert expressions.size() == 1;
 		// TODO validate 
-		if(!variable.isPointer() && onTarget)
+		if(!variable.getType().isReference() && onTarget)
 			System.err.println("incompatible");
 		
 		IValue newValue = expressions.get(0);
 		IStackFrame topFrame = stack.getTopFrame();
 		String varId = getVariable().getId();
 		IReference ref = topFrame.getVariableStore(varId);
-		if(variable.isPointer() && onTarget)
+		if(variable.getType().isReference() && onTarget)
 			ref.setValue(newValue);
 		else
 			ref.setTarget(newValue);

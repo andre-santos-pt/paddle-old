@@ -1,7 +1,13 @@
 package pt.iscte.paddle.tests.asg;
 
 
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static pt.iscte.paddle.asg.IDataType.INT;
+import static pt.iscte.paddle.asg.ILiteral.literal;
+import static pt.iscte.paddle.asg.IOperator.ADD;
+import static pt.iscte.paddle.asg.IOperator.SMALLER;
 
 import java.math.BigDecimal;
 
@@ -9,46 +15,44 @@ import org.junit.Test;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
-import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IArray;
 import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
+import pt.iscte.paddle.machine.IValue;
 
 public class TestArrays {
 
 	@Test
 	public void testNaturals() {
-		IFactory factory = IFactory.INSTANCE;
-		IModule program = factory.createModule("Arrays");
+		IModule program = IModule.create("Arrays");
 		
-		IProcedure natFunc = program.addProcedure("naturals", factory.arrayType(IDataType.INT, 1));
-		IVariable nParam = natFunc.addParameter("n", IDataType.INT);
+		IProcedure natFunc = program.addProcedure("naturals", INT.array());
+		IVariable n = natFunc.addParameter("n", INT);
 		IBlock body = natFunc.getBody();
-		IVariable vVar = body.addVariable("v", factory.arrayType(IDataType.INT, 1));
-		vVar.addAssignment(factory.arrayAllocation(IDataType.INT, 1, nParam.expression()));
-		
-		IVariable iVar = body.addVariable("i", IDataType.INT);
-		IExpression e = factory.binaryExpression(IOperator.SMALLER, iVar.expression(), nParam.expression());
-		ILoop loop = body.addLoop(e);
-		IBinaryExpression iPlus1 = factory.binaryExpression(IOperator.ADD, iVar.expression(), factory.literal(1));
-		loop.arrayElementAssignment(vVar, iPlus1, iVar.expression());
-		loop.addAssignment(iVar, factory.binaryExpression(IOperator.ADD, iVar.expression(), factory.literal(1)));
-		body.addReturnStatement(vVar.expression());
+		IVariable v = body.addVariable("v", INT.array());
+		v.addAssignment(INT.array().allocation(n));
+		IVariable i = body.addVariable("i", INT);
+		ILoop loop = body.addLoop(SMALLER.on(i, n));
+		loop.addArrayElementAssignment(v, ADD.on(i, literal(1)), i);
+		loop.addAssignment(i, ADD.on(i, literal(1)));
+		body.addReturn(v);
 		
 		System.out.println(program);
+		
 		IProgramState state = IMachine.create(program);
 		IExecutionData data = state.execute(natFunc, "5");
+		
+		assertNotEquals(IValue.NULL, data.getReturnValue());
+		
 		IArray array = (IArray) data.getReturnValue();
-		for(int i = 0; i < 5; i++)
-			assertEquals(new BigDecimal(i+1), array.getElement(i).getValue());
+		for(int x = 0; x < 5; x++)
+			assertEquals(new BigDecimal(x+1), array.getElement(x).getValue());
 	}
 	
 	public void testContainsReturn() {

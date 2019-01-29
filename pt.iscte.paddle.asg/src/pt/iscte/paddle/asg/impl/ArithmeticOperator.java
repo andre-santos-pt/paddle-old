@@ -1,8 +1,14 @@
-package pt.iscte.paddle.asg;
+package pt.iscte.paddle.asg.impl;
 
 import java.math.BigDecimal;
 import java.util.function.BiFunction;
 
+import pt.iscte.paddle.asg.IBinaryExpression;
+import pt.iscte.paddle.asg.IBinaryOperator;
+import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IExpression;
+import pt.iscte.paddle.asg.IOperator;
+import pt.iscte.paddle.asg.IOperator.OperationType;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IValue;
 import pt.iscte.paddle.machine.impl.Value;
@@ -36,6 +42,11 @@ public enum ArithmeticOperator implements IBinaryOperator {
 	}
 	
 	@Override
+	public boolean isValidFor(IDataType left, IDataType right) {
+		return left.isNumber() && right.isNumber();
+	}
+	
+	@Override
 	public String toString() {
 		return symbol;
 	}
@@ -59,5 +70,10 @@ public enum ArithmeticOperator implements IBinaryOperator {
 	@Override
 	public OperationType getOperationType() {
 		return OperationType.ARITHMETIC;
+	}
+	
+	@Override
+	public IBinaryExpression on(IExpression leftOperand, IExpression rightOperand) {
+		return new BinaryExpression(this, leftOperand, rightOperand);
 	}
 }

@@ -43,7 +43,7 @@ public interface ISemanticProblem {
 		
 		@Override
 		public String toString() {
-			return this.getClass().getSimpleName() + ": " + elements + " : " + message; 
+			return message + " " + elements; 
 		}
 	}
 }

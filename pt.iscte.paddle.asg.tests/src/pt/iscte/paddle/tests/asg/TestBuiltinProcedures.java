@@ -1,9 +1,10 @@
 package pt.iscte.paddle.tests.asg;
 
+import static pt.iscte.paddle.asg.ILiteral.literal;
+
 import org.junit.Test;
 
 import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.machine.IMachine;
@@ -19,12 +20,11 @@ public class TestBuiltinProcedures {
 	
 	@Test
 	public void test() {
-		IFactory factory = IFactory.INSTANCE;
-		IModule program = factory.createModule("Test");
+		IModule program = IModule.create("Test");
 		program.loadBuildInProcedures(TestBuiltinProcedures.TestProcedures.class);
 		IProcedure proc = program.addProcedure("test", IDataType.VOID);
 		IProcedure max = program.resolveProcedure("max", IDataType.INT, IDataType.INT);
-		proc.getBody().addProcedureCall(max, factory.literal(4), factory.literal(6));
+		proc.getBody().addCall(max, literal(4), literal(6));
 		System.out.println(program);
 		IProgramState state = IMachine.create(program);
 		state.execute(proc);

@@ -10,7 +10,7 @@ import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IValue;
 
-class BinaryExpression extends Expression implements IBinaryExpression {
+public class BinaryExpression extends Expression implements IBinaryExpression {
 	private final IBinaryOperator operator;
 	private final IExpression left;
 	private final IExpression right;
@@ -30,12 +30,12 @@ class BinaryExpression extends Expression implements IBinaryExpression {
 	}
 
 	@Override
-	public IExpression getLeftExpression() {
+	public IExpression getLeftOperand() {
 		return left;
 	}
 
 	@Override
-	public IExpression getRightExpression() {
+	public IExpression getRightOperand() {
 		return right;
 	}
 	
@@ -58,7 +58,7 @@ class BinaryExpression extends Expression implements IBinaryExpression {
 		String r = right.toString();
 		if(right instanceof IBinaryExpression)
 			r = "(" + r + ")";
-		return l + " " + operator + " " + r;
+		return l + " " + operator.getSymbol() + " " + r;
 	}
 	
 	@Override

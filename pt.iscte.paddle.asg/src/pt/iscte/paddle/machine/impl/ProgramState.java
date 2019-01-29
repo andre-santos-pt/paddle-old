@@ -102,7 +102,7 @@ public class ProgramState implements IProgramState {
 	public IValue getValue(String value) {
 		if(value.equals("null"))
 			return IValue.NULL;
-			
+
 		for(IValueType type : IDataType.VALUE_TYPES) {
 			if(type.matchesLiteral(value))
 				return Value.create(type, type.create(value));
@@ -114,7 +114,7 @@ public class ProgramState implements IProgramState {
 	public IValue getValue(Object object) {
 		if(object == null)
 			return IValue.NULL;
-		
+
 		for(IValueType type : IDataType.VALUE_TYPES) {
 			if(type.matches(object))
 				return Value.create(type, type.create(object.toString()));
@@ -134,6 +134,8 @@ public class ProgramState implements IProgramState {
 		return heap.allocateObject(type);
 	}
 
+	
+
 	public void setupExecution(IProcedure procedure, Object... args) throws ExecutionError {
 		if(args.length != procedure.getParameters().size())
 			throw new RuntimeException("incorrect number of arguments for " + procedure);
@@ -143,9 +145,9 @@ public class ProgramState implements IProgramState {
 		Factory factory = new Factory();
 		List<IExpression> procArgs = new ArrayList<>(args.length);
 		for(Object a : args)
-			procArgs.add(factory.literalMatch(a.toString()));
+			procArgs.add(ILiteral.matchValue(a.toString()));
 
-		IProcedureCallExpression call = procedure.callExpression(procArgs);
+		IProcedureCallExpression call = procedure.call(procArgs);
 		instructionPointer = call;
 
 		List<IValue> argsValues = new ArrayList<>();
@@ -177,7 +179,7 @@ public class ProgramState implements IProgramState {
 		}
 		if(!problems.isEmpty())
 			return new ExecutionData();
-		
+
 		try {
 			setupExecution(procedure, args);
 			while(!isOver())

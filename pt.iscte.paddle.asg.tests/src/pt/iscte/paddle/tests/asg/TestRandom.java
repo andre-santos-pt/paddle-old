@@ -1,15 +1,18 @@
 package pt.iscte.paddle.tests.asg;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static pt.iscte.paddle.asg.IDataType.DOUBLE;
+import static pt.iscte.paddle.asg.IDataType.INT;
+import static pt.iscte.paddle.asg.ILiteral.literal;
+import static pt.iscte.paddle.asg.IOperator.ADD;
+import static pt.iscte.paddle.asg.IOperator.MUL;
+import static pt.iscte.paddle.asg.IOperator.SUB;
+import static pt.iscte.paddle.asg.IOperator.TRUNCATE;
 
 import org.junit.Test;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.IModule;
-import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IVariable;
@@ -27,32 +30,30 @@ public class TestRandom {
 	
 	@Test
 	public void testRandom() {
-		IFactory factory = IFactory.INSTANCE;
-		IModule program = factory.createModule("Random");
+		IModule program = IModule.create("Random");
 		program.loadBuildInProcedures(RandomProc.class);
-		IProcedure proc = program.addProcedure("randomDouble", IDataType.DOUBLE);
-		proc.getBody().addReturnStatement(program.resolveProcedure("random").callExpression());
+		IProcedure proc = program.addProcedure("randomDouble", DOUBLE);
+		proc.getBody().addReturn(program.resolveProcedure("random").call());
+		System.out.println(program);
 		IProgramState state = IMachine.create(program);
 		IExecutionData data = state.execute(proc);
+		System.out.println(data.getReturnValue());
 //		assertEquals(2, data.getTotalProcedureCalls());
 	}
 	
 	@Test 
 	public void testRandomInt() {
-		IFactory factory = IFactory.INSTANCE;
-		IModule program = factory.createModule("Random");
+		IModule program = IModule.create("Random");
 		program.loadBuildInProcedures(RandomProc.class);
-		IProcedure proc = program.addProcedure("randomInt", IDataType.DOUBLE);
-		IVariable minParam = proc.addParameter("min", IDataType.INT);
-		IVariable maxParam = proc.addParameter("max", IDataType.INT);
-		IVariable rVar = proc.getBody().addVariable("r", IDataType.DOUBLE);
-		rVar.addAssignment(program.resolveProcedure("random").callExpression());
-		IBinaryExpression d = factory.binaryExpression(IOperator.SUB, maxParam.expression(), minParam.expression());
-		IBinaryExpression d1 = factory.binaryExpression(IOperator.ADD, d, factory.literal(1));
-		IBinaryExpression m = factory.binaryExpression(IOperator.MUL, rVar.expression(), d1);
-		IUnaryExpression t = factory.unaryExpression(IOperator.TRUNCATE, m);
-		IBinaryExpression e = factory.binaryExpression(IOperator.ADD, minParam.expression(), t);
-		proc.getBody().addReturnStatement(e);
+		IProcedure proc = program.addProcedure("randomInt", INT);
+		IVariable min = proc.addParameter("min", INT);
+		IVariable max = proc.addParameter("max", INT);
+		IVariable r = proc.getBody().addVariable("r", DOUBLE);
+		r.addAssignment(program.resolveProcedure("random").call());
+		IBinaryExpression m = MUL.on(r, ADD.on(SUB.on(max, min), literal(1)));
+		IUnaryExpression t = TRUNCATE.on(m);
+		IBinaryExpression e = ADD.on(min, t);
+		proc.getBody().addReturn(e);
 		
 		System.out.println(program);
 		IProgramState state = IMachine.create(program);

@@ -87,14 +87,12 @@ class Procedure extends ProgramElement implements IProcedure {
 		for(IVariable p : paramsView) {
 			if(!params.isEmpty())
 				params += ", ";
-			if(p.isPointer())
-				params += "*";
-			params += p.getId();
+			params += p.getType() + " " + p.getId();
 		}
 
 		String vars = "";
 		for(IVariable var : variables)
-			vars += var +"\n";
+			vars += var.getType() + " " + var.getId() +"\n";
 		return returnType + " " + name + "(" + params + ")" + "\n" + vars + body.toString();
 	}
 
@@ -128,7 +126,7 @@ class Procedure extends ProgramElement implements IProcedure {
 	}
 
 	@Override
-	public IProcedureCallExpression callExpression(List<IExpression> args) {
+	public IProcedureCallExpression call(List<IExpression> args) {
 		return new ProcedureCallExpression(this, args);
 	}
 }

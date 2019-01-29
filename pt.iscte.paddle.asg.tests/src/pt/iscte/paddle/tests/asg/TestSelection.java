@@ -18,7 +18,10 @@ import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
+import static pt.iscte.paddle.asg.IOperator.*;
+import static pt.iscte.paddle.asg.ILiteral.*;
 
+import static pt.iscte.paddle.asg.IDataType.*;
 
 // TODO if if
 public class TestSelection {
@@ -27,17 +30,16 @@ public class TestSelection {
 	
 	@BeforeClass
 	public static void setup() {
-		IFactory factory = IFactory.INSTANCE;
-		program = factory.createModule("Selection");
-		maxFunc = program.addProcedure("max", IDataType.INT);
-		IVariable aParam = maxFunc.addParameter("a", IDataType.INT);
-		IVariable bParam = maxFunc.addParameter("b", IDataType.INT);
+		program = IModule.create("Selection");
+		maxFunc = program.addProcedure("max", INT);
+		IVariable a = maxFunc.addParameter("a", INT);
+		IVariable b = maxFunc.addParameter("b", INT);
 		
-		IBinaryExpression e = factory.binaryExpression(IBinaryOperator.GREATER, aParam.expression(), bParam.expression());
-		ISelectionWithAlternative ifElse = maxFunc.getBody().addSelectionWithAlternative(e);
-		ifElse.addReturnStatement(aParam.expression());
+		IBinaryExpression guard = GREATER.on(a, b);
+		ISelectionWithAlternative ifElse = maxFunc.getBody().addSelectionWithAlternative(guard);
+		ifElse.addReturn(a);
 		IBlock elseblock = ifElse.getAlternativeBlock();
-		elseblock.addReturnStatement(bParam.expression());
+		elseblock.addReturn(b);
 		System.out.println(program);
 	}
 

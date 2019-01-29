@@ -2,31 +2,27 @@ package pt.iscte.paddle.asg.impl;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IExpression;
+import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
-import pt.iscte.paddle.asg.IVariableExpression;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IReference;
 import pt.iscte.paddle.machine.IValue;
 
-public class VariableAddress extends Expression implements IVariableAddress {
+public class VariableAddress extends Variable implements IVariableAddress {
 
-	private final IVariableExpression exp;
 	private final IDataType type;
 	
-	public VariableAddress(IVariableExpression exp) {
-		this.exp = exp;
-		type = new ReferenceType(exp.getType());
+	public VariableAddress(IVariable variable) {
+		super(variable.getParent(), variable.getId(), variable.getType());
+		type = new ReferenceType(variable.getType());
 	}
 	
-	@Override
-	public IVariableExpression getVariableExpression() {
-		return exp;
-	}
+//	@Override
+//	public IVariableExpression getVariableExpression() {
+//		return new VariableExpression(this);
+//	}
 
 	@Override
 	public IDataType getType() {
@@ -35,22 +31,12 @@ public class VariableAddress extends Expression implements IVariableAddress {
 	
 	@Override
 	public String toString() {
-		return "&" + exp.toString();
-	}
-
-	@Override
-	public boolean isDecomposable() {
-		return false;
-	}
-
-	@Override
-	public List<IExpression> decompose() {
-		return ImmutableList.of();
+		return "&" + super.toString();
 	}
 
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
-		IReference reference = stack.getTopFrame().getVariableStore(exp.getVariable().getId());
+		IReference reference = stack.getTopFrame().getVariableStore(getId());
 		return reference;
 	}
 }

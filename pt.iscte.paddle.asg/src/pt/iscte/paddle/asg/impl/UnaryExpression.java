@@ -34,7 +34,7 @@ class UnaryExpression extends Expression implements IUnaryExpression {
 	}
 
 	@Override
-	public IExpression getExpression() {
+	public IExpression getOperand() {
 		return expression;
 	}
 

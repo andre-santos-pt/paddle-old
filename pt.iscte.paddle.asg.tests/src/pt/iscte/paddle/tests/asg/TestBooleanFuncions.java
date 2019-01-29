@@ -17,6 +17,10 @@ import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
 import pt.iscte.paddle.machine.IValue;
 
+import static pt.iscte.paddle.asg.IDataType.*;
+import static pt.iscte.paddle.asg.IOperator.*;
+import static pt.iscte.paddle.asg.ILiteral.*;
+
 public class TestBooleanFuncions {
 	private static IModule program;
 	private static IProcedure evenFunc;
@@ -27,11 +31,10 @@ public class TestBooleanFuncions {
 	private static IProcedure outsideIntervalFunc;
 
 	
-	private static IFactory factory = IFactory.INSTANCE;
 	
 	@BeforeClass
 	public static void setup() {
-		program = factory.createModule("BooleanFunctions");
+		program = IModule.create("BooleanFunctions");
 		evenFunc = createIsEven();
 		oddFunc = createIsOdd();
 		oddNotEvenFunc = createIsOddNotEven();
@@ -49,14 +52,12 @@ public class TestBooleanFuncions {
 	}
 
 	private static IProcedure createIsEven() {
-		IProcedure f = program.addProcedure("isEven", IDataType.BOOLEAN);
-		IVariable nParam = f.addParameter("n", IDataType.INT);
+		IProcedure f = program.addProcedure("isEven", BOOLEAN);
+		IVariable n = f.addParameter("n", INT);
 		
-		IBinaryExpression e = factory.binaryExpression(IOperator.EQUAL,
-				factory.binaryExpression(IOperator.MOD, nParam.expression(), factory.literal(2)),
-				factory.literal(0));
+		IBinaryExpression e = EQUAL.on(MOD.on(n, literal(2)), literal(0));
 		
-		f.getBody().addReturnStatement(e);
+		f.getBody().addReturn(e);
 		return f;
 	}
 	
@@ -72,23 +73,19 @@ public class TestBooleanFuncions {
 	
 
 	private static IProcedure createIsOdd() {
-		IProcedure f = program.addProcedure("isOdd", IDataType.BOOLEAN);
-		IVariable nParam = f.addParameter("n", IDataType.INT);
-		
-		IBinaryExpression e = factory.binaryExpression(IOperator.DIFFERENT,
-				factory.binaryExpression(IOperator.MOD, nParam.expression(), factory.literal(2)),
-				factory.literal(0));
-		
-		f.getBody().addReturnStatement(e);
+		IProcedure f = program.addProcedure("isOdd", BOOLEAN);
+		IVariable n = f.addParameter("n", INT);
+		IBinaryExpression e = DIFFERENT.on(MOD.on(n, literal(2)), literal(0));
+		f.getBody().addReturn(e);
 		return f;
 	}
 	
 	private static IProcedure createIsOddNotEven() {
-		IProcedure f = program.addProcedure("isOddNotEven", IDataType.BOOLEAN);
-		IVariable nParam = f.addParameter("n", IDataType.INT);
+		IProcedure f = program.addProcedure("isOddNotEven", BOOLEAN);
+		IVariable n = f.addParameter("n", INT);
 		
-		IUnaryExpression e = factory.unaryExpression(IOperator.NOT, evenFunc.callExpression(nParam.expression()));
-		f.getBody().addReturnStatement(e);
+		IUnaryExpression e = NOT.on(evenFunc.call(n));
+		f.getBody().addReturn(e);
 		return f;
 	}
 	
@@ -114,15 +111,12 @@ public class TestBooleanFuncions {
 	
 	
 	private static IProcedure createWithinInterval() {
-		IProcedure f = program.addProcedure("withinInterval", IDataType.BOOLEAN);
-		IVariable nParam = f.addParameter("n", IDataType.INT);
-		IVariable aParam = f.addParameter("a", IDataType.INT);
-		IVariable bParam = f.addParameter("b", IDataType.INT);
-		
-		IBinaryExpression lower = factory.binaryExpression(IOperator.GREATER_EQ, nParam.expression(), aParam.expression());
-		IBinaryExpression upper = factory.binaryExpression(IOperator.SMALLER_EQ, nParam.expression(), bParam.expression());
-		IBinaryExpression e = factory.binaryExpression(IOperator.AND, lower, upper);
-		f.getBody().addReturnStatement(e);
+		IProcedure f = program.addProcedure("withinInterval", BOOLEAN);
+		IVariable n = f.addParameter("n", INT);
+		IVariable a = f.addParameter("a", INT);
+		IVariable b = f.addParameter("b", INT);
+		IBinaryExpression e = AND.on(GREATER_EQ.on(n, a), SMALLER_EQ.on(n, b));
+		f.getBody().addReturn(e);
 		return f;
 	}
 	
@@ -137,15 +131,12 @@ public class TestBooleanFuncions {
 	}
 	
 	private static IProcedure createOutsideInterval() {
-		IProcedure f = program.addProcedure("ousideInterval", IDataType.BOOLEAN);
-		IVariable nParam = f.addParameter("n", IDataType.INT);
-		IVariable aParam = f.addParameter("a", IDataType.INT);
-		IVariable bParam = f.addParameter("b", IDataType.INT);
-		
-		IBinaryExpression lower = factory.binaryExpression(IOperator.SMALLER, nParam.expression(), aParam.expression());
-		IBinaryExpression upper = factory.binaryExpression(IOperator.GREATER, nParam.expression(), bParam.expression());
-		IBinaryExpression e = factory.binaryExpression(IOperator.OR, lower, upper);
-		f.getBody().addReturnStatement(e);
+		IProcedure f = program.addProcedure("ousideInterval", BOOLEAN);
+		IVariable n = f.addParameter("n", INT);
+		IVariable a = f.addParameter("a", INT);
+		IVariable b = f.addParameter("b", INT);
+		IBinaryExpression e = OR.on(SMALLER.on(n, a), GREATER.on(n, b));
+		f.getBody().addReturn(e);
 		return f;
 	}
 	

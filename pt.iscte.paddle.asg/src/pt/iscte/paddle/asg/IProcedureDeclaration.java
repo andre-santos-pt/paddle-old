@@ -13,10 +13,25 @@ public interface IProcedureDeclaration extends IIdentifiableElement {
 	IVariable addParameter(String id, IDataType type);
 //	IVariable addReferenceParameter(String id, IDataType type);
 	
-	IProcedureCallExpression callExpression(List<IExpression> args);
+	IProcedureCallExpression call(List<IExpression> args);
 
-	default IProcedureCallExpression callExpression(IExpression ... args) {
-		return callExpression(Arrays.asList(args));
+	default IProcedureCallExpression call(IExpression ... args) {
+		return call(Arrays.asList(args));
+	}
+	
+	
+	default String shortSignature() {
+		return getId() + "(...)";
+	}
+	
+	default String longSignature() {
+		String args = "";
+		for (IVariable p : getParameters()) {
+			if(!args.isEmpty())
+				args += ", ";
+			args += p.getType();
+		}
+		return getReturnType() + " " +getId() + "(" + args + ")";
 	}
 	
 	default boolean matchesSignature(String id, IDataType... paramTypes) {

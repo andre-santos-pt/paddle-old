@@ -11,26 +11,14 @@ public interface IBlock extends IInstruction {
 
 	IProcedure getProcedure();
 	
-//	default IProcedure getProcedure() {
-//		IProgramElement e = getParent();
-//		while(e != null && !(e instanceof IProcedure))
-//			e = ((IBlock) e).getParent();
-//		
-//		return e == null ? null : (IProcedure) e;
-//	}
-	
 	List<IInstruction> getInstructionSequence();
 
 	boolean isEmpty();
+	
+	
 
 	IVariable addVariable(String name, IDataType type);
 
-//	IVariable addReferenceVariable(String name, IDataType type);
-	
-//	IArrayVariable addArrayVariable(String name, IArrayType type);
-
-//	IArrayVariable addReferenceArrayVariable(String name, IArrayType type);
-	
 	IBlock addBlock();
 
 	IVariableAssignment addAssignment(IVariable var, IExpression exp);
@@ -38,18 +26,16 @@ public interface IBlock extends IInstruction {
 	
 	default IVariableAssignment addIncrement(IVariable var) {
 		assert var.getType() == IDataType.INT;
-		IFactory factory = IFactory.INSTANCE;
-		return addAssignment(var, factory.binaryExpression(IOperator.ADD, var.expression(), factory.literal(1)));
+		return addAssignment(var, IOperator.ADD.on(var, ILiteral.literal(1)));
 	}
 
 	default IVariableAssignment addDecrement(IVariable var) {
 		assert var.getType() == IDataType.INT;
-		IFactory factory = IFactory.INSTANCE;
-		return addAssignment(var, factory.binaryExpression(IOperator.SUB, var.expression(), factory.literal(1)));
+		return addAssignment(var, IOperator.SUB.on(var, ILiteral.literal(1)));
 	}
 
 	IArrayElementAssignment addArrayElementAssignment(IVariable var, IExpression exp, List<IExpression> indexes);
-	default IArrayElementAssignment arrayElementAssignment(IVariable var, IExpression exp, IExpression ... indexes) {
+	default IArrayElementAssignment addArrayElementAssignment(IVariable var, IExpression exp, IExpression ... indexes) {
 		return addArrayElementAssignment(var, exp, Arrays.asList(indexes));
 	}
 
@@ -62,15 +48,15 @@ public interface IBlock extends IInstruction {
 
 	ILoop addLoop(IExpression guard);
 
-	IReturn addReturnStatement(IExpression expression);
+	IReturn addReturn(IExpression expression);
 
-	IBreak addBreakStatement();
+	IBreak addBreak();
 
-	IContinue addContinueStatement();
+	IContinue addContinue();
 	
-	IProcedureCall addProcedureCall(IProcedure procedure, List<IExpression> args);
-	default IProcedureCall addProcedureCall(IProcedure procedure, IExpression ... args) {
-		return addProcedureCall(procedure, Arrays.asList(args));
+	IProcedureCall addCall(IProcedure procedure, List<IExpression> args);
+	default IProcedureCall addCall(IProcedure procedure, IExpression ... args) {
+		return addCall(procedure, Arrays.asList(args));
 	}
 
 
@@ -159,7 +145,8 @@ public interface IBlock extends IInstruction {
 		default void 	visit(IBreak breakStatement) 				{ }
 		default void 	visit(IContinue continueStatement) 			{ }
 	
-		default void	visit(IVariable variable)					{ } // TODO missing because it is not statement
+		 // TODO missing because it is not statement, only appears on expressions
+		default void	visit(IVariable variable)					{ }
 	}
 
 }

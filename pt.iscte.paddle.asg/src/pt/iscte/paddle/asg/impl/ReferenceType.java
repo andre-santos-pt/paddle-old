@@ -32,8 +32,7 @@ public class ReferenceType extends ProgramElement implements IReferenceType {
 	}
 	
 	@Override
-	public IReferenceType referenceType() {
+	public IReferenceType reference() {
 		throw new UnsupportedOperationException();
 	}
-
 }

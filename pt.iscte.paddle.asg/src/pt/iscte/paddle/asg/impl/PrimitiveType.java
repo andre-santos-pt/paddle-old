@@ -144,7 +144,7 @@ public enum PrimitiveType implements IValueType {
 	}
 	
 	@Override
-	public IReferenceType referenceType() {
+	public IReferenceType reference() {
 		return new ReferenceType(this);
 	}
 }

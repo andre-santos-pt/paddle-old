@@ -6,7 +6,8 @@ import java.math.BigDecimal;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import pt.iscte.paddle.asg.IDataType;
+import static pt.iscte.paddle.asg.IDataType.*;
+import static pt.iscte.paddle.asg.ILiteral.*;
 import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
@@ -24,32 +25,31 @@ public class TestSwap {
 
 	@BeforeClass
 	public static void setup() {
-		IFactory factory = IFactory.INSTANCE;
-		program = factory.createModule("Swap");
+		program = IModule.create("Swap");
 		
-		swapProc = program.addProcedure("swap", IDataType.VOID);
-		IVariable vParam = (IVariable) swapProc.addParameter("v", factory.arrayType(IDataType.INT, 1));
-		IVariable iParam = swapProc.addParameter("i", IDataType.INT);
-		IVariable jParam = swapProc.addParameter("j", IDataType.INT);
+		swapProc = program.addProcedure("swap", VOID);
+		IVariable v = (IVariable) swapProc.addParameter("v", INT.array());
+		IVariable i = swapProc.addParameter("i", INT);
+		IVariable j = swapProc.addParameter("j", INT);
 		
-		IVariable tVar = swapProc.getBody().addVariable("t", IDataType.INT);
-		tVar.addAssignment(vParam.elementExpression(iParam.expression()));
-		vParam.elementAssignment(vParam.elementExpression(jParam.expression()), iParam.expression());
-		vParam.elementAssignment(tVar.expression(), jParam.expression());
+		IVariable t = swapProc.getBody().addVariable("t", INT);
+		t.addAssignment(v.arrayElement(i));
+		v.addArrayAssignment(v.arrayElement(j), i);
+		v.addArrayAssignment(t, j);
 		
-		iParam.addAssignment(factory.literal(4));
+		i.addAssignment(literal(4));
 		
-		main = program.addProcedure("main", IDataType.VOID);
-		IVariable array = main.getBody().addVariable("test", factory.arrayType(IDataType.INT, 1));
-		array.addAssignment(factory.arrayAllocation(IDataType.INT, 1, factory.literal(3)));
-		array.elementAssignment(factory.literal(5), factory.literal(0));
-		array.elementAssignment(factory.literal(7), factory.literal(1));
-		array.elementAssignment(factory.literal(9), factory.literal(2));
+		main = program.addProcedure("main", VOID);
+		IVariable array = main.getBody().addVariable("test", INT.array());
+		array.addAssignment(INT.array().allocation(literal(3)));
+		array.addArrayAssignment(literal(5), literal(0));
+		array.addArrayAssignment(literal(7), literal(1));
+		array.addArrayAssignment(literal(9), literal(2));
 		
-		IVariable iVar = main.getBody().addVariable("i", IDataType.INT);
-		iVar.addAssignment(factory.literal(0));
+		IVariable iVar = main.getBody().addVariable("i", INT);
+		iVar.addAssignment(literal(0));
 		
-		main.getBody().addProcedureCall(swapProc, array.expression(), iVar.expression(), factory.literal(2));
+		main.getBody().addCall(swapProc, array, iVar, literal(2));
 	}
 
 	@Test

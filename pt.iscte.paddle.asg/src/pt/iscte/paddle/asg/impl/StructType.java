@@ -61,7 +61,7 @@ class StructType extends ProgramElement implements IStructType {
 	}
 	
 	@Override
-	public IReferenceType referenceType() {
+	public IReferenceType reference() {
 		return new ReferenceType(this);
 	}
 }

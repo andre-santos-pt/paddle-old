@@ -1,5 +1,10 @@
 package pt.iscte.paddle.asg;
 
+import pt.iscte.paddle.asg.impl.ArithmeticOperator;
+import pt.iscte.paddle.asg.impl.LogicalOperator;
+import pt.iscte.paddle.asg.impl.RelationalOperator;
+import pt.iscte.paddle.asg.impl.UnaryOperator;
+
 /**
  * Immutable
  * @author andresantos

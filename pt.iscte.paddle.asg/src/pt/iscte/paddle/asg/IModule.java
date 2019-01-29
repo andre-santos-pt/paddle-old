@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.asg.impl.Module;
+
 /**
  * Mutable
  */
@@ -66,8 +68,7 @@ public interface IModule extends IIdentifiableElement {
 
 	default void accept(IVisitor visitor) {
 		getConstants().forEach(c -> {
-			if(visitor.visit(c))
-				visitor.visit(c.getValue());
+			visitor.visit(c);
 		});
 		
 		getStructs().forEach(s -> {
@@ -86,11 +87,14 @@ public interface IModule extends IIdentifiableElement {
 
 	interface IVisitor extends IBlock.IVisitor {
 //		default void setup(IModule module)						{ }
-		default boolean visit(IConstant constant) 	{ return true; }
+		default void 	visit(IConstant constant) 				{ }
 		default boolean visit(IStructType struct) 				{ return true; }
 		default boolean visit(IProcedure procedure) 			{ return true; }
 	}
 
 
+	static IModule create(String id) {
+		return new Module(id);
+	}
 
 }

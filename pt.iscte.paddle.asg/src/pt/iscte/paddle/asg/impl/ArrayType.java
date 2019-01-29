@@ -1,21 +1,22 @@
 package pt.iscte.paddle.asg.impl;
 
+import java.util.List;
+
+import pt.iscte.paddle.asg.IArrayAllocation;
 import pt.iscte.paddle.asg.IArrayType;
 import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IReferenceType;
 
 public class ArrayType extends ProgramElement implements IArrayType {
-	private final IDataType type;
+	private final IDataType componentType;
 	private final int dimensions;
 	private final String id;
 
-	public ArrayType(IDataType type, int dimensions) {
-		this.type = type;
-		this.dimensions = dimensions;
-		String id = type.getId();
-		for(int i = 0; i < dimensions; i++)
-			id += "[]";
-		this.id = id;
+	public ArrayType(IDataType type) {
+		this.componentType = type;
+		this.dimensions = getDimensionsInternal();
+		this.id = componentType.getId() + "[]";
 	}
 	
 	@Override
@@ -23,6 +24,12 @@ public class ArrayType extends ProgramElement implements IArrayType {
 		return dimensions;
 	}
 	
+	private int getDimensionsInternal() {
+		if(!(componentType instanceof ArrayType))
+			return 1;
+		else
+			return 1 + ((ArrayType) componentType).getDimensionsInternal();
+	}
 
 	@Override
 	public String getId() {
@@ -45,7 +52,16 @@ public class ArrayType extends ProgramElement implements IArrayType {
 
 	@Override
 	public IDataType getComponentType() {
-		return type;
+		return componentType;
+	}
+	
+	@Override
+	public IDataType getComponentTypeAt(int dim) {
+		assert dim >= 1 && dim <= dimensions;
+		if(dim == 1)
+			return componentType;
+		else
+			return ((IArrayType) componentType).getComponentTypeAt(dim-1);		
 	}
 
 	@Override
@@ -54,7 +70,12 @@ public class ArrayType extends ProgramElement implements IArrayType {
 	}
 	
 	@Override
-	public IReferenceType referenceType() {
+	public IReferenceType reference() {
 		return new ReferenceType(this);
+	}
+	
+	@Override
+	public IArrayAllocation allocation(List<IExpression> dimExpressions) {
+		return new ArrayAllocation(this, dimExpressions);
 	}
 }

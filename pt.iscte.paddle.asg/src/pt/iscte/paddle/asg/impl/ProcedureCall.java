@@ -9,6 +9,7 @@ import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IProcedureDeclaration;
 import pt.iscte.paddle.machine.ExecutionError;
+import pt.iscte.paddle.machine.ExecutionError.Type;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IValue;
 
@@ -61,8 +62,13 @@ class ProcedureCall extends Statement implements IProcedureCall {
 	
 	static IValue executeInternal(ICallStack stack, IProcedureDeclaration procedure, List<IValue> args) throws ExecutionError {
 		IProcedure p = stack.getProgramState().getProgram().resolveProcedure(procedure);
-		if(p instanceof BuiltinProcedure)
-			return ((BuiltinProcedure) p).hookAction(args);
+		if(p instanceof BuiltinProcedure) {
+			try {
+				return ((BuiltinProcedure) p).hookAction(args);
+			} catch (Exception e) {
+				throw new ExecutionError(Type.BUILT_IN_PROCEDURE, procedure, e.getMessage());
+			}
+		}
 		else {
 			stack.newFrame(p, args);
 			return null;

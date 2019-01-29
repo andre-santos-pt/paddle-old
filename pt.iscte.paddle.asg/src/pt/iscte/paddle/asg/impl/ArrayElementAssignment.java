@@ -35,7 +35,7 @@ class ArrayElementAssignment extends VariableAssignment implements IArrayElement
 
 	@Override
 	public String toString() {
-		String text = getVariable().getId();
+		String text = getVariable().toString();
 		for(IExpression e : indexes)
 			text += "[" + e + "]";
 		

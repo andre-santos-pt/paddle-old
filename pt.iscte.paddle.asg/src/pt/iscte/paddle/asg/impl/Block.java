@@ -136,16 +136,22 @@ class Block extends ProgramElement implements IBlock {
 	
 	@Override
 	public IVariableAssignment addAssignment(IVariable variable, IExpression expression) {
+		// TODO OCL: variable must be owned by the same procedure of expression
+
 		return new VariableAssignment(this, variable, expression);
 	}
 
 	@Override
 	public IArrayElementAssignment addArrayElementAssignment(IVariable var, IExpression exp, List<IExpression> indexes) {
+		// TODO OCL: variable must be owned by the same procedure of expression
+
 		return new ArrayElementAssignment(this, var, indexes, exp);
 	}
 	
 	@Override
 	public IStructMemberAssignment addStructMemberAssignment(IVariable var, String memberId, IExpression exp) {
+		// TODO OCL: variable must be owned by the same procedure of expression
+
 		return new StructMemberAssignment(this, var, memberId, exp);
 	}
 	
@@ -165,21 +171,21 @@ class Block extends ProgramElement implements IBlock {
 	}
 
 	@Override
-	public IReturn addReturnStatement(IExpression expression) {
+	public IReturn addReturn(IExpression expression) {
 		return new Return(this, expression);
 	}
 	
 	@Override
-	public IProcedureCall addProcedureCall(IProcedure procedure, List<IExpression> args) {
+	public IProcedureCall addCall(IProcedure procedure, List<IExpression> args) {
 		return new ProcedureCall(this, procedure, args);
 	}
 	@Override
-	public IBreak addBreakStatement() {
+	public IBreak addBreak() {
 		return new Break(this);
 	}
 	
 	@Override
-	public IContinue addContinueStatement() {
+	public IContinue addContinue() {
 		return new Continue(this);
 	}
 	

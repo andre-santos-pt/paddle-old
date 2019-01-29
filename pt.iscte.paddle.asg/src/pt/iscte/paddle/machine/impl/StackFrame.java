@@ -60,7 +60,7 @@ class StackFrame implements IStackFrame {
 
 		int i = 0;
 		for(IVariable param : procedure.getParameters()) {
-			IValue arg = param.isPointer() ? arguments.get(i) : arguments.get(i).copy();
+			IValue arg = param.getType().isReference() ? arguments.get(i) : arguments.get(i).copy();
 			Reference ref = new Reference(arg);
 			variables.put(param.getId(), ref);
 			i++;

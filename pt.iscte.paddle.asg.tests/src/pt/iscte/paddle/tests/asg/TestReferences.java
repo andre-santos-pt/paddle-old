@@ -13,24 +13,25 @@ import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
+import static pt.iscte.paddle.asg.ILiteral.*;
+import static pt.iscte.paddle.asg.IDataType.*;
 
 public class TestReferences {
 
 	@Test
 	public void test() {
-		IFactory factory = IFactory.INSTANCE;
-		IModule program = factory.createModule("Struct");
+		IModule program = IModule.create("Struct");
 		
-		IProcedure proc = program.addProcedure("test", IDataType.VOID);
+		IProcedure proc = program.addProcedure("test", VOID);
 		IBlock body = proc.getBody();
-		IVariable aVar = body.addVariable("a", IDataType.INT.referenceType());
-		IVariable bVar = body.addVariable("b", IDataType.INT.referenceType());
+		IVariable a = body.addVariable("a", INT.reference());
+		IVariable b = body.addVariable("b", INT.reference());
 		
-		aVar.addTargetAssignment(factory.literal(5));
-		bVar.addAssignment(aVar.expression());
+		a.addTargetAssignment(literal(5));
+		b.addAssignment(a);
 		
-		bVar.addTargetAssignment(factory.literal(7));
-//		aVar.addAssignment(factory.nullLiteral());
+		b.addTargetAssignment(literal(7));
+
 		System.out.println(program);
 		IProgramState state = IMachine.create(program);
 		IExecutionData data = state.execute(proc);

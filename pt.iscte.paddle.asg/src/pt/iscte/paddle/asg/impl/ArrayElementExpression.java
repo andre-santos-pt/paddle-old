@@ -13,32 +13,23 @@ import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IStackFrame;
 import pt.iscte.paddle.machine.IValue;
 
-class ArrayElementExpression extends VariableExpression implements IArrayElementExpression {
-	private ImmutableList<IExpression> indexes;
+class ArrayElementExpression extends Expression implements IArrayElementExpression {
+	private final IVariable variable;
+	private final ImmutableList<IExpression> indexes;
 	
 	public ArrayElementExpression(IVariable variable, List<IExpression> indexes) {
-		super(variable);
+		this.variable = variable;
 		this.indexes = ImmutableList.copyOf(indexes);
 	}
 	
-//	@Override
-//	public IArrayVariable getVariable() {
-//		return (IArrayVariable) super.getVariable();
-//	}
-
 	@Override
 	public List<IExpression> getIndexes() {
 		return indexes;
 	}
 	
-//	@Override
-//	public IDataType getType() {
-//		return getVariable().getComponentType();
-//	}
-	
 	@Override
 	public String toString() {
-		String text = getVariable().getId();
+		String text = getVariable().toString();
 		for(IExpression e : indexes)
 			text += "[" + e + "]";
 		return text;
@@ -53,8 +44,8 @@ class ArrayElementExpression extends VariableExpression implements IArrayElement
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
 		assert values.size() == getIndexes().size();
 		IStackFrame frame = stack.getTopFrame();
-		IValue variable = frame.getVariableStore(getVariable().getId()).getTarget();
-		IValue element = variable;
+		IValue value = frame.getVariableStore(variable.getId()).getTarget();
+		IValue element = value;
 		for(IValue v : values) {
 			int index = ((Number) v.getValue()).intValue();
 			if(index < 0)
@@ -62,6 +53,11 @@ class ArrayElementExpression extends VariableExpression implements IArrayElement
 			element = ((IArray) element).getElement(index);
 		}
 		return element;
+	}
+
+	@Override
+	public IVariable getVariable() {
+		return variable;
 	}
 	
 }

@@ -1,7 +1,13 @@
-package pt.iscte.paddle.asg;
+package pt.iscte.paddle.asg.impl;
 
 import java.math.BigDecimal;
 
+import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IExpression;
+import pt.iscte.paddle.asg.IOperator;
+import pt.iscte.paddle.asg.IUnaryExpression;
+import pt.iscte.paddle.asg.IUnaryOperator;
+import pt.iscte.paddle.asg.IOperator.OperationType;
 import pt.iscte.paddle.machine.IValue;
 import pt.iscte.paddle.machine.impl.Value;
 
@@ -22,11 +28,15 @@ public enum UnaryOperator implements IUnaryOperator {
 		public OperationType getOperationType() {
 			return OperationType.LOGICAL;
 		}
+		
+		@Override
+		public boolean isValidFor(IDataType type) {
+			return type.isBoolean();
+		}
 	},
 	TRUNCATE("(int)") {
 		@Override
 		protected Object calculate(IValue value) {
-//			assert value.getType().isNumeric();
 			return new BigDecimal(((BigDecimal) value.getValue()).intValue());
 		}
 		
@@ -38,6 +48,11 @@ public enum UnaryOperator implements IUnaryOperator {
 		@Override
 		public OperationType getOperationType() {
 			return OperationType.ARITHMETIC;
+		}
+		
+		@Override
+		public boolean isValidFor(IDataType type) {
+			return type.isNumber();
 		}
 	},
 	
@@ -66,6 +81,11 @@ public enum UnaryOperator implements IUnaryOperator {
 	public IValue apply(IValue value) {
 		Object obj = calculate(value);
 		return Value.create(getResultType(null), obj);
+	}
+	
+	@Override
+	public IUnaryExpression on(IExpression exp) {
+		return new UnaryExpression(this, exp);
 	}
 	
 	protected abstract Object calculate(IValue value);

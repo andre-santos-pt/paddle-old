@@ -8,5 +8,6 @@ public interface IReferenceType extends IDataType {
 	default public String getId() {
 		return "*" + getTarget().getId();
 	}
+
 	
 }

@@ -5,11 +5,12 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.asg.IOperator.OperationType;
+import pt.iscte.paddle.asg.impl.BinaryExpression;
 
 public interface IBinaryExpression extends IExpression {
 	IBinaryOperator getOperator();
-	IExpression getLeftExpression();
-	IExpression getRightExpression();
+	IExpression getLeftOperand();
+	IExpression getRightOperand();
 	
 	@Override
 	default OperationType getOperationType() {
@@ -18,7 +19,11 @@ public interface IBinaryExpression extends IExpression {
 	
 	@Override
 	default List<IExpression> decompose() {
-		return ImmutableList.of(getLeftExpression(), getRightExpression());
+		return ImmutableList.of(getLeftOperand(), getRightOperand());
+	}
+	
+	static IBinaryExpression create(IBinaryOperator operator, IExpression leftOperand, IExpression rightOperand) {
+		return new BinaryExpression(operator, leftOperand, rightOperand);
 	}
 }
 

@@ -6,10 +6,10 @@ import com.google.common.collect.ImmutableList;
 
 public interface IUnaryExpression extends IExpression {
 	IUnaryOperator getOperator();
-	IExpression getExpression();
+	IExpression getOperand();
 	
 	@Override
 	default List<IExpression> decompose() {
-		return ImmutableList.of(getExpression());
+		return ImmutableList.of(getOperand());
 	}
 }

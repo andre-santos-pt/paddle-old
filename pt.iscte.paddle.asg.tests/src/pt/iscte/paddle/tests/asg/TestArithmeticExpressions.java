@@ -1,6 +1,12 @@
 package pt.iscte.paddle.tests.asg;
 
 import static org.junit.Assert.assertEquals;
+import static pt.iscte.paddle.asg.IDataType.DOUBLE;
+import static pt.iscte.paddle.asg.IDataType.INT;
+import static pt.iscte.paddle.asg.IDataType.VOID;
+import static pt.iscte.paddle.asg.ILiteral.literal;
+import static pt.iscte.paddle.asg.IOperator.ADD;
+import static pt.iscte.paddle.asg.IOperator.MUL;
 
 import java.math.BigDecimal;
 
@@ -9,10 +15,8 @@ import org.junit.Test;
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IModule;
-import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IExpressionEvaluator;
@@ -20,40 +24,31 @@ import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
 import pt.iscte.paddle.machine.IValue;
 
+
 // TODO more arithmetic cases
 public class TestArithmeticExpressions {
 
-	IFactory factory = IFactory.INSTANCE;
 	final int EXP = 0;
 	final int TYPE = 1;
 	final int RES = 2;
 
-	ILiteral L1 = factory.literal(1);
-	ILiteral L3 = factory.literal(3);
-	ILiteral L6 = factory.literal(6);
+	ILiteral L1 = literal(1);
+	ILiteral L3 = literal(3);
+	ILiteral L6 = literal(6);
 
-	ILiteral L3_3 = factory.literal(3.3);
-	ILiteral L6_4 = factory.literal(6.4);
+	ILiteral L3_3 = literal(3.3);
+	ILiteral L6_4 = literal(6.4);
 
-	IBinaryExpression L3_ADD_L6 = factory.binaryExpression(IOperator.ADD, L3, L6);
-
-	//	Object[][] ADD_CASES = {
-	//			{L3_ADD_L6, IDataType.INT, 9},
-	//			{factory.binaryExpression(IOperator.ADD, L3_ADD_L6, L1), IDataType.INT, 10}, 
-	//			{factory.binaryExpression(IOperator.ADD, L1, L3_ADD_L6), IDataType.INT, 10}, 
-	//			{factory.binaryExpression(IOperator.ADD, L3_3, L6), IDataType.DOUBLE, 9.3},
-	//			{factory.binaryExpression(IOperator.ADD, L6, L3_3), IDataType.DOUBLE, 9.3},
-	//			{factory.binaryExpression(IOperator.ADD, L3_3, L6_4), IDataType.DOUBLE, 9.7}
-	//	};
+	IBinaryExpression L3_ADD_L6 = ADD.on(L3, L6);
 
 	@Test
 	public void testAddCases() throws ExecutionError {
 		test(L3_ADD_L6, IDataType.INT, 9);
-		test(factory.binaryExpression(IOperator.ADD, L3_ADD_L6, L1), IDataType.INT, 10);
-		test(factory.binaryExpression(IOperator.ADD, L1, L3_ADD_L6), IDataType.INT, 10);
-		test(factory.binaryExpression(IOperator.ADD, L3_3, L6), IDataType.DOUBLE, 9.3);
-		test(factory.binaryExpression(IOperator.ADD, L6, L3_3), IDataType.DOUBLE, 9.3);
-		test(factory.binaryExpression(IOperator.ADD, L3_3, L6_4), IDataType.DOUBLE, 9.7);
+		test(ADD.on(L3_ADD_L6, L1), INT, 10);
+		test(ADD.on(L1, L3_ADD_L6), INT, 10);
+		test(ADD.on(L3_3, L6), DOUBLE, 9.3);
+		test(ADD.on(L6, L3_3), DOUBLE, 9.3);
+		test(ADD.on(L3_3, L6_4), DOUBLE, 9.7);
 	}
 
 
@@ -69,23 +64,17 @@ public class TestArithmeticExpressions {
 
 
 
-	//	Object[][] PROD_CASES = {
-	//			{factory.binaryExpression(IOperator.PROD, L1, L3), IDataType.INT, 3},
-	//			{factory.binaryExpression(IOperator.PROD, L3, L6), IDataType.INT, 18},
-	//			{factory.binaryExpression(IOperator.PROD, L3, L3_3), IDataType.DOUBLE, 9.9}
-	//	};
-
 	@Test
 	public void testProdCases() throws ExecutionError {
-		test(factory.binaryExpression(IOperator.MUL, L1, L3), IDataType.INT, 3);
-		test(factory.binaryExpression(IOperator.MUL, L3, L6), IDataType.INT, 18);
-		test(factory.binaryExpression(IOperator.MUL, L3, L3_3), IDataType.DOUBLE, 9.9);
+		test(MUL.on(L1, L3), INT, 3);
+		test(MUL.on(L3, L6), INT, 18);
+		test(MUL.on(L3, L3_3), DOUBLE, 9.9);
 	}
 
 	private void test(IExpression expression, IDataType type, Number result) throws ExecutionError {
 		// TODO to setup
-		IModule mockProgram = factory.createModule("Expressions");
-		IProcedure mockProcedure = mockProgram.addProcedure("mock", IDataType.VOID);
+		IModule mockProgram = IModule.create("Expressions");
+		IProcedure mockProcedure = mockProgram.addProcedure("mock", VOID);
 		IProgramState mockState = IMachine.create(mockProgram);
 		mockState.setupExecution(mockProcedure);
 		IExpressionEvaluator eval = mockState.createExpressionEvaluator(expression);

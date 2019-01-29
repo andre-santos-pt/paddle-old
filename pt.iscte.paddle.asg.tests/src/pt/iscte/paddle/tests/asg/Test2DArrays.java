@@ -1,18 +1,21 @@
 package pt.iscte.paddle.tests.asg;
 
 import static org.junit.Assert.assertEquals;
+import static pt.iscte.paddle.asg.IDataType.BOOLEAN;
+import static pt.iscte.paddle.asg.IDataType.INT;
+import static pt.iscte.paddle.asg.ILiteral.literal;
+import static pt.iscte.paddle.asg.IOperator.ADD;
+import static pt.iscte.paddle.asg.IOperator.DIFFERENT;
+import static pt.iscte.paddle.asg.IOperator.EQUAL;
 
 import java.math.BigDecimal;
 
 import org.junit.Test;
 
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
-import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.ISelectionWithAlternative;
 import pt.iscte.paddle.asg.IVariable;
@@ -25,22 +28,21 @@ public class Test2DArrays {
 
 	@Test
 	public void testIdMatrix() {
-		IFactory factory = IFactory.INSTANCE;
-		IModule program = factory.createModule("Arrays2D");
+		IModule program = IModule.create("Arrays2D");
 		
-		IProcedure idFunc = program.addProcedure("idMatrix", factory.arrayType(IDataType.INT, 2));
-		IVariable nParam = idFunc.addParameter("n", IDataType.INT);
+		IProcedure idFunc = program.addProcedure("idMatrix", INT.array2D());
+		IVariable nParam = idFunc.addParameter("n", INT);
 		
 		IBlock body = idFunc.getBody();
-		IVariable idVar = body.addVariable("id", factory.arrayType(IDataType.INT, 2));
-		idVar.addAssignment(factory.arrayAllocation(IDataType.INT, 2, nParam.expression(), nParam.expression()));
-		IVariable iVar = body.addVariable("i", IDataType.INT);
-		IExpression e = factory.binaryExpression(IOperator.DIFFERENT, iVar.expression(), nParam.expression());
+		IVariable idVar = body.addVariable("id", INT.array2D());
+		idVar.addAssignment(INT.array2D().allocation(nParam, nParam));
+		IVariable iVar = body.addVariable("i", INT);
+		IExpression e = DIFFERENT.on(iVar, nParam);
 		ILoop loop = body.addLoop(e);
-		loop.arrayElementAssignment(idVar, factory.literal(1), iVar.expression(), iVar.expression());
-		loop.addAssignment(iVar, factory.binaryExpression(IOperator.ADD, iVar.expression(), factory.literal(1)));
+		loop.addArrayElementAssignment(idVar, literal(1), iVar, iVar);
+		loop.addAssignment(iVar, ADD.on(iVar, literal(1)));
 		
-		body.addReturnStatement(idVar.expression());
+		body.addReturn(idVar);
 
 		System.out.println(program);
 		final int N = 4;
@@ -62,37 +64,36 @@ public class Test2DArrays {
 
 	@Test
 	public void testNatMatrix() {
-		IFactory factory = IFactory.INSTANCE;
-		IModule program = factory.createModule("NatMatrix");
+		IModule program = IModule.create("NatMatrix");
 		
-		IProcedure natFunc = program.addProcedure("natMatrix", factory.arrayType(IDataType.INT, 2));
-		IVariable linesParam = natFunc.addParameter("lines", IDataType.INT);
-		IVariable colsParam = natFunc.addParameter("cols", IDataType.INT);
+		IProcedure natFunc = program.addProcedure("natMatrix", INT.array2D());
+		IVariable linesParam = natFunc.addParameter("lines", INT);
+		IVariable colsParam = natFunc.addParameter("cols", INT);
 		
 		IBlock body = natFunc.getBody();
 		
-		IVariable mVar = body.addVariable("m", factory.arrayType(IDataType.INT, 2));
-		mVar.addAssignment(factory.arrayAllocation(IDataType.INT, 2, linesParam.expression(), colsParam.expression()));
+		IVariable mVar = body.addVariable("m", INT.array2D());
+		mVar.addAssignment(INT.array2D().allocation(linesParam, colsParam));
 		
-		IVariable iVar = body.addVariable("i", IDataType.INT);
-		iVar.addAssignment(factory.literal(0));
+		IVariable iVar = body.addVariable("i", INT);
+		iVar.addAssignment(literal(0));
 		
-		IVariable jVar = body.addVariable("j", IDataType.INT);
-		IVariable nVar = body.addVariable("n", IDataType.INT);
-		nVar.addAssignment(factory.literal(1));
+		IVariable jVar = body.addVariable("j", INT);
+		IVariable nVar = body.addVariable("n", INT);
+		nVar.addAssignment(literal(1));
 
-		IExpression outerGuard = factory.binaryExpression(IOperator.DIFFERENT, iVar.expression(), linesParam.expression());
-		ILoop outerLoop = body.addLoop(outerGuard);
-		outerLoop.addAssignment(jVar, factory.literal(0));
-		IExpression innerGuard = factory.binaryExpression(IOperator.DIFFERENT, jVar.expression(), colsParam.expression());
-		ILoop innerLoop = outerLoop.addLoop(innerGuard);
-		innerLoop.arrayElementAssignment(mVar, nVar.expression(), iVar.expression(), jVar.expression());
-		innerLoop.addAssignment(jVar, factory.binaryExpression(IOperator.ADD, jVar.expression(), factory.literal(1)));
-		innerLoop.addAssignment(nVar, factory.binaryExpression(IOperator.ADD, nVar.expression(), factory.literal(1)));
+		IExpression outerGuard = DIFFERENT.on(iVar, linesParam);
+		ILoop outLoop = body.addLoop(outerGuard);
+		outLoop.addAssignment(jVar, literal(0));
+		IExpression innerGuard = DIFFERENT.on(jVar, colsParam);
+		ILoop inLoop = outLoop.addLoop(innerGuard);
+		inLoop.addArrayElementAssignment(mVar, nVar, iVar, jVar);
+		inLoop.addAssignment(jVar, ADD.on(jVar, literal(1)));
+		inLoop.addAssignment(nVar, ADD.on(nVar, literal(1)));
 		
-		outerLoop.addAssignment(iVar, factory.binaryExpression(IOperator.ADD, iVar.expression(), factory.literal(1)));
+		outLoop.addAssignment(iVar, ADD.on(iVar, literal(1)));
 		
-		body.addReturnStatement(mVar.expression());
+		body.addReturn(mVar);
 		
 		final int L = 2;
 		final int C = 4;
@@ -114,45 +115,42 @@ public class Test2DArrays {
 	
 	@Test
 	public void testContainsNinMatrix() {
-		IFactory factory =IFactory.INSTANCE;
-		IModule program = factory.createModule("ContainsInMatrix");
+		IModule program = IModule.create("ContainsInMatrix");
 		
-		IProcedure findFunc = program.addProcedure("contains", IDataType.BOOLEAN);
-		IVariable mParam = (IVariable) findFunc.addParameter("m", factory.arrayType(IDataType.INT, 2));
-		IVariable nParam = findFunc.addParameter("n", IDataType.INT);
+		IProcedure findFunc = program.addProcedure("contains", BOOLEAN);
+		IVariable mParam = (IVariable) findFunc.addParameter("m", INT.array2D());
+		IVariable nParam = findFunc.addParameter("n", INT);
 		IBlock body = findFunc.getBody();
-		IVariable iVar = body.addVariable("i", IDataType.INT);
-		iVar.addAssignment(factory.literal(0));
+		IVariable iVar = body.addVariable("i", INT);
+		iVar.addAssignment(literal(0));
 		
-		IVariable jVar = body.addVariable("j", IDataType.INT);
-		IExpression outerGuard = factory.binaryExpression(IOperator.DIFFERENT, iVar.expression(), mParam.lengthExpression());
+		IVariable jVar = body.addVariable("j", INT);
+		IExpression outerGuard = DIFFERENT.on(iVar, mParam.arrayLength());
 		ILoop outerLoop = body.addLoop(outerGuard);
-		outerLoop.addAssignment(jVar, factory.literal(0));
-		IExpression innerGuard = factory.binaryExpression(IOperator.DIFFERENT, jVar.expression(), mParam.lengthExpression(iVar.expression()) );
+		outerLoop.addAssignment(jVar, literal(0));
+		IExpression innerGuard = DIFFERENT.on(jVar, mParam.arrayLength(iVar) );
 		ILoop innerLoop = outerLoop.addLoop(innerGuard);
-		ISelectionWithAlternative ifEq = innerLoop.addSelectionWithAlternative(factory.binaryExpression(IOperator.EQUAL, mParam.elementExpression(iVar.expression(), jVar.expression()), nParam.expression()));
-		ifEq.addReturnStatement(factory.literal(true));
+		ISelectionWithAlternative ifEq = innerLoop.addSelectionWithAlternative(EQUAL.on(mParam.arrayElement(iVar, jVar), nParam));
+		ifEq.addReturn(literal(true));
 		innerLoop.addIncrement(jVar);
 		outerLoop.addIncrement(iVar);
 		
-		body.addReturnStatement(factory.literal(false));
+		body.addReturn(literal(false));
 		
 		
-		
-		
-		IProcedure main = program.addProcedure("main", IDataType.BOOLEAN);
+		IProcedure main = program.addProcedure("main", BOOLEAN);
 		IBlock mainBody = main.getBody();
-		IVariable array = mainBody.addVariable("test", factory.arrayType(IDataType.INT, 2));
-		array.addAssignment(factory.arrayAllocation(IDataType.INT, 2, factory.literal(3)));
-		array.elementAssignment(factory.arrayAllocation(IDataType.INT, 1, factory.literal(0)), factory.literal(0));
-		array.elementAssignment(factory.arrayAllocation(IDataType.INT, 1, factory.literal(2)), factory.literal(1));
-		array.elementAssignment(factory.arrayAllocation(IDataType.INT, 1, factory.literal(4)), factory.literal(2));
+		IVariable array = mainBody.addVariable("test", INT.array2D());
+		array.addAssignment(INT.array2D().allocation(literal(3)));
+		array.addArrayAssignment(INT.array2D().allocation(literal(0)), literal(0));
+		array.addArrayAssignment(INT.array2D().allocation(literal(2)), literal(1));
+		array.addArrayAssignment(INT.array2D().allocation(literal(4)), literal(2));
 		
-		array.elementAssignment(factory.literal(5), factory.literal(2), factory.literal(2));
+		array.addArrayAssignment(literal(5), literal(2), literal(2));
 		
-		IVariable var = mainBody.addVariable("contains", IDataType.BOOLEAN);
-		var.addAssignment(findFunc.callExpression(array.expression(), factory.literal(5)));
-		mainBody.addReturnStatement(var.expression());
+		IVariable var = mainBody.addVariable("contains", BOOLEAN);
+		var.addAssignment(findFunc.call(array, literal(5)));
+		mainBody.addReturn(var);
 		
 		
 		System.out.println(program);

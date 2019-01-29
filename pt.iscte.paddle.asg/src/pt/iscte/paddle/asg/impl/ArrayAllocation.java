@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.asg.IArrayAllocation;
 import pt.iscte.paddle.asg.IArrayType;
-import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ExecutionError.Type;
@@ -17,12 +16,10 @@ import pt.iscte.paddle.machine.IValue;
 
 class ArrayAllocation extends Expression implements IArrayAllocation {
 	private final IArrayType type;
-	private final int nDims;
 	private final ImmutableList<IExpression> dimensions;
 
-	public ArrayAllocation(IDataType type, int nDims, List<IExpression> dimensions) {
-		this.type = new ArrayType(type, nDims);
-		this.nDims = nDims;
+	public ArrayAllocation(IArrayType arrayType, List<IExpression> dimensions) {
+		this.type = arrayType;
 		this.dimensions = ImmutableList.copyOf(dimensions);
 	}
 
@@ -32,8 +29,8 @@ class ArrayAllocation extends Expression implements IArrayAllocation {
 	}
 
 	@Override
-	public int getNumberOfDimensions() {
-		return nDims;
+	public IArrayType getArrayType() {
+		return type;
 	}
 
 	@Override
@@ -62,10 +59,10 @@ class ArrayAllocation extends Expression implements IArrayAllocation {
 
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
-		assert values.size() > 0 && values.size() <= getNumberOfDimensions();
+		assert values.size() > 0 && values.size() <= type.getDimensions();
 		IStackFrame frame = stack.getTopFrame();
 
-		int[] dims = new int[getNumberOfDimensions()];
+		int[] dims = new int[type.getDimensions()];
 		for(int i = 0; i < dims.length; i++) {
 			if(i < values.size()) {
 				dims[i] = ((Number) values.get(i).getValue()).intValue();
