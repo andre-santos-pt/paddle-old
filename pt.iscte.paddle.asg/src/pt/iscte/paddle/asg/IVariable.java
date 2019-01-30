@@ -3,7 +3,9 @@ package pt.iscte.paddle.asg;
 import java.util.Arrays;
 import java.util.List;
 
-public interface IVariable extends IIdentifiableElement, ISimpleExpression, IAbstractVariable {
+import com.google.common.collect.ImmutableList;
+
+public interface IVariable extends IIdentifiableElement, ISimpleExpression, IStatement {
 	IProgramElement getParent();
 	IDataType getType();
 
@@ -23,41 +25,29 @@ public interface IVariable extends IIdentifiableElement, ISimpleExpression, IAbs
 		return e == null ? null : (IProcedure) e;
 	}
 	
-//	default boolean isReference() {
-//		return getType() instanceof IReferenceType;
-//	}
+	@Override
+	default List<IExpression> getExpressionParts() {
+		return ImmutableList.of();
+	}
 	
-//	boolean isPointer();
-	
-//	IVariableAssignment addTargetAssignment(IExpression exp);
-//	IVariableExpression expression();
+	IVariableAddress address();
 
-	
-//	IVariableAssignment addAssignment(IExpression exp);
-//	
-//	IStructMemberAssignment addMemberAssignment(String memberId, IExpression expression);
-//	
-//	IArrayElementAssignment addArrayAssignment(IExpression expression, List<IExpression> indexes);
-//	default IArrayElementAssignment addArrayAssignment(IExpression expression, IExpression ... indexes) {
-//		return addArrayAssignment(expression, Arrays.asList(indexes));
-//	}
+	IVariableReferenceValue valueOf();
 
+
+	IArrayLengthExpression arrayLength(List<IExpression> indexes);
+	default IArrayLengthExpression arrayLength(IExpression ... indexes) {
+		return arrayLength(Arrays.asList(indexes));
+	}
+
+	IArrayElementExpression arrayElement(List<IExpression> indexes);
+	default IArrayElementExpression arrayElement(IExpression ... indexes) {
+		return arrayElement(Arrays.asList(indexes));
+	}
+
+	IStructMemberExpression member(String memberId);
 	
-//	IVariableAddress address();
-//	
-//	IVariableReferenceValue valueOf();
-//	
-//
-//	IArrayLengthExpression arrayLength(List<IExpression> indexes);
-//	default IArrayLengthExpression arrayLength(IExpression ... indexes) {
-//		return arrayLength(Arrays.asList(indexes));
-//	}
-//	
-//	IArrayElementExpression arrayElement(List<IExpression> indexes);
-//	default IArrayElementExpression arrayElement(IExpression ... indexes) {
-//		return arrayElement(Arrays.asList(indexes));
-//	}
-//	
-//
-//	IStructMemberExpression member(String memberId);
+	default String getDeclaration() {
+		return getType() + " " + getId();
+	}
 }

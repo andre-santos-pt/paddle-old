@@ -2,6 +2,8 @@ package pt.iscte.paddle.asg.impl;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBinaryOperator;
 import pt.iscte.paddle.asg.IDataType;
@@ -12,16 +14,14 @@ import pt.iscte.paddle.machine.IValue;
 
 public class BinaryExpression extends Expression implements IBinaryExpression {
 	private final IBinaryOperator operator;
-	private final IExpression left;
-	private final IExpression right;
+	private final ImmutableList<IExpression> parts;
 	
 	public BinaryExpression(IBinaryOperator operator, IExpression left, IExpression right) {
 		assert operator != null;
 		assert left != null;
 		assert right != null;
 		this.operator = operator;
-		this.left = left;
-		this.right = right;
+		parts = ImmutableList.of(left, right);
 	}
 
 	@Override
@@ -31,32 +31,32 @@ public class BinaryExpression extends Expression implements IBinaryExpression {
 
 	@Override
 	public IExpression getLeftOperand() {
-		return left;
+		return parts.get(0);
 	}
 
 	@Override
 	public IExpression getRightOperand() {
-		return right;
+		return parts.get(1);
 	}
 	
 	@Override
 	public IDataType getType() {
-		return operator.getResultType(left, right);
+		return operator.getResultType(getLeftOperand(), getRightOperand());
 	}
 
 	@Override
-	public boolean isDecomposable() {
-		return true;
-	}	
+	public List<IExpression> decompose() {
+		return parts;
+	}
 	
 	@Override
 	public String toString() {
-		String l = left.toString();
-		if(left instanceof IBinaryExpression)
+		String l = getLeftOperand().toString();
+		if(getLeftOperand() instanceof IBinaryExpression)
 			l = "(" + l + ")";
 		
-		String r = right.toString();
-		if(right instanceof IBinaryExpression)
+		String r = getRightOperand().toString();
+		if(getRightOperand() instanceof IBinaryExpression)
 			r = "(" + r + ")";
 		return l + " " + operator.getSymbol() + " " + r;
 	}

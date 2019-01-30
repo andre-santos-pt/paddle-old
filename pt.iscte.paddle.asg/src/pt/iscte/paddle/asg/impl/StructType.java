@@ -42,7 +42,7 @@ class StructType extends ProgramElement implements IStructType {
 	public String toString() {
 		String text = "struct " + id + " {";
 		for (IVariable member : variables) {
-			text += member + ";";
+			text += member.getDeclaration() + ";";
 		}
 		return text + "}";
 	}

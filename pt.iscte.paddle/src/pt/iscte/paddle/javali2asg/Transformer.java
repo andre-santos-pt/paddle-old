@@ -18,12 +18,12 @@ import pt.iscte.paddle.asg.IBinaryOperator;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IInstruction;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.ISelectionWithAlternative;
 import pt.iscte.paddle.asg.IVariable;
@@ -86,7 +86,7 @@ public class Transformer {
 	}
 
 	void map(Statement s, IBlock block) {
-		IInstruction instr = null;
+		IProgramElement instr = null;
 		if(s instanceof Return) {
 			instr = block.addReturn(map(((Return) s).getExp()));
 		}

@@ -8,6 +8,8 @@ public interface IVariableAssignment extends IStatement {
 	// OCL: variable must be owned by the same procedure
 	IVariable getVariable();
 	IExpression getExpression();
+	IBlock getParent();
+
 	boolean onTarget();
 	
 	@Override

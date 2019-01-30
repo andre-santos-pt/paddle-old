@@ -14,8 +14,7 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 
 	@Override
 	public IConditionalExpression conditional(IExpression trueCase, IExpression falseCase) {
-		// TODO Auto-generated method stub
-		return null;
+		return new Conditional(this, trueCase, falseCase);
 	}	
 
 	// TODO evaluate only one
@@ -60,10 +59,6 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 		class Iterator implements IExpressionIterator {
 			boolean condition = false;
 			boolean over = false;
-//			@Override
-//			public boolean isEmpty() {
-//				return false;
-//			}
 
 			@Override
 			public IExpression next(IValue lastEvaluation) {

@@ -5,10 +5,8 @@ import java.util.List;
 /**
  * Immutable
  */
-public interface IStatement extends IInstruction {
+public interface IStatement extends IBlockChild {
 	
-	IBlock getParent();
-
 	List<IExpression> getExpressionParts();
 	
 }

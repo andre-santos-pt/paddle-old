@@ -7,9 +7,4 @@ import com.google.common.collect.ImmutableList;
 public interface IUnaryExpression extends ICompositeExpression {
 	IUnaryOperator getOperator();
 	IExpression getOperand();
-	
-	@Override
-	default List<IExpression> decompose() {
-		return ImmutableList.of(getOperand());
-	}
 }

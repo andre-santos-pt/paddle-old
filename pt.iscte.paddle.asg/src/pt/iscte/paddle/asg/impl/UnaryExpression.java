@@ -3,6 +3,8 @@ package pt.iscte.paddle.asg.impl;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IUnaryExpression;
@@ -11,21 +13,20 @@ import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IValue;
 
 class UnaryExpression extends Expression implements IUnaryExpression {
-
 	private final IUnaryOperator operator;
-	private final IExpression expression;
+	private final ImmutableList<IExpression> operand;
 	
 	public UnaryExpression(IUnaryOperator operator, IExpression expression) {
 		assert operator != null;
 		assert expression != null;
 		this.operator = operator;
-		this.expression = expression;
+		this.operand = ImmutableList.of(expression);
 	}
 
 	
 	@Override
 	public IDataType getType() {
-		return operator.getResultType(expression);
+		return operator.getResultType(getOperand());
 	}
 
 	@Override
@@ -35,17 +36,17 @@ class UnaryExpression extends Expression implements IUnaryExpression {
 
 	@Override
 	public IExpression getOperand() {
-		return expression;
+		return operand.get(0);
 	}
 
 	@Override
-	public boolean isDecomposable() {
-		return true;
-	}	
+	public List<IExpression> decompose() {
+		return operand;
+	}
 	
 	@Override
 	public String toString() {
-		return operator.getSymbol() + "(" + expression + ")";
+		return operator.getSymbol() + "(" + getOperand() + ")";
 	}
 
 	@Override

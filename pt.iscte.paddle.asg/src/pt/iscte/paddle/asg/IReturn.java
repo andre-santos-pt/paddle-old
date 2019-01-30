@@ -7,6 +7,8 @@ import com.google.common.collect.ImmutableList;
 
 public interface IReturn extends IStatement {
 	IExpression getExpression(); // may be null (void)
+	IBlock getParent();
+
 	
 	default IDataType getReturnValueType() {
 		return getExpression() == null ? IDataType.VOID : getExpression().getType();

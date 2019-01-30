@@ -11,7 +11,7 @@ import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IProcedureCallExpression;
+import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IStructMemberAssignment;
@@ -52,7 +52,7 @@ public class Types extends Rule {
 	}
 	
 	@Override
-	public boolean visit(IProcedureCallExpression exp) {
+	public boolean visit(IProcedureCall exp) {
 		List<IVariable> parameters = exp.getProcedure().getParameters();
 		List<IExpression> arguments = exp.getArguments();
 		if(parameters.size() != arguments.size()) {

@@ -18,7 +18,6 @@ import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
-import pt.iscte.paddle.asg.IProcedureCallExpression;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IStructAllocation;
@@ -157,17 +156,6 @@ public class SemanticChecker {
 			return true;
 		}
 
-//		@Override
-//		public void visit(IConstantExpression exp) {
-//			rules.forEach(r -> r.visit(exp));
-//		}
-
-		@Override
-		public boolean visit(IProcedureCallExpression exp) {
-			rules.forEach(r -> r.visit(exp));
-			return true;
-		}
-
 		@Override
 		public void visit(IStructAllocation exp) {
 			rules.forEach(r -> r.visit(exp));
@@ -184,15 +172,6 @@ public class SemanticChecker {
 			return true;
 		}
 
-//		@Override
-//		public void visit(IVariableExpression exp) {
-//			rules.forEach(r -> r.visit(exp));
-//		}
-//		@Override
-//		public void visit(IVariable exp) {
-//			rules.forEach(r -> r.visit(exp));
-//		}
-		
 		@Override
 		public void visit(IVariableAddress exp) {
 			rules.forEach(r -> r.visit(exp));

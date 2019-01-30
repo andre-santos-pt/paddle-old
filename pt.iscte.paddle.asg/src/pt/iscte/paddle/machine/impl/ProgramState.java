@@ -9,7 +9,7 @@ import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IProcedureCallExpression;
+import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IStatement;
 import pt.iscte.paddle.asg.IStructType;
@@ -145,7 +145,7 @@ public class ProgramState implements IProgramState {
 		for(Object a : args)
 			procArgs.add(ILiteral.matchValue(a.toString()));
 
-		IProcedureCallExpression call = procedure.call(procArgs);
+		IProcedureCall call = procedure.call(procArgs);
 		instructionPointer = call;
 
 		List<IValue> argsValues = new ArrayList<>();

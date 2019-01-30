@@ -3,9 +3,9 @@ package pt.iscte.paddle.machine.impl;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IBlock;
+import pt.iscte.paddle.asg.IBlockChild;
 import pt.iscte.paddle.asg.IControlStructure;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IInstruction;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.ISelection;
@@ -15,13 +15,13 @@ import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IValue;
 
 public class BlockIterator {
-	private List<IInstruction> elements;
+	private List<IBlockChild> elements;
 	private int i;
 	private IExpression eval;
 	
 	public BlockIterator(IBlock root) {
 		assert !root.isEmpty();
-		this.elements = root.getInstructionSequence();
+		this.elements = root.getChildren();
 		this.i = 0;
 		
 		if(current() instanceof IControlStructure)
@@ -37,7 +37,7 @@ public class BlockIterator {
 		if(last != null)
 			eval = null;
 		
-		IProgramElement current = elements.get(i);
+		IBlockChild current = elements.get(i);
 		if(current instanceof IStatement) {
 			i++;
 		}

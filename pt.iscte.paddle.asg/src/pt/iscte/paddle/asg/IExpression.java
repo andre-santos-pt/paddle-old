@@ -68,8 +68,8 @@ public interface IExpression extends IProgramElement {
 				part.decompose().forEach(p -> visitPart(visitor, p));
 		}
 		
-		else if(part instanceof IProcedureCallExpression) {
-			IProcedureCallExpression call = (IProcedureCallExpression) part; 
+		else if(part instanceof IProcedureCall) {
+			IProcedureCall call = (IProcedureCall) part; 
 			if(visitor.visit(call))
 				part.decompose().forEach(p -> visitPart(visitor, p));
 		}
@@ -129,7 +129,7 @@ public interface IExpression extends IProgramElement {
 		default boolean visit(IUnaryExpression exp) 		{ return true; }
 		default boolean visit(IBinaryExpression exp) 		{ return true; }
 		
-		default boolean visit(IProcedureCallExpression exp) { return true; }
+		default boolean visit(IProcedureCall exp) 			{ return true; }
 
 //		default void 	visit(IConstantExpression exp) 		{ }
 		default void 	visit(IConstant exp) 				{ }

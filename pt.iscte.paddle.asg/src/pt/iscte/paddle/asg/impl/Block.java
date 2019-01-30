@@ -6,15 +6,14 @@ import java.util.List;
 
 import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IBlock;
+import pt.iscte.paddle.asg.IBlockChild;
 import pt.iscte.paddle.asg.IBreak;
 import pt.iscte.paddle.asg.IContinue;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IInstruction;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
-import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.ISelectionWithAlternative;
@@ -28,7 +27,7 @@ import pt.iscte.paddle.machine.IValue;
 
 class Block extends ProgramElement implements IBlock {
 	private final ProgramElement parent;
-	private final List<IInstruction> instructions;
+	private final List<IBlockChild> instructions;
 
 	Block(ProgramElement parent, boolean addToParent) {
 		this.parent = parent;
@@ -48,15 +47,20 @@ class Block extends ProgramElement implements IBlock {
 	}
 	
 	@Override
-	public List<IInstruction> getInstructionSequence() {
+	public List<IBlockChild> getChildren() {
 		return Collections.unmodifiableList(instructions);
 	}
 	
-	void addInstruction(IInstruction statement) {
+	void addInstruction(IBlockChild statement) {
 		assert statement != null;
 		instructions.add(statement);
 	}
 
+	@Override
+	public IBlock addBlock() {
+		return new Block(this, true);
+	}
+	
 	IBlock addLooseBlock() {
 		return new Block(this, false);
 	}
@@ -69,7 +73,7 @@ class Block extends ProgramElement implements IBlock {
 		for(int i = 0; i < d; i++)
 			tabs += "\t";
 		String text = tabs.substring(1) + "{";
-		for(IProgramElement s : instructions)
+		for(IBlockChild s : instructions)
 			text += tabs + s + (s instanceof IStatement ? ";" : "");
 		return text + "}";
 	}
@@ -96,8 +100,9 @@ class Block extends ProgramElement implements IBlock {
 	public IVariable addVariable(String name, IDataType type) {		
 		Variable var = new Variable(this, name, type);
 		Procedure procedure = getProcedure();
-		if(procedure != null)
-			procedure.addVariableDeclaration(var);
+//		if(procedure != null)
+		procedure.addVariableDeclaration(var);
+		instructions.add(var);
 		return var;
 	}
 	
@@ -128,10 +133,6 @@ class Block extends ProgramElement implements IBlock {
 //		return var;
 //	}
 
-	@Override
-	public IBlock addBlock() {
-		return new Block(this, true);
-	}
 
 	
 	@Override

@@ -2,8 +2,6 @@ package pt.iscte.paddle.machine.impl;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.asg.IConditionalExpression;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;

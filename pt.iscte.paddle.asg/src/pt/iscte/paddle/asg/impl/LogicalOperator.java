@@ -4,8 +4,7 @@ import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBinaryOperator;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IOperator;
-import pt.iscte.paddle.asg.IOperator.OperationType;
+import pt.iscte.paddle.asg.IExpressionIterator;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IValue;
 import pt.iscte.paddle.machine.impl.Value;
@@ -91,5 +90,21 @@ public enum LogicalOperator implements IBinaryOperator {
 	@Override
 	public IBinaryExpression on(IExpression leftOperand, IExpression rightOperand) {
 		return new BinaryExpression(this, leftOperand, rightOperand);
+	}
+	
+	private class Iterator implements IExpressionIterator {
+
+		@Override
+		public IExpression next(IValue lastEvaluation) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public boolean hasNext(IValue lastEvaluation) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		
 	}
 }

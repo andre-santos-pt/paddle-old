@@ -6,16 +6,12 @@ import java.util.List;
 /**
  * Mutable
  */
-public interface IBlock extends IInstruction {
-	IProgramElement getParent();
-
+public interface IBlock extends IBlockChild {
 	IProcedure getProcedure();
-	
-	List<IInstruction> getInstructionSequence();
+
+	List<IBlockChild> getChildren();
 
 	boolean isEmpty();
-	
-	
 
 	IVariable addVariable(String name, IDataType type);
 
@@ -24,12 +20,12 @@ public interface IBlock extends IInstruction {
 		addAssignment(var, initialization);
 		return var;
 	}
-	
+
 	IBlock addBlock();
 
 	IVariableAssignment addAssignment(IVariable var, IExpression exp);
 
-	
+
 	default IVariableAssignment addIncrement(IVariable var) {
 		assert var.getType() == IDataType.INT;
 		return addAssignment(var, IOperator.ADD.on(var, ILiteral.literal(1)));
@@ -49,7 +45,7 @@ public interface IBlock extends IInstruction {
 
 
 	ISelection addSelection(IExpression guard);
-	
+
 	ISelectionWithAlternative addSelectionWithAlternative(IExpression guard);
 
 	ILoop addLoop(IExpression guard);
@@ -59,7 +55,7 @@ public interface IBlock extends IInstruction {
 	IBreak addBreak();
 
 	IContinue addContinue();
-	
+
 	IProcedureCall addCall(IProcedure procedure, List<IExpression> args);
 	default IProcedureCall addCall(IProcedure procedure, IExpression ... args) {
 		return addCall(procedure, Arrays.asList(args));
@@ -67,11 +63,15 @@ public interface IBlock extends IInstruction {
 
 
 	default void accept(IVisitor visitor) {
-		for(IInstruction s : getInstructionSequence()) {
+		for(IProgramElement s : getChildren()) {
 			if(s instanceof IReturn) {
 				IReturn ret = (IReturn) s;
 				if(visitor.visit(ret) && !ret.getReturnValueType().isVoid())
 					ret.getExpression().accept(visitor);
+			}
+			else if(s instanceof IVariable) {
+				IVariable var = (IVariable) s;
+				visitor.visit(var);
 			}
 			else if(s instanceof IArrayElementAssignment) {
 				IArrayElementAssignment ass = (IArrayElementAssignment) s;
@@ -129,29 +129,29 @@ public interface IBlock extends IInstruction {
 	}
 
 	interface IVisitor extends IExpression.IVisitor {
-		
+
 		// IStatement
 		default boolean visit(IReturn returnStatement) 				{ return true; }
 		default boolean visit(IArrayElementAssignment assignment) 	{ return true; }
 		default boolean visit(IVariableAssignment assignment) 		{ return true; }
 		default boolean visit(IStructMemberAssignment assignment) 	{ return true; }
 		default boolean visit(IProcedureCall call) 					{ return true; }
-		
+
 		// IControlStructure
 		default boolean visit(ISelection selection) 				{ return true; } // also ISelectionWithAlternative
 		default void endVisit(ISelection selection) 				{ }
-	
+
 		default boolean visit(ILoop loop) 							{ return true; }
 		default void endVisit(ILoop loop) 							{ }
-		
+
 		// other
 		default boolean visit(IBlock block) 						{ return true; }
 		default void endVisit(IBlock block) 						{ }
-				
+
 		default void 	visit(IBreak breakStatement) 				{ }
 		default void 	visit(IContinue continueStatement) 			{ }
-	
-		 // TODO missing because it is not statement, only appears on expressions
+
+		// TODO missing because it is not statement, only appears on expressions
 		default void	visit(IVariable variable)					{ }
 	}
 

@@ -17,11 +17,6 @@ public interface IBinaryExpression extends ICompositeExpression {
 		return getOperator().getOperationType();
 	}
 	
-	@Override
-	default List<IExpression> decompose() {
-		return ImmutableList.of(getLeftOperand(), getRightOperand());
-	}
-	
 	static IBinaryExpression create(IBinaryOperator operator, IExpression leftOperand, IExpression rightOperand) {
 		return new BinaryExpression(operator, leftOperand, rightOperand);
 	}

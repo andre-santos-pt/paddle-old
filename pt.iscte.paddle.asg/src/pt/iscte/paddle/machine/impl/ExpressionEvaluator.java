@@ -7,7 +7,7 @@ import java.util.Stack;
 import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IProcedureCallExpression;
+import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IExpressionEvaluator;
@@ -64,7 +64,7 @@ public class ExpressionEvaluator implements IExpressionEvaluator {
 
 		IValue val = callStack.getTopFrame().evaluate(expStack.peek(), values);
 		if(val == null) {
-			IProcedureCallExpression callExp = (IProcedureCallExpression) expStack.pop();
+			IProcedureCall callExp = (IProcedureCall) expStack.pop();
 			expStack.push(new ProcedureReturnExpression(callExp.getProcedure()));
 		}
 		else

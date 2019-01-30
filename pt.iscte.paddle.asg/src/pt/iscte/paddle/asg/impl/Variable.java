@@ -4,30 +4,26 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IArrayElementExpression;
 import pt.iscte.paddle.asg.IArrayLengthExpression;
-import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IConditionalExpression;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProgramElement;
-import pt.iscte.paddle.asg.IStructMemberAssignment;
 import pt.iscte.paddle.asg.IStructMemberExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
-import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.asg.IVariableReferenceValue;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ExecutionError.Type;
 import pt.iscte.paddle.machine.IArray;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IEvaluable;
+import pt.iscte.paddle.machine.IExecutable;
 import pt.iscte.paddle.machine.IReference;
 import pt.iscte.paddle.machine.IStackFrame;
 import pt.iscte.paddle.machine.IValue;
 
-class Variable extends Expression implements IVariable, IEvaluable {
+class Variable extends Expression implements IVariable, IEvaluable, IExecutable {
 
 	private final IProgramElement parent;
 	private final String id;
@@ -59,22 +55,6 @@ class Variable extends Expression implements IVariable, IEvaluable {
 		return id;
 	}
 
-//	@Override
-//	public IVariableAssignment addAssignment(IExpression expression) {
-//		assert parent instanceof IBlock;
-//		return new VariableAssignment((IBlock) parent, this, expression);
-//	}
-
-//	@Override
-//	public IVariableAssignment addTargetAssignment(IExpression expression) {
-//		return VariableAssignment.onTarget((IBlock) parent, this, expression);
-//	}
-
-	//	@Override
-	//	public IVariableExpression expression() {
-	//		return new VariableExpression(this);
-	//	}
-
 	@Override
 	public IVariableAddress address() {
 		return new VariableAddress(this);
@@ -84,13 +64,6 @@ class Variable extends Expression implements IVariable, IEvaluable {
 	public IVariableReferenceValue valueOf() {
 		return new VariableReferenceValue(this);
 	}
-
-//	@Override
-//	public IStructMemberAssignment addMemberAssignment(String memberId, IExpression expression) {
-//		assert parent instanceof IBlock;
-//		return new StructMemberAssignment((IBlock) parent, this, memberId, expression);
-//	}
-
 
 
 	@Override
@@ -108,12 +81,6 @@ class Variable extends Expression implements IVariable, IEvaluable {
 		return new ArrayElementExpression(this, indexes);
 	}
 
-//	@Override
-//	public IArrayElementAssignment addArrayAssignment(IExpression expression, List<IExpression> indexes) {
-//		IProgramElement parent = getParent();
-//		assert parent instanceof IBlock;
-//		return new ArrayElementAssignment((IBlock) parent, this, indexes, expression);
-//	}
 
 
 
@@ -182,5 +149,9 @@ class Variable extends Expression implements IVariable, IEvaluable {
 		return val;
 	}
 
-
+	@Override
+	public boolean execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
+		
+		return true;
+	}
 }

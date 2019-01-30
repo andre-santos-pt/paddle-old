@@ -305,8 +305,6 @@ class StackFrame implements IStackFrame {
 	@Override
 	public String toString() {
 		String text = procedure.getId() + "(...)"; // TODO pretty print
-		//		for(Entry<String, VariableHistory> e : variables.entrySet())
-		//			text += " " + e.getKey() + "=" + e.getValue().getCurrent();
 		for(Entry<String, IReference> e : variables.entrySet())
 			text += " " + e.getKey() + "=" + e.getValue();
 		return text;

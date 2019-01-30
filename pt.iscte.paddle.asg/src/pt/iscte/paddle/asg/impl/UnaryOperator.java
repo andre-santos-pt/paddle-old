@@ -4,10 +4,8 @@ import java.math.BigDecimal;
 
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IUnaryOperator;
-import pt.iscte.paddle.asg.IOperator.OperationType;
 import pt.iscte.paddle.machine.IValue;
 import pt.iscte.paddle.machine.impl.Value;
 

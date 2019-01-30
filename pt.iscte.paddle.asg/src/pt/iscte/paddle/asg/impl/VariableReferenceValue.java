@@ -10,7 +10,6 @@ import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IStructMemberExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
-import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.asg.IVariableReferenceValue;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ICallStack;

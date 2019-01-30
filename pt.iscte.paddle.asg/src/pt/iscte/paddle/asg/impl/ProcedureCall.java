@@ -4,24 +4,32 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.asg.IBlock;
+import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IProcedureDeclaration;
+import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ExecutionError.Type;
 import pt.iscte.paddle.machine.ICallStack;
+import pt.iscte.paddle.machine.IEvaluable;
+import pt.iscte.paddle.machine.IExecutable;
 import pt.iscte.paddle.machine.IValue;
 
-class ProcedureCall extends Statement implements IProcedureCall {
+class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IExecutable {
+	private final IBlock parent;
 	private final IProcedureDeclaration procedure;
 	private final ImmutableList<IExpression> arguments;
 	
 	public ProcedureCall(Block parent, IProcedure procedure, List<IExpression> arguments) {
-		super(parent, true);
 		assert procedure != null;
+		this.parent = parent;
 		this.procedure = procedure;
 		this.arguments = ImmutableList.copyOf(arguments);
+		if(parent != null)
+			parent.addInstruction(this);
 	}
 
 	@Override
@@ -60,6 +68,13 @@ class ProcedureCall extends Statement implements IProcedureCall {
 		return true;
 	}
 	
+	@Override
+	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
+		// excepcional case when null: for pending value from created stack
+		// if builtin procedure returns value
+		return ProcedureCall.executeInternal(stack, getProcedure(), values); 
+	}
+	
 	static IValue executeInternal(ICallStack stack, IProcedureDeclaration procedure, List<IValue> args) throws ExecutionError {
 		IProcedure p = stack.getProgramState().getProgram().resolveProcedure(procedure);
 		if(p instanceof BuiltinProcedure) {
@@ -73,5 +88,26 @@ class ProcedureCall extends Statement implements IProcedureCall {
 			stack.newFrame(p, args);
 			return null;
 		}
+	}
+
+	@Override
+	public IDataType getType() {
+		return procedure.getReturnType();
+	}
+
+	@Override
+	public int getNumberOfParts() {
+		return arguments.size();
+	}
+
+
+	@Override
+	public IProgramElement getParent() {
+		return parent;
+	}
+
+	@Override
+	public List<IExpression> decompose() {
+		return arguments;
 	}
 }

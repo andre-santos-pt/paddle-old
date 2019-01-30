@@ -18,7 +18,6 @@ import pt.iscte.paddle.asg.IStructType;
 import pt.iscte.paddle.asg.semantics.AsgSemanticChecks;
 import pt.iscte.paddle.asg.semantics.ISemanticProblem;
 import pt.iscte.paddle.asg.semantics.SemanticChecker;
-import pt.iscte.paddle.machine.impl.ExecutionData;
 
 public class Module extends ProgramElement implements IModule {
 	private final String id;

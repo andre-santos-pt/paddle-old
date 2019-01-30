@@ -22,11 +22,6 @@ public interface IProcedure extends IProcedureDeclaration {
 			public boolean visit(IProcedureCall call) {
 				return IVisitor.super.visit(call);
 			}
-			@Override
-			public boolean visit(IProcedureCallExpression exp) {
-				// TODO Auto-generated method stub
-				return IVisitor.super.visit(exp);
-			}
 		};
 		getBody().accept(v);
 		return false;

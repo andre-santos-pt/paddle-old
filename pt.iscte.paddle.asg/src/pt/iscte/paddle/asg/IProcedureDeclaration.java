@@ -13,9 +13,9 @@ public interface IProcedureDeclaration extends IIdentifiableElement {
 	IVariable addParameter(String id, IDataType type);
 //	IVariable addReferenceParameter(String id, IDataType type);
 	
-	IProcedureCallExpression call(List<IExpression> args);
+	IProcedureCall call(List<IExpression> args);
 
-	default IProcedureCallExpression call(IExpression ... args) {
+	default IProcedureCall call(IExpression ... args) {
 		return call(Arrays.asList(args));
 	}
 	

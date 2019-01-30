@@ -9,7 +9,7 @@ import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IProcedureCallExpression;
+import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IVariable;
 
 class Procedure extends ProgramElement implements IProcedure {
@@ -126,7 +126,7 @@ class Procedure extends ProgramElement implements IProcedure {
 	}
 
 	@Override
-	public IProcedureCallExpression call(List<IExpression> args) {
-		return new ProcedureCallExpression(this, args);
+	public IProcedureCall call(List<IExpression> args) {
+		return new ProcedureCall(null, this, args);
 	}
 }
