@@ -19,6 +19,12 @@ public interface IBlock extends IInstruction {
 
 	IVariable addVariable(String name, IDataType type);
 
+	default IVariable addVariable(String name, IDataType type, IExpression initialization) {
+		IVariable var = addVariable(name, type);
+		addAssignment(var, initialization);
+		return var;
+	}
+	
 	IBlock addBlock();
 
 	IVariableAssignment addAssignment(IVariable var, IExpression exp);

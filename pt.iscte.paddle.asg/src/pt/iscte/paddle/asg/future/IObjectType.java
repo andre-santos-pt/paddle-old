@@ -1,6 +1,10 @@
-package pt.iscte.paddle.asg;
+package pt.iscte.paddle.asg.future;
 
 import java.util.List;
+
+import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IProcedureDeclaration;
+import pt.iscte.paddle.asg.IStructType;
 
 interface IObjectType extends IStructType {
 

@@ -56,7 +56,6 @@ public class BuiltinProcedure extends Procedure {
 			return ((Number) o).doubleValue();
 		if(t == IDataType.BOOLEAN)
 			return ((Boolean) o).booleanValue();
-		
 		return null;
 	}
 	

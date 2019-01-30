@@ -15,6 +15,10 @@ import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureDeclaration;
 import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.semantics.AsgSemanticChecks;
+import pt.iscte.paddle.asg.semantics.ISemanticProblem;
+import pt.iscte.paddle.asg.semantics.SemanticChecker;
+import pt.iscte.paddle.machine.impl.ExecutionData;
 
 public class Module extends ProgramElement implements IModule {
 	private final String id;
@@ -123,5 +127,11 @@ public class Module extends ProgramElement implements IModule {
 		text = text.replaceAll("\\{", "{\n");
 		text = text.replaceAll("\\}", "}\n");
 		return text;
+	}
+	
+	@Override
+	public List<ISemanticProblem> checkSemantics() {
+		SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
+		return checker.check(this);
 	}
 }

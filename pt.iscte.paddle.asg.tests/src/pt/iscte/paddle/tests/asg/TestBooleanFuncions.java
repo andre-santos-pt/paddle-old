@@ -1,14 +1,24 @@
 package pt.iscte.paddle.tests.asg;
 import static org.junit.Assert.assertTrue;
+import static pt.iscte.paddle.asg.IDataType.BOOLEAN;
+import static pt.iscte.paddle.asg.IDataType.INT;
+import static pt.iscte.paddle.asg.ILiteral.literal;
+import static pt.iscte.paddle.asg.IOperator.AND;
+import static pt.iscte.paddle.asg.IOperator.DIFFERENT;
+import static pt.iscte.paddle.asg.IOperator.EQUAL;
+import static pt.iscte.paddle.asg.IOperator.GREATER;
+import static pt.iscte.paddle.asg.IOperator.GREATER_EQ;
+import static pt.iscte.paddle.asg.IOperator.MOD;
+import static pt.iscte.paddle.asg.IOperator.NOT;
+import static pt.iscte.paddle.asg.IOperator.OR;
+import static pt.iscte.paddle.asg.IOperator.SMALLER;
+import static pt.iscte.paddle.asg.IOperator.SMALLER_EQ;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.IModule;
-import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IVariable;
@@ -16,10 +26,6 @@ import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
 import pt.iscte.paddle.machine.IValue;
-
-import static pt.iscte.paddle.asg.IDataType.*;
-import static pt.iscte.paddle.asg.IOperator.*;
-import static pt.iscte.paddle.asg.ILiteral.*;
 
 public class TestBooleanFuncions {
 	private static IModule program;

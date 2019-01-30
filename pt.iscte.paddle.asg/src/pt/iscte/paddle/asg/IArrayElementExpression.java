@@ -2,7 +2,7 @@ package pt.iscte.paddle.asg;
 
 import java.util.List;
 
-public interface IArrayElementExpression extends IExpression {
+public interface IArrayElementExpression extends ICompositeExpression {
 
 	IVariable getVariable();
 	

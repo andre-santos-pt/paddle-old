@@ -14,4 +14,6 @@ public interface IVariableAssignment extends IStatement {
 	default List<IExpression> getExpressionParts() {
 		return ImmutableList.of(getExpression());
 	}
+	
+	
 }

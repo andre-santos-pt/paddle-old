@@ -1,19 +1,19 @@
 package pt.iscte.paddle.tests.asg;
 import static org.junit.Assert.assertEquals;
+import static pt.iscte.paddle.asg.IDataType.INT;
+import static pt.iscte.paddle.asg.ILiteral.literal;
+import static pt.iscte.paddle.asg.IOperator.ADD;
+import static pt.iscte.paddle.asg.IOperator.DIFFERENT;
 
 import java.math.BigDecimal;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IFactory;
+import pt.iscte.paddle.asg.IArrayAllocation;
+import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
-import static pt.iscte.paddle.asg.IOperator.*;
-import static pt.iscte.paddle.asg.ILiteral.*;
-import static pt.iscte.paddle.asg.IDataType.*;
-
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
@@ -33,32 +33,31 @@ public class TestSum {
 		sumArrayProc = program.addProcedure("sum", INT);
 		IVariable v = sumArrayProc.addParameter("v", INT.array().reference());
 		
-		IVariable s = sumArrayProc.getBody().addVariable("s", INT);
-		s.addAssignment(literal(0));
-		IVariable i = sumArrayProc.getBody().addVariable("i", INT);
-		i.addAssignment(literal(0));
+		IVariable s = sumArrayProc.getBody().addVariable("s", INT, literal(0));
+		IVariable i = sumArrayProc.getBody().addVariable("i", INT, literal(0));
 		
 		ILoop loop = sumArrayProc.getBody().addLoop(DIFFERENT.on(i, v.valueOf().arrayLength()));
 		loop.addAssignment(s, ADD.on(s, v.valueOf().arrayElement(i)));
 		loop.addIncrement(i);
 
-		v.valueOf().addArrayAssignment(literal(-1), literal(0));
+//		v.valueOf().addArrayAssignment(literal(-1), literal(0));
 		
 		sumArrayProc.getBody().addReturn(s);
 		
 		main = program.addProcedure("main", INT);
 		
-		IVariable test = main.getBody().addVariable("test", INT.array());
-		test.addAssignment(INT.array().allocation(literal(3)));
-		test.addArrayAssignment(literal(5), literal(0));
-		test.addArrayAssignment(literal(7), literal(1));
-		test.addArrayAssignment(literal(9), literal(2));
+		IBlock body = main.getBody();
+		IArrayAllocation allocation = INT.array().allocation(literal(3));
+		IVariable test = body.addVariable("test", INT.array(), allocation);
+		body.addArrayElementAssignment(test, literal(5), literal(0));
+		body.addArrayElementAssignment(test, literal(7), literal(1));
+		body.addArrayElementAssignment(test, literal(9), literal(2));
+		
 		
 //		IArrayVariableDeclaration arrayT = main.getBody().addArrayDeclaration("t", factory.arrayType(IDataType.INT, 1));
 //		arrayT.addAssignment(array.expression());
 		
-		IVariable sMain = main.getBody().addVariable("s", INT);
-		sMain.addAssignment(sumArrayProc.call(test.address())); // TODO ref type check
+		main.getBody().addVariable("s", INT, sumArrayProc.call(test.address()));
 	}
 
 	@Test

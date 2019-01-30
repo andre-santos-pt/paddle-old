@@ -15,7 +15,6 @@ import pt.iscte.paddle.asg.IStatement;
 import pt.iscte.paddle.asg.IStructType;
 import pt.iscte.paddle.asg.IValueType;
 import pt.iscte.paddle.asg.IVariableAssignment;
-import pt.iscte.paddle.asg.impl.Factory;
 import pt.iscte.paddle.asg.semantics.AsgSemanticChecks;
 import pt.iscte.paddle.asg.semantics.ISemanticProblem;
 import pt.iscte.paddle.asg.semantics.SemanticChecker;
@@ -142,7 +141,6 @@ public class ProgramState implements IProgramState {
 
 		data = new ExecutionData();
 
-		Factory factory = new Factory();
 		List<IExpression> procArgs = new ArrayList<>(args.length);
 		for(Object a : args)
 			procArgs.add(ILiteral.matchValue(a.toString()));
@@ -170,6 +168,8 @@ public class ProgramState implements IProgramState {
 	public boolean isOver() {
 		return stack.isEmpty();
 	}
+	
+
 
 	public IExecutionData execute(IProcedure procedure, Object ... args) {
 		SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());

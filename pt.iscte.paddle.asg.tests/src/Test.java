@@ -1,7 +1,9 @@
+import static pt.iscte.paddle.asg.ILiteral.literal;
+import static pt.iscte.paddle.asg.IOperator.GREATER;
+import static pt.iscte.paddle.asg.IOperator.TRUNCATE;
+
 import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.IModule;
-import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IVariable;
@@ -9,13 +11,9 @@ import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
 
-import static pt.iscte.paddle.asg.IOperator.*;
-import static pt.iscte.paddle.asg.ILiteral.*;
-
 public class Test {
 
 	public static void main(String[] args) throws ExecutionError {
-
 		IModule program = IModule.create("test");
 
 		IProcedure proc = program.addProcedure("inc", IDataType.DOUBLE);
@@ -43,7 +41,7 @@ public class Test {
 		ISelection iff = main.getBody().addSelection(literal(true));
 		ISelection iff2 = iff.addSelection(GREATER.on(literal(4), literal(true)));
 		iff2.addReturn(literal(-1));
-		a.addAssignment(proc.call());
+		main.getBody().addAssignment(a, proc.call());
 		main.getBody().addReturn(a);
 
 		System.out.println(program);

@@ -1,6 +1,7 @@
 package pt.iscte.paddle.asg;
 
-public interface IVariableReferenceValue extends IVariable {
+public interface IVariableReferenceValue extends ISimpleExpression, IVariable {
 
-//	IVariableExpression getVariableExpression();
+	IVariable getVariable();
+	
 }

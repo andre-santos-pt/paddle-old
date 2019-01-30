@@ -41,6 +41,7 @@ public interface IDataType extends IIdentifiableElement {
 
 	ImmutableCollection<IValueType> VALUE_TYPES = ImmutableList.of(INT, DOUBLE, BOOLEAN);
 
+	// TODO to impl
 	class Singletons {
 		private static final IArrayType INT_ARRAY = new ArrayType(INT);
 		private static final IArrayType INT_ARRAY2D = new ArrayType(new ArrayType(INT));

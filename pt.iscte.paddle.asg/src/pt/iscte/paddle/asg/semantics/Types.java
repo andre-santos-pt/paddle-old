@@ -109,6 +109,9 @@ public class Types extends Rule {
 			addProblem("the type of variable " + variable + " is not an array type", assignment);
 			return true;
 		}
+		
+		//TODO int type on index
+		
 		IArrayType arrayType = (IArrayType) type;
 		IDataType componentType = arrayType.getComponentTypeAt(assignment.getIndexes().size());
 		IDataType expType = assignment.getExpression().getType();

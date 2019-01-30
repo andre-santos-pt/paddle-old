@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
+import pt.iscte.paddle.asg.IArrayAllocation;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILoop;
@@ -35,7 +36,7 @@ public class Test2DArrays {
 		
 		IBlock body = idFunc.getBody();
 		IVariable idVar = body.addVariable("id", INT.array2D());
-		idVar.addAssignment(INT.array2D().allocation(nParam, nParam));
+		body.addAssignment(idVar, INT.array2D().allocation(nParam, nParam));
 		IVariable iVar = body.addVariable("i", INT);
 		IExpression e = DIFFERENT.on(iVar, nParam);
 		ILoop loop = body.addLoop(e);
@@ -72,15 +73,13 @@ public class Test2DArrays {
 		
 		IBlock body = natFunc.getBody();
 		
-		IVariable mVar = body.addVariable("m", INT.array2D());
-		mVar.addAssignment(INT.array2D().allocation(linesParam, colsParam));
+		IArrayAllocation allocation = INT.array2D().allocation(linesParam, colsParam);
+		IVariable mVar = body.addVariable("m", INT.array2D(), allocation);
 		
-		IVariable iVar = body.addVariable("i", INT);
-		iVar.addAssignment(literal(0));
+		IVariable iVar = body.addVariable("i", INT, literal(0));
 		
 		IVariable jVar = body.addVariable("j", INT);
-		IVariable nVar = body.addVariable("n", INT);
-		nVar.addAssignment(literal(1));
+		IVariable nVar = body.addVariable("n", INT, literal(1));
 
 		IExpression outerGuard = DIFFERENT.on(iVar, linesParam);
 		ILoop outLoop = body.addLoop(outerGuard);
@@ -121,8 +120,7 @@ public class Test2DArrays {
 		IVariable mParam = (IVariable) findFunc.addParameter("m", INT.array2D());
 		IVariable nParam = findFunc.addParameter("n", INT);
 		IBlock body = findFunc.getBody();
-		IVariable iVar = body.addVariable("i", INT);
-		iVar.addAssignment(literal(0));
+		IVariable iVar = body.addVariable("i", INT, literal(0));
 		
 		IVariable jVar = body.addVariable("j", INT);
 		IExpression outerGuard = DIFFERENT.on(iVar, mParam.arrayLength());
@@ -141,15 +139,16 @@ public class Test2DArrays {
 		IProcedure main = program.addProcedure("main", BOOLEAN);
 		IBlock mainBody = main.getBody();
 		IVariable array = mainBody.addVariable("test", INT.array2D());
-		array.addAssignment(INT.array2D().allocation(literal(3)));
-		array.addArrayAssignment(INT.array2D().allocation(literal(0)), literal(0));
-		array.addArrayAssignment(INT.array2D().allocation(literal(2)), literal(1));
-		array.addArrayAssignment(INT.array2D().allocation(literal(4)), literal(2));
 		
-		array.addArrayAssignment(literal(5), literal(2), literal(2));
+		mainBody.addAssignment(array, INT.array2D().allocation(literal(3)));
+		mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(0), literal(0)));
+		mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(2), literal(1)));
+		mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(4), literal(2)));
+		
+		mainBody.addArrayElementAssignment(array, literal(5), literal(2), literal(2));
 		
 		IVariable var = mainBody.addVariable("contains", BOOLEAN);
-		var.addAssignment(findFunc.call(array, literal(5)));
+		mainBody.addAssignment(var, findFunc.call(array, literal(5)));
 		mainBody.addReturn(var);
 		
 		

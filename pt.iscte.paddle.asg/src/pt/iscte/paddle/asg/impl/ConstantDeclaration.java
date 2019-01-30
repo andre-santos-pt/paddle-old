@@ -56,11 +56,6 @@ class ConstantDeclaration extends Expression implements IConstant {
 	}
 
 	@Override
-	public boolean isDecomposable() {
-		return false;
-	}
-
-	@Override
 	public List<IExpression> decompose() {
 		return ImmutableList.of();
 	}

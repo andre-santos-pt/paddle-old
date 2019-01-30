@@ -18,6 +18,11 @@ public abstract class Rule implements IModule.IVisitor {
 	
 	protected void setup(IModule module) {
 		this.module = module;
+		moduleChecks(module);
+	}
+	
+	protected void moduleChecks(IModule module) {
+		
 	}
 	
 	public IModule getModule() {

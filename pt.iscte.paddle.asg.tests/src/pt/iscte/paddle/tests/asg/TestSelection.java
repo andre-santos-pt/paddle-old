@@ -1,15 +1,14 @@
 package pt.iscte.paddle.tests.asg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static pt.iscte.paddle.asg.IDataType.INT;
+import static pt.iscte.paddle.asg.IOperator.GREATER;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IBinaryOperator;
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
@@ -18,10 +17,6 @@ import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
-import static pt.iscte.paddle.asg.IOperator.*;
-import static pt.iscte.paddle.asg.ILiteral.*;
-
-import static pt.iscte.paddle.asg.IDataType.*;
 
 // TODO if if
 public class TestSelection {

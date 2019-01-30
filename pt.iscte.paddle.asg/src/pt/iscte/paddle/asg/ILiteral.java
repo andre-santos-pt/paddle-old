@@ -1,23 +1,9 @@
 package pt.iscte.paddle.asg;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.asg.impl.Literal;
 
-public interface ILiteral extends IExpression {
+public interface ILiteral extends ISimpleExpression {
 	String getStringValue();
-	
-	@Override
-	default List<IExpression> decompose() {
-		return ImmutableList.of();
-	}
-	
-	@Override
-	default boolean isDecomposable() {
-		return false;
-	}
 	
 	static ILiteral literal(int value) {
 		return new Literal(IDataType.INT, Integer.toString(value));

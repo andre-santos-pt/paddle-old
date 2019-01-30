@@ -4,28 +4,20 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.asg.IConditionalExpression;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedureDeclaration;
+import pt.iscte.paddle.asg.ISimpleExpression;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IEvaluable;
 import pt.iscte.paddle.machine.IValue;
 
-class ProcedureReturnExpression implements IExpression, IEvaluable {
+class ProcedureReturnExpression implements ISimpleExpression, IEvaluable {
 	final IProcedureDeclaration procedure;
 	ProcedureReturnExpression(IProcedureDeclaration procedure) {
 		this.procedure = procedure;
-	}
-
-	@Override
-	public List<IExpression> decompose() {
-		return ImmutableList.of();
-	}
-
-	@Override
-	public boolean isDecomposable() {
-		return false;
 	}
 
 	@Override
@@ -44,5 +36,11 @@ class ProcedureReturnExpression implements IExpression, IEvaluable {
 	@Override
 	public void setProperty(String key, Object value) {
 		
+	}
+
+	@Override
+	public IConditionalExpression conditional(IExpression trueCase, IExpression falseCase) {
+		assert false;
+		return null;
 	}
 }

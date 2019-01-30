@@ -16,7 +16,7 @@ import org.junit.runners.Suite;
 	TestConstants.class,
 	TestStruct.class,
 	TestRecursion.class,
-	TestBuiltinProcedures.class
+	TestBuiltinProcedures.class,
 })
 
 public class JunitTestSuite {   

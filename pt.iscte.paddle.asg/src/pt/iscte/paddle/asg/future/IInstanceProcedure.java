@@ -1,4 +1,6 @@
-package pt.iscte.paddle.asg;
+package pt.iscte.paddle.asg.future;
+
+import pt.iscte.paddle.asg.IProcedure;
 
 public interface IInstanceProcedure extends IProcedure {
 	IObjectType getInstanceType();

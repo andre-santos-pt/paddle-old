@@ -32,16 +32,16 @@ public class TestStruct {
 		IProcedure moveProc = program.addProcedure("move", IDataType.VOID);
 		IVariable pParam = moveProc.addParameter("p", pointType);
 		
-		pParam.addMemberAssignment("x", literal(7));
+		moveProc.getBody().addStructMemberAssignment(pParam, "x", literal(7));
 		
 		IProcedure main = program.addProcedure("main", IDataType.INT);
 		IBlock body = main.getBody();
 		IVariable p = body.addVariable("pp", pointType);
-		p.addAssignment(pointType.allocationExpression());
+		body.addAssignment(p, pointType.allocationExpression());
 		
 		body.addCall(moveProc, p);
 		
-		body.addReturn(p.memberExpression("x"));
+		body.addReturn(p.member("x"));
 		
 		
 		System.out.println(program);

@@ -2,6 +2,8 @@ package pt.iscte.paddle.asg;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+
 import pt.iscte.paddle.asg.IOperator.OperationType;
 
 /**
@@ -16,18 +18,24 @@ public interface IExpression extends IProgramElement {
 	//	ISourceElement getParent();
 
 
-	boolean isDecomposable();
-
-	default int getNumberOfParts() {
-		return decompose().size();
+	default boolean isDecomposable() {
+		return this instanceof ICompositeExpression;
 	}
+	
+	int getNumberOfParts();
 
-	List<IExpression> decompose();
+	default List<IExpression> decompose() {
+		return ImmutableList.of();
+	}
 
 	default OperationType getOperationType() {
 		return OperationType.OTHER;
 	}
 
+	
+	IConditionalExpression conditional(IExpression trueCase, IExpression falseCase);
+	
+	
 	default void accept(IVisitor visitor) {
 		visitPart(visitor, this);
 	}
@@ -135,6 +143,8 @@ public interface IExpression extends IProgramElement {
 		default void	visit(IVariableAddress exp) 		{ }
 		default void	visit(IVariableReferenceValue exp) 	{ }
 	}
-	
+
+
+
 	
 }

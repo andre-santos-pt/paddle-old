@@ -1,20 +1,18 @@
 package pt.iscte.paddle.tests.asg;
 
+import static pt.iscte.paddle.asg.IDataType.INT;
+import static pt.iscte.paddle.asg.IDataType.VOID;
+import static pt.iscte.paddle.asg.ILiteral.literal;
+
 import org.junit.Test;
 
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IFactory;
-import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IStructType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
-import static pt.iscte.paddle.asg.ILiteral.*;
-import static pt.iscte.paddle.asg.IDataType.*;
 
 public class TestReferences {
 
@@ -27,10 +25,10 @@ public class TestReferences {
 		IVariable a = body.addVariable("a", INT.reference());
 		IVariable b = body.addVariable("b", INT.reference());
 		
-		a.addTargetAssignment(literal(5));
-		b.addAssignment(a);
+		body.addAssignment(a.valueOf(), literal(5));
+		body.addAssignment(b, a);
 		
-		b.addTargetAssignment(literal(7));
+		body.addAssignment(b, literal(7));
 
 		System.out.println(program);
 		IProgramState state = IMachine.create(program);

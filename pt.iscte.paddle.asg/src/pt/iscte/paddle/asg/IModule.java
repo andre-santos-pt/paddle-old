@@ -1,10 +1,12 @@
 package pt.iscte.paddle.asg;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.asg.impl.Module;
+import pt.iscte.paddle.asg.semantics.ISemanticProblem;
 
 /**
  * Mutable
@@ -58,6 +60,8 @@ public interface IModule extends IIdentifiableElement {
 	
 	IProcedure resolveProcedure(IProcedureDeclaration procedureDeclaration);
 	
+	List<ISemanticProblem> checkSemantics();
+	
 //	default IProcedure resolveProcedure(IProcedureDeclaration procedureDeclaration) {
 //		for(IProcedure p : getProcedures())
 //			if(p.hasSameSignature(procedureDeclaration))
@@ -67,9 +71,9 @@ public interface IModule extends IIdentifiableElement {
 //	}
 
 	default void accept(IVisitor visitor) {
-		getConstants().forEach(c -> {
-			visitor.visit(c);
-		});
+//		getConstants().forEach(c -> {
+//			visitor.visit(c);
+//		});
 		
 		getStructs().forEach(s -> {
 			if(visitor.visit(s))
@@ -87,7 +91,7 @@ public interface IModule extends IIdentifiableElement {
 
 	interface IVisitor extends IBlock.IVisitor {
 //		default void setup(IModule module)						{ }
-		default void 	visit(IConstant constant) 				{ }
+//		default void 	visit(IConstant constant) 				{ }
 		default boolean visit(IStructType struct) 				{ return true; }
 		default boolean visit(IProcedure procedure) 			{ return true; }
 	}

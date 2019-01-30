@@ -3,7 +3,7 @@ package pt.iscte.paddle.asg;
 import java.util.Arrays;
 import java.util.List;
 
-public interface IVariable extends IIdentifiableElement, IExpression {
+public interface IVariable extends IIdentifiableElement, ISimpleExpression, IAbstractVariable {
 	IProgramElement getParent();
 	IDataType getType();
 
@@ -29,35 +29,35 @@ public interface IVariable extends IIdentifiableElement, IExpression {
 	
 //	boolean isPointer();
 	
-
-	IVariableAssignment addAssignment(IExpression exp);
-	
-	IVariableAssignment addTargetAssignment(IExpression exp);
-
-	IStructMemberAssignment addMemberAssignment(String memberId, IExpression expression);
-	
-	IArrayElementAssignment addArrayAssignment(IExpression expression, List<IExpression> indexes);
-	default IArrayElementAssignment addArrayAssignment(IExpression expression, IExpression ... indexes) {
-		return addArrayAssignment(expression, Arrays.asList(indexes));
-	}
-
+//	IVariableAssignment addTargetAssignment(IExpression exp);
 //	IVariableExpression expression();
-	
-	IVariableAddress address();
-	
-	IVariableReferenceValue valueOf();
-	
 
-	IArrayLengthExpression arrayLength(List<IExpression> indexes);
-	default IArrayLengthExpression arrayLength(IExpression ... indexes) {
-		return arrayLength(Arrays.asList(indexes));
-	}
 	
-	IArrayElementExpression arrayElement(List<IExpression> indexes);
-	default IArrayElementExpression arrayElement(IExpression ... indexes) {
-		return arrayElement(Arrays.asList(indexes));
-	}
-	
+//	IVariableAssignment addAssignment(IExpression exp);
+//	
+//	IStructMemberAssignment addMemberAssignment(String memberId, IExpression expression);
+//	
+//	IArrayElementAssignment addArrayAssignment(IExpression expression, List<IExpression> indexes);
+//	default IArrayElementAssignment addArrayAssignment(IExpression expression, IExpression ... indexes) {
+//		return addArrayAssignment(expression, Arrays.asList(indexes));
+//	}
 
-	IStructMemberExpression memberExpression(String memberId);
+	
+//	IVariableAddress address();
+//	
+//	IVariableReferenceValue valueOf();
+//	
+//
+//	IArrayLengthExpression arrayLength(List<IExpression> indexes);
+//	default IArrayLengthExpression arrayLength(IExpression ... indexes) {
+//		return arrayLength(Arrays.asList(indexes));
+//	}
+//	
+//	IArrayElementExpression arrayElement(List<IExpression> indexes);
+//	default IArrayElementExpression arrayElement(IExpression ... indexes) {
+//		return arrayElement(Arrays.asList(indexes));
+//	}
+//	
+//
+//	IStructMemberExpression member(String memberId);
 }

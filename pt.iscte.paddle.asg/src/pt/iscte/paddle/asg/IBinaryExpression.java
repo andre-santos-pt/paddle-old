@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 import pt.iscte.paddle.asg.IOperator.OperationType;
 import pt.iscte.paddle.asg.impl.BinaryExpression;
 
-public interface IBinaryExpression extends IExpression {
+public interface IBinaryExpression extends ICompositeExpression {
 	IBinaryOperator getOperator();
 	IExpression getLeftOperand();
 	IExpression getRightOperand();

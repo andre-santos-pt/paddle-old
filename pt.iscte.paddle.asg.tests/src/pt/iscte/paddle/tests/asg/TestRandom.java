@@ -14,6 +14,7 @@ import org.junit.Test;
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IProcedureCallExpression;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
@@ -48,8 +49,8 @@ public class TestRandom {
 		IProcedure proc = program.addProcedure("randomInt", INT);
 		IVariable min = proc.addParameter("min", INT);
 		IVariable max = proc.addParameter("max", INT);
-		IVariable r = proc.getBody().addVariable("r", DOUBLE);
-		r.addAssignment(program.resolveProcedure("random").call());
+		IProcedureCallExpression call = program.resolveProcedure("random").call();
+		IVariable r = proc.getBody().addVariable("r", DOUBLE, call);
 		IBinaryExpression m = MUL.on(r, ADD.on(SUB.on(max, min), literal(1)));
 		IUnaryExpression t = TRUNCATE.on(m);
 		IBinaryExpression e = ADD.on(min, t);

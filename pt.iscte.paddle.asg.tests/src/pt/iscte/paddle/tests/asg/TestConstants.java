@@ -1,20 +1,18 @@
 package pt.iscte.paddle.tests.asg;
 
 import static pt.iscte.paddle.asg.IDataType.DOUBLE;
+import static pt.iscte.paddle.asg.ILiteral.literal;
 import static pt.iscte.paddle.asg.IOperator.MUL;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import pt.iscte.paddle.asg.IConstant;
-import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
-import static pt.iscte.paddle.asg.ILiteral.*;
 
 public class TestConstants {
 

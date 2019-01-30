@@ -18,7 +18,6 @@ import pt.iscte.paddle.asg.IBinaryOperator;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IFactory;
 import pt.iscte.paddle.asg.IInstruction;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.ILoop;

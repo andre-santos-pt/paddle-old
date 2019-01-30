@@ -12,8 +12,13 @@ public interface IProgramElement {
 	default <T> T getProperty(Class<T> key) {
 		return key.cast(getProperty(key.getName()));
 	}
+	
 	default void setFlag(String key) {
 		setProperty(key, Boolean.TRUE);
+	}
+	
+	default void setProperty(Object key) {
+		setProperty(key.getClass().getName(), key);
 	}
 	
 	default boolean is(String key) {

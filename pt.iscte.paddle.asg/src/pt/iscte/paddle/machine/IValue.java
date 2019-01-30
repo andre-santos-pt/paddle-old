@@ -16,6 +16,14 @@ public interface IValue {
 		return getValue() == null;
 	}
 	
+	default boolean isTrue() {
+		return getValue().equals(Boolean.TRUE);
+	}
+	
+	default boolean isFalse() {
+		return getValue().equals(Boolean.FALSE);
+	}
+	
 	default int getMemory() {
 		return getType().getMemoryBytes();
 	}
