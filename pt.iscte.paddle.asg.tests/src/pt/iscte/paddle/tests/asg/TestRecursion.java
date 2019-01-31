@@ -15,7 +15,7 @@ import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
-import pt.iscte.paddle.asg.ISelectionWithAlternative;
+import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
@@ -29,7 +29,7 @@ public class TestRecursion {
 		IProcedure proc = program.addProcedure("fact", INT);
 		IVariable nParam = proc.addParameter("n", INT);
 		IBinaryExpression guard = EQUAL.on(nParam, literal(0));
-		ISelectionWithAlternative sel = proc.getBody().addSelectionWithAlternative(guard);
+		ISelection sel = proc.getBody().addSelectionWithAlternative(guard);
 		sel.addReturn(literal(1));
 		IProcedureCall recCall = proc.call(SUB.on(nParam, literal(1)));
 		IBinaryExpression retExp = MUL.on(nParam, recCall);

@@ -9,7 +9,6 @@ import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.ISelection;
-import pt.iscte.paddle.asg.ISelectionWithAlternative;
 import pt.iscte.paddle.asg.IStatement;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IValue;
@@ -38,6 +37,7 @@ public class BlockIterator {
 			eval = null;
 		
 		IBlockChild current = elements.get(i);
+		System.out.println(current);
 		if(current instanceof IStatement) {
 			i++;
 		}
@@ -48,20 +48,20 @@ public class BlockIterator {
 		else if(current instanceof ISelection) {
 			ISelection sel = (ISelection) current;
 			i++;
-			if(last.getValue().equals(Boolean.TRUE)) {
+			if(last.isTrue()) {
 				if(!sel.isEmpty())
-					return new BlockIterator(sel);
+					return new BlockIterator(sel.getBlock());
 			}
-			else if(sel instanceof ISelectionWithAlternative) {
-				IBlock elseBlock = ((ISelectionWithAlternative) sel).getAlternativeBlock();
+			else if(sel.hasAlternativeBlock()) {
+				IBlock elseBlock = sel.getAlternativeBlock();
 				if(!elseBlock.isEmpty())
 					return new BlockIterator(elseBlock);
 			}
 		}
 		else if(current instanceof ILoop) {
 			ILoop loop = (ILoop) current;
-			if(last.getValue().equals(Boolean.TRUE) && !loop.isEmpty())
-				return new BlockIterator(loop);
+			if(last.isTrue() && !loop.isEmpty())
+				return new BlockIterator(loop.getBlock());
 			else
 				i++;
 		}

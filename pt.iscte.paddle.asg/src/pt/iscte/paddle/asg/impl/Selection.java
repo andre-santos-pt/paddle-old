@@ -1,40 +1,24 @@
 package pt.iscte.paddle.asg.impl;
 
+import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ISelection;
 
-class Selection extends Block implements ISelection {
-//	private final Block parent;
-	private final IExpression guard;
-//	private final IBlock selectionBlock;
-	
-	public Selection(Block parent, IExpression guard) {
-		super(parent, true);
-		assert parent != null;
-		assert guard != null;
-		this.guard = guard;
-//		this.parent = parent;
-//		parent.addStatement(this);
-//		this.selectionBlock = parent.addLooseBlock();
-	}
+class Selection extends ControlStructure implements ISelection {
+	private final IBlock alternativeBlock;
 
-	@Override
-	public Block getParent() {
-		return (Block) super.getParent();
+	public Selection(Block parent, IExpression guard, boolean hasAlternative) {
+		super(parent, guard);
+		alternativeBlock = hasAlternative ? parent.addLooseBlock() : null;
 	}
-	
-	@Override
-	public IExpression getGuard() {
-		return guard;
-	}
-
-//	@Override
-//	public IBlock getSelectionBlock() {
-//		return selectionBlock;
-//	}
 
 	@Override
 	public String toString() {
-		return "if " + guard + " " + super.toString();
+		return "if " + getGuard() + " " + super.toString();
+	}
+
+	@Override
+	public IBlock getAlternativeBlock() {
+		return alternativeBlock;
 	}
 }

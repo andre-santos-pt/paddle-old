@@ -1,67 +1,22 @@
 package pt.iscte.paddle.asg;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Mutable
  */
-public interface IBlock extends IBlockChild {
+public interface IBlock extends IBlockChild, IStatementContainer {
 	IProcedure getProcedure();
 
 	List<IBlockChild> getChildren();
 
 	boolean isEmpty();
 
-	IVariable addVariable(String name, IDataType type);
-
-	default IVariable addVariable(String name, IDataType type, IExpression initialization) {
-		IVariable var = addVariable(name, type);
-		addAssignment(var, initialization);
-		return var;
+	@Override
+	default IBlock getBlock() {
+		return this;
 	}
-
-	IBlock addBlock();
-
-	IVariableAssignment addAssignment(IVariable var, IExpression exp);
-
-
-	default IVariableAssignment addIncrement(IVariable var) {
-		assert var.getType() == IDataType.INT;
-		return addAssignment(var, IOperator.ADD.on(var, ILiteral.literal(1)));
-	}
-
-	default IVariableAssignment addDecrement(IVariable var) {
-		assert var.getType() == IDataType.INT;
-		return addAssignment(var, IOperator.SUB.on(var, ILiteral.literal(1)));
-	}
-
-	IArrayElementAssignment addArrayElementAssignment(IVariable var, IExpression exp, List<IExpression> indexes);
-	default IArrayElementAssignment addArrayElementAssignment(IVariable var, IExpression exp, IExpression ... indexes) {
-		return addArrayElementAssignment(var, exp, Arrays.asList(indexes));
-	}
-
-	IStructMemberAssignment addStructMemberAssignment(IVariable var, String memberId, IExpression exp);
-
-
-	ISelection addSelection(IExpression guard);
-
-	ISelectionWithAlternative addSelectionWithAlternative(IExpression guard);
-
-	ILoop addLoop(IExpression guard);
-
-	IReturn addReturn(IExpression expression);
-
-	IBreak addBreak();
-
-	IContinue addContinue();
-
-	IProcedureCall addCall(IProcedure procedure, List<IExpression> args);
-	default IProcedureCall addCall(IProcedure procedure, IExpression ... args) {
-		return addCall(procedure, Arrays.asList(args));
-	}
-
-
+	
 	default void accept(IVisitor visitor) {
 		for(IProgramElement s : getChildren()) {
 			if(s instanceof IReturn) {
@@ -103,9 +58,9 @@ public interface IBlock extends IBlockChild {
 				ISelection sel = (ISelection) s;
 				if(visitor.visit(sel)) {
 					sel.getGuard().accept(visitor);
-					sel.accept(visitor);
-					if(sel instanceof ISelectionWithAlternative)
-						((ISelectionWithAlternative) sel).getAlternativeBlock().accept(visitor);
+					sel.getBlock().accept(visitor);
+					if(sel.hasAlternativeBlock())
+						sel.getAlternativeBlock().accept(visitor);
 				}
 				visitor.endVisit(sel);
 			}
@@ -113,7 +68,7 @@ public interface IBlock extends IBlockChild {
 				ILoop loop = (ILoop) s;
 				if(visitor.visit(loop)) {
 					loop.getGuard().accept(visitor);
-					loop.accept(visitor);
+					loop.getBlock().accept(visitor);
 				}
 				visitor.endVisit(loop);
 			}
@@ -138,7 +93,7 @@ public interface IBlock extends IBlockChild {
 		default boolean visit(IProcedureCall call) 					{ return true; }
 
 		// IControlStructure
-		default boolean visit(ISelection selection) 				{ return true; } // also ISelectionWithAlternative
+		default boolean visit(ISelection selection) 				{ return true; }
 		default void endVisit(ISelection selection) 				{ }
 
 		default boolean visit(ILoop loop) 							{ return true; }

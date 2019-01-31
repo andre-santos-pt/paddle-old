@@ -29,7 +29,7 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 		this.procedure = procedure;
 		this.arguments = ImmutableList.copyOf(arguments);
 		if(parent != null)
-			parent.addInstruction(this);
+			parent.addChild(this);
 	}
 
 	@Override

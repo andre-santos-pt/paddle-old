@@ -3,7 +3,6 @@ package pt.iscte.paddle.tests.asg;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static pt.iscte.paddle.asg.IDataType.INT;

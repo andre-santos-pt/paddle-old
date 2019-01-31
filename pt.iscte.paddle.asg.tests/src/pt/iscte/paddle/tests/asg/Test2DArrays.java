@@ -18,7 +18,7 @@ import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.ISelectionWithAlternative;
+import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IArray;
 import pt.iscte.paddle.machine.IExecutionData;
@@ -128,7 +128,7 @@ public class Test2DArrays {
 		outerLoop.addAssignment(jVar, literal(0));
 		IExpression innerGuard = DIFFERENT.on(jVar, mParam.arrayLength(iVar) );
 		ILoop innerLoop = outerLoop.addLoop(innerGuard);
-		ISelectionWithAlternative ifEq = innerLoop.addSelectionWithAlternative(EQUAL.on(mParam.arrayElement(iVar, jVar), nParam));
+		ISelection ifEq = innerLoop.addSelection(EQUAL.on(mParam.arrayElement(iVar, jVar), nParam));
 		ifEq.addReturn(literal(true));
 		innerLoop.addIncrement(jVar);
 		outerLoop.addIncrement(iVar);

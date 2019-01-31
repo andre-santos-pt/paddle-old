@@ -16,7 +16,6 @@ import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
-import pt.iscte.paddle.asg.ISelectionWithAlternative;
 import pt.iscte.paddle.asg.IStatement;
 import pt.iscte.paddle.asg.IStructMemberAssignment;
 import pt.iscte.paddle.asg.IVariable;
@@ -27,13 +26,15 @@ import pt.iscte.paddle.machine.IValue;
 
 class Block extends ProgramElement implements IBlock {
 	private final ProgramElement parent;
-	private final List<IBlockChild> instructions;
+	private final List<IBlockChild> children;
 
 	Block(ProgramElement parent, boolean addToParent) {
+		assert !addToParent || parent instanceof Block;
+		
 		this.parent = parent;
-		this.instructions = new ArrayList<>();
+		this.children = new ArrayList<>();
 		if(parent != null && addToParent)
-			((Block) parent).addInstruction(this);
+			((Block) parent).addChild(this);
 	}
 
 	@Override
@@ -43,17 +44,17 @@ class Block extends ProgramElement implements IBlock {
 	
 	@Override
 	public boolean isEmpty() {
-		return instructions.isEmpty();
+		return children.isEmpty();
 	}
 	
 	@Override
 	public List<IBlockChild> getChildren() {
-		return Collections.unmodifiableList(instructions);
+		return Collections.unmodifiableList(children);
 	}
 	
-	void addInstruction(IBlockChild statement) {
+	void addChild(IBlockChild statement) {
 		assert statement != null;
-		instructions.add(statement);
+		children.add(statement);
 	}
 
 	@Override
@@ -73,7 +74,7 @@ class Block extends ProgramElement implements IBlock {
 		for(int i = 0; i < d; i++)
 			tabs += "\t";
 		String text = tabs.substring(1) + "{";
-		for(IBlockChild s : instructions)
+		for(IBlockChild s : children)
 			text += tabs + s + (s instanceof IStatement ? ";" : "");
 		return text + "}";
 	}
@@ -102,38 +103,10 @@ class Block extends ProgramElement implements IBlock {
 		Procedure procedure = getProcedure();
 //		if(procedure != null)
 		procedure.addVariableDeclaration(var);
-		instructions.add(var);
+		children.add(var);
 		return var;
 	}
 	
-//	@Override
-//	public IVariable addReferenceVariable(String name, IDataType type) {
-//		Variable var = Variable.pointer(this, name, type);
-//		Procedure procedure = getProcedure();
-//		if(procedure != null)
-//			procedure.addVariableDeclaration(var);
-//		return var;
-//	}
-	
-//	@Override
-//	public IArrayVariable addArrayVariable(String name, IArrayType type) {
-//		ArrayVariable var = new ArrayVariable(this, name, type);
-//		Procedure procedure = getProcedure();
-//		if(procedure != null)
-//			procedure.addVariableDeclaration(var);
-//		return var;
-//	}
-//	
-//	@Override
-//	public IArrayVariable addReferenceArrayVariable(String name, IArrayType type) {
-//		ArrayVariable var = ArrayVariable.reference(this, name, type);
-//		Procedure procedure = getProcedure();
-//		if(procedure != null)
-//			procedure.addVariableDeclaration(var);
-//		return var;
-//	}
-
-
 	
 	@Override
 	public IVariableAssignment addAssignment(IVariable variable, IExpression expression) {
@@ -158,12 +131,13 @@ class Block extends ProgramElement implements IBlock {
 	
 	@Override
 	public ISelection addSelection(IExpression guard) {
-		return new Selection(this, guard);
+		return new Selection(this, guard, false);
 	}
 
 	@Override
-	public ISelectionWithAlternative addSelectionWithAlternative(IExpression guard) {
-		return new SelectionWithAlternative(this, guard);
+	public ISelection addSelectionWithAlternative(IExpression guard) {
+		return new Selection(this, guard, true);
+//		return new SelectionWithAlternative(this, guard);
 	}
 	
 	@Override

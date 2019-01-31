@@ -8,11 +8,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.ISelectionWithAlternative;
+import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
@@ -31,10 +30,9 @@ public class TestSelection {
 		IVariable b = maxFunc.addParameter("b", INT);
 		
 		IBinaryExpression guard = GREATER.on(a, b);
-		ISelectionWithAlternative ifElse = maxFunc.getBody().addSelectionWithAlternative(guard);
+		ISelection ifElse = maxFunc.getBody().addSelectionWithAlternative(guard);
 		ifElse.addReturn(a);
-		IBlock elseblock = ifElse.getAlternativeBlock();
-		elseblock.addReturn(b);
+		ifElse.getAlternativeBlock().addReturn(b);
 		System.out.println(program);
 	}
 

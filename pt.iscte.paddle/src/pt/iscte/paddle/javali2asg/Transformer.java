@@ -25,7 +25,6 @@ import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.ISelection;
-import pt.iscte.paddle.asg.ISelectionWithAlternative;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.javali.Block;
 import pt.iscte.paddle.javali.Break;
@@ -112,16 +111,16 @@ public class Transformer {
 			IExpression guard = map(ifElse.getGuard());
 			Block elseBlock = ifElse.getAlternativeBlock();
 			ISelection sel = elseBlock == null ? block.addSelection(guard) : block.addSelectionWithAlternative(guard);
-			ifElse.getSelectionBlock().getStatements().forEach(st -> map(st, (ISelection) sel));
+			ifElse.getSelectionBlock().getStatements().forEach(st -> map(st, sel.getBlock()));
 			if(elseBlock != null)
-				elseBlock.getStatements().forEach(st -> map(st, ((ISelectionWithAlternative) sel).getAlternativeBlock()));
+				elseBlock.getStatements().forEach(st -> map(st, sel.getAlternativeBlock()));
 			instr = sel;
 		}
 		else if(s instanceof While) {
 			While whi = (While) s;
 			IExpression guard = map(whi.getGuard());
 			ILoop loop = block.addLoop(guard);
-			whi.getBlock().getStatements().forEach(st -> map(st, loop));
+			whi.getBlock().getStatements().forEach(st -> map(st, loop.getBlock()));
 			instr = loop;
 		}
 		else if(s instanceof For) {
@@ -130,8 +129,8 @@ public class Transformer {
 			IBlock fBlock = block.addBlock();
 			fo.getInitStatements().forEach(st -> map(st, fBlock));
 			ILoop loop = fBlock.addLoop(guard);
-			fo.getBlock().getStatements().forEach(st -> map(st, loop));
-			fo.getProgressStatements().forEach(st -> map(st, loop));
+			fo.getBlock().getStatements().forEach(st -> map(st, loop.getBlock()));
+			fo.getProgressStatements().forEach(st -> map(st, loop.getBlock()));
 		}
 		else if(s instanceof DoWhile) {
 			
