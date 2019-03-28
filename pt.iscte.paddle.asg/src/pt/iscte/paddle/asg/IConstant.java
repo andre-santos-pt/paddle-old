@@ -1,6 +1,6 @@
 package pt.iscte.paddle.asg;
 
-public interface IConstant extends IIdentifiableElement, ISimpleExpression {
+public interface IConstant extends IProgramElement, ISimpleExpression {
 
 	IModule getProgram();
 	

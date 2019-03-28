@@ -4,21 +4,19 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public interface IProcedureDeclaration extends IIdentifiableElement {
+public interface IProcedureDeclaration extends IProgramElement {
 
 	List<IVariable> getParameters();	
 
 	IDataType getReturnType();
 
-	IVariable addParameter(String id, IDataType type);
-//	IVariable addReferenceParameter(String id, IDataType type);
+	IVariable addParameter(IDataType type);
 	
 	IProcedureCall call(List<IExpression> args);
 
 	default IProcedureCall call(IExpression ... args) {
 		return call(Arrays.asList(args));
 	}
-	
 	
 	default String shortSignature() {
 		return getId() + "(...)";

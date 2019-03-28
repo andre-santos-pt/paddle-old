@@ -5,25 +5,16 @@ import java.util.Collections;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IIdentifiableElement;
 import pt.iscte.paddle.asg.IReferenceType;
 import pt.iscte.paddle.asg.IStructAllocation;
 import pt.iscte.paddle.asg.IStructType;
 import pt.iscte.paddle.asg.IVariable;
 
 class StructType extends ProgramElement implements IStructType {
-	private final String id;
 	private final List<IVariable> variables;
 	
-	StructType(String id) {
-		assert IIdentifiableElement.isValidIdentifier(id);
-		this.id = id;
+	StructType() {
 		this.variables = new ArrayList<>(5);
-	}
-	
-	@Override
-	public String getId() {
-		return id;
 	}
 	
 	@Override
@@ -32,15 +23,15 @@ class StructType extends ProgramElement implements IStructType {
 	}
 	
 	@Override
-	public IVariable addMemberVariable(String id, IDataType type) {
-		IVariable var = new Variable(this, id, type);
+	public IVariable addMemberVariable(IDataType type) {
+		IVariable var = new Variable(this, type);
 		variables.add(var);
 		return var;
 	}
 	
 	@Override
 	public String toString() {
-		String text = "struct " + id + " {";
+		String text = "struct " + getId() + " {";
 		for (IVariable member : variables) {
 			text += member.getDeclaration() + ";";
 		}

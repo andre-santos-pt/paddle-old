@@ -15,12 +15,12 @@ public interface IStatementContainer {
 		return getBlock().addBlock();
 	}
 
-	default IVariable addVariable(String name, IDataType type) {
-		return getBlock().addVariable(name, type);
+	default IVariable addVariable(IDataType type) {
+		return getBlock().addVariable(type);
 	}
 
-	default IVariable addVariable(String name, IDataType type, IExpression initialization) {
-		IVariable var = addVariable(name, type);
+	default IVariable addVariable(IDataType type, IExpression initialization) {
+		IVariable var = addVariable(type);
 		addAssignment(var, initialization);
 		return var;
 	}

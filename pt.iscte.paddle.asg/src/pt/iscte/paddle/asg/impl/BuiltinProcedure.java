@@ -16,11 +16,11 @@ public class BuiltinProcedure extends Procedure {
 	private Method method;
 	
 	public BuiltinProcedure(Method method) {
-		super(method.getName(), matchType(method.getReturnType()));
+		super(matchType(method.getReturnType()));
 		assert isValidForBuiltin(method);
 		this.method = method;
 		for (Parameter p : method.getParameters()) {
-			addParameter(p.getName(), matchType(p.getType()));
+			addParameter(matchType(p.getType()));
 		}
 	}
 

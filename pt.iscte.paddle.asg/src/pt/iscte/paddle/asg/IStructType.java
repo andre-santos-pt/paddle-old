@@ -9,7 +9,7 @@ public interface IStructType extends IDataType {
 	
 	List<IVariable> getMemberVariables();
 	
-	IVariable addMemberVariable(String id, IDataType type);
+	IVariable addMemberVariable(IDataType type);
 
 	@Override
 	default Object getDefaultValue() {

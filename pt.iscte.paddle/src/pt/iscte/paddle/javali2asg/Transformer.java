@@ -60,12 +60,14 @@ public class Transformer {
 	public IModule createProgram() {
 		Module module = (Module) resource.getContents().get(0);
 		ICompositeNode node = NodeModelUtils.getNode(module);
-		IModule program = IModule.create("test");
+		IModule program = IModule.create();
 		for (Procedure p : module.getProcedures()) {
 			varTable = new HashMap<>();
-			IProcedure proc = program.addProcedure(p.getId().getId(), toModelType(p.getRetType()));
+			IProcedure proc = program.addProcedure(toModelType(p.getRetType()));
+			proc.setId(p.getId().getId());
 			for (VarDeclaration paramDec : p.getParams()) {
-				IVariable param = proc.addParameter(paramDec.getId().getId(), toModelType(p.getRetType()));
+				IVariable param = proc.addParameter(toModelType(p.getRetType()));
+				param.setId(paramDec.getId().getId());
 				varTable.put(param.getId(), param);
 			}
 			for (Statement statement : p.getBody().getStatements()) {
@@ -92,7 +94,8 @@ public class Transformer {
 		else if(s instanceof VarDeclaration) {
 			VarDeclaration varDec = (VarDeclaration) s;
 			String id = varDec.getId().getId();
-			IVariable var = block.addVariable(id, toModelType(varDec.getType()));
+			IVariable var = block.addVariable(toModelType(varDec.getType()));
+			var.setId(id);
 			varTable.put(id, var);
 			if(varDec.getAnnotation() != null)
 				var.setProperty("ANNOTATION", varDec.getAnnotation().getId());

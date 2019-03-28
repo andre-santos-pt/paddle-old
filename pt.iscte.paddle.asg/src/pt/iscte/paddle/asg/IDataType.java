@@ -6,14 +6,15 @@ import com.google.common.collect.ImmutableList;
 import pt.iscte.paddle.asg.impl.ArrayType;
 import pt.iscte.paddle.asg.impl.PrimitiveType;
 
-public interface IDataType extends IIdentifiableElement {
+public interface IDataType extends IProgramElement  {
 
 	Object getDefaultValue();
 
 	int getMemoryBytes();
 
+	// TODO REVER
 	default boolean isCompatible(IDataType type) {
-		return this.getId().equals(type.getId());
+		return this.equals(type);
 	}
 	
 	default boolean isVoid() {
@@ -66,11 +67,6 @@ public interface IDataType extends IIdentifiableElement {
 	IDataType VOID = new IDataType() {
 
 		@Override
-		public String getId() {
-			return "void";
-		}
-
-		@Override
 		public void setProperty(String key, Object value) {
 
 		}
@@ -109,18 +105,13 @@ public interface IDataType extends IIdentifiableElement {
 
 	IDataType UNKNOWN = new IDataType() {
 		@Override
-		public String getId() {
-			return "unknown";
-		}
-
-		@Override
 		public Object getDefaultValue() {
 			return null;
 		}
 
 		@Override
 		public String toString() {
-			return getId();
+			return "unknown";
 		}
 
 		@Override

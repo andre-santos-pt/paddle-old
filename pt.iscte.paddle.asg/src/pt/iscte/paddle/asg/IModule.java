@@ -11,7 +11,7 @@ import pt.iscte.paddle.asg.semantics.ISemanticProblem;
 /**
  * Mutable
  */
-public interface IModule extends IIdentifiableElement {
+public interface IModule extends IProgramElement {
 	default Collection<IModule> getImports() {
 		// TODO imports
 		return ImmutableList.of();
@@ -24,9 +24,9 @@ public interface IModule extends IIdentifiableElement {
 
 //	IDataType getDataType(String id);
 
-	IConstant addConstant(String id, IDataType type, ILiteral value);
-	IStructType addStruct(String id);
-	IProcedure addProcedure(String id, IDataType returnType);
+	IConstant addConstant(IDataType type, ILiteral value);
+	IStructType addStruct();
+	IProcedure addProcedure(IDataType returnType);
 
 	void loadBuildInProcedures(Class<?> staticClass);
 
@@ -97,8 +97,8 @@ public interface IModule extends IIdentifiableElement {
 	}
 
 
-	static IModule create(String id) {
-		return new Module(id);
+	static IModule create() {
+		return new Module();
 	}
 
 }

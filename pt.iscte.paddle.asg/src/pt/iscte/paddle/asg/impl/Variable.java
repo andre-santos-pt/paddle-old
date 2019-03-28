@@ -26,18 +26,11 @@ import pt.iscte.paddle.machine.IValue;
 class Variable extends Expression implements IVariable, IEvaluable, IExecutable {
 
 	private final IProgramElement parent;
-	private final String id;
 	private final IDataType type;
 
-	public Variable(IProgramElement parent, String name, IDataType type) {
+	public Variable(IProgramElement parent, IDataType type) {
 		this.parent = parent;
-		this.id = name;
 		this.type = type;
-	}
-
-	@Override
-	public String getId() {
-		return id;
 	}
 
 	@Override
@@ -52,7 +45,7 @@ class Variable extends Expression implements IVariable, IEvaluable, IExecutable 
 
 	@Override
 	public String toString() {
-		return id;
+		return getId();
 	}
 
 	@Override

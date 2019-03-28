@@ -1,12 +1,20 @@
 import static pt.iscte.paddle.asg.ILiteral.literal;
-import static pt.iscte.paddle.asg.IOperator.GREATER;
-import static pt.iscte.paddle.asg.IOperator.TRUNCATE;
+import static pt.iscte.paddle.asg.IOperator.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static pt.iscte.paddle.asg.IDataType.*;
+
+import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IVariable;
+import pt.iscte.paddle.asg.IVariableAssignment;
+import pt.iscte.paddle.asg.IBlock.IVisitor;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
@@ -14,40 +22,46 @@ import pt.iscte.paddle.machine.IProgramState;
 public class Test {
 
 	public static void main(String[] args) throws ExecutionError {
-		IModule program = IModule.create("test");
+		IModule program = IModule.create();
 
-		IProcedure proc = program.addProcedure("inc", IDataType.DOUBLE);
-		IVariable nParam = proc.addParameter("n", IDataType.INT);
-
-//		IProcedureCallExpression randomCall = program.getProcedure("random").callExpression();
-
-		proc.getBody().addReturn(TRUNCATE.on(literal(3.2)));
-
-		//		IVariableDeclaration rVar = proc.variableDeclaration("r", program.getDataType("double"));
-		//		IVariableAssignment rAss = rVar.assignment(randomCall);
-
-		//		ILiteral lit = factory.literal(4);
-		//		IBinaryExpression e = factory.binaryExpression(IOperator.ADD, rVar.expression(), lit);
-
-
-		//		IVariableAssignment ass2 = rVar.assignment(e);
-		//		proc.returnStatement(rVar.expression());
-
-		IProcedure main = program.addProcedure("main", IDataType.DOUBLE);
-//		IVariableDeclaration var2 = main.addVariableDeclaration("b", IDataType.INT);	
-//		IVariableAssignment ass3 = var2.addAssignment(proc.callExpression(factory.literal(2)));
-//		var2.addAssignment(factory.literal(4))
-		IVariable a = main.getBody().addVariable("a", IDataType.DOUBLE);
-		ISelection iff = main.getBody().addSelection(literal(true));
-		ISelection iff2 = iff.addSelection(GREATER.on(literal(4), literal(true)));
-		iff2.addReturn(literal(-1));
-		main.getBody().addAssignment(a, proc.call());
-		main.getBody().addReturn(a);
-
-		System.out.println(program);
+		IProcedure max = program.addProcedure(INT.array());  max.setId("max");
+		
+		IVariable array = max.addParameter(INT.array()); array.setId("array");
+		IVariable bound = max.addParameter(INT); bound.setId("bound");
+		IBlock body = max.getBody();
+		IVariable m = body.addVariable(INT); m.setId("m");
+		body.addAssignment(m, array.arrayElement(literal(0)));
+		IVariable i = body.addVariable(INT); i.setId("i");
+		body.addAssignment(i, literal(1));
+		ILoop loop = body.addLoop(SMALLER.on(i, bound));
+		ISelection selection = loop.addSelection(GREATER.on(array.arrayElement(i), bound));
+		selection.addAssignment(m, array.arrayElement(i));
+		loop.addAssignment(i, ADD.on(i, literal(1)));
+		body.addReturn(m);
+		
+		
+		IProcedure main = program.addProcedure(IDataType.DOUBLE);  main.setId("main");
+		IBlock body2 = main.getBody();
+		IVariable a = main.getBody().addVariable(INT.array());
+		
+		System.out.println(max);
+		
+		class ConstantChecker implements IBlock.IVisitor {
+			List<IVariable> constants = new ArrayList<>(max.getVariables());
+			
+			public boolean visit(IVariableAssignment assignment) {
+				constants.remove(assignment.getVariable());
+				return false;
+			}
+		};
+		ConstantChecker constantChecker = new ConstantChecker();
+		max.getBody().accept(constantChecker);
+		
+		System.out.println(constantChecker.constants);
 		
 		IProgramState state = IMachine.create(program);
 
+		
 		state.execute(main);
 		
 		//		List<ISemanticProblem> problems = program.validateSematics();

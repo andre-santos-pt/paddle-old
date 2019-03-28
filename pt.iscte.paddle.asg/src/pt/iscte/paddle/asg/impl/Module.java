@@ -20,15 +20,13 @@ import pt.iscte.paddle.asg.semantics.ISemanticProblem;
 import pt.iscte.paddle.asg.semantics.SemanticChecker;
 
 public class Module extends ProgramElement implements IModule {
-	private final String id;
 	private final List<IConstant> constants;
 	private final List<IStructType> structs;
 	private final List<IProcedure> procedures;
 
 	private final List<IProcedure> builtinProcedures;
 
-	public Module(String id) {
-		this.id = id;
+	public Module() {
 		constants = new ArrayList<>();
 		structs = new ArrayList<>();
 		procedures = new ArrayList<>();
@@ -42,11 +40,6 @@ public class Module extends ProgramElement implements IModule {
 			else
 				System.err.println("not valid for built-in procedure: " + method);
 		}
-	}
-
-	@Override
-	public String getId() {
-		return id;
 	}
 
 	@Override
@@ -65,25 +58,24 @@ public class Module extends ProgramElement implements IModule {
 	}
 
 	@Override
-	public IConstant addConstant(String id, IDataType type, ILiteral value) {
-		assert id != null;
+	public IConstant addConstant(IDataType type, ILiteral value) {
 		assert type != null;
 		assert value != null;
-		ConstantDeclaration dec = new ConstantDeclaration(this, id, type, value);
+		ConstantDeclaration dec = new ConstantDeclaration(this, type, value);
 		constants.add(dec);
 		return dec;
 	}
 
 	@Override
-	public IStructType addStruct(String id) {
-		IStructType struct = new StructType(id);
+	public IStructType addStruct() {
+		IStructType struct = new StructType();
 		structs.add(struct);
 		return struct;
 	}
 
 	@Override
-	public IProcedure addProcedure(String id, IDataType returnType) {
-		IProcedure proc = new Procedure(id, returnType);
+	public IProcedure addProcedure(IDataType returnType) {
+		IProcedure proc = new Procedure(returnType);
 		procedures.add(proc);
 		return proc;
 	}

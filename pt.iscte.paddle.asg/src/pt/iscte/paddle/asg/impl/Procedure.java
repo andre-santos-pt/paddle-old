@@ -13,7 +13,6 @@ import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IVariable;
 
 class Procedure extends ProgramElement implements IProcedure {
-	private final String name;
 	private final List<IVariable> variables;
 	private final List<IVariable> variablesView;
 	private final ParamsView paramsView;
@@ -22,8 +21,7 @@ class Procedure extends ProgramElement implements IProcedure {
 	private final Block body;
 	private int parameters;
 
-	public Procedure(String id, IDataType returnType) {
-		this.name = id;
+	public Procedure(IDataType returnType) {
 		this.variables = new ArrayList<>(5);
 		this.parameters = 0;
 		this.returnType = returnType;
@@ -32,11 +30,6 @@ class Procedure extends ProgramElement implements IProcedure {
 		paramsView = new ParamsView();
 		localVarsView = new LocalVariablesView();
 		body = new Block(this, false);
-	}
-
-	@Override
-	public String getId() {
-		return name;
 	}
 
 	@Override
@@ -55,8 +48,8 @@ class Procedure extends ProgramElement implements IProcedure {
 	}
 
 	@Override
-	public IVariable addParameter(String id, IDataType type) {
-		IVariable param = new Variable(body, id, type);
+	public IVariable addParameter(IDataType type) {
+		IVariable param = new Variable(body, type);
 		variables.add(parameters, param);
 		parameters++;
 		return param;
@@ -93,7 +86,7 @@ class Procedure extends ProgramElement implements IProcedure {
 		String vars = "";
 		for(IVariable var : variables)
 			vars += var.getType() + " " + var.getId() +"\n";
-		return returnType + " " + name + "(" + params + ")" + "\n" + vars + body.toString();
+		return returnType + " " + getId() + "(" + params + ")" + "\n" + vars + body.toString();
 	}
 
 	private class ParamsView extends AbstractList<IVariable> {

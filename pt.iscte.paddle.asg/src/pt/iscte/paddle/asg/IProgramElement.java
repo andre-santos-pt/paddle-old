@@ -1,6 +1,8 @@
 package pt.iscte.paddle.asg;
 
 public interface IProgramElement {
+	String ID = "ID";
+	
 	void setProperty(String key, Object value);	
 	
 	Object getProperty(String key);
@@ -23,5 +25,13 @@ public interface IProgramElement {
 	
 	default boolean is(String key) {
 		return Boolean.TRUE.equals(getProperty(key));
+	}
+	
+	default String getId() {
+		return (String) getProperty(ID);
+	}
+	
+	default void setId(String id) {
+		setProperty(ID, id);
 	}
 }

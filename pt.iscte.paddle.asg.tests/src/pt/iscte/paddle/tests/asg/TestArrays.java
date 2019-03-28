@@ -10,20 +10,19 @@ import static pt.iscte.paddle.asg.ILiteral.literal;
 import static pt.iscte.paddle.asg.IOperator.ADD;
 import static pt.iscte.paddle.asg.IOperator.SMALLER;
 
-import java.math.BigDecimal;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.IVariable;
+import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.machine.IArray;
 import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
 import pt.iscte.paddle.machine.IValue;
 import pt.iscte.paddle.tests.asg.TestArrays.Naturals;
 
@@ -35,19 +34,16 @@ import pt.iscte.paddle.tests.asg.TestArrays.Naturals;
 public class TestArrays {
 
 	public static class Naturals extends BaseTest {
-		protected IProcedure defineProcedure(IModule module) {
-			IProcedure natFunc = module.addProcedure("naturals", INT.array());
-			IVariable n = natFunc.addParameter("n", INT);
-			IBlock body = natFunc.getBody();
-			IVariable v = body.addVariable("v", INT.array());
-			body.addAssignment(v, INT.array().allocation(n));
-			IVariable i = body.addVariable("i", INT, literal(0));
-			ILoop loop = body.addLoop(SMALLER.on(i, n));
-			loop.addArrayElementAssignment(v, ADD.on(i, literal(1)), i);
-			loop.addAssignment(i, ADD.on(i, literal(1)));
-			body.addReturn(v);
-			return natFunc;
-		}
+		IProcedure naturals = module.addProcedure(INT.array());
+		IVariable n = naturals.addParameter(INT);
+		IBlock body = naturals.getBody();
+		IVariable v = body.addVariable(INT.array());
+		IVariableAssignment addAssignment = body.addAssignment(v, INT.array().allocation(n));
+		IVariable i = body.addVariable(INT, literal(0));
+		ILoop loop = body.addLoop(SMALLER.on(i, n));
+		IArrayElementAssignment addArrayElementAssignment = loop.addArrayElementAssignment(v, ADD.on(i, literal(1)), i);
+		IVariableAssignment addAssignment2 = loop.addAssignment(i, ADD.on(i, literal(1)));
+		IReturn addReturn = body.addReturn(v);
 		
 		protected void commonAsserts(IExecutionData data) {
 			IValue returnValue = data.getReturnValue();
@@ -70,31 +66,6 @@ public class TestArrays {
 		}
 	}
 
-//	@Test
-	public void testNaturals() {
-		IModule program = IModule.create("Arrays");
-
-		IProcedure natFunc = program.addProcedure("naturals", INT.array());
-		IVariable n = natFunc.addParameter("n", INT);
-		IBlock body = natFunc.getBody();
-		IVariable v = body.addVariable("v", INT.array(), INT.array().allocation(n));
-		IVariable i = body.addVariable("i", INT);
-		ILoop loop = body.addLoop(SMALLER.on(i, n));
-		loop.addArrayElementAssignment(v, ADD.on(i, literal(1)), i);
-		loop.addAssignment(i, ADD.on(i, literal(1)));
-		body.addReturn(v);
-
-		System.out.println(program);
-
-		IProgramState state = IMachine.create(program);
-		IExecutionData data = state.execute(natFunc, "5");
-
-		assertNotEquals(IValue.NULL, data.getReturnValue());
-
-		IArray array = (IArray) data.getReturnValue();
-		for(int x = 0; x < 5; x++)
-			assertEquals(new BigDecimal(x+1), array.getElement(x).getValue());
-	}
 
 	public void testContainsReturn() {
 

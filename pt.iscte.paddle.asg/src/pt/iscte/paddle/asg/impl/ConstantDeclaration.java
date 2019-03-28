@@ -14,13 +14,11 @@ import pt.iscte.paddle.machine.IValue;
 
 class ConstantDeclaration extends Expression implements IConstant {
 	private final IModule program;
-	private final String id;
 	private final IDataType type;
 	private final ILiteral value;
 	
-	public ConstantDeclaration(IModule program, String id, IDataType type, ILiteral value) {
+	public ConstantDeclaration(IModule program, IDataType type, ILiteral value) {
 		this.program = program;
-		this.id = id;
 		this.type = type;
 		this.value = value;
 	}
@@ -28,11 +26,6 @@ class ConstantDeclaration extends Expression implements IConstant {
 	@Override
 	public IModule getProgram() {
 		return program;
-	}
-
-	@Override
-	public String getId() {
-		return id;
 	}
 
 	@Override
@@ -45,14 +38,9 @@ class ConstantDeclaration extends Expression implements IConstant {
 		return value;
 	}
 	
-//	@Override
-//	public IConstantExpression expression() {
-//		return new ConstantExpression(this);
-//	}
-	
 	@Override
 	public String toString() {
-		return type + " " + id + " = " + value;
+		return type + " " + getId() + " = " + value;
 	}
 
 	@Override

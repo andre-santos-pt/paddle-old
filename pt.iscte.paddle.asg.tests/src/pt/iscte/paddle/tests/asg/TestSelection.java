@@ -24,7 +24,7 @@ public class TestSelection {
 	
 	@BeforeClass
 	public static void setup() {
-		program = IModule.create("Selection");
+		program = IModule.create();
 		maxFunc = program.addProcedure("max", INT);
 		IVariable a = maxFunc.addParameter("a", INT);
 		IVariable b = maxFunc.addParameter("b", INT);

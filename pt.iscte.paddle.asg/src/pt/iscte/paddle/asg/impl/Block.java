@@ -98,10 +98,9 @@ class Block extends ProgramElement implements IBlock {
 	}
 
 	@Override
-	public IVariable addVariable(String name, IDataType type) {		
-		Variable var = new Variable(this, name, type);
+	public IVariable addVariable(IDataType type) {		
+		Variable var = new Variable(this, type);
 		Procedure procedure = getProcedure();
-//		if(procedure != null)
 		procedure.addVariableDeclaration(var);
 		children.add(var);
 		return var;

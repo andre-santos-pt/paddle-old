@@ -12,8 +12,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
+import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
@@ -38,14 +40,11 @@ public class BooleanFuncions {
 	}
 	
 	public static class IsEven extends BooleanFunctions {
-		@Override
-		protected IProcedure defineProcedure(IModule module) {
-			IProcedure f = module.addProcedure("isEven", BOOLEAN);
-			IVariable n = f.addParameter("n", INT);
-			IBinaryExpression e = EQUAL.on(MOD.on(n, literal(2)), literal(0));
-			f.getBody().addReturn(e);
-			return f;
-		}
+		IProcedure isEven = module.addProcedure(BOOLEAN);
+		IVariable n = isEven.addParameter(INT);
+		IBinaryExpression e = EQUAL.on(MOD.on(n, literal(2)), literal(0));
+		IBlock body = isEven.getBody();
+		IReturn ret = body.addReturn(e);
 		
 		@Case("6")
 		public void caseTrue(IExecutionData data) {
@@ -60,15 +59,12 @@ public class BooleanFuncions {
 	
 
 	public static class IsOdd extends BooleanFunctions {
-		@Override
-		protected IProcedure defineProcedure(IModule module) {
-			IProcedure f = module.addProcedure("isOdd", BOOLEAN);
-			IVariable n = f.addParameter("n", INT);
-			IBinaryExpression e = DIFFERENT.on(MOD.on(n, literal(2)), literal(0));
-			f.getBody().addReturn(e);
-			return f;
-		}
-		
+		IProcedure isOdd = module.addProcedure(BOOLEAN);
+		IVariable n = isOdd.addParameter(INT);
+		IBinaryExpression e = DIFFERENT.on(MOD.on(n, literal(2)), literal(0));
+		IBlock body = isOdd.getBody();
+		IReturn ret = body.addReturn(e);
+
 		@Case("6")
 		public void caseTrue(IExecutionData data) {
 			assertTrue(data.getReturnValue().isFalse());
@@ -81,19 +77,15 @@ public class BooleanFuncions {
 	}
 	
 	public static class IsOddNotEven extends IsOdd {
-		@Override
-		protected IProcedure defineProcedure(IModule module) {
-			IProcedure isEven = new IsEven().defineProcedure(module);
-			IProcedure f = module.addProcedure("isOddNotEven", BOOLEAN);
-			IVariable n = f.addParameter("n", INT);
-			IUnaryExpression e = NOT.on(isEven.call(n));
-			f.getBody().addReturn(e);
-			return f;
-		}
+		IProcedure isOddNotEven = module.addProcedure(BOOLEAN);
+		IProcedure isEven = new IsEven().isEven;
+		IVariable n = isOddNotEven.addParameter(INT);
+		IUnaryExpression e = NOT.on(new IsEven().isEven.call(n));
+		IBlock body = isOddNotEven.getBody();
+		IReturn ret = body.addReturn(e);
+
 	}
 	
-	
-	// TODO
 	
 //	private static IProcedure createWithinInterval() {
 //		IProcedure f = program.addProcedure("withinInterval", BOOLEAN);

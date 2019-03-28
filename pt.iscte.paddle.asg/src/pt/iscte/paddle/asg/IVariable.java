@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-public interface IVariable extends IIdentifiableElement, ISimpleExpression, IStatement {
+public interface IVariable extends ISimpleExpression, IStatement {
 	IProgramElement getParent();
 	IDataType getType();
 
