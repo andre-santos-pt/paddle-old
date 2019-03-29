@@ -7,11 +7,11 @@ import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IValue;
 
-class StructAllocation extends Expression implements IRecordAllocation {
+class RecordAllocation extends Expression implements IRecordAllocation {
 
 	private final IRecordType type;
 	
-	public StructAllocation(IRecordType type) {
+	public RecordAllocation(IRecordType type) {
 		this.type = type;
 	}
 
@@ -28,6 +28,6 @@ class StructAllocation extends Expression implements IRecordAllocation {
 
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) {
-		return stack.getTopFrame().allocateObject(getType());
+		return stack.getTopFrame().allocateRecord(getType());
 	}
 }

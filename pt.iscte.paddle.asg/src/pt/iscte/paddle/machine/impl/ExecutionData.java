@@ -6,6 +6,7 @@ import java.util.Map;
 
 import pt.iscte.paddle.asg.IOperator.OperationType;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IValue;
@@ -25,6 +26,8 @@ public class ExecutionData implements IExecutionData  {
 	private long time;
 	
 	private IValue returnValue = IValue.NULL;
+	
+	private Map<IVariable, IValue> state;
 	
 	@Override
 	public Map<IProcedure, Integer> getAssignmentData() {
@@ -124,13 +127,11 @@ public class ExecutionData implements IExecutionData  {
 	}
 
 	@Override
-	public IValue getVariableValue(String id) {
-		return state.get(id);
+	public IValue getVariableValue(IVariable variable) {
+		return state.get(variable);
 	}
 	
-	private Map<String, IValue> state;
-	
-	public void setVariableState(Map<String, IValue> variables) {
+	public void setVariableState(Map<IVariable, IValue> variables) {
 		state = variables;
 	}
 }

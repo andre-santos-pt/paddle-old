@@ -9,7 +9,7 @@ public interface IVariable extends ISimpleExpression, IStatement {
 	IProgramElement getParent();
 	IDataType getType();
 
-	default boolean isStructField() {
+	default boolean isRecordField() {
 		return getParent() instanceof IRecordType;
 	}
 
@@ -34,6 +34,9 @@ public interface IVariable extends ISimpleExpression, IStatement {
 
 	IVariableReferenceValue valueOf();
 
+//	default IVariable resolve() {
+//		return this;
+//	}
 
 	IArrayLengthExpression arrayLength(List<IExpression> indexes);
 	default IArrayLengthExpression arrayLength(IExpression ... indexes) {
@@ -45,7 +48,7 @@ public interface IVariable extends ISimpleExpression, IStatement {
 		return arrayElement(Arrays.asList(indexes));
 	}
 
-	IRecordFieldExpression member(String memberId);
+	IRecordFieldExpression field(IVariable field);
 	
 	default String getDeclaration() {
 		return getType() + " " + getId();

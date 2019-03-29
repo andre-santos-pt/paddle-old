@@ -20,15 +20,19 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 	private final IVariable variable;
 	
 	public VariableReferenceValue(IVariable variable) {
-//		super(variable.getParent(), variable.getId(), variable.getType());
 		assert variable != null;
 		this.variable = variable;
 	}
 
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
-		IReference reference = stack.getTopFrame().getVariableStore(variable.getId());
-		return reference.getTarget();
+		IReference reference = stack.getTopFrame().getVariableStore(resolve());
+		IVariable var = variable;
+		while(var instanceof VariableReferenceValue) {		
+			var = ((VariableReferenceValue) var).variable;
+			reference = (IReference) reference.getTarget();
+		}
+		return reference;
 	}
 
 	@Override
@@ -36,14 +40,16 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 		return variable;
 	}
 
-	//	@Override
-//	public IVariableExpression getVariableExpression() {
-//		return new VariableExpression(this);
-//	}
+	private IVariable resolve() {
+		IVariable var = variable;
+		while(var instanceof VariableReferenceValue)
+			var = ((VariableReferenceValue) var).variable;
+		return var;
+	}
 	
 	@Override
 	public String toString() {
-		return "*" + variable.getId();
+		return getId();
 	}
 
 	@Override
@@ -63,17 +69,17 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 
 	@Override
 	public IArrayLengthExpression arrayLength(List<IExpression> indexes) {
-		return variable.arrayLength(indexes);
+		return new ArrayLengthExpression(this, indexes);
 	}
 
 	@Override
 	public IArrayElementExpression arrayElement(List<IExpression> indexes) {
-		return variable.arrayElement(indexes);
+		return new ArrayElementExpression(this, indexes);
 	}
 
 	@Override
-	public IRecordFieldExpression member(String memberId) {
-		return variable.member(memberId);
+	public IRecordFieldExpression field(IVariable field) {
+		return new RecordFieldExpression(this, field); 
 	}
 
 	@Override
@@ -83,8 +89,7 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 
 	@Override
 	public String getId() {
-		return variable.getId();
+		return "*" + variable.getId();
 	}
 
-	
 }

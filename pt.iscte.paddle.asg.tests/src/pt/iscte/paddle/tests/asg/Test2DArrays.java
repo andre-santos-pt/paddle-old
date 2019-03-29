@@ -33,6 +33,8 @@ import pt.iscte.paddle.machine.IExecutionData;
 	Test2DArrays.NatMatrix.class,
 	Test2DArrays.ContainsNinMatrix.class
 })
+
+// TODO Test 3D
 public class Test2DArrays extends BaseTest {
 
 	public static class IdMatrix extends BaseTest {

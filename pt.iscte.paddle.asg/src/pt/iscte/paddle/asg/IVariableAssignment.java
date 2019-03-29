@@ -9,8 +9,6 @@ public interface IVariableAssignment extends IStatement {
 	IVariable getVariable();
 	IExpression getExpression();
 	IBlock getParent();
-
-	boolean onTarget();
 	
 	@Override
 	default List<IExpression> getExpressionParts() {

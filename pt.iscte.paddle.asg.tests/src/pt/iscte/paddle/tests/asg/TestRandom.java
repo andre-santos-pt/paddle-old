@@ -36,7 +36,8 @@ public class TestRandom extends BaseTest {
 	IProcedure randomInt = module.addProcedure(INT);
 	IVariable min = randomInt.addParameter(INT);
 	IVariable max = randomInt.addParameter(INT);
-	IProcedureCall randomCall = module.resolveProcedure("random").call();
+	IProcedure random = module.resolveProcedure("random");
+	IProcedureCall randomCall = random.call();
 	IVariable r = randomInt.getBody().addVariable(DOUBLE, randomCall);
 	IBinaryExpression m = MUL.on(r, ADD.on(SUB.on(max, min), literal(1)));
 	IUnaryExpression t = TRUNCATE.on(m);
@@ -46,7 +47,7 @@ public class TestRandom extends BaseTest {
 
 	@Case({"1","10"})
 	public void testRandomInt(IExecutionData data) {
-		int ret = ((BigDecimal) data.getReturnValue()).intValue();
+		int ret = ((BigDecimal) data.getReturnValue().getValue()).intValue();
 		assertTrue(ret >= 1); 
 		assertTrue(ret <= 10); 
 	}

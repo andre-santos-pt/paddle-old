@@ -16,24 +16,14 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 
 	private final IVariable variable;
 	private final IExpression expression;
-	private final boolean onTarget;
 	
-	private VariableAssignment(IBlock parent, IVariable variable, IExpression expression, boolean onTarget) {
+	public VariableAssignment(IBlock parent, IVariable variable, IExpression expression) {
 		super(parent, true);
 		if(variable.getProcedure() != parent.getProcedure())
 			throw new RuntimeException("Violation: variable to assign must be within the same procedure");
 		
 		this.variable = variable;
 		this.expression = expression;
-		this.onTarget = onTarget;
-	}
-	
-	public VariableAssignment(IBlock parent, IVariable variable, IExpression expression) {
-		this(parent, variable, expression, false);
-	}
-	
-	public static VariableAssignment onTarget(IBlock parent, IVariable variable, IExpression expression) {
-		return new VariableAssignment(parent, variable, expression, true);
 	}
 	
 	@Override
@@ -47,30 +37,20 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 	}
 	
 	@Override
-	public boolean onTarget() {
-		return onTarget;
-	}
-	
-	@Override
 	public String toString() {
-		return (onTarget ? "*" : "") + variable.getId() + " = " + expression;
+		return variable.getId() + " = " + expression;
 	}
 
 	@Override
-	public boolean execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
+	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
 		assert expressions.size() == 1;
-		// TODO validate 
-		if(!variable.getType().isReference() && onTarget)
-			System.err.println("incompatible");
 		
 		IValue newValue = expressions.get(0);
 		IStackFrame topFrame = stack.getTopFrame();
-		String varId = getVariable().getId();
-		IReference ref = topFrame.getVariableStore(varId);
-		if(variable.getType().isReference() && onTarget)
-			ref.setValue(newValue);
-		else
+		IReference ref = topFrame.getVariableStore(variable);
+//		if(variable.getType().isReference())
+//			ref.setValue(newValue);
+//		else
 			ref.setTarget(newValue);
-		return true;
 	}
 }

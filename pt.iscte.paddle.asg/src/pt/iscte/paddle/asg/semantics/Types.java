@@ -15,10 +15,13 @@ import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IRecordFieldAssignment;
+import pt.iscte.paddle.asg.IReferenceType;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IUnaryOperator;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAssignment;
+import pt.iscte.paddle.asg.IVariableReferenceValue;
+import pt.iscte.paddle.machine.IReference;
 
 public class Types extends Rule {
 
@@ -66,6 +69,7 @@ public class Types extends Rule {
 		return true;
 	}
 
+	
 	@Override
 	public boolean visit(ISelection selection) {
 		checkGuard(selection);
@@ -101,10 +105,20 @@ public class Types extends Rule {
 			addProblem("incompatible assignment: " + exp.getType() + " cannot be assigned to " + type,
 					type, exp);	
 	}
+	
+	@Override
+	public void visit(IVariableReferenceValue exp) {
+		if(!exp.getVariable().getType().isReference())
+			addProblem("not a reference type", exp);
+	}
+	
 	@Override
 	public boolean visit(IArrayElementAssignment assignment) {
 		IVariable variable = assignment.getVariable();
 		IDataType type = variable.getType();
+		if(type instanceof IReferenceType)
+			type = ((IReferenceType) type).resolveTarget();
+		
 		if(!(type instanceof IArrayType)) {
 			addProblem("the type of variable " + variable + " is not an array type", assignment);
 			return true;
@@ -112,24 +126,23 @@ public class Types extends Rule {
 		
 		//TODO int type on index
 		
-		IArrayType arrayType = (IArrayType) type;
-		IDataType componentType = arrayType.getComponentTypeAt(assignment.getIndexes().size());
-		IDataType expType = assignment.getExpression().getType();
-		if(!componentType.isCompatible(expType))
-			addProblem("incompatible assignment: " + expType + " cannot be assigned to " + componentType,
-					arrayType, expType);	
+//		IArrayType arrayType = (IArrayType) type;
+//		IDataType componentType = arrayType.getComponentTypeAt(assignment.getIndexes().size());
+//		IDataType expType = assignment.getExpression().getType();
+//		if(!componentType.isCompatible(expType))
+//			addProblem("incompatible assignment: " + expType + " cannot be assigned to " + componentType,
+//					arrayType, expType);	
 		return true;
 	}
 	
 	@Override
 	public boolean visit(IRecordFieldAssignment assignment) {
-		checkAssignment(assignment.getVariable(), assignment.getExpression());
+		checkAssignment(assignment.getField(), assignment.getExpression());
 		return true;
 	}
 	
 	@Override
 	public boolean visit(IArrayLengthExpression exp) {
-		// TODO Auto-generated method stub
 		return super.visit(exp);
 	}
 }

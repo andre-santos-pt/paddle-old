@@ -7,11 +7,9 @@ import pt.iscte.paddle.asg.IRecordType;
 
 public interface IHeapMemory {
 
-	
-
 	IArray allocateArray(IDataType baseType, int ... dimensions) throws ExecutionError;
 
-	IStructObject allocateObject(IRecordType type) throws ExecutionError;
+	IRecord allocateRecord(IRecordType type) throws ExecutionError;
 	
 	default int getMemory() {
 		return 0;

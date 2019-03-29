@@ -43,6 +43,8 @@ public abstract class BaseTest {
 	private IProcedure main;
 	private IProgramState state;
 
+	private List<ISemanticProblem> problems;
+
 	
 	public BaseTest() {
 		module = IModule.create();
@@ -70,12 +72,12 @@ public abstract class BaseTest {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
+		compile();
 	}
 
-	@Test
-	public void compile() {
+	private void compile() {
 		System.out.println(module);
-		List<ISemanticProblem> problems = module.checkSemantics();
+		problems = module.checkSemantics();
 		for (ISemanticProblem p : problems) {
 			System.err.println(p);
 		}
@@ -84,6 +86,9 @@ public abstract class BaseTest {
 
 	@Test
 	public void run() throws Throwable {
+		if(!problems.isEmpty())
+			return;
+		
 		state = IMachine.create(module);
 
 		for (Method method : getClass().getMethods()) {
@@ -127,7 +132,7 @@ public abstract class BaseTest {
 	}
 
 	protected static void equal(int expected, IValue value) {
-		assertTrue("value is not BigDecimal", value.getValue() instanceof BigDecimal);
+		assertTrue("value is not BigDecimal: " + value, value.getValue() instanceof BigDecimal);
 		assertEquals(expected, ((BigDecimal) value.getValue()).intValue());
 	}
 	

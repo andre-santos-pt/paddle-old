@@ -6,10 +6,13 @@ import pt.iscte.paddle.machine.IValue;
 
 class Array implements IArray {
 	private final IArrayType type;
-	private IValue[] elements;
+	private final IValue[] elements;
 	
-	public Array(IArrayType type) {
+	public Array(IArrayType type, int length) {
 		this.type = type;
+		elements = new IValue[length];
+		for(int i = 0; i < length; i++)
+			this.elements[i] = IValue.NULL;
 	}
 	
 	@Override
@@ -17,23 +20,22 @@ class Array implements IArray {
 		return type;
 	}
 
-	@Override
-	public void setValue(Object array) {
-		assert array instanceof IValue[];
-		
-		IValue[] vals = (IValue[]) array;
-		this.elements = new IValue[vals.length];
-		for(int i = 0; i < vals.length; i++)
-			this.elements[i] = vals[i];
-	}
+//	@Override
+//	public void setValue(Object array) {
+//		assert array instanceof IValue[];
+//		
+//		IValue[] vals = (IValue[]) array;
+//		this.elements = new IValue[vals.length];
+//		for(int i = 0; i < vals.length; i++)
+//			this.elements[i] = vals[i];
+//	}
 	
 	@Override
 	public IArray copy() {
-		Array copy = new Array(type);
+		Array copy = new Array(type, elements.length);
 		if(elements != null) {
-			copy.elements = new IValue[elements.length];
 			for(int i = 0; i < elements.length; i++)
-				copy.elements[i] = elements[i].copy();
+				copy.elements[i] = elements[i];
 		}
 		return copy;
 	}
@@ -56,10 +58,11 @@ class Array implements IArray {
 	@Override
 	public void setElement(int i, IValue value) {
 		assert !isNull();
-		if(elements[i] == null)
-			elements[i] = value;
-		else
-			elements[i].setValue(value.getValue());
+		elements[i] = value;
+//		if(elements[i] == null)
+//			elements[i] = value;
+//		else
+//			elements[i].setValue(value.getValue());
 	}
 	
 	@Override

@@ -26,7 +26,7 @@ import pt.iscte.paddle.machine.IExpressionEvaluator;
 import pt.iscte.paddle.machine.IHeapMemory;
 import pt.iscte.paddle.machine.IProgramState;
 import pt.iscte.paddle.machine.IStackFrame;
-import pt.iscte.paddle.machine.IStructObject;
+import pt.iscte.paddle.machine.IRecord;
 import pt.iscte.paddle.machine.IValue;
 
 public class ProgramState implements IProgramState {
@@ -129,8 +129,8 @@ public class ProgramState implements IProgramState {
 	}
 
 	@Override
-	public IStructObject allocateObject(IRecordType type) {
-		return heap.allocateObject(type);
+	public IRecord allocateObject(IRecordType type) {
+		return heap.allocateRecord(type);
 	}
 
 	
@@ -156,6 +156,10 @@ public class ProgramState implements IProgramState {
 		IStackFrame newFrame = stack.newFrame(procedure, argsValues);
 	}
 
+	public boolean isOver() {
+		return stack.isEmpty();
+	}
+
 	public void stepIn() throws ExecutionError {
 		assert !isOver();
 		stack.stepIn();
@@ -163,27 +167,26 @@ public class ProgramState implements IProgramState {
 
 	public void stepOver() throws ExecutionError {
 		assert !isOver();
+		// TODO
 	}
 
-	public boolean isOver() {
-		return stack.isEmpty();
-	}
 	
 
 
 	public IExecutionData execute(IProcedure procedure, Object ... args) {
 		SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
 		List<ISemanticProblem> problems = checker.check(program);
-		for (ISemanticProblem p : problems) {
-			System.err.println(p);
-		}
+		problems.forEach(p -> System.err.println(p));
 		if(!problems.isEmpty())
 			return new ExecutionData();
 
 		try {
 			setupExecution(procedure, args);
-			while(!isOver())
+			while(!isOver()) {
 				stepIn();
+				while(!stack.isEmpty() && stack.getTopFrame().isOver())
+					stack.getTopFrame().terminateFrame();
+			}
 		}
 		catch (ExecutionError e) {
 			System.err.println("Execution error: " + e);
@@ -197,12 +200,10 @@ public class ProgramState implements IProgramState {
 			@Override
 			public void stackFrameCreated(IStackFrame stackFrame) {
 				data.updateCallStackSize(stack);
-				System.out.println("> " + stackFrame);
 				stackFrame.addListener(new IStackFrame.IListener() {
 					@Override
 					public void statementExecutionStart(IStatement statement) {
 						instructionPointer = statement;
-						//							System.out.println("+ " + instructionPointer);
 					}
 
 					public void statementExecutionEnd(IStatement statement) {
@@ -214,7 +215,6 @@ public class ProgramState implements IProgramState {
 					public void expressionEvaluationStart(IExpression expression) {
 						if(expression instanceof IBinaryExpression) {
 							instructionPointer = expression;
-							//							System.out.println("+ " + instructionPointer);
 						}
 					}
 
@@ -227,7 +227,6 @@ public class ProgramState implements IProgramState {
 
 			@Override
 			public void stackFrameTerminated(IStackFrame stackFrame, IValue returnValue) {
-				System.out.println(stackFrame.getProcedure().getId() + " returns " + returnValue);
 				data.setVariableState(stackFrame.getVariables());
 				data.setReturnValue(returnValue);
 				data.countCall();

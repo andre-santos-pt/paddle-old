@@ -7,6 +7,7 @@ public interface IArray extends IValue {
 	int getLength();
 	IValue getElement(int i);
 	void setElement(int i, IValue value);
+	IArray copy();
 	
 	@Override
 	default int getMemory() {
@@ -14,6 +15,6 @@ public interface IArray extends IValue {
 	}
 	
 	interface IListener {
-		void elementChanged(int index, IValue newValue);
+		void elementChanged(int index, IValue oldValue, IValue newValue);
 	}
 }

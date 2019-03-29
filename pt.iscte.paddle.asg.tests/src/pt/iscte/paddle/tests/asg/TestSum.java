@@ -5,23 +5,15 @@ import static pt.iscte.paddle.asg.ILiteral.literal;
 import static pt.iscte.paddle.asg.IOperator.ADD;
 import static pt.iscte.paddle.asg.IOperator.DIFFERENT;
 
-import java.math.BigDecimal;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import pt.iscte.paddle.asg.IArrayAllocation;
 import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.ILoop;
-import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
 
 public class TestSum extends BaseTest {
 
@@ -47,7 +39,7 @@ public class TestSum extends BaseTest {
 	@Case
 	public void test(IExecutionData data) {
 		assertEquals(2, data.getCallStackDepth());
-		equal(21, data.getVariableValue("result"));
+		equal(21, data.getVariableValue(result));
 		
 	}
 }

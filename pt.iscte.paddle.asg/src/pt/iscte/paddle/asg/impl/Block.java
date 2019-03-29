@@ -44,7 +44,16 @@ class Block extends ProgramElement implements IBlock {
 	
 	@Override
 	public boolean isEmpty() {
-		return children.isEmpty();
+//		return children.isEmpty();
+		return onlyEmptyBlocks();
+	}
+	
+	// TODO
+	private boolean onlyEmptyBlocks() {
+		for(IBlockChild child : children)
+			if(!(child instanceof Block) || child instanceof Block && !((Block) child).onlyEmptyBlocks())
+				return false;
+		return true;
 	}
 	
 	@Override
@@ -125,7 +134,7 @@ class Block extends ProgramElement implements IBlock {
 	public IRecordFieldAssignment addStructMemberAssignment(IVariable var, IVariable field, IExpression exp) {
 		// TODO OCL: variable must be owned by the same procedure of expression
 
-		return new StructMemberAssignment(this, var, field, exp);
+		return new RecordFieldAssignment(this, var, field, exp);
 	}
 	
 	@Override
@@ -174,8 +183,8 @@ class Block extends ProgramElement implements IBlock {
 		}
 		
 		@Override
-		public boolean execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
-			return true;
+		public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
+
 		}
 	}
 	
@@ -190,8 +199,8 @@ class Block extends ProgramElement implements IBlock {
 		}
 		
 		@Override
-		public boolean execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
-			return true;
+		public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
+
 		}
 	}
 }

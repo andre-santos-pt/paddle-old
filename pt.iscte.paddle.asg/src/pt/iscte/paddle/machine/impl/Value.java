@@ -7,7 +7,7 @@ import pt.iscte.paddle.machine.IValue;
 
 public final class Value implements IValue {
 	private final IDataType type;
-	private Object value;
+	private final Object value;
 	
 	private Value(IDataType type, Object value) {
 		this.type = type;
@@ -18,7 +18,7 @@ public final class Value implements IValue {
 		if(type instanceof IValueType)
 			return new Value(type, ((IValueType)type).create(value.toString()));			
 		else if(type instanceof IArrayType)
-			return new Array((IArrayType) type);
+			return IValue.NULL;
 		else
 			return new Value(type, value);
 	}
@@ -38,14 +38,14 @@ public final class Value implements IValue {
 		return value == null ? "null" : value.toString();
 	}
 	
-	@Override
-	public void setValue(Object value) {
+//	@Override
+//	public void setValue(Object value) {
 //		assert !(value instanceof IValue);
-		this.value = value;
-	}
+//		this.value = value;
+//	}
 	
 	@Override
 	public IValue copy() {
-		return new Value(type, value);
+		return this;
 	}
 }

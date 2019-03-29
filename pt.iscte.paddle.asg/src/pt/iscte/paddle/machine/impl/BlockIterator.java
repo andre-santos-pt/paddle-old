@@ -15,42 +15,43 @@ import pt.iscte.paddle.machine.IValue;
 
 public class BlockIterator {
 	private List<IBlockChild> elements;
-	private int i;
+	private int next;
 	private IExpression eval;
 	
 	public BlockIterator(IBlock root) {
 		assert !root.isEmpty();
+		
 		this.elements = root.getChildren();
-		this.i = 0;
+		this.next = 0;
 		
 		if(current() instanceof IControlStructure)
 			eval = ((IControlStructure) current()).getGuard();
 	}
 
 	public boolean hasNext() {
-		return i != elements.size();
+		return next != elements.size();
 	}
 
 	public BlockIterator moveNext(IValue last) throws ExecutionError {
 		assert hasNext();
+		
 		if(last != null)
 			eval = null;
 		
-		IBlockChild current = elements.get(i);
-		System.out.println(current);
+		IBlockChild current = elements.get(next);
+
 		if(current instanceof IStatement) {
-			i++;
+			next++;
 		}
 		else if(current instanceof IControlStructure && last == null) {
 			eval = ((IControlStructure) current).getGuard();
 			return null;
 		}
 		else if(current instanceof ISelection) {
+			next++;
 			ISelection sel = (ISelection) current;
-			i++;
-			if(last.isTrue()) {
-				if(!sel.isEmpty())
-					return new BlockIterator(sel.getBlock());
+			if(last.isTrue() && !sel.isEmpty()) {
+				return new BlockIterator(sel.getBlock());
 			}
 			else if(sel.hasAlternativeBlock()) {
 				IBlock elseBlock = sel.getAlternativeBlock();
@@ -63,15 +64,15 @@ public class BlockIterator {
 			if(last.isTrue() && !loop.isEmpty())
 				return new BlockIterator(loop.getBlock());
 			else
-				i++;
+				next++;
 		}
 
 		return null;
 	}
 
 	public IProgramElement current() {
-		assert i >= 0 && i < elements.size();
-		return eval == null ? elements.get(i) : eval;
+		assert next >= 0 && next < elements.size();
+		return eval == null ? elements.get(next) : eval;
 	}
 
 	@Override

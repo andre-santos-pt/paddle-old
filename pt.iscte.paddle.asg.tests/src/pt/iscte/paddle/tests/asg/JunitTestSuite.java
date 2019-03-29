@@ -13,7 +13,7 @@ import org.junit.runners.Suite;
 	TestArrays.class,
 	Test2DArrays.class,
 	TestConstants.class,
-	TestStruct.class,
+	TestRecord.class,
 	TestRecursion.class,
 	TestBuiltinProcedures.class,
 })

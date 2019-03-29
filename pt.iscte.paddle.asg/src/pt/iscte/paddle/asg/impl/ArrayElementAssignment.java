@@ -11,6 +11,7 @@ import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IArray;
 import pt.iscte.paddle.machine.ICallStack;
+import pt.iscte.paddle.machine.IReference;
 import pt.iscte.paddle.machine.IStackFrame;
 import pt.iscte.paddle.machine.IValue;
 
@@ -28,11 +29,6 @@ class ArrayElementAssignment extends VariableAssignment implements IArrayElement
 		return indexes;
 	}
 	
-//	@Override
-//	public IArrayVariable getVariable() {
-//		return (IArrayVariable) super.getVariable();
-//	}
-
 	@Override
 	public String toString() {
 		String text = getVariable().toString();
@@ -44,10 +40,18 @@ class ArrayElementAssignment extends VariableAssignment implements IArrayElement
 	}
 	
 	@Override
-	public boolean execute(ICallStack callStack, List<IValue> values) throws ExecutionError {
+	public void execute(ICallStack callStack, List<IValue> values) throws ExecutionError {
 		assert values.size() == getIndexes().size() + 1;
+		
 		IStackFrame frame = callStack.getTopFrame();
-		IValue valueArray = frame.getVariableStore(getVariable().getId()).getTarget();
+
+		IReference ref = null;
+		if(getVariable() instanceof VariableReferenceValue)
+			ref = (IReference) ((VariableReferenceValue) getVariable() ).evalutate(values, callStack);
+		else
+			ref = frame.getVariableStore(getVariable());
+		
+		IValue valueArray = ref.getTarget();
 		if(valueArray.isNull())
 			throw new ExecutionError(ExecutionError.Type.NULL_POINTER, this, "null pointer", getVariable());
 		
@@ -62,6 +66,5 @@ class ArrayElementAssignment extends VariableAssignment implements IArrayElement
 		int index = ((Number) values.get(indexes.size()-1).getValue()).intValue();
 		IValue val = values.get(values.size()-1);
 		((IArray) v).setElement(index, val);
-		return true;
 	}
 }

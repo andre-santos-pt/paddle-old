@@ -29,11 +29,11 @@ public interface IProcedureDeclaration extends IProgramElement {
 				args += ", ";
 			args += p.getType();
 		}
-		return getReturnType() + " " +getId() + "(" + args + ")";
+		return getReturnType() + " " + getId() + "(" + args + ")";
 	}
 	
 	default boolean matchesSignature(String id, IDataType... paramTypes) {
-		if(!getId().equals(id))
+		if(!id.equals(getId()))
 			return false;
 		
 		List<IVariable> parameters = getParameters();

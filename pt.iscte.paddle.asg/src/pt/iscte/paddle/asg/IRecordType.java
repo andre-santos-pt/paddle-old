@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface IRecordType extends IDataType {
 	
-	List<IVariable> getMemberVariables();
+	List<IVariable> getFields();
 	
 	IVariable addMemberVariable(IDataType type);
 

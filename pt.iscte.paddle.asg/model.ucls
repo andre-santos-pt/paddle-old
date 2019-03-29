@@ -446,8 +446,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="50" language="java" name="pt.iscte.paddle.machine.IStructObject" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IStructObject.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="50" language="java" name="pt.iscte.paddle.machine.IRecord" project="pt.iscte.paddle.asg" 
+    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IRecord.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1688" y="2330"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -592,271 +592,293 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <generalization id="66">    
-    <end type="SOURCE" refId="14"/>    
-    <end type="TARGET" refId="12"/>  
-  </generalization>  
-  <generalization id="67">    
-    <end type="SOURCE" refId="60"/>    
-    <end type="TARGET" refId="49"/>  
-  </generalization>  
-  <generalization id="68">    
-    <end type="SOURCE" refId="42"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <generalization id="69">    
-    <end type="SOURCE" refId="23"/>    
-    <end type="TARGET" refId="11"/>  
-  </generalization>  
+  <class id="66" language="java" name="pt.iscte.paddle.asg.impl.VariableReferenceValue" project="pt.iscte.paddle.asg" 
+    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/impl/VariableReferenceValue.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1997" y="1257"/>    
+    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <association id="67">    
+    <end type="SOURCE" refId="66" navigable="false">      
+      <attribute id="68" name="variable"/>      
+      <multiplicity id="69" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <generalization id="70">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <generalization id="71">    
-    <end type="SOURCE" refId="36"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <nesting id="72">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="14"/>  
-  </nesting>  
-  <generalization id="73">    
-    <end type="SOURCE" refId="21"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="74">    
-    <end type="SOURCE" refId="40"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <nesting id="75">    
-    <end type="SOURCE" refId="56"/>    
-    <end type="TARGET" refId="58"/>  
-  </nesting>  
-  <association id="76">    
-    <end type="SOURCE" refId="55" navigable="false">      
-      <attribute id="77" name="value">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="78" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="49" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="79">    
-    <end type="SOURCE" refId="62"/>    
-    <end type="TARGET" refId="63"/>  
-  </nesting>  
-  <generalization id="80">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="31"/>  
-  </generalization>  
-  <generalization id="81">    
-    <end type="SOURCE" refId="32"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <nesting id="82">    
-    <end type="SOURCE" refId="61"/>    
-    <end type="TARGET" refId="53"/>  
-  </nesting>  
-  <generalization id="83">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="44"/>  
-  </generalization>  
-  <generalization id="84">    
-    <end type="SOURCE" refId="30"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <generalization id="85">    
-    <end type="SOURCE" refId="29"/>    
-    <end type="TARGET" refId="44"/>  
-  </generalization>  
-  <nesting id="86">    
-    <end type="SOURCE" refId="65"/>    
-    <end type="TARGET" refId="45"/>  
-  </nesting>  
-  <generalization id="87">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="20"/>  
-  </generalization>  
-  <nesting id="88">    
-    <end type="SOURCE" refId="54"/>    
-    <end type="TARGET" refId="47"/>  
-  </nesting>  
-  <generalization id="89">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <association id="90">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="91" name="INT_ARRAY2D">        
-        <position height="0" width="0" x="-152" y="-144"/>      
-      </attribute>      
-      <multiplicity id="92" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-152" y="-144"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="93">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="94" name="INT_ARRAY">        
-        <position height="19" width="75" x="3765" y="1442"/>      
-      </attribute>      
-      <multiplicity id="95" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-152" y="-144"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="96">    
-    <end type="SOURCE" refId="20"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <nesting id="97">    
-    <end type="SOURCE" refId="46"/>    
-    <end type="TARGET" refId="55"/>  
-  </nesting>  
-  <generalization id="98">    
-    <end type="SOURCE" refId="33"/>    
-    <end type="TARGET" refId="31"/>  
-  </generalization>  
-  <generalization id="99">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <generalization id="100">    
     <bendpoint x="601" y="435"/>    
     <end type="SOURCE" refId="18"/>    
     <end type="TARGET" refId="17"/>  
   </generalization>  
-  <generalization id="101">    
-    <end type="SOURCE" refId="38"/>    
-    <end type="TARGET" refId="37"/>  
+  <generalization id="71">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="20"/>  
   </generalization>  
-  <generalization id="102">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <nesting id="103">    
-    <end type="SOURCE" refId="11"/>    
-    <end type="TARGET" refId="12"/>  
-  </nesting>  
-  <generalization id="104">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="105">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="106">    
+  <generalization id="72">    
     <end type="SOURCE" refId="28"/>    
     <end type="TARGET" refId="23"/>  
   </generalization>  
-  <generalization id="107">    
-    <end type="SOURCE" refId="25"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="108">    
-    <end type="SOURCE" refId="39"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <generalization id="109">    
-    <end type="SOURCE" refId="41"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <generalization id="110">    
-    <end type="SOURCE" refId="26"/>    
-    <end type="TARGET" refId="34"/>  
-  </generalization>  
-  <generalization id="111">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <nesting id="112">    
-    <end type="SOURCE" refId="31"/>    
-    <end type="TARGET" refId="24"/>  
-  </nesting>  
-  <generalization id="113">    
-    <end type="SOURCE" refId="27"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <generalization id="114">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="44"/>  
-  </generalization>  
-  <generalization id="115">    
-    <end type="SOURCE" refId="35"/>    
-    <end type="TARGET" refId="20"/>  
-  </generalization>  
-  <generalization id="116">    
-    <end type="SOURCE" refId="50"/>    
-    <end type="TARGET" refId="49"/>  
-  </generalization>  
-  <generalization id="117">    
-    <end type="SOURCE" refId="22"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <generalization id="118">    
-    <end type="SOURCE" refId="34"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <nesting id="119">    
-    <end type="SOURCE" refId="17"/>    
-    <end type="TARGET" refId="16"/>  
-  </nesting>  
-  <association id="120">    
-    <end type="SOURCE" refId="55" navigable="false">      
-      <attribute id="121" name="expression">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="122" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="123">    
-    <end type="SOURCE" refId="34"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <generalization id="124">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="125">    
-    <end type="SOURCE" refId="22"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="126">    
-    <end type="SOURCE" refId="19"/>    
-    <end type="TARGET" refId="11"/>  
-  </generalization>  
-  <generalization id="127">    
-    <end type="SOURCE" refId="54"/>    
-    <end type="TARGET" refId="49"/>  
-  </generalization>  
-  <nesting id="128">    
-    <end type="SOURCE" refId="57"/>    
-    <end type="TARGET" refId="64"/>  
-  </nesting>  
-  <association id="129">    
+  <association id="73">    
     <end type="SOURCE" refId="62" navigable="false">      
-      <attribute id="130" name="type">        
+      <attribute id="74" name="type">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="131" minimum="0" maximum="1">        
+      <multiplicity id="75" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="63" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <generalization id="76">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="77">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="44"/>  
+  </generalization>  
+  <generalization id="78">    
+    <end type="SOURCE" refId="41"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <generalization id="79">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <nesting id="80">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="12"/>  
+  </nesting>  
+  <generalization id="81">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <generalization id="82">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <nesting id="83">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="16"/>  
+  </nesting>  
+  <nesting id="84">    
+    <end type="SOURCE" refId="61"/>    
+    <end type="TARGET" refId="53"/>  
+  </nesting>  
+  <generalization id="85">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="12"/>  
+  </generalization>  
+  <generalization id="86">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="87">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <realization id="88">    
+    <end type="SOURCE" refId="66"/>    
+    <end type="TARGET" refId="26"/>  
+  </realization>  
+  <generalization id="89">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="90">    
+    <end type="SOURCE" refId="35"/>    
+    <end type="TARGET" refId="20"/>  
+  </generalization>  
+  <generalization id="91">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
+  <association id="92">    
+    <end type="SOURCE" refId="55" navigable="false">      
+      <attribute id="93" name="value">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="94" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="49" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="95">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <association id="96">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="97" name="INT_ARRAY2D">        
+        <position height="0" width="0" x="-152" y="-144"/>      
+      </attribute>      
+      <multiplicity id="98" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-152" y="-144"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="99">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="100">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="101">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
+  <generalization id="102">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="103">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="49"/>  
+  </generalization>  
+  <generalization id="104">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <generalization id="105">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="106">    
+    <end type="SOURCE" refId="50"/>    
+    <end type="TARGET" refId="49"/>  
+  </generalization>  
+  <association id="107">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="108" name="INT_ARRAY">        
+        <position height="19" width="75" x="3765" y="1442"/>      
+      </attribute>      
+      <multiplicity id="109" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-152" y="-144"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="110">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <generalization id="111">    
+    <end type="SOURCE" refId="38"/>    
+    <end type="TARGET" refId="37"/>  
+  </generalization>  
+  <nesting id="112">    
+    <end type="SOURCE" refId="65"/>    
+    <end type="TARGET" refId="45"/>  
+  </nesting>  
+  <nesting id="113">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="14"/>  
+  </nesting>  
+  <generalization id="114">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="34"/>  
+  </generalization>  
+  <nesting id="115">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="24"/>  
+  </nesting>  
+  <generalization id="116">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="44"/>  
+  </generalization>  
+  <generalization id="117">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <association id="118">    
+    <end type="SOURCE" refId="55" navigable="false">      
+      <attribute id="119" name="expression">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="120" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="121">    
+    <end type="SOURCE" refId="40"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="122">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="44"/>  
+  </generalization>  
+  <generalization id="123">    
+    <end type="SOURCE" refId="36"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <nesting id="124">    
+    <end type="SOURCE" refId="62"/>    
+    <end type="TARGET" refId="63"/>  
+  </nesting>  
+  <nesting id="125">    
+    <end type="SOURCE" refId="57"/>    
+    <end type="TARGET" refId="64"/>  
+  </nesting>  
+  <generalization id="126">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <nesting id="127">    
+    <end type="SOURCE" refId="56"/>    
+    <end type="TARGET" refId="58"/>  
+  </nesting>  
+  <nesting id="128">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="47"/>  
+  </nesting>  
+  <nesting id="129">    
+    <end type="SOURCE" refId="46"/>    
+    <end type="TARGET" refId="55"/>  
+  </nesting>  
+  <generalization id="130">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <generalization id="131">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <generalization id="132">    
+    <end type="SOURCE" refId="60"/>    
+    <end type="TARGET" refId="49"/>  
+  </generalization>  
+  <generalization id="133">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <generalization id="134">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="135">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="136">    
+    <end type="SOURCE" refId="39"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
   <classifier-display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

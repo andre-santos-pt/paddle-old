@@ -8,7 +8,7 @@ public interface IValue {
 	IDataType getType();
 	Object getValue();
 	
-	void setValue(Object o);
+//	void setValue(Object o);
 	
 	IValue copy();
 	
@@ -38,15 +38,16 @@ public interface IValue {
 		public Object getValue() {
 			return null;
 		}
-		@Override
-		public void setValue(Object o) {
-			assert false;
-		}
+//		@Override
+//		public void setValue(Object o) {
+//			assert false;
+//		}
 		
 		@Override
 		public String toString() {
 			return "null";
 		}
+		
 		@Override
 		public IValue copy() {
 			return this;

@@ -11,14 +11,13 @@ import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
 
 public interface IStackFrame {
-//	IStackFrame getParent(); // only null on root
 	ICallStack getCallStack();
 	
 	IProcedure getProcedure();
 	
-	Map<String, IValue> getVariables();
+	Map<IVariable, IValue> getVariables();
 	
-	IReference getVariableStore(String id);
+	IReference getVariableStore(IVariable variable);
 //	void setVariable(String identifier, IValue value);
 	
 
@@ -38,12 +37,16 @@ public interface IStackFrame {
 	
 	void terminateFrame();
 	
+	default boolean isTopFrame() {
+		return this == getCallStack().getTopFrame();
+	}
+	
 	IValue getValue(String literal);
 	IValue getValue(Object object);
 
 	IArray allocateArray(IDataType baseType, int[] dimensions);
 	
-	IStructObject allocateObject(IRecordType type);
+	IRecord allocateRecord(IRecordType type);
 	
 	IValue evaluate(IExpression expression, List<IValue> expressions) throws ExecutionError;
 	
@@ -55,9 +58,9 @@ public interface IStackFrame {
 	void addListener(IListener listener);
 
 	interface IListener {
-		default void variableAdded(String identifier, IDataType type) { }
+		default void variableAdded(IVariable variable, IDataType type) { }
 		
-		default void variableModified(String identifier, IDataType type, IValue newValue) { }
+		default void variableModified(IVariable variable, IDataType type, IValue newValue) { }
 		
 		default void statementExecutionStart(IStatement statement) { }
 

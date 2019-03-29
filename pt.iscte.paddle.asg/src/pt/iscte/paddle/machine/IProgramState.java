@@ -21,7 +21,7 @@ public interface IProgramState {
 	IValue getValue(Object object);
 	
 	IArray allocateArray(IDataType baseType, int ... dimensions);
-	IStructObject allocateObject(IRecordType type);
+	IRecord allocateObject(IRecordType type);
 	
 	IExecutionData execute(IProcedure p, Object...args);
 

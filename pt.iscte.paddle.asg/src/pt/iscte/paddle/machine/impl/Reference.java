@@ -6,10 +6,8 @@ import pt.iscte.paddle.machine.IValue;
 
 public class Reference implements IReference {
 	private IValue target;
-	//	private IReferenceType type;
 
 	public Reference(IValue target) {
-		//		this.type = type;
 		this.target = target;
 	}
 
@@ -33,14 +31,13 @@ public class Reference implements IReference {
 		target = value;
 	}
 
-	@Override
-	public void setValue(Object o) {
+//	@Override
+//	public void setValue(IValue v) {
+//		target 
+//	}
 
-		target.setValue(o);
-	}
-
 	@Override
-	public IValue copy() {
+	public IReference copy() {
 		return new Reference(target);
 	}
 

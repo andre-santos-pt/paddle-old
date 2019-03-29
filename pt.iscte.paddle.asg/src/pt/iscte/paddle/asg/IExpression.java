@@ -99,6 +99,12 @@ public interface IExpression extends IProgramElement {
 			visitor.visit(sm);
 		}
 		
+		// before IVariable because it is subtype
+		else if(part instanceof IVariableReferenceValue) {
+			IVariableReferenceValue varadd = (IVariableReferenceValue) part; 
+			visitor.visit(varadd);
+		}
+		
 		else if(part instanceof IVariable) {
 			IVariable var = (IVariable) part; 
 			visitor.visit(var);
@@ -111,10 +117,7 @@ public interface IExpression extends IProgramElement {
 			IVariableAddress varadd = (IVariableAddress) part; 
 			visitor.visit(varadd);
 		}
-		else if(part instanceof IVariableReferenceValue) {
-			IVariableReferenceValue varadd = (IVariableReferenceValue) part; 
-			visitor.visit(varadd);
-		}
+		
 		
 		else
 			assert false: "missing case " + part.getClass().getName();

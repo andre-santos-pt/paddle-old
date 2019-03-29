@@ -6,21 +6,19 @@ import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IRecordFieldExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ICallStack;
-import pt.iscte.paddle.machine.IStructObject;
+import pt.iscte.paddle.machine.IRecord;
 import pt.iscte.paddle.machine.IValue;
 
-class StructMemberExpression extends Expression implements IRecordFieldExpression {
+class RecordFieldExpression extends Expression implements IRecordFieldExpression {
 
 	private final IVariable variable;
-	private final String memberId;
+	private final IVariable field;
 	
-	public StructMemberExpression(IVariable variable, String memberId) {
+	public RecordFieldExpression(IVariable variable, IVariable field) {
 		assert variable != null;
-		assert memberId != null;
-		
-		// TODO validation variable
+		assert field != null;
 		this.variable = variable;
-		this.memberId = memberId;
+		this.field = field;
 	}
 
 	@Override
@@ -29,25 +27,24 @@ class StructMemberExpression extends Expression implements IRecordFieldExpressio
 	}
 
 	@Override
-	public String getMemberId() {
-		return memberId;
+	public IVariable getField() {
+		return field;
 	}
 
 	@Override
 	public IDataType getType() {
-		return variable.getType();
+		return field.getType();
 	}
 	
 	@Override
 	public String toString() {
-		return variable.getId() + "." + memberId;
+		return variable.getId() + "." + field.getId();
 	}
 	
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) {
-		// TODO validate
-		IStructObject object = (IStructObject) stack.getTopFrame().getVariableStore(getVariable().getId());
-		IValue field = object.getField(getMemberId());
+		IRecord object = (IRecord) stack.getTopFrame().getVariableStore(getVariable()).getTarget();
+		IValue field = object.getField(this.field);
 		return field;
 	}
 }

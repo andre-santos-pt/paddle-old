@@ -28,9 +28,8 @@ class Return extends Statement implements IReturn {
 	}
 	
 	@Override
-	public boolean execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
+	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
 		if(expressions.size() == 1)
 			stack.getTopFrame().setReturn(expressions.get(0));
-		return false;
 	}
 }

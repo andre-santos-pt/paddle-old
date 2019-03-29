@@ -33,16 +33,17 @@ public interface IBlock extends IBlockChild, IStatementContainer {
 				if(visitor.visit(ass))
 					ass.getExpression().accept(visitor);
 			}
-			else if(s instanceof IVariableAssignment) {
-				IVariableAssignment ass = (IVariableAssignment) s;
-				if(visitor.visit(ass))
-					ass.getExpression().accept(visitor);
-			}
 			else if(s instanceof IRecordFieldAssignment) {
 				IRecordFieldAssignment ass = (IRecordFieldAssignment) s;
 				if(visitor.visit(ass))
 					ass.getExpression().accept(visitor);
 			}
+			else if(s instanceof IVariableAssignment) {
+				IVariableAssignment ass = (IVariableAssignment) s;
+				if(visitor.visit(ass))
+					ass.getExpression().accept(visitor);
+			}
+			
 			else if(s instanceof IProcedureCall) {
 				IProcedureCall call = (IProcedureCall) s;
 				if(visitor.visit(call))

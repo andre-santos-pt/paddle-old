@@ -2,7 +2,6 @@ package pt.iscte.paddle.machine.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import com.google.common.collect.ImmutableList;
 
@@ -36,10 +35,10 @@ public class ExpressionEvaluator implements IExpressionEvaluator {
 	public IValue evaluate() throws ExecutionError {
 		while(!expStack.isEmpty())
 			step();
-		
+
 		return getValue();
 	}
-	
+
 	@Override
 	public IValue getValue() {
 		assert isComplete();
@@ -49,10 +48,10 @@ public class ExpressionEvaluator implements IExpressionEvaluator {
 	@Override
 	public Step step() throws ExecutionError {
 		assert !isComplete();
-		
+
 		while(expStack.peek().isDecomposable() && valueStack.size() < expStack.peek().getNumberOfParts()) {
 			expStack.peek().decompose().forEach(e -> expStack.push(e));
-			
+
 			while(!expStack.peek().isDecomposable())
 				valueStack.push(callStack.getTopFrame().evaluate(expStack.pop(), ImmutableList.of()));
 		}
@@ -69,7 +68,7 @@ public class ExpressionEvaluator implements IExpressionEvaluator {
 		}
 		else
 			valueStack.push(val);
-			
+
 		return new Step(val == null ? null : expStack.pop(), val);
 	}
 }

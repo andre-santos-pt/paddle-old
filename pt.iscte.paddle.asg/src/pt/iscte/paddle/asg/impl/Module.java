@@ -68,7 +68,7 @@ public class Module extends ProgramElement implements IModule {
 
 	@Override
 	public IRecordType addRecordType() {
-		IRecordType struct = new StructType();
+		IRecordType struct = new RecordType();
 		structs.add(struct);
 		return struct;
 	}

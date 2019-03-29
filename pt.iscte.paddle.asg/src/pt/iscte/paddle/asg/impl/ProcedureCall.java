@@ -63,9 +63,8 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 	}
 	
 	@Override
-	public boolean execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
+	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
 		executeInternal(stack, getProcedure(), expressions);
-		return true;
 	}
 	
 	@Override

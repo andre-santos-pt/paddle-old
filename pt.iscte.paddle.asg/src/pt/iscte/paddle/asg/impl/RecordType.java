@@ -10,15 +10,15 @@ import pt.iscte.paddle.asg.IRecordAllocation;
 import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
 
-class StructType extends ProgramElement implements IRecordType {
+class RecordType extends ProgramElement implements IRecordType {
 	private final List<IVariable> variables;
 	
-	StructType() {
+	RecordType() {
 		this.variables = new ArrayList<>(5);
 	}
 	
 	@Override
-	public List<IVariable> getMemberVariables() {
+	public List<IVariable> getFields() {
 		return Collections.unmodifiableList(variables);
 	}
 	
@@ -31,7 +31,7 @@ class StructType extends ProgramElement implements IRecordType {
 	
 	@Override
 	public String toString() {
-		String text = "struct " + getId() + " {";
+		String text = "record " + getId() + " {";
 		for (IVariable member : variables) {
 			text += member.getDeclaration() + ";";
 		}
@@ -48,7 +48,7 @@ class StructType extends ProgramElement implements IRecordType {
 	
 	@Override
 	public IRecordAllocation allocationExpression() {
-		return new StructAllocation(this);
+		return new RecordAllocation(this);
 	}
 	
 	@Override

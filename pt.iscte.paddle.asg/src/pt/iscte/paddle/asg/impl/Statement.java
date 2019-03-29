@@ -17,5 +17,4 @@ abstract class Statement extends ProgramElement implements IStatement, IExecutab
 	public IBlock getParent() {
 		return parent;
 	}
-
 }
