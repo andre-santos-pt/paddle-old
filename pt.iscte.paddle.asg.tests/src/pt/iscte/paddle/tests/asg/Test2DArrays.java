@@ -10,151 +10,133 @@ import static pt.iscte.paddle.asg.IOperator.EQUAL;
 
 import java.math.BigDecimal;
 
-import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 import pt.iscte.paddle.asg.IArrayAllocation;
+import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILoop;
-import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IVariable;
+import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.machine.IArray;
 import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
 
-public class Test2DArrays {
+@RunWith(Suite.class)
 
-	@Test
-	public void testIdMatrix() {
-		IModule program = IModule.create("Arrays2D");
-		
-		IProcedure idFunc = program.addProcedure("idMatrix", INT.array2D());
-		IVariable nParam = idFunc.addParameter("n", INT);
-		
-		IBlock body = idFunc.getBody();
-		IVariable idVar = body.addVariable("id", INT.array2D());
-		body.addAssignment(idVar, INT.array2D().allocation(nParam, nParam));
-		IVariable iVar = body.addVariable("i", INT);
-		IExpression e = DIFFERENT.on(iVar, nParam);
+@Suite.SuiteClasses({
+	Test2DArrays.IdMatrix.class,
+	Test2DArrays.NatMatrix.class,
+	Test2DArrays.ContainsNinMatrix.class
+})
+public class Test2DArrays extends BaseTest {
+
+	public static class IdMatrix extends BaseTest {
+		IProcedure idMatrix = module.addProcedure(INT.array2D());
+		IVariable n = idMatrix.addParameter(INT);		
+		IBlock body = idMatrix.getBody();
+		IVariable id = body.addVariable(INT.array2D());
+		IVariableAssignment assignment = body.addAssignment(id, INT.array2D().allocation(n, n));
+		IVariable iVar = body.addVariable(INT);
+		IExpression e = DIFFERENT.on(iVar, n);
 		ILoop loop = body.addLoop(e);
-		loop.addArrayElementAssignment(idVar, literal(1), iVar, iVar);
-		loop.addAssignment(iVar, ADD.on(iVar, literal(1)));
-		
-		body.addReturn(idVar);
+		IArrayElementAssignment ass2 = loop.addArrayElementAssignment(id, literal(1), iVar, iVar);
+		IVariableAssignment ass3 = loop.addAssignment(iVar, ADD.on(iVar, literal(1)));
+		IReturn ret = body.addReturn(id);
 
-		System.out.println(program);
-		final int N = 4;
-		final BigDecimal ZERO = new BigDecimal(0);
-		final BigDecimal ONE = new BigDecimal(1);
-		
-		IProgramState state = IMachine.create(program);
-		IExecutionData data = state.execute(idFunc, N);
-		IArray returnValue = (IArray) data.getReturnValue();
-		assertEquals(N, returnValue.getLength());
-		for(int i = 0; i < N; i++) {
-			IArray line = (IArray) returnValue.getElement(i);
-			assertEquals(N, line.getLength());
-			for(int j = 0; j < N; j++)
-				assertEquals(i == j ? ONE : ZERO, line.getElement(j).getValue());
+		@Case("4")
+		public void test(IExecutionData data) {
+			final int N = 4;
+			IArray returnValue = (IArray) data.getReturnValue();
+			assertEquals(N, returnValue.getLength());
+			for(int i = 0; i < N; i++) {
+				IArray line = (IArray) returnValue.getElement(i);
+				assertEquals(N, line.getLength());
+				for(int j = 0; j < N; j++)
+					equal(i == j ? 1 : 0, line.getElement(j));
+			}
 		}
 	}
 
-
-	@Test
-	public void testNatMatrix() {
-		IModule program = IModule.create("NatMatrix");
+	public static class NatMatrix extends BaseTest {
+		IProcedure naturalsMatrix = module.addProcedure(INT.array2D());
+		IVariable lines = naturalsMatrix.addParameter(INT);
+		IVariable cols = naturalsMatrix.addParameter(INT);
 		
-		IProcedure natFunc = program.addProcedure("natMatrix", INT.array2D());
-		IVariable linesParam = natFunc.addParameter("lines", INT);
-		IVariable colsParam = natFunc.addParameter("cols", INT);
+		IBlock body = naturalsMatrix.getBody();
 		
-		IBlock body = natFunc.getBody();
+		IArrayAllocation allocation = INT.array2D().allocation(lines, cols);
+		IVariable m = body.addVariable(INT.array2D(), allocation);
+		IVariable i = body.addVariable(INT, literal(0));
+		IVariable j = body.addVariable(INT);
+		IVariable n = body.addVariable(INT, literal(1));
 		
-		IArrayAllocation allocation = INT.array2D().allocation(linesParam, colsParam);
-		IVariable mVar = body.addVariable("m", INT.array2D(), allocation);
-		
-		IVariable iVar = body.addVariable("i", INT, literal(0));
-		
-		IVariable jVar = body.addVariable("j", INT);
-		IVariable nVar = body.addVariable("n", INT, literal(1));
-
-		IExpression outerGuard = DIFFERENT.on(iVar, linesParam);
+		IExpression outerGuard = DIFFERENT.on(i, lines);
 		ILoop outLoop = body.addLoop(outerGuard);
-		outLoop.addAssignment(jVar, literal(0));
-		IExpression innerGuard = DIFFERENT.on(jVar, colsParam);
+		IVariableAssignment ass1 = outLoop.addAssignment(j, literal(0));
+		IExpression innerGuard = DIFFERENT.on(j, cols);
 		ILoop inLoop = outLoop.addLoop(innerGuard);
-		inLoop.addArrayElementAssignment(mVar, nVar, iVar, jVar);
-		inLoop.addAssignment(jVar, ADD.on(jVar, literal(1)));
-		inLoop.addAssignment(nVar, ADD.on(nVar, literal(1)));
+		IArrayElementAssignment ass2 = inLoop.addArrayElementAssignment(m, n, i, j);
+		IVariableAssignment ass3 = inLoop.addAssignment(j, ADD.on(j, literal(1)));
+		IVariableAssignment ass4 = inLoop.addAssignment(n, ADD.on(n, literal(1)));
 		
-		outLoop.addAssignment(iVar, ADD.on(iVar, literal(1)));
+		IVariableAssignment ass5 = outLoop.addAssignment(i, ADD.on(i, literal(1)));
+		IReturn ret = body.addReturn(m);
 		
-		body.addReturn(mVar);
-		
-		final int L = 2;
-		final int C = 4;
-		IProgramState state = IMachine.create(program);
-		System.out.println(program);
-		IExecutionData data = state.execute(natFunc, L, C);
-		IArray returnValue = (IArray) data.getReturnValue();
-		assertEquals(L, returnValue.getLength());
-		int n = 1;
-		for(int i = 0; i < L; i++) {
-			IArray line = (IArray) returnValue.getElement(i);
-			assertEquals(C, line.getLength());
-			for(int j = 0; j < C; j++)
-				assertEquals(new BigDecimal(n++), line.getElement(j).getValue());
+		@Case({"2","4"})
+		public void testNatMatrix(IExecutionData data) {
+			final int L = 2;
+			final int C = 4;
+			IArray returnValue = (IArray) data.getReturnValue();
+			assertEquals(L, returnValue.getLength());
+			int n = 1;
+			for(int i = 0; i < L; i++) {
+				IArray line = (IArray) returnValue.getElement(i);
+				assertEquals(C, line.getLength());
+				for(int j = 0; j < C; j++)
+					assertEquals(new BigDecimal(n++), line.getElement(j).getValue());
+			}
 		}
-		
-		data.printResult();
 	}
-	
-	@Test
-	public void testContainsNinMatrix() {
-		IModule program = IModule.create("ContainsInMatrix");
-		
-		IProcedure findFunc = program.addProcedure("contains", BOOLEAN);
-		IVariable mParam = (IVariable) findFunc.addParameter("m", INT.array2D());
-		IVariable nParam = findFunc.addParameter("n", INT);
-		IBlock body = findFunc.getBody();
-		IVariable iVar = body.addVariable("i", INT, literal(0));
-		
-		IVariable jVar = body.addVariable("j", INT);
-		IExpression outerGuard = DIFFERENT.on(iVar, mParam.arrayLength());
+
+	public static class ContainsNinMatrix extends BaseTest {
+		IProcedure contains = module.addProcedure(BOOLEAN);
+		IVariable matrix = (IVariable) contains.addParameter(INT.array2D());
+		IVariable n = contains.addParameter(INT);
+		IBlock body = contains.getBody();
+		IVariable i = body.addVariable(INT, literal(0));
+		IVariable j = body.addVariable(INT);
+		IExpression outerGuard = DIFFERENT.on(i, matrix.arrayLength());
 		ILoop outerLoop = body.addLoop(outerGuard);
-		outerLoop.addAssignment(jVar, literal(0));
-		IExpression innerGuard = DIFFERENT.on(jVar, mParam.arrayLength(iVar) );
+		IVariableAssignment ass1 = outerLoop.addAssignment(j, literal(0));
+		IExpression innerGuard = DIFFERENT.on(j, matrix.arrayLength(i) );
 		ILoop innerLoop = outerLoop.addLoop(innerGuard);
-		ISelection ifEq = innerLoop.addSelection(EQUAL.on(mParam.arrayElement(iVar, jVar), nParam));
-		ifEq.addReturn(literal(true));
-		innerLoop.addIncrement(jVar);
-		outerLoop.addIncrement(iVar);
+		ISelection ifEq = innerLoop.addSelection(EQUAL.on(matrix.arrayElement(i, j), n));
+		IReturn ret1 = ifEq.addReturn(literal(true));
+		IVariableAssignment inc1 = innerLoop.addIncrement(j);
+		IVariableAssignment inc2 = outerLoop.addIncrement(i);
+		IReturn ret2 = body.addReturn(literal(false));
 		
-		body.addReturn(literal(false));
 		
-		
-		IProcedure main = program.addProcedure("main", BOOLEAN);
+		IProcedure main = module.addProcedure(BOOLEAN);
 		IBlock mainBody = main.getBody();
-		IVariable array = mainBody.addVariable("test", INT.array2D());
+		IVariable array = mainBody.addVariable(INT.array2D());
+		IVariableAssignment ass2 = mainBody.addAssignment(array, INT.array2D().allocation(literal(3)));
+		IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(0), literal(0)));
+		IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(2), literal(1)));
+		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(4), literal(2)));
+		IArrayElementAssignment ass6 = mainBody.addArrayElementAssignment(array, literal(5), literal(2), literal(2));
+		IVariable var = mainBody.addVariable(BOOLEAN);
+		IVariableAssignment ass7 = mainBody.addAssignment(var, contains.call(array, literal(5)));
+		IReturn ret3 = mainBody.addReturn(var);
 		
-		mainBody.addAssignment(array, INT.array2D().allocation(literal(3)));
-		mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(0), literal(0)));
-		mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(2), literal(1)));
-		mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(4), literal(2)));
-		
-		mainBody.addArrayElementAssignment(array, literal(5), literal(2), literal(2));
-		
-		IVariable var = mainBody.addVariable("contains", BOOLEAN);
-		mainBody.addAssignment(var, findFunc.call(array, literal(5)));
-		mainBody.addReturn(var);
-		
-		
-		System.out.println(program);
-		IProgramState state = IMachine.create(program);
-		IExecutionData data = state.execute(main);
-		System.out.println(data.getReturnValue());
+		@Case
+		public void test(IExecutionData data) {
+			isTrue(data.getReturnValue());
+		}
 	}
 }

@@ -7,7 +7,7 @@ import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IStatement;
-import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
 
 public interface IStackFrame {
@@ -43,7 +43,7 @@ public interface IStackFrame {
 
 	IArray allocateArray(IDataType baseType, int[] dimensions);
 	
-	IStructObject allocateObject(IStructType type);
+	IStructObject allocateObject(IRecordType type);
 	
 	IValue evaluate(IExpression expression, List<IValue> expressions) throws ExecutionError;
 	

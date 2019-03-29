@@ -1,6 +1,6 @@
 package pt.iscte.paddle.asg;
 
-public interface IStructMemberExpression extends ISimpleExpression {
+public interface IRecordFieldExpression extends ISimpleExpression {
 
 	IVariable getVariable();
 	String getMemberId();

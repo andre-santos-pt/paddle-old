@@ -14,14 +14,14 @@ import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureDeclaration;
-import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.semantics.AsgSemanticChecks;
 import pt.iscte.paddle.asg.semantics.ISemanticProblem;
 import pt.iscte.paddle.asg.semantics.SemanticChecker;
 
 public class Module extends ProgramElement implements IModule {
 	private final List<IConstant> constants;
-	private final List<IStructType> structs;
+	private final List<IRecordType> structs;
 	private final List<IProcedure> procedures;
 
 	private final List<IProcedure> builtinProcedures;
@@ -48,7 +48,7 @@ public class Module extends ProgramElement implements IModule {
 	}
 
 	@Override
-	public Collection<IStructType> getStructs() {
+	public Collection<IRecordType> getRecordTypes() {
 		return Collections.unmodifiableList(structs);
 	}
 
@@ -67,8 +67,8 @@ public class Module extends ProgramElement implements IModule {
 	}
 
 	@Override
-	public IStructType addStruct() {
-		IStructType struct = new StructType();
+	public IRecordType addRecordType() {
+		IRecordType struct = new StructType();
 		structs.add(struct);
 		return struct;
 	}
@@ -104,7 +104,7 @@ public class Module extends ProgramElement implements IModule {
 		for(IConstant c : constants)
 			text += c + ";\n";
 
-		for(IStructType s : structs)
+		for(IRecordType s : structs)
 			text += s + "\n";
 
 		for (IProcedure p : builtinProcedures) {

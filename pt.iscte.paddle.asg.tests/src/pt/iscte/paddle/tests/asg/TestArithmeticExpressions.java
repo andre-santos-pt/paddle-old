@@ -10,6 +10,7 @@ import static pt.iscte.paddle.asg.IOperator.MUL;
 
 import java.math.BigDecimal;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
@@ -26,7 +27,7 @@ import pt.iscte.paddle.machine.IValue;
 
 
 // TODO more arithmetic cases
-public class TestArithmeticExpressions {
+public class TestArithmeticExpressions extends BaseTest {
 
 	final int EXP = 0;
 	final int TYPE = 1;
@@ -51,19 +52,6 @@ public class TestArithmeticExpressions {
 		test(ADD.on(L3_3, L6_4), DOUBLE, 9.7);
 	}
 
-
-
-	//	private void testCase(Object[] c) throws ExecutionError {
-	//		IExpression exp = (IExpression) c[EXP];
-	//		IValue value = exp.evaluate(mockFrame);
-	//		String text = exp + " = " + value;
-	//		assertEquals(c[TYPE], value.getType(), text);
-	//		assertEquals(c[RES], value.getValue(), text);
-	//		System.out.println(text);
-	//	}
-
-
-
 	@Test
 	public void testProdCases() throws ExecutionError {
 		test(MUL.on(L1, L3), INT, 3);
@@ -72,10 +60,8 @@ public class TestArithmeticExpressions {
 	}
 
 	private void test(IExpression expression, IDataType type, Number result) throws ExecutionError {
-		// TODO to setup
-		IModule mockProgram = IModule.create("Expressions");
-		IProcedure mockProcedure = mockProgram.addProcedure("mock", VOID);
-		IProgramState mockState = IMachine.create(mockProgram);
+		IProcedure mockProcedure = module.addProcedure(VOID);
+		IProgramState mockState = IMachine.create(module);
 		mockState.setupExecution(mockProcedure);
 		IExpressionEvaluator eval = mockState.createExpressionEvaluator(expression);
 		IValue value = eval.evaluate();

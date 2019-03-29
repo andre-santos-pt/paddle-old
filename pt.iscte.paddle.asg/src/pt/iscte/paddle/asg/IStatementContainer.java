@@ -47,8 +47,8 @@ public interface IStatementContainer {
 		return addArrayElementAssignment(var, exp, Arrays.asList(indexes));
 	}
 
-	default IStructMemberAssignment addStructMemberAssignment(IVariable var, String memberId, IExpression exp) {
-		return getBlock().addStructMemberAssignment(var, memberId, exp);
+	default IRecordFieldAssignment addStructMemberAssignment(IVariable var, IVariable field, IExpression exp) {
+		return getBlock().addStructMemberAssignment(var, field, exp);
 	}
 
 	default ISelection addSelection(IExpression guard) {

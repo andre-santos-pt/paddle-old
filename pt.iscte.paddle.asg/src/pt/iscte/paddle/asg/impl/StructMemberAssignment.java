@@ -4,24 +4,24 @@ import java.util.List;
 
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IStructMemberAssignment;
+import pt.iscte.paddle.asg.IRecordFieldAssignment;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IStructObject;
 import pt.iscte.paddle.machine.IValue;
 
-class StructMemberAssignment extends Statement implements IStructMemberAssignment {
+class StructMemberAssignment extends Statement implements IRecordFieldAssignment {
 	
 	private final IVariable variable;
-	private final String memberId;
+	private final IVariable field;
 	private final IExpression expression;
 	
-	public StructMemberAssignment(IBlock parent, IVariable variable, String memberId, IExpression expression) {
+	public StructMemberAssignment(IBlock parent, IVariable variable, IVariable field, IExpression expression) {
 		super(parent, true);
 		// TODO assert type
 		this.variable = variable;
-		this.memberId = memberId;
+		this.field = field;
 		this.expression = expression;
 	}
 
@@ -31,10 +31,10 @@ class StructMemberAssignment extends Statement implements IStructMemberAssignmen
 	}
 	
 	@Override
-	public String getMemberId() {
-		return memberId;
-	}
-	
+	public IVariable getField() {
+		return field;
+	}	
+
 	@Override
 	public IExpression getExpression() {
 		return expression;
@@ -47,13 +47,13 @@ class StructMemberAssignment extends Statement implements IStructMemberAssignmen
 
 	@Override
 	public String toString() {
-		return variable.getId() + "." + memberId + " = " + expression;
+		return variable.getId() + "." + field.getId() + " = " + expression;
 	}
 	
 	@Override
 	public boolean execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
 		IStructObject object = (IStructObject) stack.getTopFrame().getVariableStore(getVariable().getId());
-		object.setField(getMemberId(), expressions.get(0));
+		object.setField(field.getId(), expressions.get(0));
 		return true;
 	}
 }

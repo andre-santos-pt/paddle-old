@@ -14,7 +14,7 @@ import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IStatement;
-import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IArray;
@@ -174,7 +174,7 @@ class StackFrame implements IStackFrame {
 	}
 
 	@Override
-	public IStructObject allocateObject(IStructType type) {
+	public IStructObject allocateObject(IRecordType type) {
 		return callStack.getProgramState().allocateObject(type);
 	}
 

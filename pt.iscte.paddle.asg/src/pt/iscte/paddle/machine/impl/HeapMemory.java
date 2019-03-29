@@ -8,7 +8,7 @@ import com.google.common.util.concurrent.ExecutionError;
 
 import pt.iscte.paddle.asg.IArrayType;
 import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.machine.IArray;
 import pt.iscte.paddle.machine.IHeapMemory;
 import pt.iscte.paddle.machine.IStructObject;
@@ -54,7 +54,7 @@ public class HeapMemory implements IHeapMemory {
 	}
 
 	@Override
-	public IStructObject allocateObject(IStructType type) throws ExecutionError {
+	public IStructObject allocateObject(IRecordType type) throws ExecutionError {
 		StructObject object = new StructObject(type);
 		objects.add(object);
 		return object;

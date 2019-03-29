@@ -80,12 +80,12 @@ class Procedure extends ProgramElement implements IProcedure {
 		for(IVariable p : paramsView) {
 			if(!params.isEmpty())
 				params += ", ";
-			params += p.getType() + " " + p.getId();
+			params += p.getType().getId() + " " + p.getId();
 		}
 
 		String vars = "";
 		for(IVariable var : variables)
-			vars += var.getType() + " " + var.getId() +"\n";
+			vars += var.getType().getId() + " " + var.getId() +"\n";
 		return returnType + " " + getId() + "(" + params + ")" + "\n" + vars + body.toString();
 	}
 

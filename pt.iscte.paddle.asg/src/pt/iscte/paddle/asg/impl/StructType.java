@@ -6,11 +6,11 @@ import java.util.List;
 
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IReferenceType;
-import pt.iscte.paddle.asg.IStructAllocation;
-import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.IRecordAllocation;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
 
-class StructType extends ProgramElement implements IStructType {
+class StructType extends ProgramElement implements IRecordType {
 	private final List<IVariable> variables;
 	
 	StructType() {
@@ -47,7 +47,7 @@ class StructType extends ProgramElement implements IStructType {
 	}
 	
 	@Override
-	public IStructAllocation allocationExpression() {
+	public IRecordAllocation allocationExpression() {
 		return new StructAllocation(this);
 	}
 	

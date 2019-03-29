@@ -5,14 +5,8 @@ import pt.iscte.paddle.asg.impl.LogicalOperator;
 import pt.iscte.paddle.asg.impl.RelationalOperator;
 import pt.iscte.paddle.asg.impl.UnaryOperator;
 
-/**
- * Immutable
- * @author andresantos
- *
- */
-public interface IOperator {
-	String getSymbol();
-	
+public interface IOperator extends IProgramElement {
+		
 	IBinaryOperator ADD = ArithmeticOperator.ADD;
 	IBinaryOperator SUB = ArithmeticOperator.SUB;
 	IBinaryOperator MUL = ArithmeticOperator.MUL;
@@ -35,6 +29,11 @@ public interface IOperator {
 	IUnaryOperator TRUNCATE = UnaryOperator.TRUNCATE;
 
 	OperationType getOperationType();
+
+	default String getSymbol() {
+		return getId();
+	}
+
 
 	enum OperationType {
 		ARITHMETIC, RELATIONAL, LOGICAL, CALL, OTHER;

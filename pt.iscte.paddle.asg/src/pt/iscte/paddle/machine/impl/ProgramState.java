@@ -12,7 +12,7 @@ import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IStatement;
-import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IValueType;
 import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.asg.semantics.AsgSemanticChecks;
@@ -129,7 +129,7 @@ public class ProgramState implements IProgramState {
 	}
 
 	@Override
-	public IStructObject allocateObject(IStructType type) {
+	public IStructObject allocateObject(IRecordType type) {
 		return heap.allocateObject(type);
 	}
 

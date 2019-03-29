@@ -6,56 +6,44 @@ import static pt.iscte.paddle.asg.ILiteral.literal;
 
 import java.math.BigDecimal;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IVariable;
+import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.machine.IArray;
 import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
 
-public class TestSwap {
+public class TestSwap extends BaseTest {
 
-	private static IModule program;
-	private static IProcedure swapProc;
-	private static IProcedure main;
+	IProcedure swapProc = module.addProcedure(VOID);
+	IVariable v = (IVariable) swapProc.addParameter(INT.array());
+	IVariable i = swapProc.addParameter(INT);
+	IVariable j = swapProc.addParameter(INT);
+	
+	IVariable t = swapProc.getBody().addVariable(INT, v.arrayElement(i));
+	IBlock swapBody = swapProc.getBody();
+	IArrayElementAssignment ass = swapBody.addArrayElementAssignment(v, v.arrayElement(j), i);
+	IArrayElementAssignment ass0 = swapBody.addArrayElementAssignment(v, t, j);
+	
+	IProcedure main = module.addProcedure(VOID);
+	IBlock body = main.getBody();
+	IVariable array = body.addVariable(INT.array());
+	IVariableAssignment ass1 = body.addAssignment(array, INT.array().allocation(literal(3)));
 
-	@BeforeClass
-	public static void setup() {
-		program = IModule.create("Swap");
-		
-		swapProc = program.addProcedure("swap", VOID);
-		IVariable v = (IVariable) swapProc.addParameter("v", INT.array());
-		IVariable i = swapProc.addParameter("i", INT);
-		IVariable j = swapProc.addParameter("j", INT);
-		
-		IVariable t = swapProc.getBody().addVariable("t", INT, v.arrayElement(i));
-		swapProc.getBody().addArrayElementAssignment(v, v.arrayElement(j), i);
-		swapProc.getBody().addArrayElementAssignment(v, t, j);
-		
-		main = program.addProcedure("main", VOID);
-		IBlock body = main.getBody();
-		IVariable array = body.addVariable("test", INT.array());
-		body.addAssignment(array, INT.array().allocation(literal(3)));
+	IArrayElementAssignment ass2 = body.addArrayElementAssignment(array, literal(5), literal(0));
+	IArrayElementAssignment ass3 = body.addArrayElementAssignment(array, literal(7), literal(1));
+	IArrayElementAssignment ass4 = body.addArrayElementAssignment(array, literal(9), literal(2));
+	
+	IVariable iVar = main.getBody().addVariable(INT, literal(0));
+	
+	IBlock mainBody = main.getBody();
+	IProcedureCall call = mainBody.addCall(swapProc, array, iVar, literal(2));
 
-		body.addArrayElementAssignment(array, literal(5), literal(0));
-		body.addArrayElementAssignment(array, literal(7), literal(1));
-		body.addArrayElementAssignment(array, literal(9), literal(2));
-		
-		IVariable iVar = main.getBody().addVariable("i", INT, literal(0));
-		
-		main.getBody().addCall(swapProc, array, iVar, literal(2));
-	}
 
-	@Test
-	public void testSwap() {
-		System.out.println(program);
-		IProgramState state = IMachine.create(program);
-		IExecutionData data = state.execute(main);
+	@Case
+	public void testSwap(IExecutionData data) {
 		IArray array = (IArray) data.getVariableValue("test");
 		assertEquals(new BigDecimal(9), array.getElement(0).getValue());
 		assertEquals(new BigDecimal(5), array.getElement(2).getValue());

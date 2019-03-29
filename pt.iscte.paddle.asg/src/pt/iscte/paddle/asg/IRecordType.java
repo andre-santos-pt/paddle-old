@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Mutable
  */
-public interface IStructType extends IDataType {
+public interface IRecordType extends IDataType {
 	
 	List<IVariable> getMemberVariables();
 	
@@ -16,5 +16,5 @@ public interface IStructType extends IDataType {
 		return null;
 	}
 
-	IStructAllocation allocationExpression();
+	IRecordAllocation allocationExpression();
 }

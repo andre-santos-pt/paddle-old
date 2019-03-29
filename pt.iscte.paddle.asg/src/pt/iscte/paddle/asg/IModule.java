@@ -17,15 +17,12 @@ public interface IModule extends IProgramElement {
 		return ImmutableList.of();
 	}
 	Collection<IConstant> getConstants();
-	Collection<IStructType> getStructs();
+	Collection<IRecordType> getRecordTypes();
 	Collection<IProcedure> getProcedures();
 	
-//	Collection<IDataType> getDataTypes();
-
-//	IDataType getDataType(String id);
 
 	IConstant addConstant(IDataType type, ILiteral value);
-	IStructType addStruct();
+	IRecordType addRecordType();
 	IProcedure addProcedure(IDataType returnType);
 
 	void loadBuildInProcedures(Class<?> staticClass);
@@ -70,31 +67,31 @@ public interface IModule extends IProgramElement {
 //		return null;
 //	}
 
-	default void accept(IVisitor visitor) {
+//	default void accept(IVisitor visitor) {
 //		getConstants().forEach(c -> {
 //			visitor.visit(c);
 //		});
 		
-		getStructs().forEach(s -> {
-			if(visitor.visit(s))
-				s.getMemberVariables().forEach(v -> {
-					visitor.visit(v);
-				});
-		});
-		
-		getProcedures().forEach(p -> {
-			if(visitor.visit(p))
-				p.getBody().accept(visitor);
-		});
-	}	
+//		getRecordTypes().forEach(s -> {
+//			if(visitor.visit(s))
+//				s.getMemberVariables().forEach(v -> {
+//					visitor.visit(v);
+//				});
+//		});
+//		
+//		getProcedures().forEach(p -> {
+//			if(visitor.visit(p))
+//				p.getBody().accept(visitor);
+//		});
+//	}	
 
 
-	interface IVisitor extends IBlock.IVisitor {
+//	interface IVisitor extends IBlock.IVisitor {
 //		default void setup(IModule module)						{ }
 //		default void 	visit(IConstant constant) 				{ }
-		default boolean visit(IStructType struct) 				{ return true; }
-		default boolean visit(IProcedure procedure) 			{ return true; }
-	}
+//		default boolean visit(IRecordType struct) 				{ return true; }
+//		default boolean visit(IProcedure procedure) 			{ return true; }
+//	}
 
 
 	static IModule create() {

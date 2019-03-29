@@ -7,34 +7,26 @@ import static pt.iscte.paddle.asg.ILiteral.literal;
 import org.junit.Test;
 
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
+import pt.iscte.paddle.asg.IVariableAssignment;
 
-public class TestReferences {
+public class TestReferences extends BaseTest {
 
-	@Test
+	IProcedure proc = module.addProcedure(VOID);
+	IBlock body = proc.getBody();
+	IVariable a = body.addVariable(INT.reference());
+	IVariable b = body.addVariable(INT.reference());
+	IVariableAssignment ass1 = body.addAssignment(a.valueOf(), literal(5));
+	IVariableAssignment ass2 = body.addAssignment(b, a);
+	IVariableAssignment ass3 = body.addAssignment(b, literal(7));
+	
+	
+	
 	public void test() {
-		IModule program = IModule.create("Struct");
 		
-		IProcedure proc = program.addProcedure("test", VOID);
-		IBlock body = proc.getBody();
-		IVariable a = body.addVariable("a", INT.reference());
-		IVariable b = body.addVariable("b", INT.reference());
 		
-		body.addAssignment(a.valueOf(), literal(5));
-		body.addAssignment(b, a);
-		
-		body.addAssignment(b, literal(7));
 
-		System.out.println(program);
-		IProgramState state = IMachine.create(program);
-		IExecutionData data = state.execute(proc);
-		System.out.println(data.getVariableValue("a"));
-		System.out.println(data.getVariableValue("b"));
 	}
 		
 }

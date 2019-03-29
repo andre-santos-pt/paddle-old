@@ -5,17 +5,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IStructObject;
 import pt.iscte.paddle.machine.IValue;
 
 public class StructObject implements IStructObject {
 
-	private final IStructType type;
+	private final IRecordType type;
 	private Map<String, IValue> fields;
 	
-	public StructObject(IStructType type) {
+	public StructObject(IRecordType type) {
 		this.type = type;
 		fields = new LinkedHashMap<>();
 		for (IVariable var : type.getMemberVariables()) {

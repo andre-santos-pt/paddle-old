@@ -22,6 +22,7 @@ public class BuiltinProcedure extends Procedure {
 		for (Parameter p : method.getParameters()) {
 			addParameter(matchType(p.getType()));
 		}
+		setId(method.getName());
 	}
 
 	public static boolean isValidForBuiltin(Method method) {

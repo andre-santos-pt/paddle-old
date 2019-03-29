@@ -219,8 +219,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </enumeration>  
-  <interface id="25" language="java" name="pt.iscte.paddle.asg.IStructType" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IStructType.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="25" language="java" name="pt.iscte.paddle.asg.IRecordType" project="pt.iscte.paddle.asg" 
+    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IRecordType.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="281" x="632" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -310,9 +310,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="35" language="java" name="pt.iscte.paddle.asg.IStructMemberAssignment" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IStructMemberAssignment.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+  <interface id="35" language="java" name="pt.iscte.paddle.asg.IRecordFieldAssignment" project="pt.iscte.paddle.asg" 
+    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IRecordFieldAssignment.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="70" width="237" x="1651" y="1069"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -320,18 +319,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="36" language="java" name="pt.iscte.paddle.asg.IModule.IVisitor" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IModule.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="70" width="162" x="735" y="1069"/>    
-    <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="true" package="false" protected="false" private="false" static="true"/>    
-    </display>  
-  </interface>  
-  <interface id="37" language="java" name="pt.iscte.paddle.asg.IStructMemberExpression" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IStructMemberExpression.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+  <interface id="36" language="java" name="pt.iscte.paddle.asg.IRecordFieldExpression" project="pt.iscte.paddle.asg" 
+    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IRecordFieldExpression.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="70" width="198" x="3453" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -339,7 +328,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="38" language="java" name="pt.iscte.paddle.asg.IProcedureDeclaration" project="pt.iscte.paddle.asg" 
+  <interface id="37" language="java" name="pt.iscte.paddle.asg.IProcedureDeclaration" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IProcedureDeclaration.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="214" width="302" x="41" y="37"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -348,7 +337,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="39" language="java" name="pt.iscte.paddle.asg.IProcedure" project="pt.iscte.paddle.asg" 
+  <interface id="38" language="java" name="pt.iscte.paddle.asg.IProcedure" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IProcedure.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="142" width="211" x="41" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -357,7 +346,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="40" language="java" name="pt.iscte.paddle.asg.IReturn" project="pt.iscte.paddle.asg" 
+  <interface id="39" language="java" name="pt.iscte.paddle.asg.IReturn" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IReturn.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="237" x="2343" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -366,7 +355,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="41" language="java" name="pt.iscte.paddle.asg.IReferenceType" project="pt.iscte.paddle.asg" 
+  <interface id="40" language="java" name="pt.iscte.paddle.asg.IReferenceType" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IReferenceType.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="70" width="143" x="292" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -375,8 +364,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="42" language="java" name="pt.iscte.paddle.asg.IStructAllocation" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IStructAllocation.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="41" language="java" name="pt.iscte.paddle.asg.IRecordAllocation" project="pt.iscte.paddle.asg" 
+    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IRecordAllocation.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="52" width="141" x="3874" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -384,7 +373,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="43" language="java" name="pt.iscte.paddle.asg.ISelection" project="pt.iscte.paddle.asg" 
+  <interface id="42" language="java" name="pt.iscte.paddle.asg.ISelection" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/ISelection.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1296" y="678"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -393,7 +382,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="44" language="java" name="pt.iscte.paddle.asg.IModule" project="pt.iscte.paddle.asg" 
+  <interface id="43" language="java" name="pt.iscte.paddle.asg.IModule" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IModule.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="268" width="310" x="242" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -402,7 +391,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="45" language="java" name="pt.iscte.paddle.asg.IBlockChild" project="pt.iscte.paddle.asg" 
+  <interface id="44" language="java" name="pt.iscte.paddle.asg.IBlockChild" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IBlockChild.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1627" y="252"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -411,7 +400,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="46" language="java" name="pt.iscte.paddle.machine.IStackFrame.IListener" project="pt.iscte.paddle.asg" 
+  <interface id="45" language="java" name="pt.iscte.paddle.machine.IStackFrame.IListener" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IStackFrame.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2847" y="1876"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -420,7 +409,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="47" language="java" name="pt.iscte.paddle.machine.IExpressionEvaluator" project="pt.iscte.paddle.asg" 
+  <interface id="46" language="java" name="pt.iscte.paddle.machine.IExpressionEvaluator" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IExpressionEvaluator.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1897" y="1460"/>    
@@ -430,7 +419,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="48" language="java" name="pt.iscte.paddle.machine.IArray.IListener" project="pt.iscte.paddle.asg" 
+  <interface id="47" language="java" name="pt.iscte.paddle.machine.IArray.IListener" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IArray.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1913" y="2485"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -439,7 +428,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="49" language="java" name="pt.iscte.paddle.machine.IEvaluable" project="pt.iscte.paddle.asg" 
+  <interface id="48" language="java" name="pt.iscte.paddle.machine.IEvaluable" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IEvaluable.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="418" y="1433"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -448,7 +437,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="50" language="java" name="pt.iscte.paddle.machine.IValue" project="pt.iscte.paddle.asg" 
+  <interface id="49" language="java" name="pt.iscte.paddle.machine.IValue" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IValue.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1911" y="2148"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -457,7 +446,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="51" language="java" name="pt.iscte.paddle.machine.IStructObject" project="pt.iscte.paddle.asg" 
+  <interface id="50" language="java" name="pt.iscte.paddle.machine.IStructObject" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IStructObject.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1688" y="2330"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -466,7 +455,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="52" language="java" name="pt.iscte.paddle.machine.IExecutionData" project="pt.iscte.paddle.asg" 
+  <interface id="51" language="java" name="pt.iscte.paddle.machine.IExecutionData" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IExecutionData.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="719" y="1496"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -475,7 +464,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="53" language="java" name="pt.iscte.paddle.machine.IExecutable" project="pt.iscte.paddle.asg" 
+  <interface id="52" language="java" name="pt.iscte.paddle.machine.IExecutable" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IExecutable.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1419" y="1433"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -484,7 +473,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="54" language="java" name="pt.iscte.paddle.machine.ICallStack.IListener" project="pt.iscte.paddle.asg" 
+  <interface id="53" language="java" name="pt.iscte.paddle.machine.ICallStack.IListener" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/ICallStack.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2164" y="1822"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -493,7 +482,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="55" language="java" name="pt.iscte.paddle.machine.IArray" project="pt.iscte.paddle.asg" 
+  <interface id="54" language="java" name="pt.iscte.paddle.machine.IArray" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IArray.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1897" y="2357"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -502,7 +491,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <class id="56" language="java" name="pt.iscte.paddle.machine.IExpressionEvaluator.Step" project="pt.iscte.paddle.asg" 
+  <class id="55" language="java" name="pt.iscte.paddle.machine.IExpressionEvaluator.Step" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IExpressionEvaluator.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1892" y="1822"/>    
@@ -512,7 +501,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <interface id="57" language="java" name="pt.iscte.paddle.machine.IHeapMemory" project="pt.iscte.paddle.asg" 
+  <interface id="56" language="java" name="pt.iscte.paddle.machine.IHeapMemory" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IHeapMemory.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="135" y="1451"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -521,7 +510,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="58" language="java" name="pt.iscte.paddle.machine.IProgramState" project="pt.iscte.paddle.asg" 
+  <interface id="57" language="java" name="pt.iscte.paddle.machine.IProgramState" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IProgramState.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1077" y="1568"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -530,7 +519,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="59" language="java" name="pt.iscte.paddle.machine.IHeapMemory.IListener" project="pt.iscte.paddle.asg" 
+  <interface id="58" language="java" name="pt.iscte.paddle.machine.IHeapMemory.IListener" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IHeapMemory.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="90" y="1822"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -539,7 +528,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="60" language="java" name="pt.iscte.paddle.machine.IMachine" project="pt.iscte.paddle.asg" 
+  <interface id="59" language="java" name="pt.iscte.paddle.machine.IMachine" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IMachine.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1677" y="1433"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -548,7 +537,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="61" language="java" name="pt.iscte.paddle.machine.IReference" project="pt.iscte.paddle.asg" 
+  <interface id="60" language="java" name="pt.iscte.paddle.machine.IReference" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IReference.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2093" y="2330"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -557,7 +546,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="62" language="java" name="pt.iscte.paddle.machine.ICallStack" project="pt.iscte.paddle.asg" 
+  <interface id="61" language="java" name="pt.iscte.paddle.machine.ICallStack" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/ICallStack.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2166" y="1523"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -566,7 +555,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <class id="63" language="java" name="pt.iscte.paddle.machine.ExecutionError" project="pt.iscte.paddle.asg" 
+  <class id="62" language="java" name="pt.iscte.paddle.machine.ExecutionError" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/ExecutionError.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2505" y="1523"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -575,7 +564,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="64" language="java" name="pt.iscte.paddle.machine.ExecutionError.Type" project="pt.iscte.paddle.asg" 
+  <enumeration id="63" language="java" name="pt.iscte.paddle.machine.ExecutionError.Type" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/ExecutionError.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2451" y="1894"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -584,7 +573,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </enumeration>  
-  <interface id="65" language="java" name="pt.iscte.paddle.machine.IProgramState.IListener" 
+  <interface id="64" language="java" name="pt.iscte.paddle.machine.IProgramState.IListener" 
     project="pt.iscte.paddle.asg" file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IProgramState.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1040" y="1831"/>    
@@ -594,7 +583,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="66" language="java" name="pt.iscte.paddle.machine.IStackFrame" project="pt.iscte.paddle.asg" 
+  <interface id="65" language="java" name="pt.iscte.paddle.machine.IStackFrame" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IStackFrame.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2859" y="1577"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -603,267 +592,271 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <generalization id="67">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="68">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="45"/>  
-  </generalization>  
-  <generalization id="69">    
-    <end type="SOURCE" refId="26"/>    
-    <end type="TARGET" refId="34"/>  
-  </generalization>  
-  <generalization id="70">    
-    <end type="SOURCE" refId="41"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="71">    
-    <end type="SOURCE" refId="21"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="72">    
-    <end type="SOURCE" refId="22"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="73">    
+  <generalization id="66">    
     <end type="SOURCE" refId="14"/>    
     <end type="TARGET" refId="12"/>  
   </generalization>  
-  <nesting id="74">    
-    <end type="SOURCE" refId="47"/>    
-    <end type="TARGET" refId="56"/>  
-  </nesting>  
-  <nesting id="75">    
-    <end type="SOURCE" refId="44"/>    
-    <end type="TARGET" refId="36"/>  
-  </nesting>  
-  <nesting id="76">    
-    <end type="SOURCE" refId="57"/>    
-    <end type="TARGET" refId="59"/>  
-  </nesting>  
-  <generalization id="77">    
-    <end type="SOURCE" refId="33"/>    
-    <end type="TARGET" refId="31"/>  
+  <generalization id="67">    
+    <end type="SOURCE" refId="60"/>    
+    <end type="TARGET" refId="49"/>  
   </generalization>  
-  <generalization id="78">    
-    <end type="SOURCE" refId="37"/>    
+  <generalization id="68">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="69">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
+  <generalization id="70">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <generalization id="71">    
+    <end type="SOURCE" refId="36"/>    
     <end type="TARGET" refId="23"/>  
   </generalization>  
-  <association id="79">    
+  <nesting id="72">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="14"/>  
+  </nesting>  
+  <generalization id="73">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="74">    
+    <end type="SOURCE" refId="40"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <nesting id="75">    
+    <end type="SOURCE" refId="56"/>    
+    <end type="TARGET" refId="58"/>  
+  </nesting>  
+  <association id="76">    
+    <end type="SOURCE" refId="55" navigable="false">      
+      <attribute id="77" name="value">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="78" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="49" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="79">    
+    <end type="SOURCE" refId="62"/>    
+    <end type="TARGET" refId="63"/>  
+  </nesting>  
+  <generalization id="80">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="81">    
+    <end type="SOURCE" refId="32"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <nesting id="82">    
+    <end type="SOURCE" refId="61"/>    
+    <end type="TARGET" refId="53"/>  
+  </nesting>  
+  <generalization id="83">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="44"/>  
+  </generalization>  
+  <generalization id="84">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <generalization id="85">    
+    <end type="SOURCE" refId="29"/>    
+    <end type="TARGET" refId="44"/>  
+  </generalization>  
+  <nesting id="86">    
+    <end type="SOURCE" refId="65"/>    
+    <end type="TARGET" refId="45"/>  
+  </nesting>  
+  <generalization id="87">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="20"/>  
+  </generalization>  
+  <nesting id="88">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="47"/>  
+  </nesting>  
+  <generalization id="89">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <association id="90">    
     <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="80" name="INT_ARRAY2D">        
+      <attribute id="91" name="INT_ARRAY2D">        
         <position height="0" width="0" x="-152" y="-144"/>      
       </attribute>      
-      <multiplicity id="81" minimum="0" maximum="1">        
+      <multiplicity id="92" minimum="0" maximum="1">        
         <position height="0" width="0" x="-152" y="-144"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="18" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="82">    
-    <end type="SOURCE" refId="31"/>    
-    <end type="TARGET" refId="24"/>  
-  </nesting>  
-  <generalization id="83">    
-    <end type="SOURCE" refId="42"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <generalization id="84">    
-    <end type="SOURCE" refId="25"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="85">    
-    <end type="SOURCE" refId="55"/>    
-    <end type="TARGET" refId="50"/>  
-  </generalization>  
-  <generalization id="86">    
-    <end type="SOURCE" refId="29"/>    
-    <end type="TARGET" refId="45"/>  
-  </generalization>  
-  <generalization id="87">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="88">    
-    <end type="SOURCE" refId="23"/>    
-    <end type="TARGET" refId="11"/>  
-  </generalization>  
-  <generalization id="89">    
-    <end type="SOURCE" refId="51"/>    
-    <end type="TARGET" refId="50"/>  
-  </generalization>  
-  <generalization id="90">    
-    <end type="SOURCE" refId="6"/>    
-    <end type="TARGET" refId="20"/>  
-  </generalization>  
-  <generalization id="91">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="45"/>  
-  </generalization>  
-  <generalization id="92">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <nesting id="93">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="14"/>  
-  </nesting>  
-  <nesting id="94">    
-    <end type="SOURCE" refId="66"/>    
-    <end type="TARGET" refId="46"/>  
-  </nesting>  
-  <generalization id="95">    
-    <end type="SOURCE" refId="43"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <nesting id="96">    
-    <end type="SOURCE" refId="55"/>    
-    <end type="TARGET" refId="48"/>  
-  </nesting>  
-  <generalization id="97">    
-    <end type="SOURCE" refId="36"/>    
-    <end type="TARGET" refId="14"/>  
-  </generalization>  
-  <generalization id="98">    
-    <end type="SOURCE" refId="61"/>    
-    <end type="TARGET" refId="50"/>  
-  </generalization>  
-  <generalization id="99">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="100">    
-    <end type="SOURCE" refId="27"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <generalization id="101">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="31"/>  
-  </generalization>  
-  <generalization id="102">    
-    <end type="SOURCE" refId="34"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <association id="103">    
-    <end type="SOURCE" refId="56" navigable="false">      
-      <attribute id="104" name="expression"/>      
-      <multiplicity id="105" minimum="0" maximum="1"/>    
+  <association id="93">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="94" name="INT_ARRAY">        
+        <position height="19" width="75" x="3765" y="1442"/>      
+      </attribute>      
+      <multiplicity id="95" minimum="0" maximum="1">        
+        <position height="0" width="0" x="-152" y="-144"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="11" navigable="true"/>    
+    <end type="TARGET" refId="18" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="106">    
-    <end type="SOURCE" refId="30"/>    
-    <end type="TARGET" refId="23"/>  
+  <generalization id="96">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="29"/>  
   </generalization>  
-  <generalization id="107">    
+  <nesting id="97">    
+    <end type="SOURCE" refId="46"/>    
+    <end type="TARGET" refId="55"/>  
+  </nesting>  
+  <generalization id="98">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="99">    
     <end type="SOURCE" refId="1"/>    
     <end type="TARGET" refId="23"/>  
   </generalization>  
-  <generalization id="108">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="109">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <nesting id="110">    
-    <end type="SOURCE" refId="63"/>    
-    <end type="TARGET" refId="64"/>  
-  </nesting>  
-  <generalization id="111">    
-    <end type="SOURCE" refId="34"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <generalization id="112">    
+  <generalization id="100">    
     <bendpoint x="601" y="435"/>    
     <end type="SOURCE" refId="18"/>    
     <end type="TARGET" refId="17"/>  
   </generalization>  
-  <generalization id="113">    
-    <end type="SOURCE" refId="20"/>    
+  <generalization id="101">    
+    <end type="SOURCE" refId="38"/>    
+    <end type="TARGET" refId="37"/>  
+  </generalization>  
+  <generalization id="102">    
+    <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <nesting id="103">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="12"/>  
+  </nesting>  
+  <generalization id="104">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="105">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="106">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <generalization id="107">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="108">    
+    <end type="SOURCE" refId="39"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <generalization id="109">    
+    <end type="SOURCE" refId="41"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <generalization id="110">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="34"/>  
+  </generalization>  
+  <generalization id="111">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <nesting id="112">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="24"/>  
+  </nesting>  
+  <generalization id="113">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="2"/>  
   </generalization>  
   <generalization id="114">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="29"/>  
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="44"/>  
   </generalization>  
   <generalization id="115">    
-    <end type="SOURCE" refId="40"/>    
-    <end type="TARGET" refId="29"/>  
+    <end type="SOURCE" refId="35"/>    
+    <end type="TARGET" refId="20"/>  
   </generalization>  
   <generalization id="116">    
-    <end type="SOURCE" refId="19"/>    
-    <end type="TARGET" refId="11"/>  
+    <end type="SOURCE" refId="50"/>    
+    <end type="TARGET" refId="49"/>  
   </generalization>  
   <generalization id="117">    
     <end type="SOURCE" refId="22"/>    
     <end type="TARGET" refId="29"/>  
   </generalization>  
-  <association id="118">    
-    <end type="SOURCE" refId="56" navigable="false">      
-      <attribute id="119" name="value"/>      
-      <multiplicity id="120" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="50" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <nesting id="121">    
-    <end type="SOURCE" refId="62"/>    
-    <end type="TARGET" refId="54"/>  
-  </nesting>  
-  <generalization id="122">    
-    <end type="SOURCE" refId="28"/>    
-    <end type="TARGET" refId="23"/>  
+  <generalization id="118">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="29"/>  
   </generalization>  
-  <association id="123">    
-    <end type="SOURCE" refId="16" navigable="false">      
-      <attribute id="124" name="INT_ARRAY">        
-        <position height="19" width="75" x="3765" y="1442"/>      
-      </attribute>      
-      <multiplicity id="125" minimum="0" maximum="1">        
-        <position height="0" width="0" x="-152" y="-144"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="18" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="126">    
-    <end type="SOURCE" refId="35"/>    
-    <end type="TARGET" refId="20"/>  
-  </generalization>  
-  <nesting id="127">    
-    <end type="SOURCE" refId="58"/>    
-    <end type="TARGET" refId="65"/>  
-  </nesting>  
-  <association id="128">    
-    <end type="SOURCE" refId="63" navigable="false">      
-      <attribute id="129" name="type"/>      
-      <multiplicity id="130" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="64" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="131">    
-    <end type="SOURCE" refId="32"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <nesting id="132">    
+  <nesting id="119">    
     <end type="SOURCE" refId="17"/>    
     <end type="TARGET" refId="16"/>  
   </nesting>  
-  <generalization id="133">    
-    <end type="SOURCE" refId="39"/>    
-    <end type="TARGET" refId="38"/>  
+  <association id="120">    
+    <end type="SOURCE" refId="55" navigable="false">      
+      <attribute id="121" name="expression">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="122" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="123">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="23"/>  
   </generalization>  
-  <nesting id="134">    
-    <end type="SOURCE" refId="11"/>    
-    <end type="TARGET" refId="12"/>  
+  <generalization id="124">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="125">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="126">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
+  <generalization id="127">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="49"/>  
+  </generalization>  
+  <nesting id="128">    
+    <end type="SOURCE" refId="57"/>    
+    <end type="TARGET" refId="64"/>  
   </nesting>  
+  <association id="129">    
+    <end type="SOURCE" refId="62" navigable="false">      
+      <attribute id="130" name="type">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="131" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="63" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

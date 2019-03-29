@@ -1,42 +1,33 @@
 package pt.iscte.paddle.tests.asg;
 
-import static org.junit.Assert.assertEquals;
 import static pt.iscte.paddle.asg.IDataType.INT;
 import static pt.iscte.paddle.asg.ILiteral.literal;
 import static pt.iscte.paddle.asg.IOperator.EQUAL;
 import static pt.iscte.paddle.asg.IOperator.MUL;
 import static pt.iscte.paddle.asg.IOperator.SUB;
 
-import java.math.BigDecimal;
-
-import org.junit.Test;
-
 import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IModule;
+import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
+import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
 
-public class TestRecursion {
-	@Test
-	public void test() {
-		IModule program = IModule.create("Test");
-		program.loadBuildInProcedures(TestBuiltinProcedures.TestProcedures.class);
-		IProcedure proc = program.addProcedure("fact", INT);
-		IVariable nParam = proc.addParameter("n", INT);
-		IBinaryExpression guard = EQUAL.on(nParam, literal(0));
-		ISelection sel = proc.getBody().addSelectionWithAlternative(guard);
-		sel.addReturn(literal(1));
-		IProcedureCall recCall = proc.call(SUB.on(nParam, literal(1)));
-		IBinaryExpression retExp = MUL.on(nParam, recCall);
-		sel.getAlternativeBlock().addReturn(retExp);
-		System.out.println(program);
-		IProgramState state = IMachine.create(program);
-		IExecutionData data = state.execute(proc, 5);
-		assertEquals(new BigDecimal(120), data.getReturnValue().getValue());
+public class TestRecursion extends BaseTest {	
+	IProcedure fact = module.addProcedure(INT);
+	IVariable n = fact.addParameter(INT);
+	IBinaryExpression guard = EQUAL.on(n, literal(0));
+	ISelection sel = fact.getBody().addSelectionWithAlternative(guard);
+	IReturn return1 = sel.addReturn(literal(1));
+	IProcedureCall recCall = fact.call(SUB.on(n, literal(1)));
+	IBinaryExpression retExp = MUL.on(n, recCall);
+	IBlock elseBlock = sel.getAlternativeBlock();
+	IReturn return2 = elseBlock.addReturn(retExp);
+	
+	@Case("5")
+	public void test(IExecutionData data) {
+		equal(120, data.getReturnValue());
 	}
 }

@@ -90,12 +90,12 @@ public interface IExpression extends IProgramElement {
 		}
 		
 		
-		else if(part instanceof IStructAllocation) {
-			IStructAllocation str = (IStructAllocation) part; 
+		else if(part instanceof IRecordAllocation) {
+			IRecordAllocation str = (IRecordAllocation) part; 
 			visitor.visit(str);
 		}
-		else if(part instanceof IStructMemberExpression) {
-			IStructMemberExpression sm = (IStructMemberExpression) part; 
+		else if(part instanceof IRecordFieldExpression) {
+			IRecordFieldExpression sm = (IRecordFieldExpression) part; 
 			visitor.visit(sm);
 		}
 		
@@ -135,8 +135,8 @@ public interface IExpression extends IProgramElement {
 		default void 	visit(IConstant exp) 				{ }
 		default void 	visit(ILiteral exp) 				{ }
 		
-		default void 	visit(IStructAllocation exp) 		{ }
-		default void 	visit(IStructMemberExpression exp) 	{ }
+		default void 	visit(IRecordAllocation exp) 		{ }
+		default void 	visit(IRecordFieldExpression exp) 	{ }
 	
 //		default void 	visit(IVariableExpression exp) 		{ }
 		default void 	visit(IVariable exp)		 		{ }

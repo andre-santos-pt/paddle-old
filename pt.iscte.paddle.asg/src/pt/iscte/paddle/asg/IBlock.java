@@ -38,8 +38,8 @@ public interface IBlock extends IBlockChild, IStatementContainer {
 				if(visitor.visit(ass))
 					ass.getExpression().accept(visitor);
 			}
-			else if(s instanceof IStructMemberAssignment) {
-				IStructMemberAssignment ass = (IStructMemberAssignment) s;
+			else if(s instanceof IRecordFieldAssignment) {
+				IRecordFieldAssignment ass = (IRecordFieldAssignment) s;
 				if(visitor.visit(ass))
 					ass.getExpression().accept(visitor);
 			}
@@ -89,7 +89,7 @@ public interface IBlock extends IBlockChild, IStatementContainer {
 		default boolean visit(IReturn returnStatement) 				{ return true; }
 		default boolean visit(IArrayElementAssignment assignment) 	{ return true; }
 		default boolean visit(IVariableAssignment assignment) 		{ return true; }
-		default boolean visit(IStructMemberAssignment assignment) 	{ return true; }
+		default boolean visit(IRecordFieldAssignment assignment) 	{ return true; }
 		default boolean visit(IProcedureCall call) 					{ return true; }
 
 		// IControlStructure

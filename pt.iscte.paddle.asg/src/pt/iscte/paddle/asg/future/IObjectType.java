@@ -4,9 +4,9 @@ import java.util.List;
 
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureDeclaration;
-import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.IRecordType;
 
-interface IObjectType extends IStructType {
+interface IObjectType extends IRecordType {
 
 	List<IProcedure> getProcedures();
 	

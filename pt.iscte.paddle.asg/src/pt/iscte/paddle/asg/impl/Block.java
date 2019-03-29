@@ -17,7 +17,7 @@ import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IStatement;
-import pt.iscte.paddle.asg.IStructMemberAssignment;
+import pt.iscte.paddle.asg.IRecordFieldAssignment;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.machine.ExecutionError;
@@ -122,10 +122,10 @@ class Block extends ProgramElement implements IBlock {
 	}
 	
 	@Override
-	public IStructMemberAssignment addStructMemberAssignment(IVariable var, String memberId, IExpression exp) {
+	public IRecordFieldAssignment addStructMemberAssignment(IVariable var, IVariable field, IExpression exp) {
 		// TODO OCL: variable must be owned by the same procedure of expression
 
-		return new StructMemberAssignment(this, var, memberId, exp);
+		return new StructMemberAssignment(this, var, field, exp);
 	}
 	
 	@Override

@@ -57,20 +57,11 @@ public enum LogicalOperator implements IBinaryOperator {
 		}
 	};
 
-	private String symbol;
-
+	private ProgramElement programElement;
+	
 	private LogicalOperator(String symbol) {
-		this.symbol = symbol;
-	}
-
-	@Override
-	public String toString() {
-		return symbol;
-	}
-
-	@Override
-	public String getSymbol() {
-		return symbol;
+		programElement = new ProgramElement();
+		setId(symbol);
 	}
 
 	public IDataType getResultType(IExpression left, IExpression right) {
@@ -92,17 +83,26 @@ public enum LogicalOperator implements IBinaryOperator {
 		return new BinaryExpression(this, leftOperand, rightOperand);
 	}
 	
+	@Override
+	public void setProperty(String key, Object value) {
+		programElement.setProperty(key, value);
+	}
+	
+	@Override
+	public Object getProperty(String key) {
+		return programElement.getProperty(key);
+	}
+	
+	// TODO expression iterator?
 	private class Iterator implements IExpressionIterator {
 
 		@Override
 		public IExpression next(IValue lastEvaluation) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public boolean hasNext(IValue lastEvaluation) {
-			// TODO Auto-generated method stub
 			return false;
 		}
 		

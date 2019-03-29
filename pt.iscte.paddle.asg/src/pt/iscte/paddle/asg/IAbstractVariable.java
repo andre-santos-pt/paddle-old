@@ -21,5 +21,5 @@ public interface IAbstractVariable {
 	}
 
 
-	IStructMemberExpression member(String memberId);
+	IRecordFieldExpression member(String memberId);
 }

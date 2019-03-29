@@ -1,9 +1,5 @@
 package pt.iscte.paddle.asg;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.asg.IOperator.OperationType;
 import pt.iscte.paddle.asg.impl.BinaryExpression;
 

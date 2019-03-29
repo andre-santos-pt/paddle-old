@@ -20,10 +20,10 @@ import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
-import pt.iscte.paddle.asg.IStructAllocation;
-import pt.iscte.paddle.asg.IStructMemberAssignment;
-import pt.iscte.paddle.asg.IStructMemberExpression;
-import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.IRecordAllocation;
+import pt.iscte.paddle.asg.IRecordFieldAssignment;
+import pt.iscte.paddle.asg.IRecordFieldExpression;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
@@ -51,12 +51,14 @@ public class SemanticChecker {
 				e.printStackTrace();
 			}
 		}
+		
 		CompleteVisitor v = new CompleteVisitor();
-		program.accept(v);
+		program.getProcedures().forEach(p -> p.getBody().accept(v));
+//		program.accept(v);
 		return v.getProblems();
 	}
 
-	public class CompleteVisitor implements IModule.IVisitor {
+	public class CompleteVisitor implements IBlock.IVisitor {
 		List<ISemanticProblem> getProblems() {
 			List<ISemanticProblem> list = new ArrayList<>();
 			rules.forEach(r -> list.addAll(r.getProblems()));
@@ -68,17 +70,17 @@ public class SemanticChecker {
 			rules.forEach(r -> r.visit(constant));
 		}
 		
-		@Override
-		public boolean visit(IStructType struct) {
-			rules.forEach(r -> r.visit(struct));
-			return true;
-		}
+//		@Override
+//		public boolean visit(IRecordType struct) {
+//			rules.forEach(r -> r.visit(struct));
+//			return true;
+//		}
 		
-		@Override
-		public boolean visit(IProcedure procedure) {
-			rules.forEach(r -> r.visit(procedure));
-			return true;
-		}
+//		@Override
+//		public boolean visit(IProcedure procedure) {
+//			rules.forEach(r -> r.visit(procedure));
+//			return true;
+//		}
 		
 		@Override
 		public boolean visit(IBlock block) {
@@ -110,7 +112,7 @@ public class SemanticChecker {
 		}
 
 		@Override
-		public boolean visit(IStructMemberAssignment assignment) {
+		public boolean visit(IRecordFieldAssignment assignment) {
 			rules.forEach(r -> r.visit(assignment));
 			return true;
 		}
@@ -157,12 +159,12 @@ public class SemanticChecker {
 		}
 
 		@Override
-		public void visit(IStructAllocation exp) {
+		public void visit(IRecordAllocation exp) {
 			rules.forEach(r -> r.visit(exp));
 		}
 
 		@Override
-		public void visit(IStructMemberExpression exp) {
+		public void visit(IRecordFieldExpression exp) {
 			rules.forEach(r -> r.visit(exp));
 		}
 
@@ -205,7 +207,7 @@ public class SemanticChecker {
 	
 	private static boolean hasAllVisitMethods() {
 		boolean all = true;
-		for (Method method : IModule.IVisitor.class.getMethods()) {
+		for (Method method : IBlock.IVisitor.class.getMethods()) {
 			try {
 				if(method.getName().equals("visit"))
 					CompleteVisitor.class.getDeclaredMethod(method.getName(), method.getParameterTypes()[0]);

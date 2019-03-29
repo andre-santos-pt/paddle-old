@@ -9,61 +9,46 @@ import static pt.iscte.paddle.asg.IOperator.MUL;
 import static pt.iscte.paddle.asg.IOperator.SUB;
 import static pt.iscte.paddle.asg.IOperator.TRUNCATE;
 
-import org.junit.Test;
+import java.math.BigDecimal;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IModule;
+import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
+import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
 
-public class TestRandom {
+public class TestRandom extends BaseTest {
 
 	public static class RandomProc {
 		public static double random() {
 			return Math.random();
 		}
 	}
-	
-	@Test
-	public void testRandom() {
-		IModule program = IModule.create("Random");
-		program.loadBuildInProcedures(RandomProc.class);
-		IProcedure proc = program.addProcedure("randomDouble", DOUBLE);
-		proc.getBody().addReturn(program.resolveProcedure("random").call());
-		System.out.println(program);
-		IProgramState state = IMachine.create(program);
-		IExecutionData data = state.execute(proc);
-		System.out.println(data.getReturnValue());
-//		assertEquals(2, data.getTotalProcedureCalls());
+
+	@Override
+	protected Class<?>[] getBuiltins() {
+		return new Class[] {RandomProc.class};
 	}
-	
-	@Test 
-	public void testRandomInt() {
-		IModule program = IModule.create("Random");
-		program.loadBuildInProcedures(RandomProc.class);
-		IProcedure proc = program.addProcedure("randomInt", INT);
-		IVariable min = proc.addParameter("min", INT);
-		IVariable max = proc.addParameter("max", INT);
-		IProcedureCall call = program.resolveProcedure("random").call();
-		IVariable r = proc.getBody().addVariable("r", DOUBLE, call);
-		IBinaryExpression m = MUL.on(r, ADD.on(SUB.on(max, min), literal(1)));
-		IUnaryExpression t = TRUNCATE.on(m);
-		IBinaryExpression e = ADD.on(min, t);
-		proc.getBody().addReturn(e);
-		
-		System.out.println(program);
-		IProgramState state = IMachine.create(program);
-		for(int i = 0; i < 10; i++) {
-			IExecutionData data = state.execute(proc, "1", "10");
-			Number output = (Number) data.getReturnValue().getValue(); 
-			assertTrue(output.intValue() >= 1); 
-			assertTrue(output.intValue() <= 10); 
-		}
+
+	IProcedure randomInt = module.addProcedure(INT);
+	IVariable min = randomInt.addParameter(INT);
+	IVariable max = randomInt.addParameter(INT);
+	IProcedureCall randomCall = module.resolveProcedure("random").call();
+	IVariable r = randomInt.getBody().addVariable(DOUBLE, randomCall);
+	IBinaryExpression m = MUL.on(r, ADD.on(SUB.on(max, min), literal(1)));
+	IUnaryExpression t = TRUNCATE.on(m);
+	IBinaryExpression e = ADD.on(min, t);
+	IBlock body = randomInt.getBody();
+	IReturn return1 = body.addReturn(e);
+
+	@Case({"1","10"})
+	public void testRandomInt(IExecutionData data) {
+		int ret = ((BigDecimal) data.getReturnValue()).intValue();
+		assertTrue(ret >= 1); 
+		assertTrue(ret <= 10); 
 	}
-	
+
 }

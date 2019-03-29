@@ -18,12 +18,13 @@ public enum ArithmeticOperator implements IBinaryOperator {
 	DIV("/", (left, right) -> left.divide(right)),
 	MOD("%", (left, right) -> left.remainder(right));
 	
-	private final String symbol;
 	private final BiFunction<BigDecimal, BigDecimal, BigDecimal> f;
+	private ProgramElement programElement;
 	
 	private ArithmeticOperator(String symbol, BiFunction<BigDecimal, BigDecimal, BigDecimal> f) {
-		this.symbol = symbol;
 		this.f = f;
+		programElement = new ProgramElement();
+		setId(symbol);
 	}
 	
 	private static IDataType getDataType(IDataType left, IDataType right) {
@@ -45,16 +46,6 @@ public enum ArithmeticOperator implements IBinaryOperator {
 	}
 	
 	@Override
-	public String toString() {
-		return symbol;
-	}
-	
-	@Override
-	public String getSymbol() {
-		return symbol;
-	}
-
-	@Override
 	public IValue apply(IValue left, IValue right) throws ExecutionError {
 		IDataType type = getDataType(left.getType(), right.getType());
 		BigDecimal obj = f.apply((BigDecimal) left.getValue(), (BigDecimal) right.getValue());
@@ -73,5 +64,15 @@ public enum ArithmeticOperator implements IBinaryOperator {
 	@Override
 	public IBinaryExpression on(IExpression leftOperand, IExpression rightOperand) {
 		return new BinaryExpression(this, leftOperand, rightOperand);
+	}	
+	
+	@Override
+	public void setProperty(String key, Object value) {
+		programElement.setProperty(key, value);
+	}
+	
+	@Override
+	public Object getProperty(String key) {
+		return programElement.getProperty(key);
 	}
 }

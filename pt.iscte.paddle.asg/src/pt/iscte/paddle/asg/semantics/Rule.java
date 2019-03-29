@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProgramElement;
 
-public abstract class Rule implements IModule.IVisitor {
+public abstract class Rule implements IBlock.IVisitor {
 
 	enum Kind {
 		// ?

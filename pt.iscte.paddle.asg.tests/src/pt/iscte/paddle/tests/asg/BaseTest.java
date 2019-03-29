@@ -21,6 +21,7 @@ import org.junit.runners.MethodSorters;
 
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.semantics.ISemanticProblem;
 import pt.iscte.paddle.machine.IExecutionData;
@@ -34,26 +35,35 @@ public abstract class BaseTest {
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface Case {
-		String[] value();
+		String[] value() default {};
 	}
 
-	final IModule module = IModule.create();
+	final IModule module;
 
-	private IProcedure procedure;
+	private IProcedure main;
 	private IProgramState state;
 
+	
+	public BaseTest() {
+		module = IModule.create();
+		for(Class<?> builtin : getBuiltins())
+			module.loadBuildInProcedures(builtin);		
+		module.setId(getClass().getSimpleName());
+	}
+	
 	@Before
 	public void setup() {
-		module.setId(getClass().getSimpleName());
 		try {
 			for (Field f : getClass().getDeclaredFields()) {
 				if (f.getType().equals(IProcedure.class)) {
 					IProcedure p = (IProcedure) f.get(this);
 					p.setId(f.getName());
-					if (procedure == null)
-						procedure = p;
+					if (main == null || f.getName().equals("main"))
+						main = p;
 				} else if (f.getType().equals(IVariable.class))
 					((IVariable) f.get(this)).setId(f.getName());
+				else if(f.getType().equals(IRecordType.class))
+					((IRecordType) f.get(this)).setId(f.getName());
 			}
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -102,23 +112,42 @@ public abstract class BaseTest {
 	}
 
 	private IExecutionData runCase(Object[] args) {
-		IExecutionData data = state.execute(procedure, args);
+		IExecutionData data = state.execute(main, args);
 		assertNotNull(data);
 		commonAsserts(data);
 		return data;
 	}
 
+	protected Class<?>[] getBuiltins() {
+		return new Class[0];
+	}
+	
 	protected void commonAsserts(IExecutionData data) {
 
 	}
 
-	protected static void assertEqual(int expected, IValue value) {
+	protected static void equal(int expected, IValue value) {
 		assertTrue("value is not BigDecimal", value.getValue() instanceof BigDecimal);
 		assertEquals(expected, ((BigDecimal) value.getValue()).intValue());
 	}
+	
+	protected static void equal(double expected, IValue value) {
+		assertTrue("value is not BigDecimal", value.getValue() instanceof BigDecimal);
+		assertEquals(expected, ((BigDecimal) value.getValue()).doubleValue(), 0.0001);
+	}
 
-	protected static void assertEqual(String expected, IValue value) {
+	protected static void equal(String expected, IValue value) {
 		assertTrue("value is not BigDecimal", value.getValue() instanceof BigDecimal);
 		assertEquals(expected, ((BigDecimal) value.getValue()).toString());
+	}
+	
+	protected static void isTrue(IValue value) {
+		assertTrue("value is not Boolean", value.getValue() instanceof Boolean);
+		assertEquals(true, ((Boolean) value.getValue()).booleanValue());
+	}
+	
+	protected static void isFalse(IValue value) {
+		assertTrue("value is not Boolean", value.getValue() instanceof Boolean);
+		assertEquals(false, ((Boolean) value.getValue()).booleanValue());
 	}
 }

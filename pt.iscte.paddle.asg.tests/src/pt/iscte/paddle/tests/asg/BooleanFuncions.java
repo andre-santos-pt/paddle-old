@@ -13,7 +13,6 @@ import org.junit.runners.Suite;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.IUnaryExpression;

@@ -10,7 +10,7 @@ public interface IVariable extends ISimpleExpression, IStatement {
 	IDataType getType();
 
 	default boolean isStructField() {
-		return getParent() instanceof IStructType;
+		return getParent() instanceof IRecordType;
 	}
 
 	default boolean isLocalVariable() {
@@ -45,7 +45,7 @@ public interface IVariable extends ISimpleExpression, IStatement {
 		return arrayElement(Arrays.asList(indexes));
 	}
 
-	IStructMemberExpression member(String memberId);
+	IRecordFieldExpression member(String memberId);
 	
 	default String getDeclaration() {
 		return getType() + " " + getId();

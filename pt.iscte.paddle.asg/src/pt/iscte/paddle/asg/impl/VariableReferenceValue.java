@@ -7,7 +7,7 @@ import pt.iscte.paddle.asg.IArrayLengthExpression;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProgramElement;
-import pt.iscte.paddle.asg.IStructMemberExpression;
+import pt.iscte.paddle.asg.IRecordFieldExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
 import pt.iscte.paddle.asg.IVariableReferenceValue;
@@ -72,7 +72,7 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 	}
 
 	@Override
-	public IStructMemberExpression member(String memberId) {
+	public IRecordFieldExpression member(String memberId) {
 		return variable.member(memberId);
 	}
 

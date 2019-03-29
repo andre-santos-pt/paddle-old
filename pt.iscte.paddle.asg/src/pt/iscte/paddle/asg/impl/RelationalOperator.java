@@ -28,22 +28,14 @@ public enum RelationalOperator implements IBinaryOperator {
 		return ((BigDecimal) left.getValue()).compareTo((BigDecimal) right.getValue());
 	}
 	
-	private final String symbol;
+	private final ProgramElement programElement;
+	
 	private final BiFunction<IValue, IValue, Boolean> f;
 	
 	private RelationalOperator(String symbol, BiFunction<IValue, IValue, Boolean> f) {
-		this.symbol = symbol;
 		this.f = f;
-	}
-
-	@Override
-	public String toString() {
-		return symbol;
-	}
-
-	@Override
-	public String getSymbol() {
-		return symbol;
+		programElement = new ProgramElement();
+		setId(symbol);
 	}
 
 	@Override
@@ -71,5 +63,15 @@ public enum RelationalOperator implements IBinaryOperator {
 	@Override
 	public IBinaryExpression on(IExpression leftOperand, IExpression rightOperand) {
 		return new BinaryExpression(this, leftOperand, rightOperand);
+	}
+	
+	@Override
+	public void setProperty(String key, Object value) {
+		programElement.setProperty(key, value);
+	}
+	
+	@Override
+	public Object getProperty(String key) {
+		return programElement.getProperty(key);
 	}
 }

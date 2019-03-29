@@ -14,7 +14,7 @@ import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
-import pt.iscte.paddle.asg.IStructMemberAssignment;
+import pt.iscte.paddle.asg.IRecordFieldAssignment;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IUnaryOperator;
 import pt.iscte.paddle.asg.IVariable;
@@ -122,7 +122,7 @@ public class Types extends Rule {
 	}
 	
 	@Override
-	public boolean visit(IStructMemberAssignment assignment) {
+	public boolean visit(IRecordFieldAssignment assignment) {
 		checkAssignment(assignment.getVariable(), assignment.getExpression());
 		return true;
 	}

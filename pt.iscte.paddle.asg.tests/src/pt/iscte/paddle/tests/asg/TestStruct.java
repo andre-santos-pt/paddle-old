@@ -1,53 +1,40 @@
 package pt.iscte.paddle.tests.asg;
 
 
-import static org.junit.Assert.assertEquals;
 import static pt.iscte.paddle.asg.ILiteral.literal;
-
-import java.math.BigDecimal;
-
-import org.junit.Test;
 
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IStructType;
+import pt.iscte.paddle.asg.IProcedureCall;
+import pt.iscte.paddle.asg.IReturn;
+import pt.iscte.paddle.asg.IRecordFieldAssignment;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
+import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
 
 
-public class TestStruct {
+public class TestStruct extends BaseTest {
 
-	@Test
-	public void test() {
-		IModule program = IModule.create("Struct");
-		
-		IStructType pointType = program.addStruct("Point");
-		pointType.addMemberVariable("x", IDataType.INT);
-		pointType.addMemberVariable("y", IDataType.INT);
-		
-		IProcedure moveProc = program.addProcedure("move", IDataType.VOID);
-		IVariable pParam = moveProc.addParameter("p", pointType);
-		
-		moveProc.getBody().addStructMemberAssignment(pParam, "x", literal(7));
-		
-		IProcedure main = program.addProcedure("main", IDataType.INT);
-		IBlock body = main.getBody();
-		IVariable p = body.addVariable("pp", pointType);
-		body.addAssignment(p, pointType.allocationExpression());
-		
-		body.addCall(moveProc, p);
-		
-		body.addReturn(p.member("x"));
-		
-		
-		System.out.println(program);
-		IProgramState state = IMachine.create(program);
-		IExecutionData data = state.execute(main);
-		
-		assertEquals(new BigDecimal(7), data.getReturnValue().getValue());
+	IRecordType Point = module.addRecordType();
+	IVariable x = Point.addMemberVariable(IDataType.INT);
+	IVariable y = Point.addMemberVariable(IDataType.INT);
+	
+	IProcedure move = module.addProcedure(IDataType.VOID);
+	IVariable p = move.addParameter(Point);
+	IBlock moveBody = move.getBody();
+	IRecordFieldAssignment ass = moveBody.addStructMemberAssignment(p, x, literal(7));
+	
+	IProcedure main = module.addProcedure(IDataType.INT);
+	IBlock mainBody = main.getBody();
+	IVariable point = mainBody.addVariable(Point);
+	IVariableAssignment ass2 = mainBody.addAssignment(point, Point.allocationExpression());
+	IProcedureCall addCall = mainBody.addCall(move, point);
+	IReturn addReturn = mainBody.addReturn(point.member("x"));
+
+	@Case
+	public void test(IExecutionData data) {
+		equal(7, data.getReturnValue());
 	}
 }

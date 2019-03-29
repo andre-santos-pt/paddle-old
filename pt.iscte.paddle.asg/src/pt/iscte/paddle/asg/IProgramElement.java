@@ -4,8 +4,9 @@ public interface IProgramElement {
 	String ID = "ID";
 	
 	void setProperty(String key, Object value);	
-	
+
 	Object getProperty(String key);
+	
 	
 	default <T> void setProperty(Class<T> key, T value) {
 		setProperty(key.getName(), value);

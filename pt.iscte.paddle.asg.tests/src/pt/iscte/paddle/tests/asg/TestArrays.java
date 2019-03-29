@@ -16,7 +16,6 @@ import org.junit.runners.Suite;
 import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.ILoop;
-import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.IVariable;
@@ -38,11 +37,11 @@ public class TestArrays {
 		IVariable n = naturals.addParameter(INT);
 		IBlock body = naturals.getBody();
 		IVariable v = body.addVariable(INT.array());
-		IVariableAssignment addAssignment = body.addAssignment(v, INT.array().allocation(n));
+		IVariableAssignment ass1 = body.addAssignment(v, INT.array().allocation(n));
 		IVariable i = body.addVariable(INT, literal(0));
 		ILoop loop = body.addLoop(SMALLER.on(i, n));
-		IArrayElementAssignment addArrayElementAssignment = loop.addArrayElementAssignment(v, ADD.on(i, literal(1)), i);
-		IVariableAssignment addAssignment2 = loop.addAssignment(i, ADD.on(i, literal(1)));
+		IArrayElementAssignment ass2 = loop.addArrayElementAssignment(v, ADD.on(i, literal(1)), i);
+		IVariableAssignment ass3 = loop.addAssignment(i, ADD.on(i, literal(1)));
 		IReturn addReturn = body.addReturn(v);
 		
 		protected void commonAsserts(IExecutionData data) {
@@ -56,7 +55,7 @@ public class TestArrays {
 			IArray array = (IArray) data.getReturnValue();
 			assertEquals(5, array.getLength());
 			for(int x = 0; x < 5; x++)
-				assertEqual(x+1, array.getElement(x));
+				equal(x+1, array.getElement(x));
 		}
 		
 		@Case("0")

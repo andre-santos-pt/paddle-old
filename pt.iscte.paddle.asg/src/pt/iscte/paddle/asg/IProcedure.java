@@ -27,6 +27,4 @@ public interface IProcedure extends IProcedureDeclaration {
 		return false;
 	}
 	
-	
-	
 }

@@ -1,19 +1,16 @@
 package pt.iscte.paddle.tests.asg;
 
-import static pt.iscte.paddle.asg.ILiteral.literal;
-
-import org.junit.Test;
-
-
+import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ExecutionError.Type;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
+import pt.iscte.paddle.machine.IExecutionData;
+import static pt.iscte.paddle.asg.ILiteral.literal;
 
-public class TestBuiltinProcedures {
+
+public class TestBuiltinProcedures extends BaseTest {
 
 	public static class TestProcedures {
 		public static int max(int a, int b) {
@@ -30,15 +27,18 @@ public class TestBuiltinProcedures {
 		}
 	}
 	
-	@Test
-	public void test() {
-		IModule program = IModule.create("Test");
-		program.loadBuildInProcedures(TestBuiltinProcedures.TestProcedures.class);
-		IProcedure proc = program.addProcedure("test", IDataType.VOID);
-		IProcedure max = program.resolveProcedure("max", IDataType.INT, IDataType.INT);
-		proc.getBody().addCall(max, literal(4), literal(6));
-		System.out.println(program);
-		IProgramState state = IMachine.create(program);
-		state.execute(proc);
+	@Override
+	protected Class<?>[] getBuiltins() {
+		return new Class[] {TestProcedures.class};
+	}
+	
+	IProcedure test = module.addProcedure(IDataType.INT);
+	IProcedure max = module.resolveProcedure("max", IDataType.INT, IDataType.INT);
+	IBlock body = test.getBody();
+	IReturn ret = body.addReturn(body.addCall(max, literal(4), literal(6)));
+	
+	@Case
+	public void test(IExecutionData data) {
+		equal(6, data.getReturnValue());
 	}
 }

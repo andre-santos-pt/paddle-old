@@ -58,23 +58,13 @@ public enum UnaryOperator implements IUnaryOperator {
 	// TODO PLUS
 	;
 	
-	private final String symbol;
+	private final ProgramElement programElement;
 	
 	private UnaryOperator(String symbol) {
-		this.symbol = symbol;
+		programElement = new ProgramElement();
+		setId(symbol);
 	}
 	
-	
-	@Override
-	public String toString() {
-		return symbol;
-	}
-	
-	@Override
-	public String getSymbol() {
-		return symbol;
-	}
-
 	@Override
 	public IValue apply(IValue value) {
 		Object obj = calculate(value);
@@ -89,4 +79,14 @@ public enum UnaryOperator implements IUnaryOperator {
 	protected abstract Object calculate(IValue value);
 	
 	public abstract IDataType getResultType(IExpression exp);
+	
+	@Override
+	public void setProperty(String key, Object value) {
+		programElement.setProperty(key, value);
+	}
+	
+	@Override
+	public Object getProperty(String key) {
+		return programElement.getProperty(key);
+	}
 }

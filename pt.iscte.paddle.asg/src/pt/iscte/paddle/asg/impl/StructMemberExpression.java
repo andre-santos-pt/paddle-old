@@ -3,13 +3,13 @@ package pt.iscte.paddle.asg.impl;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IDataType;
-import pt.iscte.paddle.asg.IStructMemberExpression;
+import pt.iscte.paddle.asg.IRecordFieldExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IStructObject;
 import pt.iscte.paddle.machine.IValue;
 
-class StructMemberExpression extends Expression implements IStructMemberExpression {
+class StructMemberExpression extends Expression implements IRecordFieldExpression {
 
 	private final IVariable variable;
 	private final String memberId;
