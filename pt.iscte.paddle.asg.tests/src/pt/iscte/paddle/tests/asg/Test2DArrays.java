@@ -128,9 +128,9 @@ public class Test2DArrays extends BaseTest {
 		IBlock mainBody = main.getBody();
 		IVariable array = mainBody.addVariable(INT.array2D());
 		IVariableAssignment ass2 = mainBody.addAssignment(array, INT.array2D().allocation(literal(3)));
-		IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(0), literal(0)));
-		IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(2), literal(1)));
-		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(4), literal(2)));
+		IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(0)), literal(0));
+		IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(2)), literal(1));
+		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(4)), literal(2));
 		IArrayElementAssignment ass6 = mainBody.addArrayElementAssignment(array, literal(5), literal(2), literal(2));
 		IVariable var = mainBody.addVariable(BOOLEAN);
 		IVariableAssignment ass7 = mainBody.addAssignment(var, contains.call(array, literal(5)));

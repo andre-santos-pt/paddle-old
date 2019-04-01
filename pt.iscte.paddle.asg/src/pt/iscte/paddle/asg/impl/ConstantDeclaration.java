@@ -40,7 +40,7 @@ class ConstantDeclaration extends Expression implements IConstant {
 	
 	@Override
 	public String toString() {
-		return type + " " + getId() + " = " + value;
+		return getId();
 	}
 
 	@Override

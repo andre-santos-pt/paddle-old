@@ -14,9 +14,14 @@ class Selection extends ControlStructure implements ISelection {
 
 	@Override
 	public String toString() {
-		String code = "if " + getGuard() + " " + getBlock();
-		if(alternativeBlock != null)
-			code += " else " + alternativeBlock;
+		String code = "if(" + getGuard() + ") " + getBlock();
+		if(alternativeBlock != null) {
+			String tabs = "";
+			int d = alternativeBlock.getDepth();
+			for(int i = 1; i < d; i++)
+				tabs += "\t";
+			code += tabs + "else " + alternativeBlock;
+		}
 		return code;
 	}
 

@@ -15,20 +15,21 @@ import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureDeclaration;
 import pt.iscte.paddle.asg.IRecordType;
+import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.semantics.AsgSemanticChecks;
 import pt.iscte.paddle.asg.semantics.ISemanticProblem;
 import pt.iscte.paddle.asg.semantics.SemanticChecker;
 
 public class Module extends ProgramElement implements IModule {
 	private final List<IConstant> constants;
-	private final List<IRecordType> structs;
+	private final List<IRecordType> records;
 	private final List<IProcedure> procedures;
 
 	private final List<IProcedure> builtinProcedures;
 
 	public Module() {
 		constants = new ArrayList<>();
-		structs = new ArrayList<>();
+		records = new ArrayList<>();
 		procedures = new ArrayList<>();
 		builtinProcedures = new ArrayList<>();
 	}
@@ -49,7 +50,7 @@ public class Module extends ProgramElement implements IModule {
 
 	@Override
 	public Collection<IRecordType> getRecordTypes() {
-		return Collections.unmodifiableList(structs);
+		return Collections.unmodifiableList(records);
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class Module extends ProgramElement implements IModule {
 	@Override
 	public IRecordType addRecordType() {
 		IRecordType struct = new RecordType();
-		structs.add(struct);
+		records.add(struct);
 		return struct;
 	}
 
@@ -98,25 +99,31 @@ public class Module extends ProgramElement implements IModule {
 		return null;
 	}
 
-	@Override // TODO pretty print
+	@Override
 	public String toString() {
 		String text = "";
 		for(IConstant c : constants)
-			text += c + ";\n";
+			text += c.getType() + " " + c.getId() + " = " + c.getValue() + ";\n";
 
-		for(IRecordType s : structs)
-			text += s + "\n";
-
-		for (IProcedure p : builtinProcedures) {
-			System.out.println(p.longSignature() + "\t(built-in)\n");
+		if(!constants.isEmpty())
+			text += "\n";
+		
+		for(IRecordType r : records) {
+			text += "record " + getId() + " {\n";
+			for (IVariable member : r.getFields()) {
+				text += "\t" + member.getDeclaration() + ";\n";
+			}
+			return text + "}\n\n";
 		}
+		
+		for (IProcedure p : builtinProcedures)
+			System.out.println(p.longSignature() + "\t(built-in)\n");
+		
+		text += "\n";
 		
 		for (IProcedure p : procedures)
 			text += p + "\n\n";
 		
-		text = text.replaceAll(";", ";\n"); // wrong replacement of tabs
-		text = text.replaceAll("\\{", "{\n");
-		text = text.replaceAll("\\}", "}\n");
 		return text;
 	}
 	

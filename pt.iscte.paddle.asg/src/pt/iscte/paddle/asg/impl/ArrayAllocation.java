@@ -40,7 +40,7 @@ class ArrayAllocation extends Expression implements IArrayAllocation {
 
 	@Override
 	public String toString() {
-		String text = "new " + type.getComponentType();
+		String text = "new " + type.getComponentTypeAt(dimensions.size());
 		for(IExpression e : dimensions)
 			text += "[" + e + "]";
 		return text;
@@ -73,7 +73,7 @@ class ArrayAllocation extends Expression implements IArrayAllocation {
 				dims[i] = -1;
 		}
 
-		IArray array = frame.allocateArray(getType().getComponentType(), dims); 
+		IArray array = frame.allocateArray(getType().getComponentTypeAt(dims.length), dims); 
 		return array;
 	}
 }

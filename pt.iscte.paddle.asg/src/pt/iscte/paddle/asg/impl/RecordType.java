@@ -31,11 +31,7 @@ class RecordType extends ProgramElement implements IRecordType {
 	
 	@Override
 	public String toString() {
-		String text = "record " + getId() + " {";
-		for (IVariable member : variables) {
-			text += member.getDeclaration() + ";";
-		}
-		return text + "}";
+		return getId();
 	}
 	
 	@Override

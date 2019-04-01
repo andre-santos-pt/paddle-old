@@ -12,6 +12,9 @@ public interface IBlock extends IBlockChild, IStatementContainer {
 
 	boolean isEmpty();
 
+	int getDepth();
+
+	
 	@Override
 	default IBlock getBlock() {
 		return this;
@@ -110,5 +113,6 @@ public interface IBlock extends IBlockChild, IStatementContainer {
 		// TODO missing because it is not statement, only appears on expressions
 		default void	visit(IVariable variable)					{ }
 	}
+
 
 }

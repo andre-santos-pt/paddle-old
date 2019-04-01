@@ -81,9 +81,6 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 			public boolean hasNext(IValue lastEvaluation) {
 				return !over;
 			}
-			
 		}
 	}
-	
-	
 }

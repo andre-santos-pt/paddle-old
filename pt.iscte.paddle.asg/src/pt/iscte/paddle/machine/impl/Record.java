@@ -1,5 +1,6 @@
 package pt.iscte.paddle.machine.impl;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,15 +12,16 @@ import pt.iscte.paddle.machine.IRecord;
 import pt.iscte.paddle.machine.IValue;
 
 public class Record implements IRecord {
-
 	private final IRecordType type;
 	private final Map<IVariable, IValue> fields;
 	
 	public Record(IRecordType type) {
 		this.type = type;
-		fields = new LinkedHashMap<>();
-		for (IVariable var : type.getFields())
-			fields.put(var, Value.create(var.getType(), var.getType().getDefaultValue()));
+		this.fields = new LinkedHashMap<>();
+		for (IVariable var : type.getFields()) {
+			IValue val = Value.create(var.getType(), var.getType().getDefaultValue());
+			fields.put(var, val);
+		}
 	}
 	
 	@Override
@@ -47,15 +49,9 @@ public class Record implements IRecord {
 	}
 
 	@Override
-	public Object getValue() {
-		// TODO ?
-		return fields.values();
+	public Map<IVariable, IValue> getValue() {
+		return Collections.unmodifiableMap(fields);
 	}
-	
-//	@Override
-//	public void setValue(Object o) {
-//		
-//	}
 	
 	@Override
 	public IRecord copy() {

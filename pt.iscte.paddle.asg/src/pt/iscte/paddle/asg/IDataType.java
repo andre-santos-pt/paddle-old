@@ -1,5 +1,10 @@
 package pt.iscte.paddle.asg;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
@@ -37,32 +42,38 @@ public interface IDataType extends IProgramElement  {
 	
 	IValueType INT = PrimitiveType.INT;
 	IValueType DOUBLE = PrimitiveType.DOUBLE;
-	IValueType BOOLEAN =PrimitiveType.BOOLEAN;
+	IValueType BOOLEAN = PrimitiveType.BOOLEAN;
 	// TODO IDataType CHAR
 
 	ImmutableCollection<IValueType> VALUE_TYPES = ImmutableList.of(INT, DOUBLE, BOOLEAN);
 
+
+	
+	public static Set<IDataType> getAllTypes() {
+		return Collections.unmodifiableSet(Instances.mapArrayTypes.keySet());
+	}
+	
 	// TODO to impl
-	class Singletons {
-		private static final IArrayType INT_ARRAY = new ArrayType(INT);
-		private static final IArrayType INT_ARRAY2D = new ArrayType(new ArrayType(INT));
+	class Instances {
+		private static Map<IDataType, IArrayType> mapArrayTypes = new HashMap<>();
+		
 		
 	}
+	
+	
 	default IArrayType array() {
-		if(this == INT)
-			return Singletons.INT_ARRAY;
-		else if(this == Singletons.INT_ARRAY)
-			return Singletons.INT_ARRAY2D;
-		else
-			return new ArrayType(this);
+		IArrayType type = Instances.mapArrayTypes.get(this);
+		if(type == null) {
+			type = new ArrayType(this);
+			Instances.mapArrayTypes.put(this, type);
+		}
+		return type;
 	}
 	
 	default IArrayType array2D() {
-		if(this == INT)
-			return Singletons.INT_ARRAY2D;
-		else
-			return new ArrayType(new ArrayType(this));
+		return array().array();
 	}
+	
 	
 	IDataType VOID = new IDataType() {
 

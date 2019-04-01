@@ -10,6 +10,6 @@ class Loop extends ControlStructure implements ILoop {
 	
 	@Override
 	public String toString() {
-		return "while " + getGuard() + " " + getBlock();
+		return "while(" + getGuard() + ") " + getBlock();
 	}
 }

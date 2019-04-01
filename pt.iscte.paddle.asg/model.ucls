@@ -138,7 +138,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <class id="16" language="java" name="pt.iscte.paddle.asg.IDataType.Singletons" project="pt.iscte.paddle.asg" 
+  <class id="16" language="java" name="pt.iscte.paddle.asg.IDataType.Instances" project="pt.iscte.paddle.asg" 
     file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IDataType.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="34" width="96" x="475" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 

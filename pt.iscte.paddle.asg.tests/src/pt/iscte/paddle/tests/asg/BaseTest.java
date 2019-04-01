@@ -19,8 +19,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import pt.iscte.paddle.asg.IConstant;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.semantics.ISemanticProblem;
@@ -45,27 +47,28 @@ public abstract class BaseTest {
 
 	private List<ISemanticProblem> problems;
 
-	
+
 	public BaseTest() {
+		System.out.println("\n\n------------------------\n" + getClass().getSimpleName() + ":\n");
 		module = IModule.create();
 		for(Class<?> builtin : getBuiltins())
 			module.loadBuildInProcedures(builtin);		
 		module.setId(getClass().getSimpleName());
 	}
-	
+
 	@Before
 	public void setup() {
 		try {
 			for (Field f : getClass().getDeclaredFields()) {
-				if (f.getType().equals(IProcedure.class)) {
-					IProcedure p = (IProcedure) f.get(this);
-					p.setId(f.getName());
-					if (main == null || f.getName().equals("main"))
-						main = p;
-				} else if (f.getType().equals(IVariable.class))
-					((IVariable) f.get(this)).setId(f.getName());
-				else if(f.getType().equals(IRecordType.class))
-					((IRecordType) f.get(this)).setId(f.getName());
+				Object o = f.get(this);
+				if(isIdElement(o)) {
+					((IProgramElement) o).setId(f.getName());
+
+					if (o instanceof IProcedure) {
+						if (main == null || f.getName().equals("main"))
+							main = (IProcedure) o;
+					} 
+				}
 			}
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -73,6 +76,10 @@ public abstract class BaseTest {
 			e.printStackTrace();
 		}
 		compile();
+	}
+
+	private boolean isIdElement(Object element) {
+		return element instanceof IProcedure || element instanceof IVariable || element instanceof IConstant || element instanceof IRecordType;
 	}
 
 	private void compile() {
@@ -84,11 +91,15 @@ public abstract class BaseTest {
 		assertTrue("Semantic errors", problems.isEmpty());
 	}
 
+	public IModule getModule() {
+		return module;
+	}
+	
 	@Test
 	public void run() throws Throwable {
 		if(!problems.isEmpty())
 			return;
-		
+
 		state = IMachine.create(module);
 
 		for (Method method : getClass().getMethods()) {
@@ -126,7 +137,7 @@ public abstract class BaseTest {
 	protected Class<?>[] getBuiltins() {
 		return new Class[0];
 	}
-	
+
 	protected void commonAsserts(IExecutionData data) {
 
 	}
@@ -135,7 +146,7 @@ public abstract class BaseTest {
 		assertTrue("value is not BigDecimal: " + value, value.getValue() instanceof BigDecimal);
 		assertEquals(expected, ((BigDecimal) value.getValue()).intValue());
 	}
-	
+
 	protected static void equal(double expected, IValue value) {
 		assertTrue("value is not BigDecimal", value.getValue() instanceof BigDecimal);
 		assertEquals(expected, ((BigDecimal) value.getValue()).doubleValue(), 0.0001);
@@ -145,12 +156,12 @@ public abstract class BaseTest {
 		assertTrue("value is not BigDecimal", value.getValue() instanceof BigDecimal);
 		assertEquals(expected, ((BigDecimal) value.getValue()).toString());
 	}
-	
+
 	protected static void isTrue(IValue value) {
 		assertTrue("value is not Boolean", value.getValue() instanceof Boolean);
 		assertEquals(true, ((Boolean) value.getValue()).booleanValue());
 	}
-	
+
 	protected static void isFalse(IValue value) {
 		assertTrue("value is not Boolean", value.getValue() instanceof Boolean);
 		assertEquals(false, ((Boolean) value.getValue()).booleanValue());

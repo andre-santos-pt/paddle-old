@@ -12,10 +12,16 @@ import pt.iscte.paddle.asg.semantics.ISemanticProblem;
  * Mutable
  */
 public interface IModule extends IProgramElement {
+
+	static IModule create() {
+		return new Module();
+	}
+	
 	default Collection<IModule> getImports() {
 		// TODO imports
 		return ImmutableList.of();
 	}
+	
 	Collection<IConstant> getConstants();
 	Collection<IRecordType> getRecordTypes();
 	Collection<IProcedure> getProcedures();
@@ -26,6 +32,15 @@ public interface IModule extends IProgramElement {
 	IProcedure addProcedure(IDataType returnType);
 
 	void loadBuildInProcedures(Class<?> staticClass);
+
+
+	
+	IProcedure resolveProcedure(String id, IDataType ... paramTypes);
+	
+	IProcedure resolveProcedure(IProcedureDeclaration procedureDeclaration);
+	
+	List<ISemanticProblem> checkSemantics();
+
 
 //	IConstantDeclaration getConstant(String id);
 	//	default IConstantDeclaration getConstant(String id) {
@@ -51,14 +66,8 @@ public interface IModule extends IProgramElement {
 //					return p;
 //			}
 //		return null;
-//	}
-	
-	IProcedure resolveProcedure(String id, IDataType ... paramTypes);
-	
-	IProcedure resolveProcedure(IProcedureDeclaration procedureDeclaration);
-	
-	List<ISemanticProblem> checkSemantics();
-	
+
+
 //	default IProcedure resolveProcedure(IProcedureDeclaration procedureDeclaration) {
 //		for(IProcedure p : getProcedures())
 //			if(p.hasSameSignature(procedureDeclaration))
@@ -94,8 +103,5 @@ public interface IModule extends IProgramElement {
 //	}
 
 
-	static IModule create() {
-		return new Module();
-	}
 
 }

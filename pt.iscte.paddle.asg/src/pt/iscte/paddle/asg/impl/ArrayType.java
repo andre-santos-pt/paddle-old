@@ -1,11 +1,13 @@
 package pt.iscte.paddle.asg.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IArrayAllocation;
 import pt.iscte.paddle.asg.IArrayType;
 import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IExpression;
+import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IReferenceType;
 
 public class ArrayType extends ProgramElement implements IArrayType {
@@ -66,7 +68,7 @@ public class ArrayType extends ProgramElement implements IArrayType {
 
 	@Override
 	public int getMemoryBytes() {
-		return 4;
+		return 8;
 	}
 	
 	@Override
@@ -76,6 +78,9 @@ public class ArrayType extends ProgramElement implements IArrayType {
 	
 	@Override
 	public IArrayAllocation allocation(List<IExpression> dimExpressions) {
+//		List<IExpression> dims = new ArrayList<IExpression>(dimExpressions);
+//		for(int i = 0; i < getDimensionsInternal() - dimExpressions.size(); i++)
+//			dims.add(ILiteral.literal(-1));
 		return new ArrayAllocation(this, dimExpressions);
 	}
 }

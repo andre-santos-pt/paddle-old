@@ -14,10 +14,10 @@ import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
+import pt.iscte.paddle.asg.IRecordFieldAssignment;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IStatement;
-import pt.iscte.paddle.asg.IRecordFieldAssignment;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.machine.ExecutionError;
@@ -79,18 +79,25 @@ class Block extends ProgramElement implements IBlock {
 	public String toString() {
 		String tabs = "";
 		int d = getDepth();
-//		int d = 0; // FIXME
 		for(int i = 0; i < d; i++)
 			tabs += "\t";
-		String text = tabs.substring(1) + "{";
-		for(IBlockChild s : children)
-			text += tabs + s + (s instanceof IStatement ? ";" : "");
-		return text + "}";
+		String text = "{\n";
+		for(IBlockChild s : children) {
+			if(s instanceof IVariable) {
+				IVariable v = (IVariable) s;
+				text += tabs + v.getType() + " " + v.getId() + ";\n";
+			}
+			else if(s instanceof IStatement) {
+				text += tabs + s + ";\n";
+			}
+			else {
+				text += tabs + s;
+			}
+		}
+		return text + tabs.substring(1) + "}\n";
 	}
 	
-	
-	
-	private int getDepth() {
+	public int getDepth() {
 		if(!(parent instanceof Block))
 			return 1;
 		else

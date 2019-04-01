@@ -40,6 +40,5 @@ public class TestSum extends BaseTest {
 	public void test(IExecutionData data) {
 		assertEquals(2, data.getCallStackDepth());
 		equal(21, data.getVariableValue(result));
-		
 	}
 }

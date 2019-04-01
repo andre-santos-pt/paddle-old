@@ -83,10 +83,7 @@ class Procedure extends ProgramElement implements IProcedure {
 			params += p.getType().getId() + " " + p.getId();
 		}
 
-		String vars = "";
-		for(IVariable var : variables)
-			vars += var.getType().getId() + " " + var.getId() +"\n";
-		return returnType + " " + getId() + "(" + params + ")" + "\n" + vars + body.toString();
+		return returnType + " " + getId() + "(" + params + ") " + body.toString();
 	}
 
 	private class ParamsView extends AbstractList<IVariable> {
