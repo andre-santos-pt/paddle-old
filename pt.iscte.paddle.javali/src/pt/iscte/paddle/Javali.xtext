@@ -6,37 +6,41 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate javali "http://www.iscte.pt/paddle/Javali"
 
 Module:
-	//'class' id=IDENTIFIER '{'
-//	('main' singleBlock=Block)? 
+	TypeDef | StaticClass
+;
+	
+TypeDef returns Module:
+	{TypeDef} (
+	(visibility=AccessModifier)?
+	'class' id=IDENTIFIER '{' 
 	(
 		constants+=Constant |
-		types+=TypeDef |
-		procedures+=Procedure |
-		('run' singleBlock+=Block)
+		(fields+=VarDeclaration ';') |
+		procedures+=Procedure
 	)*
-	//'}'
+	'}'
+	)?
+;
+
+StaticClass returns Module:
+	{StaticClass} 
+	(procedures+=Procedure)+
 ;
 
 Constant:
-	'const' type=Type id=Id '=' exp=Literal ';'
+	'static' 'final' type=Type id=Id '=' exp=Literal ';'
 ;
 
-TypeDef:
-	'type' id=Id '{'
-		('field' fields+=VarDeclaration ';')*
-		
-		(operations+=Procedure)*
-	'}'
-;
 	
 Procedure:
 	(comment=ML_COMMENT_DOC)?
-	kind=('func'|'proc') retType=Type id=Id '(' (params+=VarDeclaration (',' params+=VarDeclaration)*)? ')' body=Block
+	(visibility=AccessModifier)?
+	(static ?= 'static')? (retType=Type|void?='void') id=Id '(' (params+=VarDeclaration (',' params+=VarDeclaration)*)? ')' body=Block
 ;
 
 
 Block:
-	{Block} '{' (statements+=Statement)* '}'
+	{Block} ('{' (statements+=Statement)* '}' )
 ;
 
 Statement:
@@ -97,6 +101,10 @@ Decrement:
 	(id=Id '--') // | ('--' id=IDENTIFIER)
 ;
 
+AccessModifier:
+	'public'|'private'|'protected'
+;
+
 Expression:
 	Relation
 ;
@@ -128,7 +136,7 @@ ProcCall:
 ;
 
 Type:
-	id=('int' | 'double' | 'boolean' | 'char' | 'void' | IDENTIFIER) (arrayDims+='['']')*
+	id=('int' | 'double' | 'boolean' | 'char' | IDENTIFIER) (arrayDims+='['']')*
 ;
 
 NewArray:

@@ -39,16 +39,19 @@ import pt.iscte.paddle.javali.Procedure;
 import pt.iscte.paddle.javali.Return;
 import pt.iscte.paddle.javali.Statement;
 import pt.iscte.paddle.javali.Type;
+import pt.iscte.paddle.javali.TypeDef;
 import pt.iscte.paddle.javali.VarAssign;
 import pt.iscte.paddle.javali.VarDeclaration;
 import pt.iscte.paddle.javali.VarExpression;
 import pt.iscte.paddle.javali.While;
 
 public class Transformer {
-	Map<String, IVariable> varTable;
+	private Map<String, IVariable> varTable;
 	private Resource resource;
-
+	private IFile file;
+	
 	public Transformer(IFile file) {
+		this.file = file;
 //		new org.eclipse.emf.mwe.utils.StandaloneSetup().setPlatformUri("../");
 		Injector injector = new JavaliStandaloneSetup().createInjectorAndDoEMFRegistration();
 		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
@@ -61,6 +64,11 @@ public class Transformer {
 		Module module = (Module) resource.getContents().get(0);
 		ICompositeNode node = NodeModelUtils.getNode(module);
 		IModule program = IModule.create();
+		if(module instanceof TypeDef)
+			program.setId(((TypeDef) module).getId());
+		else
+			program.setId(file.getName());
+		
 		for (Procedure p : module.getProcedures()) {
 			varTable = new HashMap<>();
 			IProcedure proc = program.addProcedure(toModelType(p.getRetType()));

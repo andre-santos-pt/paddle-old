@@ -10,6 +10,17 @@ public interface IVariableAssignment extends IStatement {
 	IExpression getExpression();
 	IBlock getParent();
 	
+	default boolean isIncrement() {
+		if(!(getExpression() instanceof IBinaryExpression))
+			return false;
+		
+		IBinaryExpression exp = (IBinaryExpression) getExpression();
+		return exp.getOperator().equals(IOperator.ADD) &&
+				exp.getLeftOperand().equals(getVariable()) && exp.getRightOperand().equals(ILiteral.literal(1)) ||
+				exp.getRightOperand().equals(getVariable()) && exp.getLeftOperand().equals(ILiteral.literal(1));
+				
+	}
+	
 	@Override
 	default List<IExpression> getExpressionParts() {
 		return ImmutableList.of(getExpression());
