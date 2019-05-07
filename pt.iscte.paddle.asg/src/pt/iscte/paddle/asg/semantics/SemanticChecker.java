@@ -6,8 +6,8 @@ import java.util.List;
 
 import pt.iscte.paddle.asg.IArrayAllocation;
 import pt.iscte.paddle.asg.IArrayElementAssignment;
-import pt.iscte.paddle.asg.IArrayElementExpression;
-import pt.iscte.paddle.asg.IArrayLengthExpression;
+import pt.iscte.paddle.asg.IArrayElement;
+import pt.iscte.paddle.asg.IArrayLength;
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IBreak;
@@ -147,7 +147,7 @@ public class SemanticChecker {
 		}
 
 		@Override
-		public boolean visit(IArrayLengthExpression exp) {
+		public boolean visit(IArrayLength exp) {
 			rules.forEach(r -> r.visit(exp));
 			return true;
 		}
@@ -185,7 +185,7 @@ public class SemanticChecker {
 		}
 		
 		@Override
-		public boolean visit(IArrayElementExpression exp) {
+		public boolean visit(IArrayElement exp) {
 			rules.forEach(r -> r.visit(exp));
 			return true;
 		}

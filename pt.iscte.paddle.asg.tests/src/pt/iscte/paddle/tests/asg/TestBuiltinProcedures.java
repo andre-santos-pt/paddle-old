@@ -1,15 +1,14 @@
 package pt.iscte.paddle.tests.asg;
 
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IReturn;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ExecutionError.Type;
 import pt.iscte.paddle.machine.IExecutionData;
-import static pt.iscte.paddle.asg.ILiteral.literal;
 
-
+// TODO read system.in
 public class TestBuiltinProcedures extends BaseTest {
 
 	public static class TestProcedures {
@@ -32,10 +31,10 @@ public class TestBuiltinProcedures extends BaseTest {
 		return new Class[] {TestProcedures.class};
 	}
 	
-	IProcedure test = module.addProcedure(IDataType.INT);
-	IProcedure max = module.resolveProcedure("max", IDataType.INT, IDataType.INT);
+	IProcedure test = module.addProcedure(IType.INT);
+	IProcedure max = module.resolveProcedure("max", IType.INT, IType.INT);
 	IBlock body = test.getBody();
-	IReturn ret = body.addReturn(body.addCall(max, literal(4), literal(6)));
+	IReturn ret = body.addReturn(body.addCall(max, IType.INT.literal(4), IType.INT.literal(6)));
 	
 	@Case
 	public void test(IExecutionData data) {

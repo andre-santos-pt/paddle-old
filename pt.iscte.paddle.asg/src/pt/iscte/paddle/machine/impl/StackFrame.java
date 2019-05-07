@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IRecordType;
@@ -128,7 +128,7 @@ class StackFrame implements IStackFrame {
 	}
 
 	@Override
-	public IArray allocateArray(IDataType baseType, int[] dimensions) {
+	public IArray allocateArray(IType baseType, int[] dimensions) {
 		return callStack.getProgramState().allocateArray(baseType, dimensions);
 	}
 

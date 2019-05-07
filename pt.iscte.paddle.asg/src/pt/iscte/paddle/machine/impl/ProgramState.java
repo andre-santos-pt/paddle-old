@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IModule;
@@ -102,7 +102,7 @@ public class ProgramState implements IProgramState {
 		if(value.equals("null"))
 			return IValue.NULL;
 
-		for(IValueType type : IDataType.VALUE_TYPES) {
+		for(IValueType type : IType.VALUE_TYPES) {
 			if(type.matchesLiteral(value))
 				return Value.create(type, type.create(value));
 		}
@@ -114,7 +114,7 @@ public class ProgramState implements IProgramState {
 		if(object == null)
 			return IValue.NULL;
 
-		for(IValueType type : IDataType.VALUE_TYPES) {
+		for(IValueType type : IType.VALUE_TYPES) {
 			if(type.matches(object))
 				return Value.create(type, type.create(object.toString()));
 		}
@@ -124,7 +124,7 @@ public class ProgramState implements IProgramState {
 
 
 	@Override
-	public IArray allocateArray(IDataType baseType, int ... dimensions) {
+	public IArray allocateArray(IType baseType, int ... dimensions) {
 		return heap.allocateArray(baseType, dimensions);
 	}
 

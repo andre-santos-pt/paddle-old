@@ -1,12 +1,11 @@
 package pt.iscte.paddle.tests.asg;
 import static org.junit.Assert.assertTrue;
-import static pt.iscte.paddle.asg.IDataType.BOOLEAN;
-import static pt.iscte.paddle.asg.IDataType.INT;
-import static pt.iscte.paddle.asg.ILiteral.literal;
 import static pt.iscte.paddle.asg.IOperator.DIFFERENT;
 import static pt.iscte.paddle.asg.IOperator.EQUAL;
 import static pt.iscte.paddle.asg.IOperator.MOD;
 import static pt.iscte.paddle.asg.IOperator.NOT;
+import static pt.iscte.paddle.asg.IType.BOOLEAN;
+import static pt.iscte.paddle.asg.IType.INT;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -41,7 +40,7 @@ public class BooleanFuncions {
 	public static class IsEven extends BooleanFunctions {
 		IProcedure isEven = module.addProcedure(BOOLEAN);
 		IVariable n = isEven.addParameter(INT);
-		IBinaryExpression e = EQUAL.on(MOD.on(n, literal(2)), literal(0));
+		IBinaryExpression e = EQUAL.on(MOD.on(n, INT.literal(2)), INT.literal(0));
 		IBlock body = isEven.getBody();
 		IReturn ret = body.addReturn(e);
 		
@@ -60,7 +59,7 @@ public class BooleanFuncions {
 	public static class IsOdd extends BooleanFunctions {
 		IProcedure isOdd = module.addProcedure(BOOLEAN);
 		IVariable n = isOdd.addParameter(INT);
-		IBinaryExpression e = DIFFERENT.on(MOD.on(n, literal(2)), literal(0));
+		IBinaryExpression e = DIFFERENT.on(MOD.on(n, INT.literal(2)), INT.literal(0));
 		IBlock body = isOdd.getBody();
 		IReturn ret = body.addReturn(e);
 

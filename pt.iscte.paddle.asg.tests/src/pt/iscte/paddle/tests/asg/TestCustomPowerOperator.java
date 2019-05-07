@@ -1,13 +1,13 @@
 package pt.iscte.paddle.tests.asg;
 
-import static pt.iscte.paddle.asg.IDataType.DOUBLE;
+import static pt.iscte.paddle.asg.IType.DOUBLE;
 
 import java.math.BigDecimal;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBinaryOperator;
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IReturn;
@@ -31,12 +31,12 @@ public class TestCustomPowerOperator extends BaseTest {
 		}
 
 		@Override
-		public boolean isValidFor(IDataType left, IDataType right) {
+		public boolean isValidFor(IType left, IType right) {
 			return left.isNumber() && right.isNumber();
 		}
 
 		@Override
-		public IDataType getResultType(IExpression left, IExpression right) {
+		public IType getResultType(IExpression left, IExpression right) {
 			return DOUBLE;
 		}
 

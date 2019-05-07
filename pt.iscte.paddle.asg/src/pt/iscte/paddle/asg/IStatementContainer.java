@@ -15,11 +15,11 @@ public interface IStatementContainer {
 		return getBlock().addBlock();
 	}
 
-	default IVariable addVariable(IDataType type) {
+	default IVariable addVariable(IType type) {
 		return getBlock().addVariable(type);
 	}
 
-	default IVariable addVariable(IDataType type, IExpression initialization) {
+	default IVariable addVariable(IType type, IExpression initialization) {
 		IVariable var = addVariable(type);
 		addAssignment(var, initialization);
 		return var;
@@ -30,13 +30,13 @@ public interface IStatementContainer {
 	}
 
 	default IVariableAssignment addIncrement(IVariable var) {
-		assert var.getType() == IDataType.INT;
-		return addAssignment(var, IOperator.ADD.on(var, ILiteral.literal(1)));
+		assert var.getType() == IType.INT;
+		return addAssignment(var, IOperator.ADD.on(var, IType.INT.literal(1)));
 	}
 
 	default IVariableAssignment addDecrement(IVariable var) {
-		assert var.getType() == IDataType.INT;
-		return addAssignment(var, IOperator.SUB.on(var, ILiteral.literal(1)));
+		assert var.getType() == IType.INT;
+		return addAssignment(var, IOperator.SUB.on(var, IType.INT.literal(1)));
 	}
 
 	default IArrayElementAssignment addArrayElementAssignment(IVariable var, IExpression exp, List<IExpression> indexes) {

@@ -9,7 +9,7 @@ import java.util.List;
 import com.google.common.collect.Iterables;
 
 import pt.iscte.paddle.asg.IConstant;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
@@ -59,7 +59,7 @@ public class Module extends ProgramElement implements IModule {
 	}
 
 	@Override
-	public IConstant addConstant(IDataType type, ILiteral value) {
+	public IConstant addConstant(IType type, ILiteral value) {
 		assert type != null;
 		assert value != null;
 		ConstantDeclaration dec = new ConstantDeclaration(this, type, value);
@@ -75,7 +75,7 @@ public class Module extends ProgramElement implements IModule {
 	}
 
 	@Override
-	public IProcedure addProcedure(IDataType returnType) {
+	public IProcedure addProcedure(IType returnType) {
 		IProcedure proc = new Procedure(returnType);
 		procedures.add(proc);
 		return proc;
@@ -91,7 +91,7 @@ public class Module extends ProgramElement implements IModule {
 	}
 
 	@Override
-	public IProcedure resolveProcedure(String id, IDataType... paramTypes) {
+	public IProcedure resolveProcedure(String id, IType... paramTypes) {
 		for(IProcedure p : Iterables.concat(procedures, builtinProcedures))
 			if(p.matchesSignature(id, paramTypes))
 				return p;

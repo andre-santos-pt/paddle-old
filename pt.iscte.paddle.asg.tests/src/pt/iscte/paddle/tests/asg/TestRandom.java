@@ -1,9 +1,8 @@
 package pt.iscte.paddle.tests.asg;
 
 import static org.junit.Assert.assertTrue;
-import static pt.iscte.paddle.asg.IDataType.DOUBLE;
-import static pt.iscte.paddle.asg.IDataType.INT;
-import static pt.iscte.paddle.asg.ILiteral.literal;
+import static pt.iscte.paddle.asg.IType.DOUBLE;
+import static pt.iscte.paddle.asg.IType.INT;
 import static pt.iscte.paddle.asg.IOperator.ADD;
 import static pt.iscte.paddle.asg.IOperator.MUL;
 import static pt.iscte.paddle.asg.IOperator.SUB;
@@ -39,7 +38,7 @@ public class TestRandom extends BaseTest {
 	IProcedure random = module.resolveProcedure("random");
 	IProcedureCall randomCall = random.call();
 	IVariable r = randomInt.getBody().addVariable(DOUBLE, randomCall);
-	IBinaryExpression m = MUL.on(r, ADD.on(SUB.on(max, min), literal(1)));
+	IBinaryExpression m = MUL.on(r, ADD.on(SUB.on(max, min), INT.literal(1)));
 	IUnaryExpression t = TRUNCATE.on(m);
 	IBinaryExpression e = ADD.on(min, t);
 	IBlock body = randomInt.getBody();

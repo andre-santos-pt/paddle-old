@@ -1,13 +1,13 @@
 package pt.iscte.paddle.asg.impl;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IReferenceType;
 
 public class ReferenceType extends ProgramElement implements IReferenceType {
 
-	private final IDataType target;
+	private final IType target;
 	
-	public ReferenceType(IDataType target) {
+	public ReferenceType(IType target) {
 		this.target = target;
 	}
 	
@@ -22,7 +22,7 @@ public class ReferenceType extends ProgramElement implements IReferenceType {
 	}
 
 	@Override
-	public IDataType getTarget() {
+	public IType getTarget() {
 		return target;
 	}
 	

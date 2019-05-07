@@ -2,7 +2,7 @@ package pt.iscte.paddle.asg.impl;
 
 import java.math.BigDecimal;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IUnaryOperator;
@@ -13,13 +13,13 @@ public enum UnaryOperator implements IUnaryOperator {
 	NOT("!") {
 		@Override
 		protected Object calculate(IValue value) {
-			assert value.getType() == IDataType.BOOLEAN;
+			assert value.getType() == IType.BOOLEAN;
 			return !(boolean) value.getValue();
 		}
 		
 		@Override
-		public IDataType getResultType(IExpression exp) {
-			return IDataType.BOOLEAN;
+		public IType getResultType(IExpression exp) {
+			return IType.BOOLEAN;
 		}
 		
 		@Override
@@ -28,7 +28,7 @@ public enum UnaryOperator implements IUnaryOperator {
 		}
 		
 		@Override
-		public boolean isValidFor(IDataType type) {
+		public boolean isValidFor(IType type) {
 			return type.isBoolean();
 		}
 	},
@@ -39,8 +39,8 @@ public enum UnaryOperator implements IUnaryOperator {
 		}
 		
 		@Override
-		public IDataType getResultType(IExpression exp) {
-			return IDataType.INT;
+		public IType getResultType(IExpression exp) {
+			return IType.INT;
 		}
 		
 		@Override
@@ -49,7 +49,7 @@ public enum UnaryOperator implements IUnaryOperator {
 		}
 		
 		@Override
-		public boolean isValidFor(IDataType type) {
+		public boolean isValidFor(IType type) {
 			return type.isNumber();
 		}
 	},
@@ -78,7 +78,7 @@ public enum UnaryOperator implements IUnaryOperator {
 	
 	protected abstract Object calculate(IValue value);
 	
-	public abstract IDataType getResultType(IExpression exp);
+	public abstract IType getResultType(IExpression exp);
 	
 	@Override
 	public void setProperty(String key, Object value) {

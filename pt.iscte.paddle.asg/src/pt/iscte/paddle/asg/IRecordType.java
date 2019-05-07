@@ -5,11 +5,11 @@ import java.util.List;
 /**
  * Mutable
  */
-public interface IRecordType extends IDataType {
+public interface IRecordType extends IType {
 	
 	List<IVariable> getFields();
 	
-	IVariable addMemberVariable(IDataType type);
+	IVariable addMemberVariable(IType type);
 
 	@Override
 	default Object getDefaultValue() {

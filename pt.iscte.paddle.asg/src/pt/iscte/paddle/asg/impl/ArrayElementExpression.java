@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import pt.iscte.paddle.asg.IArrayElementExpression;
+import pt.iscte.paddle.asg.IArrayElement;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ExecutionError;
@@ -14,7 +14,7 @@ import pt.iscte.paddle.machine.IReference;
 import pt.iscte.paddle.machine.IStackFrame;
 import pt.iscte.paddle.machine.IValue;
 
-class ArrayElementExpression extends Expression implements IArrayElementExpression {
+class ArrayElementExpression extends Expression implements IArrayElement {
 	private final IVariable variable;
 	private final ImmutableList<IExpression> indexes;
 	

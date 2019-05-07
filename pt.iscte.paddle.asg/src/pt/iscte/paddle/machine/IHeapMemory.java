@@ -2,12 +2,12 @@ package pt.iscte.paddle.machine;
 
 import com.google.common.util.concurrent.ExecutionError;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IRecordType;
 
 public interface IHeapMemory {
 
-	IArray allocateArray(IDataType baseType, int ... dimensions) throws ExecutionError;
+	IArray allocateArray(IType baseType, int ... dimensions) throws ExecutionError;
 
 	IRecord allocateRecord(IRecordType type) throws ExecutionError;
 	

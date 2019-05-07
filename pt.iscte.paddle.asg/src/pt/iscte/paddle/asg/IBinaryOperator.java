@@ -6,9 +6,9 @@ import pt.iscte.paddle.machine.IValue;
 
 public interface IBinaryOperator extends IOperator {
 	
-	boolean isValidFor(IDataType left, IDataType right);
+	boolean isValidFor(IType left, IType right);
 	
-	IDataType getResultType(IExpression left, IExpression right);
+	IType getResultType(IExpression left, IExpression right);
 	
 	IValue apply(IValue left, IValue right) throws ExecutionError;
 	

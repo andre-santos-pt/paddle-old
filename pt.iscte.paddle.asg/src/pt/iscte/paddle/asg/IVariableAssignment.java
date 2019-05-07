@@ -16,8 +16,8 @@ public interface IVariableAssignment extends IStatement {
 		
 		IBinaryExpression exp = (IBinaryExpression) getExpression();
 		return exp.getOperator().equals(IOperator.ADD) &&
-				exp.getLeftOperand().equals(getVariable()) && exp.getRightOperand().equals(ILiteral.literal(1)) ||
-				exp.getRightOperand().equals(getVariable()) && exp.getLeftOperand().equals(ILiteral.literal(1));
+				exp.getLeftOperand().equals(getVariable()) && exp.getRightOperand().equals(IType.INT.literal(1)) ||
+				exp.getRightOperand().equals(getVariable()) && exp.getLeftOperand().equals(IType.INT.literal(1));
 				
 	}
 	

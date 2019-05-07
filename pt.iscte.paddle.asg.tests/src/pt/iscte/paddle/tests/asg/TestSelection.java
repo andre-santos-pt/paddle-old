@@ -1,7 +1,7 @@
 package pt.iscte.paddle.tests.asg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static pt.iscte.paddle.asg.IDataType.INT;
+import static pt.iscte.paddle.asg.IType.INT;
 import static pt.iscte.paddle.asg.IOperator.GREATER;
 
 import pt.iscte.paddle.asg.IBinaryExpression;

@@ -2,7 +2,7 @@ package pt.iscte.paddle.asg.impl;
 
 import java.util.List;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IValueType;
 import pt.iscte.paddle.machine.ICallStack;
@@ -10,17 +10,17 @@ import pt.iscte.paddle.machine.IValue;
 
 public class Literal extends Expression implements ILiteral {
 
-	private final IDataType type;
+	private final IType type;
 	private final String value;
 	
 	public Literal(IValueType type, String value) {
 		assert value != null && !value.isEmpty();
-		this.type = type == null ? IDataType.UNKNOWN : type;
+		this.type = type == null ? IType.UNKNOWN : type;
 		this.value = value;
 	}
 	
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return type;
 	}
 	

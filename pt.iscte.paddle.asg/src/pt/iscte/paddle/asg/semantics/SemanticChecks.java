@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import pt.iscte.paddle.asg.IBlock.IVisitor;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.IVariable;
@@ -22,10 +22,10 @@ class SemanticChecks {
 	}
 	
 	static void checkReturn(IProcedure procedure, List<ISemanticProblem> problems) {
-		IDataType returnType = procedure.getReturnType();
+		IType returnType = procedure.getReturnType();
 		procedure.getBody().accept(new IVisitor() {
 			public boolean visit(IReturn returnStatement) {
-				IDataType t = returnStatement.getReturnValueType();
+				IType t = returnStatement.getReturnValueType();
 				if(!t.equals(returnType))
 					problems.add(ISemanticProblem.create("return not compatible with procedure result: " + t + " " + returnType, returnStatement, procedure));
 				return true;

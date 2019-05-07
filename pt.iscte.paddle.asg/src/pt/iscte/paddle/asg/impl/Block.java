@@ -9,7 +9,7 @@ import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IBlockChild;
 import pt.iscte.paddle.asg.IBreak;
 import pt.iscte.paddle.asg.IContinue;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IProcedure;
@@ -114,7 +114,7 @@ class Block extends ProgramElement implements IBlock {
 	}
 
 	@Override
-	public IVariable addVariable(IDataType type) {		
+	public IVariable addVariable(IType type) {		
 		Variable var = new Variable(this, type);
 		Procedure procedure = getProcedure();
 		procedure.addVariableDeclaration(var);

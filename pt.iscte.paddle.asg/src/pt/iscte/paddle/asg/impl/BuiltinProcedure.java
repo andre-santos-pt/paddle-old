@@ -5,7 +5,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.List;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IValueType;
 import pt.iscte.paddle.machine.IValue;
 import pt.iscte.paddle.machine.impl.Value;
@@ -38,8 +38,8 @@ public class BuiltinProcedure extends Procedure {
 		return true;
 	}
 	
-	private static IDataType matchType(Class<?> c) {
-		for(IValueType t : IDataType.VALUE_TYPES)
+	private static IType matchType(Class<?> c) {
+		for(IValueType t : IType.VALUE_TYPES)
 			if(t.matchesPrimitiveType(c))
 				return t;
 		return null;
@@ -49,12 +49,12 @@ public class BuiltinProcedure extends Procedure {
 		return matchType(c) != null;
 	}
 	
-	private static Object match(Object o, IDataType t) {
-		if(t == IDataType.INT)
+	private static Object match(Object o, IType t) {
+		if(t == IType.INT)
 			return ((Number) o).intValue();
-		if(t == IDataType.DOUBLE)
+		if(t == IType.DOUBLE)
 			return ((Number) o).doubleValue();
-		if(t == IDataType.BOOLEAN)
+		if(t == IType.BOOLEAN)
 			return ((Boolean) o).booleanValue();
 		return null;
 	}

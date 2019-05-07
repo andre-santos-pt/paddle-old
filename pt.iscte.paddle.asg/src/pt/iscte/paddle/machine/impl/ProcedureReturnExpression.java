@@ -3,7 +3,7 @@ package pt.iscte.paddle.machine.impl;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IConditionalExpression;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedureDeclaration;
 import pt.iscte.paddle.asg.ISimpleExpression;
@@ -19,7 +19,7 @@ class ProcedureReturnExpression implements ISimpleExpression, IEvaluable {
 	}
 
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return procedure.getReturnType();
 	}
 

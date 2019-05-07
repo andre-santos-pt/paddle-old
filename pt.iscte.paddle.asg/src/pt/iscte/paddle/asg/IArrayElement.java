@@ -2,14 +2,14 @@ package pt.iscte.paddle.asg;
 
 import java.util.List;
 
-public interface IArrayElementExpression extends ICompositeExpression {
+public interface IArrayElement extends ICompositeExpression {
 
 	IVariable getVariable();
 	
 	List<IExpression> getIndexes(); // size() >= 1
 	
-	default IDataType getType() {
-		IDataType type = getVariable().getType();
+	default IType getType() {
+		IType type = getVariable().getType();
 		if(type.isReference())
 			type = ((IReferenceType) type).getTarget();
 		return ((IArrayType) type).getComponentTypeAt(getIndexes().size());

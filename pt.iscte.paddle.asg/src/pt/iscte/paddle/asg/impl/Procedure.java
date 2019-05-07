@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
@@ -17,11 +17,11 @@ class Procedure extends ProgramElement implements IProcedure {
 	private final List<IVariable> variablesView;
 	private final ParamsView paramsView;
 	private final LocalVariablesView localVarsView;
-	private final IDataType returnType;
+	private final IType returnType;
 	private final Block body;
 	private int parameters;
 
-	public Procedure(IDataType returnType) {
+	public Procedure(IType returnType) {
 		this.variables = new ArrayList<>(5);
 		this.parameters = 0;
 		this.returnType = returnType;
@@ -48,7 +48,7 @@ class Procedure extends ProgramElement implements IProcedure {
 	}
 
 	@Override
-	public IVariable addParameter(IDataType type) {
+	public IVariable addParameter(IType type) {
 		IVariable param = new Variable(body, type);
 		variables.add(parameters, param);
 		parameters++;
@@ -56,16 +56,16 @@ class Procedure extends ProgramElement implements IProcedure {
 	}
 
 
-	@Override
-	public IVariable getVariable(String id) {
-		for(IVariable v : variables)
-			if(v.getId().equals(id))
-				return v;
-		return null;
-	}
+//	@Override
+//	public IVariable getVariable(String id) {
+//		for(IVariable v : variables)
+//			if(v.getId().equals(id))
+//				return v;
+//		return null;
+//	}
 
 	@Override
-	public IDataType getReturnType() {
+	public IType getReturnType() {
 		return returnType;
 	}
 

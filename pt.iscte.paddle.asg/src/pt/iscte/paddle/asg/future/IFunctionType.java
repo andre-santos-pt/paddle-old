@@ -1,7 +1,7 @@
 package pt.iscte.paddle.asg.future;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 
 public interface IFunctionType {
-	IDataType getParameterTypes();
+	IType getParameterTypes();
 }

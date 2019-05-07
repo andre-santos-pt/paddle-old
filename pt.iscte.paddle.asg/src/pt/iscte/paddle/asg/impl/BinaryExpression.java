@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBinaryOperator;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ICallStack;
@@ -40,7 +40,7 @@ public class BinaryExpression extends Expression implements IBinaryExpression {
 	}
 	
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return operator.getResultType(getLeftOperand(), getRightOperand());
 	}
 

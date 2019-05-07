@@ -11,14 +11,14 @@ import com.google.common.collect.ImmutableList;
 import pt.iscte.paddle.asg.impl.ArrayType;
 import pt.iscte.paddle.asg.impl.PrimitiveType;
 
-public interface IDataType extends IProgramElement  {
+public interface IType extends IProgramElement  {
 
 	Object getDefaultValue();
 
 	int getMemoryBytes();
 
 	// TODO REVER
-	default boolean isCompatible(IDataType type) {
+	default boolean isCompatible(IType type) {
 		return this.equals(type);
 	}
 	
@@ -49,13 +49,13 @@ public interface IDataType extends IProgramElement  {
 
 
 	
-	public static Set<IDataType> getAllTypes() {
+	public static Set<IType> getAllTypes() {
 		return Collections.unmodifiableSet(Instances.mapArrayTypes.keySet());
 	}
 	
 	// TODO to impl
 	class Instances {
-		private static Map<IDataType, IArrayType> mapArrayTypes = new HashMap<>();
+		private static Map<IType, IArrayType> mapArrayTypes = new HashMap<>();
 		
 		
 	}
@@ -75,7 +75,7 @@ public interface IDataType extends IProgramElement  {
 	}
 	
 	
-	IDataType VOID = new IDataType() {
+	IType VOID = new IType() {
 
 		@Override
 		public void setProperty(String key, Object value) {
@@ -114,7 +114,7 @@ public interface IDataType extends IProgramElement  {
 	};
 
 
-	IDataType UNKNOWN = new IDataType() {
+	IType UNKNOWN = new IType() {
 		@Override
 		public Object getDefaultValue() {
 			return null;

@@ -27,15 +27,15 @@ public interface IModule extends IProgramElement {
 	Collection<IProcedure> getProcedures();
 	
 
-	IConstant addConstant(IDataType type, ILiteral value);
+	IConstant addConstant(IType type, ILiteral value);
 	IRecordType addRecordType();
-	IProcedure addProcedure(IDataType returnType);
+	IProcedure addProcedure(IType returnType);
 
 	void loadBuildInProcedures(Class<?> staticClass);
 
 
 	
-	IProcedure resolveProcedure(String id, IDataType ... paramTypes);
+	IProcedure resolveProcedure(String id, IType ... paramTypes);
 	
 	IProcedure resolveProcedure(IProcedureDeclaration procedureDeclaration);
 	

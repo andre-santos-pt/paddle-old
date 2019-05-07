@@ -1,6 +1,6 @@
 package pt.iscte.paddle.machine;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
@@ -20,7 +20,7 @@ public interface IProgramState {
 	IValue getValue(String literal);
 	IValue getValue(Object object);
 	
-	IArray allocateArray(IDataType baseType, int ... dimensions);
+	IArray allocateArray(IType baseType, int ... dimensions);
 	IRecord allocateObject(IRecordType type);
 	
 	IExecutionData execute(IProcedure p, Object...args);

@@ -2,9 +2,9 @@ package pt.iscte.paddle.asg.impl;
 
 import java.util.List;
 
-import pt.iscte.paddle.asg.IArrayElementExpression;
-import pt.iscte.paddle.asg.IArrayLengthExpression;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IArrayElement;
+import pt.iscte.paddle.asg.IArrayLength;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IRecordFieldExpression;
@@ -53,7 +53,7 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 	}
 
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return variable.getType();
 	}
 
@@ -63,17 +63,17 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 	}
 
 	@Override
-	public IVariableReferenceValue valueOf() {
+	public IVariableReferenceValue value() {
 		return new VariableReferenceValue(this);
 	}
 
 	@Override
-	public IArrayLengthExpression arrayLength(List<IExpression> indexes) {
+	public IArrayLength length(List<IExpression> indexes) {
 		return new ArrayLengthExpression(this, indexes);
 	}
 
 	@Override
-	public IArrayElementExpression arrayElement(List<IExpression> indexes) {
+	public IArrayElement element(List<IExpression> indexes) {
 		return new ArrayElementExpression(this, indexes);
 	}
 

@@ -1,46 +1,48 @@
-import static pt.iscte.paddle.asg.ILiteral.literal;
-import static pt.iscte.paddle.asg.IOperator.*;
+import static pt.iscte.paddle.asg.IOperator.ADD;
+import static pt.iscte.paddle.asg.IOperator.GREATER;
+import static pt.iscte.paddle.asg.IOperator.SMALLER;
+import static pt.iscte.paddle.asg.IType.INT;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static pt.iscte.paddle.asg.IDataType.*;
-
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.ISelection;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAssignment;
-import pt.iscte.paddle.asg.IBlock.IVisitor;
 import pt.iscte.paddle.machine.ExecutionError;
+import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
+import pt.iscte.paddle.machine.IValue;
 
 public class Test {
 
 	public static void main(String[] args) throws ExecutionError {
 		IModule program = IModule.create();
 
-		IProcedure max = program.addProcedure(INT.array());  max.setId("max");
+		IProcedure max = program.addProcedure(INT);  max.setId("max");
 		
 		IVariable array = max.addParameter(INT.array()); array.setId("array");
+		
 		IVariable bound = max.addParameter(INT); bound.setId("bound");
 		IBlock body = max.getBody();
 		IVariable m = body.addVariable(INT); m.setId("m");
-		body.addAssignment(m, array.arrayElement(literal(0)));
+		body.addAssignment(m, array.element(INT.literal(0)));
 		IVariable i = body.addVariable(INT); i.setId("i");
-		body.addAssignment(i, literal(1));
+		body.addAssignment(i, INT.literal(1));
 		ILoop loop = body.addLoop(SMALLER.on(i, bound));
-		ISelection selection = loop.addSelection(GREATER.on(array.arrayElement(i), bound));
-		selection.addAssignment(m, array.arrayElement(i));
-		loop.addAssignment(i, ADD.on(i, literal(1)));
+		ISelection selection = loop.addSelection(GREATER.on(array.element(i), bound));
+		selection.addAssignment(m, array.element(i));
+		loop.addAssignment(i, ADD.on(i, INT.literal(1)));
 		body.addReturn(m);
 		
 		
-		IProcedure main = program.addProcedure(IDataType.DOUBLE);  main.setId("main");
+		IProcedure main = program.addProcedure(IType.DOUBLE);  main.setId("main");
 		IBlock body2 = main.getBody();
 		IVariable a = main.getBody().addVariable(INT.array());
 		
@@ -60,9 +62,12 @@ public class Test {
 		System.out.println(constantChecker.constants);
 		
 		IProgramState state = IMachine.create(program);
-
 		
-		state.execute(main);
+		
+		
+		IExecutionData data = state.execute(max, new int[] {2,4,3}, 3);
+		IValue result = data.getReturnValue();
+		System.out.println(result);
 		
 		//		List<ISemanticProblem> problems = program.validateSematics();
 //		if(problems.isEmpty())

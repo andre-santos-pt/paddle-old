@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
@@ -90,7 +90,7 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 	}
 
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return procedure.getReturnType();
 	}
 

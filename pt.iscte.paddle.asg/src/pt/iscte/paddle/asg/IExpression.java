@@ -11,7 +11,7 @@ import pt.iscte.paddle.asg.IOperator.OperationType;
  *
  */
 public interface IExpression extends IProgramElement {
-	IDataType getType();
+	IType getType();
 
 	// TODO concretize expression
 	//String concretize();
@@ -46,13 +46,13 @@ public interface IExpression extends IProgramElement {
 			if(visitor.visit(alloc))
 				part.decompose().forEach(p -> visitPart(visitor, p));
 		}
-		else if(part instanceof IArrayLengthExpression) {
-			IArrayLengthExpression len = (IArrayLengthExpression) part; 
+		else if(part instanceof IArrayLength) {
+			IArrayLength len = (IArrayLength) part; 
 			if(visitor.visit(len))
 				part.decompose().forEach(p -> visitPart(visitor, p));
 		}
-		else if(part instanceof IArrayElementExpression) {
-			IArrayElementExpression el = (IArrayElementExpression) part; 
+		else if(part instanceof IArrayElement) {
+			IArrayElement el = (IArrayElement) part; 
 			if(visitor.visit(el))
 				part.decompose().forEach(p -> visitPart(visitor, p));
 		}
@@ -126,8 +126,8 @@ public interface IExpression extends IProgramElement {
 	// TODO include parent in visit(...) ?
 	interface IVisitor {
 		default boolean visit(IArrayAllocation exp) 		{ return true; }
-		default boolean visit(IArrayLengthExpression exp) 	{ return true; }
-		default boolean visit(IArrayElementExpression exp) 	{ return true; }
+		default boolean visit(IArrayLength exp) 	{ return true; }
+		default boolean visit(IArrayElement exp) 	{ return true; }
 		
 		default boolean visit(IUnaryExpression exp) 		{ return true; }
 		default boolean visit(IBinaryExpression exp) 		{ return true; }

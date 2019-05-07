@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.IRecord;
@@ -44,7 +44,7 @@ public class Record implements IRecord {
 	}
 
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return type;
 	}
 

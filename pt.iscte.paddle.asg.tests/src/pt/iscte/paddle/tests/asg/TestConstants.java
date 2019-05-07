@@ -1,8 +1,8 @@
 package pt.iscte.paddle.tests.asg;
 
-import static pt.iscte.paddle.asg.IDataType.DOUBLE;
-import static pt.iscte.paddle.asg.ILiteral.literal;
 import static pt.iscte.paddle.asg.IOperator.MUL;
+import static pt.iscte.paddle.asg.IType.DOUBLE;
+import static pt.iscte.paddle.asg.IType.INT;
 
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IConstant;
@@ -13,7 +13,7 @@ import pt.iscte.paddle.machine.IExecutionData;
 
 public class TestConstants extends BaseTest {
 
-	IConstant PI = module.addConstant(DOUBLE, literal(3.14159265359));
+	IConstant PI = module.addConstant(DOUBLE, INT.literal(3.14159265359));
 	IProcedure circleArea = module.addProcedure(DOUBLE);
 	IVariable r = circleArea.addParameter(DOUBLE);
 	IBlock body = circleArea.getBody();

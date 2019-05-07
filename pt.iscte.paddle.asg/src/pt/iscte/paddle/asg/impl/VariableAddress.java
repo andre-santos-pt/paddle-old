@@ -2,7 +2,7 @@ package pt.iscte.paddle.asg.impl;
 
 import java.util.List;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
 import pt.iscte.paddle.machine.ExecutionError;
@@ -13,7 +13,7 @@ import pt.iscte.paddle.machine.IValue;
 public class VariableAddress extends Expression implements IVariableAddress {
 
 	private final IVariable variable;
-	private final IDataType type;
+	private final IType type;
 	
 	public VariableAddress(IVariable variable) {
 		assert variable != null;
@@ -27,7 +27,7 @@ public class VariableAddress extends Expression implements IVariableAddress {
 	}
 	
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return type;
 	}
 	

@@ -15,8 +15,8 @@ TypeDef returns Module:
 	'class' id=IDENTIFIER '{' 
 	(
 		constants+=Constant |
-		(fields+=VarDeclaration ';') |
-		procedures+=Procedure
+		procedures+=Procedure |
+		(fields+=VarDeclaration ';')
 	)*
 	'}'
 	)?

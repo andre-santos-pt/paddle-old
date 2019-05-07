@@ -3,7 +3,7 @@ package pt.iscte.paddle.machine;
 import java.util.List;
 import java.util.Map;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IStatement;
@@ -44,7 +44,7 @@ public interface IStackFrame {
 	IValue getValue(String literal);
 	IValue getValue(Object object);
 
-	IArray allocateArray(IDataType baseType, int[] dimensions);
+	IArray allocateArray(IType baseType, int[] dimensions);
 	
 	IRecord allocateRecord(IRecordType type);
 	
@@ -58,9 +58,9 @@ public interface IStackFrame {
 	void addListener(IListener listener);
 
 	interface IListener {
-		default void variableAdded(IVariable variable, IDataType type) { }
+		default void variableAdded(IVariable variable, IType type) { }
 		
-		default void variableModified(IVariable variable, IDataType type, IValue newValue) { }
+		default void variableModified(IVariable variable, IType type, IValue newValue) { }
 		
 		default void statementExecutionStart(IStatement statement) { }
 

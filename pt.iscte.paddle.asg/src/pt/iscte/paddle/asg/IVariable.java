@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 
 public interface IVariable extends ISimpleExpression, IStatement {
 	IProgramElement getParent();
-	IDataType getType();
+	IType getType();
 
 	default boolean isRecordField() {
 		return getParent() instanceof IRecordType;
@@ -32,20 +32,20 @@ public interface IVariable extends ISimpleExpression, IStatement {
 	
 	IVariableAddress address();
 
-	IVariableReferenceValue valueOf();
+	IVariableReferenceValue value();
 
 //	default IVariable resolve() {
 //		return this;
 //	}
 
-	IArrayLengthExpression arrayLength(List<IExpression> indexes);
-	default IArrayLengthExpression arrayLength(IExpression ... indexes) {
-		return arrayLength(Arrays.asList(indexes));
+	IArrayLength length(List<IExpression> indexes);
+	default IArrayLength length(IExpression ... indexes) {
+		return length(Arrays.asList(indexes));
 	}
 
-	IArrayElementExpression arrayElement(List<IExpression> indexes);
-	default IArrayElementExpression arrayElement(IExpression ... indexes) {
-		return arrayElement(Arrays.asList(indexes));
+	IArrayElement element(List<IExpression> indexes);
+	default IArrayElement element(IExpression ... indexes) {
+		return element(Arrays.asList(indexes));
 	}
 
 	IRecordFieldExpression field(IVariable field);

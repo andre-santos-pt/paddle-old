@@ -3,7 +3,8 @@ package pt.iscte.paddle.asg.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
+import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IReferenceType;
 import pt.iscte.paddle.asg.IValueType;
 
@@ -45,6 +46,11 @@ public enum PrimitiveType implements IValueType {
 		public int getMemoryBytes() {
 			return 4;
 		}
+
+		@Override
+		public ILiteral literal(Object obj) {
+			return new Literal(IType.INT, Integer.toString((Integer) obj));
+		}
 	}, 
 	DOUBLE {
 		public boolean matchesLiteral(String literal) {
@@ -79,6 +85,11 @@ public enum PrimitiveType implements IValueType {
 		public int getMemoryBytes() {
 			return 8;
 		}
+
+		@Override
+		public ILiteral literal(Object obj) {
+			return new Literal(IType.DOUBLE, Double.toString((Double) obj));
+		}
 	}, 
 	BOOLEAN {
 		public boolean matchesLiteral(String literal) {
@@ -107,6 +118,14 @@ public enum PrimitiveType implements IValueType {
 		public int getMemoryBytes() {
 			return 1;
 		}
+		
+		private ILiteral TRUE = new Literal(IType.BOOLEAN, "true");
+		private ILiteral FALSE = new Literal(IType.BOOLEAN, "false");
+
+		@Override
+		public ILiteral literal(Object obj) {
+			return (Boolean) obj ? TRUE : FALSE;
+		}
 	};
 
 	@Override
@@ -129,7 +148,7 @@ public enum PrimitiveType implements IValueType {
 	public abstract Object create(String literal);
 
 	@Override
-	public boolean isCompatible(IDataType type) {
+	public boolean isCompatible(IType type) {
 		return this.equals(type); // TODO number compatible
 	}
 

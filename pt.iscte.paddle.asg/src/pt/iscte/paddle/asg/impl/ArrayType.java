@@ -5,17 +5,17 @@ import java.util.List;
 
 import pt.iscte.paddle.asg.IArrayAllocation;
 import pt.iscte.paddle.asg.IArrayType;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IReferenceType;
 
 public class ArrayType extends ProgramElement implements IArrayType {
-	private final IDataType componentType;
+	private final IType componentType;
 	private final int dimensions;
 	private final String id;
 
-	public ArrayType(IDataType type) {
+	public ArrayType(IType type) {
 		this.componentType = type;
 		this.dimensions = getDimensionsInternal();
 		this.id = componentType.getId() + "[]";
@@ -53,12 +53,12 @@ public class ArrayType extends ProgramElement implements IArrayType {
 	}
 
 	@Override
-	public IDataType getComponentType() {
+	public IType getComponentType() {
 		return componentType;
 	}
 	
 	@Override
-	public IDataType getComponentTypeAt(int dim) {
+	public IType getComponentTypeAt(int dim) {
 		assert dim >= 1 && dim <= dimensions;
 		if(dim == 1)
 			return componentType;

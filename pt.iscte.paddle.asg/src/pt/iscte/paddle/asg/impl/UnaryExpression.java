@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IUnaryOperator;
@@ -25,7 +25,7 @@ class UnaryExpression extends Expression implements IUnaryExpression {
 
 	
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return operator.getResultType(getOperand());
 	}
 

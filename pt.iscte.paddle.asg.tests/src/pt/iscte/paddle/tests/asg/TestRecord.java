@@ -1,15 +1,13 @@
 package pt.iscte.paddle.tests.asg;
 
 
-import static pt.iscte.paddle.asg.ILiteral.literal;
-
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
-import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.IRecordFieldAssignment;
 import pt.iscte.paddle.asg.IRecordType;
+import pt.iscte.paddle.asg.IReturn;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.machine.IExecutionData;
@@ -18,15 +16,15 @@ import pt.iscte.paddle.machine.IExecutionData;
 public class TestRecord extends BaseTest {
 
 	IRecordType Point = module.addRecordType();
-	IVariable x = Point.addMemberVariable(IDataType.INT);
-	IVariable y = Point.addMemberVariable(IDataType.INT);
+	IVariable x = Point.addMemberVariable(IType.INT);
+	IVariable y = Point.addMemberVariable(IType.INT);
 	
-	IProcedure move = module.addProcedure(IDataType.VOID);
+	IProcedure move = module.addProcedure(IType.VOID);
 	IVariable p = move.addParameter(Point.reference());
 	IBlock moveBody = move.getBody();
-	IRecordFieldAssignment ass = moveBody.addStructMemberAssignment(p, x, literal(7));
+	IRecordFieldAssignment ass = moveBody.addStructMemberAssignment(p, x, IType.INT.literal(7));
 	
-	IProcedure main = module.addProcedure(IDataType.INT);
+	IProcedure main = module.addProcedure(IType.INT);
 	IBlock mainBody = main.getBody();
 	IVariable point = mainBody.addVariable(Point);
 	IVariableAssignment ass2 = mainBody.addAssignment(point, Point.allocationExpression());

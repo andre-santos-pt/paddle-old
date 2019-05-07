@@ -1,10 +1,7 @@
 package pt.iscte.paddle.tests.asg;
 
-import static pt.iscte.paddle.asg.IDataType.INT;
-import static pt.iscte.paddle.asg.IDataType.VOID;
-import static pt.iscte.paddle.asg.ILiteral.literal;
-
-import org.junit.Test;
+import static pt.iscte.paddle.asg.IType.INT;
+import static pt.iscte.paddle.asg.IType.VOID;
 
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IProcedure;
@@ -17,14 +14,14 @@ public class TestReferences extends BaseTest {
 	IBlock body = proc.getBody();
 	IVariable a = body.addVariable(INT.reference());
 	IVariable b = body.addVariable(INT.reference());
-	IVariableAssignment ass1 = body.addAssignment(a.valueOf(), literal(5));
+	IVariableAssignment ass1 = body.addAssignment(a.value(), INT.literal(5));
 	IVariableAssignment ass2 = body.addAssignment(b, a);
-	IVariableAssignment ass3 = body.addAssignment(b, literal(7));
+	IVariableAssignment ass3 = body.addAssignment(b, INT.literal(7));
 	
 	
 	
 	public void test() {
-		
+		// TODO
 		
 
 	}

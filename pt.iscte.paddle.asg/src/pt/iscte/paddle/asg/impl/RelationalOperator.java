@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBinaryOperator;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IValue;
@@ -40,15 +40,15 @@ public enum RelationalOperator implements IBinaryOperator {
 
 	@Override
 	public IValue apply(IValue left, IValue right) throws ExecutionError {
-		return Value.create(IDataType.BOOLEAN, f.apply(left, right));
+		return Value.create(IType.BOOLEAN, f.apply(left, right));
 	}
 	
 	@Override
-	public IDataType getResultType(IExpression left, IExpression right) {
-		return IDataType.BOOLEAN;
+	public IType getResultType(IExpression left, IExpression right) {
+		return IType.BOOLEAN;
 	}
 	@Override
-	public boolean isValidFor(IDataType left, IDataType right) {
+	public boolean isValidFor(IType left, IType right) {
 		if(this == EQUAL || this == DIFFERENT)
 			return left.equals(right);
 		else

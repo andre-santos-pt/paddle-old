@@ -2,9 +2,9 @@ package pt.iscte.paddle.asg.impl;
 
 import java.util.List;
 
-import pt.iscte.paddle.asg.IArrayElementExpression;
-import pt.iscte.paddle.asg.IArrayLengthExpression;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IArrayElement;
+import pt.iscte.paddle.asg.IArrayLength;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IRecordFieldExpression;
@@ -21,9 +21,9 @@ import pt.iscte.paddle.machine.IValue;
 class Variable extends Expression implements IVariable, IEvaluable, IExecutable {
 
 	private final IProgramElement parent;
-	private final IDataType type;
+	private final IType type;
 
-	public Variable(IProgramElement parent, IDataType type) {
+	public Variable(IProgramElement parent, IType type) {
 		this.parent = parent;
 		this.type = type;
 	}
@@ -34,7 +34,7 @@ class Variable extends Expression implements IVariable, IEvaluable, IExecutable 
 	}
 
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return type;
 	}
 
@@ -49,7 +49,7 @@ class Variable extends Expression implements IVariable, IEvaluable, IExecutable 
 	}
 
 	@Override
-	public IVariableReferenceValue valueOf() {
+	public IVariableReferenceValue value() {
 		return new VariableReferenceValue(this);
 	}
 
@@ -60,12 +60,12 @@ class Variable extends Expression implements IVariable, IEvaluable, IExecutable 
 	}
 
 	@Override
-	public IArrayLengthExpression arrayLength(List<IExpression> indexes) {
+	public IArrayLength length(List<IExpression> indexes) {
 		return new ArrayLengthExpression(this, indexes);
 	}
 
 	@Override
-	public IArrayElementExpression arrayElement(List<IExpression> indexes) {
+	public IArrayElement element(List<IExpression> indexes) {
 		return new ArrayElementExpression(this, indexes);
 	}
 

@@ -3,11 +3,11 @@ package pt.iscte.paddle.asg.semantics;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IArrayElementAssignment;
-import pt.iscte.paddle.asg.IArrayLengthExpression;
+import pt.iscte.paddle.asg.IArrayLength;
 import pt.iscte.paddle.asg.IArrayType;
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IControlStructure;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IProcedure;
@@ -27,7 +27,7 @@ public class Types extends Rule {
 
 	@Override
 	public boolean visit(IUnaryExpression exp) {
-		IDataType expType = exp.getOperand().getType();
+		IType expType = exp.getOperand().getType();
 		IUnaryOperator operator = exp.getOperator();
 		if(!operator.isValidFor(expType))
 			addProblem("operator " + operator.getSymbol() + " cannot be used with " + expType, exp);
@@ -36,8 +36,8 @@ public class Types extends Rule {
 	
 	@Override
 	public boolean visit(IBinaryExpression exp) {
-		IDataType left = exp.getLeftOperand().getType();
-		IDataType right = exp.getRightOperand().getType();
+		IType left = exp.getLeftOperand().getType();
+		IType right = exp.getRightOperand().getType();
 		if(!exp.getOperator().isValidFor(left, right))
 			addProblem("operator " + exp.getOperator().getSymbol() + " cannot be used with " + left + " and " + right, exp);
 		return true;
@@ -46,8 +46,8 @@ public class Types extends Rule {
 	@Override
 	public boolean visit(IReturn returnStatement) {
 		IProcedure procedure = returnStatement.getParent().getProcedure();
-		IDataType expType = returnStatement.getExpression().getType();
-		IDataType procReturnType = procedure.getReturnType();
+		IType expType = returnStatement.getExpression().getType();
+		IType procReturnType = procedure.getReturnType();
 		if(!procReturnType.isCompatible(expType))
 			addProblem("incompatible return at " + procedure.shortSignature() +
 					"; expected " + procReturnType + ", found " + expType, procReturnType , expType);
@@ -84,7 +84,7 @@ public class Types extends Rule {
 	
 	private void checkGuard(IControlStructure control) {
 		IExpression guard = control.getGuard();
-		if(!guard.getType().equals(IDataType.BOOLEAN))
+		if(!guard.getType().equals(IType.BOOLEAN))
 			addProblem("guard must be a boolean expression, not " + guard.getType(), guard);
 	}
 	
@@ -100,7 +100,7 @@ public class Types extends Rule {
 					var, exp);	
 	}
 	
-	private void checkType(IDataType type, IExpression exp) {
+	private void checkType(IType type, IExpression exp) {
 		if(!type.isCompatible(exp.getType()))
 			addProblem("incompatible assignment: " + exp.getType() + " cannot be assigned to " + type,
 					type, exp);	
@@ -115,7 +115,7 @@ public class Types extends Rule {
 	@Override
 	public boolean visit(IArrayElementAssignment assignment) {
 		IVariable variable = assignment.getVariable();
-		IDataType type = variable.getType();
+		IType type = variable.getType();
 		if(type instanceof IReferenceType)
 			type = ((IReferenceType) type).resolveTarget();
 		
@@ -142,7 +142,7 @@ public class Types extends Rule {
 	}
 	
 	@Override
-	public boolean visit(IArrayLengthExpression exp) {
+	public boolean visit(IArrayLength exp) {
 		return super.visit(exp);
 	}
 }

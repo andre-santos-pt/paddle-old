@@ -16,7 +16,7 @@ import com.google.inject.Injector;
 import pt.iscte.paddle.JavaliStandaloneSetup;
 import pt.iscte.paddle.asg.IBinaryOperator;
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.ILoop;
@@ -222,11 +222,11 @@ public class Transformer {
 //
 //	}
 
-	static IDataType toModelType(Type retType) {
+	static IType toModelType(Type retType) {
 		switch(retType.getId()) {
-		case "int": return IDataType.INT;
-		case "double": return IDataType.DOUBLE;
-		case "boolean": return IDataType.BOOLEAN;
+		case "int": return IType.INT;
+		case "double": return IType.DOUBLE;
+		case "boolean": return IType.BOOLEAN;
 		}
 		return null;
 	}

@@ -1,6 +1,6 @@
 package pt.iscte.paddle.machine.impl;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.machine.IReference;
 import pt.iscte.paddle.machine.IValue;
 
@@ -12,7 +12,7 @@ public class Reference implements IReference {
 	}
 
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return target == IValue.NULL ? null : target.getType();
 	}
 

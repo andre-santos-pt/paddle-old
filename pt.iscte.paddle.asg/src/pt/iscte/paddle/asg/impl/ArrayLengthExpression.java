@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import pt.iscte.paddle.asg.IArrayLengthExpression;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IArrayLength;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ExecutionError;
@@ -15,7 +15,7 @@ import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IReference;
 import pt.iscte.paddle.machine.IValue;
 
-class ArrayLengthExpression extends Expression implements IArrayLengthExpression {
+class ArrayLengthExpression extends Expression implements IArrayLength {
 	private final IVariable variable;
 	private final ImmutableList<IExpression> indexes;
 
@@ -35,8 +35,8 @@ class ArrayLengthExpression extends Expression implements IArrayLengthExpression
 	}
 
 	@Override
-	public IDataType getType() {
-		return IDataType.INT;
+	public IType getType() {
+		return IType.INT;
 	}
 
 	@Override

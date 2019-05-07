@@ -2,7 +2,7 @@ package pt.iscte.paddle.asg.impl;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBinaryOperator;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IExpressionIterator;
 import pt.iscte.paddle.machine.ExecutionError;
@@ -25,7 +25,7 @@ public enum LogicalOperator implements IBinaryOperator {
 		@Override
 		public IValue apply(IValue left, IValue right) throws ExecutionError {
 			boolean val = left.getValue().equals(Boolean.TRUE) && right.getValue().equals(Boolean.TRUE);
-			return Value.create(IDataType.BOOLEAN, val);
+			return Value.create(IType.BOOLEAN, val);
 		}
 	},
 	OR("||") {
@@ -40,7 +40,7 @@ public enum LogicalOperator implements IBinaryOperator {
 		@Override
 		public IValue apply(IValue left, IValue right) throws ExecutionError {
 			boolean val = left.getValue().equals(Boolean.TRUE) || right.getValue().equals(Boolean.TRUE);
-			return Value.create(IDataType.BOOLEAN, val);
+			return Value.create(IType.BOOLEAN, val);
 		}
 	}, 
 	XOR("^") {
@@ -53,7 +53,7 @@ public enum LogicalOperator implements IBinaryOperator {
 		@Override
 		public IValue apply(IValue left, IValue right) throws ExecutionError {
 			boolean val = !left.getValue().equals(right.getValue());
-			return Value.create(IDataType.BOOLEAN, val);
+			return Value.create(IType.BOOLEAN, val);
 		}
 	};
 
@@ -64,12 +64,12 @@ public enum LogicalOperator implements IBinaryOperator {
 		setId(symbol);
 	}
 
-	public IDataType getResultType(IExpression left, IExpression right) {
-		return IDataType.BOOLEAN;
+	public IType getResultType(IExpression left, IExpression right) {
+		return IType.BOOLEAN;
 	}
 	
 	@Override
-	public boolean isValidFor(IDataType left, IDataType right) {
+	public boolean isValidFor(IType left, IType right) {
 		return left.isBoolean() && right.isBoolean();
 	}
 	

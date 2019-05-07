@@ -1,12 +1,11 @@
 package pt.iscte.paddle.tests.asg;
 
 import static org.junit.Assert.assertEquals;
-import static pt.iscte.paddle.asg.IDataType.BOOLEAN;
-import static pt.iscte.paddle.asg.IDataType.INT;
-import static pt.iscte.paddle.asg.ILiteral.literal;
 import static pt.iscte.paddle.asg.IOperator.ADD;
 import static pt.iscte.paddle.asg.IOperator.DIFFERENT;
 import static pt.iscte.paddle.asg.IOperator.EQUAL;
+import static pt.iscte.paddle.asg.IType.BOOLEAN;
+import static pt.iscte.paddle.asg.IType.INT;
 
 import java.math.BigDecimal;
 
@@ -46,8 +45,8 @@ public class Test2DArrays extends BaseTest {
 		IVariable iVar = body.addVariable(INT);
 		IExpression e = DIFFERENT.on(iVar, n);
 		ILoop loop = body.addLoop(e);
-		IArrayElementAssignment ass2 = loop.addArrayElementAssignment(id, literal(1), iVar, iVar);
-		IVariableAssignment ass3 = loop.addAssignment(iVar, ADD.on(iVar, literal(1)));
+		IArrayElementAssignment ass2 = loop.addArrayElementAssignment(id, INT.literal(1), iVar, iVar);
+		IVariableAssignment ass3 = loop.addAssignment(iVar, ADD.on(iVar, INT.literal(1)));
 		IReturn ret = body.addReturn(id);
 
 		@Case("4")
@@ -73,20 +72,20 @@ public class Test2DArrays extends BaseTest {
 		
 		IArrayAllocation allocation = INT.array2D().allocation(lines, cols);
 		IVariable m = body.addVariable(INT.array2D(), allocation);
-		IVariable i = body.addVariable(INT, literal(0));
+		IVariable i = body.addVariable(INT, INT.literal(0));
 		IVariable j = body.addVariable(INT);
-		IVariable n = body.addVariable(INT, literal(1));
+		IVariable n = body.addVariable(INT, INT.literal(1));
 		
 		IExpression outerGuard = DIFFERENT.on(i, lines);
 		ILoop outLoop = body.addLoop(outerGuard);
-		IVariableAssignment ass1 = outLoop.addAssignment(j, literal(0));
+		IVariableAssignment ass1 = outLoop.addAssignment(j, INT.literal(0));
 		IExpression innerGuard = DIFFERENT.on(j, cols);
 		ILoop inLoop = outLoop.addLoop(innerGuard);
 		IArrayElementAssignment ass2 = inLoop.addArrayElementAssignment(m, n, i, j);
-		IVariableAssignment ass3 = inLoop.addAssignment(j, ADD.on(j, literal(1)));
-		IVariableAssignment ass4 = inLoop.addAssignment(n, ADD.on(n, literal(1)));
+		IVariableAssignment ass3 = inLoop.addAssignment(j, ADD.on(j, INT.literal(1)));
+		IVariableAssignment ass4 = inLoop.addAssignment(n, ADD.on(n, INT.literal(1)));
 		
-		IVariableAssignment ass5 = outLoop.addAssignment(i, ADD.on(i, literal(1)));
+		IVariableAssignment ass5 = outLoop.addAssignment(i, ADD.on(i, INT.literal(1)));
 		IReturn ret = body.addReturn(m);
 		
 		@Case({"2","4"})
@@ -110,30 +109,30 @@ public class Test2DArrays extends BaseTest {
 		IVariable matrix = (IVariable) contains.addParameter(INT.array2D());
 		IVariable n = contains.addParameter(INT);
 		IBlock body = contains.getBody();
-		IVariable i = body.addVariable(INT, literal(0));
+		IVariable i = body.addVariable(INT, INT.literal(0));
 		IVariable j = body.addVariable(INT);
-		IExpression outerGuard = DIFFERENT.on(i, matrix.arrayLength());
+		IExpression outerGuard = DIFFERENT.on(i, matrix.length());
 		ILoop outerLoop = body.addLoop(outerGuard);
-		IVariableAssignment ass1 = outerLoop.addAssignment(j, literal(0));
-		IExpression innerGuard = DIFFERENT.on(j, matrix.arrayLength(i) );
+		IVariableAssignment ass1 = outerLoop.addAssignment(j, INT.literal(0));
+		IExpression innerGuard = DIFFERENT.on(j, matrix.length(i) );
 		ILoop innerLoop = outerLoop.addLoop(innerGuard);
-		ISelection ifEq = innerLoop.addSelection(EQUAL.on(matrix.arrayElement(i, j), n));
-		IReturn ret1 = ifEq.addReturn(literal(true));
+		ISelection ifEq = innerLoop.addSelection(EQUAL.on(matrix.element(i, j), n));
+		IReturn ret1 = ifEq.addReturn(INT.literal(true));
 		IVariableAssignment inc1 = innerLoop.addIncrement(j);
 		IVariableAssignment inc2 = outerLoop.addIncrement(i);
-		IReturn ret2 = body.addReturn(literal(false));
+		IReturn ret2 = body.addReturn(INT.literal(false));
 		
 		
 		IProcedure main = module.addProcedure(BOOLEAN);
 		IBlock mainBody = main.getBody();
 		IVariable array = mainBody.addVariable(INT.array2D());
-		IVariableAssignment ass2 = mainBody.addAssignment(array, INT.array2D().allocation(literal(3)));
-		IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(0)), literal(0));
-		IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(2)), literal(1));
-		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(literal(4)), literal(2));
-		IArrayElementAssignment ass6 = mainBody.addArrayElementAssignment(array, literal(5), literal(2), literal(2));
+		IVariableAssignment ass2 = mainBody.addAssignment(array, INT.array2D().allocation(INT.literal(3)));
+		IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(INT.literal(0)), INT.literal(0));
+		IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(INT.literal(2)), INT.literal(1));
+		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(INT.literal(4)), INT.literal(2));
+		IArrayElementAssignment ass6 = mainBody.addArrayElementAssignment(array, INT.literal(5), INT.literal(2), INT.literal(2));
 		IVariable var = mainBody.addVariable(BOOLEAN);
-		IVariableAssignment ass7 = mainBody.addAssignment(var, contains.call(array, literal(5)));
+		IVariableAssignment ass7 = mainBody.addAssignment(var, contains.call(array, INT.literal(5)));
 		IReturn ret3 = mainBody.addReturn(var);
 		
 		@Case

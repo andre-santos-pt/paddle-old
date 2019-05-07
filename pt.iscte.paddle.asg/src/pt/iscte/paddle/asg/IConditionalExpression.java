@@ -7,7 +7,7 @@ public interface IConditionalExpression extends ICompositeExpression {
 	IExpression getFalseExpression();
 	
 	@Override
-	default IDataType getType() {
+	default IType getType() {
 		return getTrueExpression().getType();
 	}
 }

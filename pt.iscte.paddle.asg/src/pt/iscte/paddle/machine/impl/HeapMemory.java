@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.common.util.concurrent.ExecutionError;
 
 import pt.iscte.paddle.asg.IArrayType;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.machine.IArray;
 import pt.iscte.paddle.machine.IHeapMemory;
@@ -24,7 +24,7 @@ public class HeapMemory implements IHeapMemory {
 	}
 
 	@Override
-	public IArray allocateArray(IDataType baseType, int... dimensions) throws ExecutionError {
+	public IArray allocateArray(IType baseType, int... dimensions) throws ExecutionError {
 		assert dimensions.length > 0 && dimensions[0] >= 0;
 		IArrayType arrayType = baseType.array();
 		for (int i = 1; i < dimensions.length; i++)

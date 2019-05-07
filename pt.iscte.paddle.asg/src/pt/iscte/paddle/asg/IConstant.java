@@ -4,7 +4,7 @@ public interface IConstant extends IProgramElement, ISimpleExpression {
 
 	IModule getProgram();
 	
-	IDataType getType();
+	IType getType();
 	
 	ILiteral getValue();
 	

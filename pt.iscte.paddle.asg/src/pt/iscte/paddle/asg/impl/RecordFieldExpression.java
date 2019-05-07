@@ -2,7 +2,7 @@ package pt.iscte.paddle.asg.impl;
 
 import java.util.List;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IRecordFieldExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ICallStack;
@@ -32,7 +32,7 @@ class RecordFieldExpression extends Expression implements IRecordFieldExpression
 	}
 
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return field.getType();
 	}
 	

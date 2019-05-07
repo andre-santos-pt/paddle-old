@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IReferenceType;
 import pt.iscte.paddle.asg.IRecordAllocation;
 import pt.iscte.paddle.asg.IRecordType;
@@ -23,7 +23,7 @@ class RecordType extends ProgramElement implements IRecordType {
 	}
 	
 	@Override
-	public IVariable addMemberVariable(IDataType type) {
+	public IVariable addMemberVariable(IType type) {
 		IVariable var = new Variable(this, type);
 		variables.add(var);
 		return var;

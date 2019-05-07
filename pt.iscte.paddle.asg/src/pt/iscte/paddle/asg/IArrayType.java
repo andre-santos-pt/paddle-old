@@ -3,10 +3,10 @@ package pt.iscte.paddle.asg;
 import java.util.Arrays;
 import java.util.List;
 
-public interface IArrayType extends IDataType {
+public interface IArrayType extends IType {
 	int getDimensions();
-	IDataType getComponentType();
-	IDataType getComponentTypeAt(int dim);
+	IType getComponentType();
+	IType getComponentTypeAt(int dim);
 	
 	IArrayAllocation allocation(List<IExpression> dimensions);
 	

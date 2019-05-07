@@ -8,9 +8,9 @@ public interface IProcedureDeclaration extends IProgramElement {
 
 	List<IVariable> getParameters();	
 
-	IDataType getReturnType();
+	IType getReturnType();
 
-	IVariable addParameter(IDataType type);
+	IVariable addParameter(IType type);
 	
 	IProcedureCall call(List<IExpression> args);
 
@@ -32,7 +32,7 @@ public interface IProcedureDeclaration extends IProgramElement {
 		return getReturnType() + " " + getId() + "(" + args + ")";
 	}
 	
-	default boolean matchesSignature(String id, IDataType... paramTypes) {
+	default boolean matchesSignature(String id, IType... paramTypes) {
 		if(!id.equals(getId()))
 			return false;
 		
@@ -41,7 +41,7 @@ public interface IProcedureDeclaration extends IProgramElement {
 			return false;
 		
 		int i = 0;
-		for(IDataType t : paramTypes)
+		for(IType t : paramTypes)
 			if(!parameters.get(i++).getType().equals(t))
 				return false;
 		

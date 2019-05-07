@@ -10,13 +10,13 @@ public interface IAbstractVariable {
 	IVariableReferenceValue valueOf();
 
 
-	IArrayLengthExpression arrayLength(List<IExpression> indexes);
-	default IArrayLengthExpression arrayLength(IExpression ... indexes) {
+	IArrayLength arrayLength(List<IExpression> indexes);
+	default IArrayLength arrayLength(IExpression ... indexes) {
 		return arrayLength(Arrays.asList(indexes));
 	}
 
-	IArrayElementExpression arrayElement(List<IExpression> indexes);
-	default IArrayElementExpression arrayElement(IExpression ... indexes) {
+	IArrayElement arrayElement(List<IExpression> indexes);
+	default IArrayElement arrayElement(IExpression ... indexes) {
 		return arrayElement(Arrays.asList(indexes));
 	}
 

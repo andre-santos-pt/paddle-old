@@ -22,7 +22,7 @@ import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.ide.IDE;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.semantics.ISemanticProblem;
@@ -82,7 +82,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 				IModule program = trans.createProgram();
 				
 				IProgramState state = IMachine.create(program);
-				state.execute(program.resolveProcedure("f", IDataType.INT), 2);
+				state.execute(program.resolveProcedure("f", IType.INT), 2);
 			}
 		});
 

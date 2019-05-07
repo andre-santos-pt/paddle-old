@@ -1,13 +1,11 @@
 package pt.iscte.paddle.tests.asg;
-import static pt.iscte.paddle.asg.IDataType.INT;
-import static pt.iscte.paddle.asg.IDataType.VOID;
-import static pt.iscte.paddle.asg.ILiteral.literal;
+import static pt.iscte.paddle.asg.IType.INT;
+import static pt.iscte.paddle.asg.IType.VOID;
 
 import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
-import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.machine.IArray;
@@ -21,19 +19,19 @@ public class TestSwap extends BaseTest {
 	IVariable j = swap.addParameter(INT);
 	
 	IBlock swapBody = swap.getBody();
-	IVariable t = swapBody.addVariable(INT, v.valueOf().arrayElement(i));
-	IArrayElementAssignment ass = swapBody.addArrayElementAssignment(v.valueOf(), v.valueOf().arrayElement(j), i);
-	IArrayElementAssignment ass0 = swapBody.addArrayElementAssignment(v.valueOf(), t, j);
+	IVariable t = swapBody.addVariable(INT, v.value().element(i));
+	IArrayElementAssignment ass = swapBody.addArrayElementAssignment(v.value(), v.value().element(j), i);
+	IArrayElementAssignment ass0 = swapBody.addArrayElementAssignment(v.value(), t, j);
 	
 	IProcedure main = module.addProcedure(INT);
 	IBlock body = main.getBody();
 	IVariable array = body.addVariable(INT.array());
-	IVariableAssignment ass1 = body.addAssignment(array, INT.array().allocation(literal(3)));
+	IVariableAssignment ass1 = body.addAssignment(array, INT.array().allocation(INT.literal(3)));
 
-	IArrayElementAssignment ass2 = body.addArrayElementAssignment(array, literal(5), literal(0));
-	IArrayElementAssignment ass3 = body.addArrayElementAssignment(array, literal(7), literal(1));
-	IArrayElementAssignment ass4 = body.addArrayElementAssignment(array, literal(9), literal(2));
-	IProcedureCall call = body.addCall(swap, array.address(), literal(0), literal(2));
+	IArrayElementAssignment ass2 = body.addArrayElementAssignment(array, INT.literal(5), INT.literal(0));
+	IArrayElementAssignment ass3 = body.addArrayElementAssignment(array, INT.literal(7), INT.literal(1));
+	IArrayElementAssignment ass4 = body.addArrayElementAssignment(array, INT.literal(9), INT.literal(2));
+	IProcedureCall call = body.addCall(swap, array.address(), INT.literal(0), INT.literal(2));
 	
 	@Case
 	public void testSwap(IExecutionData data) {

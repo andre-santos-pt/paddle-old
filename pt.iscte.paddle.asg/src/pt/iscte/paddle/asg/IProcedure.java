@@ -8,11 +8,9 @@ import pt.iscte.paddle.asg.IBlock.IVisitor;
  * Mutable
  */
 public interface IProcedure extends IProcedureDeclaration {
-//	IModule getModule();
 	List<IVariable> getLocalVariables();
 	List<IVariable> getVariables();
-	IVariable getVariable(String id);
-	IDataType getReturnType();
+	IType getReturnType();
 	
 	IBlock getBody();
 	
@@ -25,6 +23,10 @@ public interface IProcedure extends IProcedureDeclaration {
 		};
 		getBody().accept(v);
 		return false;
+	}
+	
+	default void accept(IBlock.IVisitor visitor) {
+		getBody().accept(visitor);
 	}
 	
 }

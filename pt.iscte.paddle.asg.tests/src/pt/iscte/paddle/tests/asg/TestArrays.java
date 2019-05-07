@@ -5,10 +5,9 @@ package pt.iscte.paddle.tests.asg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
-import static pt.iscte.paddle.asg.IDataType.INT;
-import static pt.iscte.paddle.asg.ILiteral.literal;
 import static pt.iscte.paddle.asg.IOperator.ADD;
 import static pt.iscte.paddle.asg.IOperator.SMALLER;
+import static pt.iscte.paddle.asg.IType.INT;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -38,10 +37,10 @@ public class TestArrays {
 		IBlock body = naturals.getBody();
 		IVariable v = body.addVariable(INT.array());
 		IVariableAssignment ass1 = body.addAssignment(v, INT.array().allocation(n));
-		IVariable i = body.addVariable(INT, literal(0));
+		IVariable i = body.addVariable(INT, INT.literal(0));
 		ILoop loop = body.addLoop(SMALLER.on(i, n));
-		IArrayElementAssignment ass2 = loop.addArrayElementAssignment(v, ADD.on(i, literal(1)), i);
-		IVariableAssignment ass3 = loop.addAssignment(i, ADD.on(i, literal(1)));
+		IArrayElementAssignment ass2 = loop.addArrayElementAssignment(v, ADD.on(i, INT.literal(1)), i);
+		IVariableAssignment ass3 = loop.addAssignment(i, ADD.on(i, INT.literal(1)));
 		IReturn addReturn = body.addReturn(v);
 		
 		protected void commonAsserts(IExecutionData data) {

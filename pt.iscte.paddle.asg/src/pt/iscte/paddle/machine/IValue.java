@@ -1,11 +1,11 @@
 package pt.iscte.paddle.machine;
 
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.machine.impl.Value;
 
 public interface IValue {
 	// TODO value overflow error
-	IDataType getType();
+	IType getType();
 	Object getValue();
 	
 //	void setValue(Object o);
@@ -30,7 +30,7 @@ public interface IValue {
 	
 	IValue NULL = new IValue() {
 		@Override
-		public IDataType getType() {
+		public IType getType() {
 			return null;
 		}
 
@@ -54,7 +54,7 @@ public interface IValue {
 		}
 	};
 	
-	static IValue create(IDataType type, Object value) {
+	static IValue create(IType type, Object value) {
 		return Value.create(type, value);
 	}
 }

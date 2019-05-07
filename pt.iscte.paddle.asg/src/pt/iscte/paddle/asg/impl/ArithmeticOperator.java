@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBinaryOperator;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IValue;
@@ -27,32 +27,32 @@ public enum ArithmeticOperator implements IBinaryOperator {
 		setId(symbol);
 	}
 	
-	private static IDataType getDataType(IDataType left, IDataType right) {
-		if(left.equals(IDataType.INT) && right.equals(IDataType.INT))
-			return IDataType.INT;
-		else if(left.equals(IDataType.DOUBLE) && right.equals(IDataType.INT))
-			return IDataType.DOUBLE;
-		else if(left.equals(IDataType.INT) && right.equals(IDataType.DOUBLE))
-			return IDataType.DOUBLE;
-		else if(left.equals(IDataType.DOUBLE) && right.equals(IDataType.DOUBLE))
-			return IDataType.DOUBLE;
+	private static IType getDataType(IType left, IType right) {
+		if(left.equals(IType.INT) && right.equals(IType.INT))
+			return IType.INT;
+		else if(left.equals(IType.DOUBLE) && right.equals(IType.INT))
+			return IType.DOUBLE;
+		else if(left.equals(IType.INT) && right.equals(IType.DOUBLE))
+			return IType.DOUBLE;
+		else if(left.equals(IType.DOUBLE) && right.equals(IType.DOUBLE))
+			return IType.DOUBLE;
 		else
-			return IDataType.UNKNOWN;
+			return IType.UNKNOWN;
 	}
 	
 	@Override
-	public boolean isValidFor(IDataType left, IDataType right) {
+	public boolean isValidFor(IType left, IType right) {
 		return left.isNumber() && right.isNumber();
 	}
 	
 	@Override
 	public IValue apply(IValue left, IValue right) throws ExecutionError {
-		IDataType type = getDataType(left.getType(), right.getType());
+		IType type = getDataType(left.getType(), right.getType());
 		BigDecimal obj = f.apply((BigDecimal) left.getValue(), (BigDecimal) right.getValue());
 		return Value.create(type, obj);
 	}
 	
-	public IDataType getResultType(IExpression left, IExpression right) {
+	public IType getResultType(IExpression left, IExpression right) {
 		return getDataType(left.getType(), right.getType());
 	}
 	

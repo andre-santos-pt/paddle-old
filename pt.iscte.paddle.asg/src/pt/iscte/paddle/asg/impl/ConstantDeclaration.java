@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.asg.IConstant;
-import pt.iscte.paddle.asg.IDataType;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IModule;
@@ -14,10 +14,10 @@ import pt.iscte.paddle.machine.IValue;
 
 class ConstantDeclaration extends Expression implements IConstant {
 	private final IModule program;
-	private final IDataType type;
+	private final IType type;
 	private final ILiteral value;
 	
-	public ConstantDeclaration(IModule program, IDataType type, ILiteral value) {
+	public ConstantDeclaration(IModule program, IType type, ILiteral value) {
 		this.program = program;
 		this.type = type;
 		this.value = value;
@@ -29,7 +29,7 @@ class ConstantDeclaration extends Expression implements IConstant {
 	}
 
 	@Override
-	public IDataType getType() {
+	public IType getType() {
 		return type;
 	}
 
