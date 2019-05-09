@@ -117,10 +117,10 @@ public class Test2DArrays extends BaseTest {
 		IExpression innerGuard = DIFFERENT.on(j, matrix.length(i) );
 		ILoop innerLoop = outerLoop.addLoop(innerGuard);
 		ISelection ifEq = innerLoop.addSelection(EQUAL.on(matrix.element(i, j), n));
-		IReturn ret1 = ifEq.addReturn(INT.literal(true));
+		IReturn ret1 = ifEq.addReturn(BOOLEAN.literal(true));
 		IVariableAssignment inc1 = innerLoop.addIncrement(j);
 		IVariableAssignment inc2 = outerLoop.addIncrement(i);
-		IReturn ret2 = body.addReturn(INT.literal(false));
+		IReturn ret2 = body.addReturn(BOOLEAN.literal(false));
 		
 		
 		IProcedure main = module.addProcedure(BOOLEAN);

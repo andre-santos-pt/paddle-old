@@ -13,7 +13,7 @@ import pt.iscte.paddle.machine.IExecutionData;
 
 public class TestConstants extends BaseTest {
 
-	IConstant PI = module.addConstant(DOUBLE, INT.literal(3.14159265359));
+	IConstant PI = module.addConstant(DOUBLE, DOUBLE.literal(3.14159265359));
 	IProcedure circleArea = module.addProcedure(DOUBLE);
 	IVariable r = circleArea.addParameter(DOUBLE);
 	IBlock body = circleArea.getBody();

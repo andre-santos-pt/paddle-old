@@ -34,8 +34,8 @@ public class TestArithmeticExpressions extends BaseTest {
 	ILiteral L3 = INT.literal(3);
 	ILiteral L6 = INT.literal(6);
 
-	ILiteral L3_3 = INT.literal(3.3);
-	ILiteral L6_4 = INT.literal(6.4);
+	ILiteral L3_3 = DOUBLE.literal(3.3);
+	ILiteral L6_4 = DOUBLE.literal(6.4);
 
 	IBinaryExpression L3_ADD_L6 = ADD.on(L3, L6);
 
