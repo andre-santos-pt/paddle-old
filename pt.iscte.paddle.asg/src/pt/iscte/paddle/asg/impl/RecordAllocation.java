@@ -2,6 +2,7 @@ package pt.iscte.paddle.asg.impl;
 
 import java.util.List;
 
+import pt.iscte.paddle.IModel2CodeTranslator;
 import pt.iscte.paddle.asg.IRecordAllocation;
 import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.machine.ICallStack;
@@ -26,6 +27,8 @@ class RecordAllocation extends Expression implements IRecordAllocation {
 		return "new " + getType().getId(); 
 	}
 
+	
+	
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) {
 		return stack.getTopFrame().allocateRecord(getType());

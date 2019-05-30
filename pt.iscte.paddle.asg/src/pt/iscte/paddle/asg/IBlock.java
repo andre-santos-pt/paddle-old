@@ -1,15 +1,18 @@
 package pt.iscte.paddle.asg;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Mutable
  */
-public interface IBlock extends IBlockChild, IStatementContainer {
+public interface IBlock extends IBlockElement, IStatementContainer, Iterable<IBlockElement> {
 	IProcedure getProcedure();
 
-	List<IBlockChild> getChildren();
+	List<IBlockElement> getChildren();
 
+	int getSize();
+	
 	boolean isEmpty();
 
 	int getDepth();
@@ -18,6 +21,11 @@ public interface IBlock extends IBlockChild, IStatementContainer {
 	@Override
 	default IBlock getBlock() {
 		return this;
+	}
+	
+	@Override
+	default Iterator<IBlockElement> iterator() {
+		return getChildren().iterator();
 	}
 	
 	default void accept(IVisitor visitor) {

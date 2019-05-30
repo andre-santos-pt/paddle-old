@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.IModel2CodeTranslator;
 import pt.iscte.paddle.asg.IOperator.OperationType;
 
 /**
@@ -32,6 +33,9 @@ public interface IExpression extends IProgramElement {
 		return OperationType.OTHER;
 	}
 
+	default String translate(IModel2CodeTranslator t) {
+		return t.expression(this);
+	}
 	
 	IConditionalExpression conditional(IExpression trueCase, IExpression falseCase);
 	
@@ -100,8 +104,8 @@ public interface IExpression extends IProgramElement {
 		}
 		
 		// before IVariable because it is subtype
-		else if(part instanceof IVariableReferenceValue) {
-			IVariableReferenceValue varadd = (IVariableReferenceValue) part; 
+		else if(part instanceof IVariableDereference) {
+			IVariableDereference varadd = (IVariableDereference) part; 
 			visitor.visit(varadd);
 		}
 		
@@ -144,7 +148,7 @@ public interface IExpression extends IProgramElement {
 //		default void 	visit(IVariableExpression exp) 		{ }
 		default void 	visit(IVariable exp)		 		{ }
 		default void	visit(IVariableAddress exp) 		{ }
-		default void	visit(IVariableReferenceValue exp) 	{ }
+		default void	visit(IVariableDereference exp) 	{ }
 	}
 
 

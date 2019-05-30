@@ -28,7 +28,7 @@ import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
 import pt.iscte.paddle.asg.IVariableAssignment;
-import pt.iscte.paddle.asg.IVariableReferenceValue;
+import pt.iscte.paddle.asg.IVariableDereference;
 
 public class SemanticChecker {
 	private ISemanticChecker checker;
@@ -180,7 +180,7 @@ public class SemanticChecker {
 		}
 		
 		@Override
-		public void visit(IVariableReferenceValue exp) {
+		public void visit(IVariableDereference exp) {
 			rules.forEach(r -> r.visit(exp));
 		}
 		

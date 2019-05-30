@@ -1,5 +1,7 @@
 package pt.iscte.paddle.tests.asg;
 
+import java.util.Scanner;
+
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IReturn;
@@ -19,6 +21,21 @@ public class TestBuiltinProcedures extends BaseTest {
 		public static void print(int i) {
 			System.out.println(i);
 		}
+		
+		public static String readString() {
+			Scanner scanner = new Scanner(System.in);
+			String line = scanner.nextLine();
+			scanner.close();
+			return line;
+		}
+		
+		public static int readInt() {
+			Scanner scanner = new Scanner(System.in);
+			String line = scanner.nextLine();
+			scanner.close();
+			return Integer.parseInt(line);
+		}
+		
 		
 		public static void _assert(boolean condition) throws ExecutionError {
 			if(!condition)

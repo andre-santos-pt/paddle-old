@@ -6,7 +6,7 @@ import java.util.List;
 
 import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IBlockChild;
+import pt.iscte.paddle.asg.IBlockElement;
 import pt.iscte.paddle.asg.IBreak;
 import pt.iscte.paddle.asg.IContinue;
 import pt.iscte.paddle.asg.IType;
@@ -26,7 +26,7 @@ import pt.iscte.paddle.machine.IValue;
 
 class Block extends ProgramElement implements IBlock {
 	private final ProgramElement parent;
-	private final List<IBlockChild> children;
+	private final List<IBlockElement> children;
 
 	Block(ProgramElement parent, boolean addToParent) {
 		assert !addToParent || parent instanceof Block;
@@ -50,18 +50,23 @@ class Block extends ProgramElement implements IBlock {
 	
 	// TODO
 	private boolean onlyEmptyBlocks() {
-		for(IBlockChild child : children)
+		for(IBlockElement child : children)
 			if(!(child instanceof Block) || child instanceof Block && !((Block) child).onlyEmptyBlocks())
 				return false;
 		return true;
 	}
 	
 	@Override
-	public List<IBlockChild> getChildren() {
+	public List<IBlockElement> getChildren() {
 		return Collections.unmodifiableList(children);
 	}
 	
-	void addChild(IBlockChild statement) {
+	@Override
+	public int getSize() {
+		return children.size();
+	}
+	
+	void addChild(IBlockElement statement) {
 		assert statement != null;
 		children.add(statement);
 	}
@@ -82,7 +87,7 @@ class Block extends ProgramElement implements IBlock {
 		for(int i = 0; i < d; i++)
 			tabs += "\t";
 		String text = "{\n";
-		for(IBlockChild s : children) {
+		for(IBlockElement s : children) {
 			if(s instanceof IVariable) {
 				IVariable v = (IVariable) s;
 				text += tabs + v.getType() + " " + v.getId() + ";\n";
@@ -138,7 +143,7 @@ class Block extends ProgramElement implements IBlock {
 	}
 	
 	@Override
-	public IRecordFieldAssignment addStructMemberAssignment(IVariable var, IVariable field, IExpression exp) {
+	public IRecordFieldAssignment addRecordMemberAssignment(IVariable var, IVariable field, IExpression exp) {
 		// TODO OCL: variable must be owned by the same procedure of expression
 
 		return new RecordFieldAssignment(this, var, field, exp);
@@ -169,6 +174,7 @@ class Block extends ProgramElement implements IBlock {
 	public IProcedureCall addCall(IProcedure procedure, List<IExpression> args) {
 		return new ProcedureCall(this, procedure, args);
 	}
+	
 	@Override
 	public IBreak addBreak() {
 		return new Break(this);

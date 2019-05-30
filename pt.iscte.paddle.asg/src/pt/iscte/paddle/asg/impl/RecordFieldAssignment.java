@@ -5,6 +5,7 @@ import java.util.List;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IRecordFieldAssignment;
+import pt.iscte.paddle.asg.IReferenceType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ICallStack;
@@ -40,7 +41,10 @@ class RecordFieldAssignment extends Statement implements IRecordFieldAssignment 
 	
 	@Override
 	public String toString() {
-		return variable.getId() + "." + field.getId() + " = " + expression;
+		if(variable.getType() instanceof IReferenceType)
+			return variable.getId() + "->" + field.getId() + " = " + expression;
+		else
+			return variable.getId() + "." + field.getId() + " = " + expression;
 	}
 	
 	@Override

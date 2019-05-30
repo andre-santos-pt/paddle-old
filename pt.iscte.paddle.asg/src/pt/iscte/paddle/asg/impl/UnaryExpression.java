@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.asg.IType;
+import pt.iscte.paddle.IModel2CodeTranslator;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IUnaryOperator;
@@ -47,6 +48,11 @@ class UnaryExpression extends Expression implements IUnaryExpression {
 	@Override
 	public String toString() {
 		return operator.getSymbol() + "(" + getOperand() + ")";
+	}
+	
+	@Override
+	public String translate(IModel2CodeTranslator t) {
+		return t.operator(operator) + "(" + t.expression(getOperand()) + ")";
 	}
 
 	@Override

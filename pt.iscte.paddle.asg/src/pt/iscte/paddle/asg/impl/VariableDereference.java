@@ -8,18 +8,19 @@ import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IRecordFieldExpression;
+import pt.iscte.paddle.asg.IRecordFieldVariable;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
-import pt.iscte.paddle.asg.IVariableReferenceValue;
+import pt.iscte.paddle.asg.IVariableDereference;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IReference;
 import pt.iscte.paddle.machine.IValue;
 
-public class VariableReferenceValue extends Expression implements IVariableReferenceValue {
+public class VariableDereference extends Expression implements IVariableDereference {
 	private final IVariable variable;
 	
-	public VariableReferenceValue(IVariable variable) {
+	public VariableDereference(IVariable variable) {
 		assert variable != null;
 		this.variable = variable;
 	}
@@ -28,8 +29,8 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
 		IReference reference = stack.getTopFrame().getVariableStore(resolve());
 		IVariable var = variable;
-		while(var instanceof VariableReferenceValue) {		
-			var = ((VariableReferenceValue) var).variable;
+		while(var instanceof VariableDereference) {		
+			var = ((VariableDereference) var).variable;
 			reference = (IReference) reference.getTarget();
 		}
 		return reference;
@@ -42,8 +43,8 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 
 	private IVariable resolve() {
 		IVariable var = variable;
-		while(var instanceof VariableReferenceValue)
-			var = ((VariableReferenceValue) var).variable;
+		while(var instanceof VariableDereference)
+			var = ((VariableDereference) var).variable;
 		return var;
 	}
 	
@@ -63,23 +64,28 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 	}
 
 	@Override
-	public IVariableReferenceValue value() {
-		return new VariableReferenceValue(this);
+	public IVariableDereference dereference() {
+		return new VariableDereference(this);
 	}
 
 	@Override
 	public IArrayLength length(List<IExpression> indexes) {
-		return new ArrayLengthExpression(this, indexes);
+		return new ArrayLength(this, indexes);
 	}
 
 	@Override
 	public IArrayElement element(List<IExpression> indexes) {
-		return new ArrayElementExpression(this, indexes);
+		return new ArrayElement(this, indexes);
 	}
 
 	@Override
 	public IRecordFieldExpression field(IVariable field) {
 		return new RecordFieldExpression(this, field); 
+	}
+	
+	@Override
+	public IRecordFieldVariable fieldVariable(IVariable field) {
+		return new RecordFieldVariable(this, field);
 	}
 
 	@Override
@@ -89,7 +95,9 @@ public class VariableReferenceValue extends Expression implements IVariableRefer
 
 	@Override
 	public String getId() {
-		return "*" + variable.getId();
+		return variable.getId();
 	}
+
+	
 
 }

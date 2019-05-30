@@ -8,9 +8,10 @@ import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IRecordFieldExpression;
+import pt.iscte.paddle.asg.IRecordFieldVariable;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
-import pt.iscte.paddle.asg.IVariableReferenceValue;
+import pt.iscte.paddle.asg.IVariableDereference;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IEvaluable;
@@ -42,15 +43,15 @@ class Variable extends Expression implements IVariable, IEvaluable, IExecutable 
 	public String toString() {
 		return getId();
 	}
-
+	
 	@Override
 	public IVariableAddress address() {
 		return new VariableAddress(this);
 	}
 
 	@Override
-	public IVariableReferenceValue value() {
-		return new VariableReferenceValue(this);
+	public IVariableDereference dereference() {
+		return new VariableDereference(this);
 	}
 
 
@@ -58,15 +59,20 @@ class Variable extends Expression implements IVariable, IEvaluable, IExecutable 
 	public IRecordFieldExpression field(IVariable field) {
 		return new RecordFieldExpression(this, field);
 	}
+	
+	@Override
+	public IRecordFieldVariable fieldVariable(IVariable field) {
+		return new RecordFieldVariable(this, field);
+	}
 
 	@Override
 	public IArrayLength length(List<IExpression> indexes) {
-		return new ArrayLengthExpression(this, indexes);
+		return new ArrayLength(this, indexes);
 	}
 
 	@Override
 	public IArrayElement element(List<IExpression> indexes) {
-		return new ArrayElementExpression(this, indexes);
+		return new ArrayElement(this, indexes);
 	}
 
 	@Override

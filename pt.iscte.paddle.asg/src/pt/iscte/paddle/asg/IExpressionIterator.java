@@ -2,6 +2,7 @@ package pt.iscte.paddle.asg;
 
 import pt.iscte.paddle.machine.IValue;
 
+// TODO expression iterator
 public interface IExpressionIterator {
 
 //	boolean isEmpty();

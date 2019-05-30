@@ -4,10 +4,7 @@ import pt.iscte.paddle.asg.impl.Literal;
 
 public interface ILiteral extends ISimpleExpression {
 	String getStringValue();
-	
-	static ILiteral nullLiteral() {
-		return Literal.NULL;
-	}
+	ILiteral NULL = Literal.NULL;
 	
 	static ILiteral matchValue(String string) {
 		for(IValueType t : IType.VALUE_TYPES)

@@ -42,11 +42,12 @@ public class Test2DArrays extends BaseTest {
 		IBlock body = idMatrix.getBody();
 		IVariable id = body.addVariable(INT.array2D());
 		IVariableAssignment assignment = body.addAssignment(id, INT.array2D().allocation(n, n));
-		IVariable iVar = body.addVariable(INT);
-		IExpression e = DIFFERENT.on(iVar, n);
+		IVariable i = body.addVariable(INT);
+		IVariableAssignment iInit = body.addAssignment(i, INT.literal(0));
+		IExpression e = DIFFERENT.on(i, n);
 		ILoop loop = body.addLoop(e);
-		IArrayElementAssignment ass2 = loop.addArrayElementAssignment(id, INT.literal(1), iVar, iVar);
-		IVariableAssignment ass3 = loop.addAssignment(iVar, ADD.on(iVar, INT.literal(1)));
+		IArrayElementAssignment ass2 = loop.addArrayElementAssignment(id, INT.literal(1), i, i);
+		IVariableAssignment ass3 = loop.addAssignment(i, ADD.on(i, INT.literal(1)));
 		IReturn ret = body.addReturn(id);
 
 		@Case("4")
@@ -73,11 +74,12 @@ public class Test2DArrays extends BaseTest {
 		IArrayAllocation allocation = INT.array2D().allocation(lines, cols);
 		IVariable m = body.addVariable(INT.array2D(), allocation);
 		IVariable i = body.addVariable(INT, INT.literal(0));
-		IVariable j = body.addVariable(INT);
+	
 		IVariable n = body.addVariable(INT, INT.literal(1));
 		
 		IExpression outerGuard = DIFFERENT.on(i, lines);
 		ILoop outLoop = body.addLoop(outerGuard);
+		IVariable j = outLoop.addVariable(INT);
 		IVariableAssignment ass1 = outLoop.addAssignment(j, INT.literal(0));
 		IExpression innerGuard = DIFFERENT.on(j, cols);
 		ILoop inLoop = outLoop.addLoop(innerGuard);
@@ -110,9 +112,9 @@ public class Test2DArrays extends BaseTest {
 		IVariable n = contains.addParameter(INT);
 		IBlock body = contains.getBody();
 		IVariable i = body.addVariable(INT, INT.literal(0));
-		IVariable j = body.addVariable(INT);
 		IExpression outerGuard = DIFFERENT.on(i, matrix.length());
 		ILoop outerLoop = body.addLoop(outerGuard);
+		IVariable j = outerLoop.addVariable(INT);
 		IVariableAssignment ass1 = outerLoop.addAssignment(j, INT.literal(0));
 		IExpression innerGuard = DIFFERENT.on(j, matrix.length(i) );
 		ILoop innerLoop = outerLoop.addLoop(innerGuard);
@@ -127,9 +129,9 @@ public class Test2DArrays extends BaseTest {
 		IBlock mainBody = main.getBody();
 		IVariable array = mainBody.addVariable(INT.array2D());
 		IVariableAssignment ass2 = mainBody.addAssignment(array, INT.array2D().allocation(INT.literal(3)));
-		IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(INT.literal(0)), INT.literal(0));
-		IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(INT.literal(2)), INT.literal(1));
-		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array2D().allocation(INT.literal(4)), INT.literal(2));
+		IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(array, INT.array().allocation(INT.literal(0)), INT.literal(0));
+		IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(array, INT.array().allocation(INT.literal(2)), INT.literal(1));
+		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array().allocation(INT.literal(4)), INT.literal(2));
 		IArrayElementAssignment ass6 = mainBody.addArrayElementAssignment(array, INT.literal(5), INT.literal(2), INT.literal(2));
 		IVariable var = mainBody.addVariable(BOOLEAN);
 		IVariableAssignment ass7 = mainBody.addAssignment(var, contains.call(array, INT.literal(5)));

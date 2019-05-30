@@ -1,10 +1,10 @@
 package pt.iscte.paddle.asg.impl;
 
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IBlockChild;
+import pt.iscte.paddle.asg.IBlockElement;
 import pt.iscte.paddle.asg.IProgramElement;
 
-public abstract class BlockChild extends ProgramElement implements IBlockChild {
+public abstract class BlockChild extends ProgramElement implements IBlockElement {
 	private final IBlock parent;
 	
 	BlockChild(IBlock parent) {

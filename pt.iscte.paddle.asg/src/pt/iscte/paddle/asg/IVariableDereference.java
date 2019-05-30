@@ -1,6 +1,6 @@
 package pt.iscte.paddle.asg;
 
-public interface IVariableReferenceValue extends IVariable {
+public interface IVariableDereference extends IVariable {
 
 	IVariable getVariable();
 	

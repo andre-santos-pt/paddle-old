@@ -21,8 +21,8 @@ public class TestSum extends BaseTest {
 	IBlock sumBody = sum.getBody();
 	IVariable s = sumBody.addVariable(INT, INT.literal(0));
 	IVariable i = sumBody.addVariable(INT, INT.literal(0));
-	ILoop loop = sumBody.addLoop(DIFFERENT.on(i, v.value().length()));
-	IVariableAssignment ass1 = loop.addAssignment(s, ADD.on(s, v.value().element(i)));
+	ILoop loop = sumBody.addLoop(DIFFERENT.on(i, v.dereference().length()));
+	IVariableAssignment ass1 = loop.addAssignment(s, ADD.on(s, v.dereference().element(i)));
 	IVariableAssignment ass2 = loop.addIncrement(i);
 	IReturn ret = sumBody.addReturn(s);
 	
@@ -34,7 +34,8 @@ public class TestSum extends BaseTest {
 	IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(test, INT.literal(7), INT.literal(1));
 	IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(test, INT.literal(9), INT.literal(2));
 	IVariable result = mainBody.addVariable(INT, sum.call(test.address()));
-
+	IReturn mainRet = mainBody.addReturn(result);
+	
 	@Case
 	public void test(IExecutionData data) {
 		assertEquals(2, data.getCallStackDepth());

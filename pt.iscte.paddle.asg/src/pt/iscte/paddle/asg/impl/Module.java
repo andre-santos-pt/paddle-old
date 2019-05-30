@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.google.common.collect.Iterables;
 
+import pt.iscte.paddle.IModel2CodeTranslator;
+import pt.iscte.paddle.asg.IBlockElement;
 import pt.iscte.paddle.asg.IConstant;
 import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.ILiteral;
@@ -109,11 +111,11 @@ public class Module extends ProgramElement implements IModule {
 			text += "\n";
 		
 		for(IRecordType r : records) {
-			text += "record " + getId() + " {\n";
+			text += "typedef struct\n{\n";
 			for (IVariable member : r.getFields()) {
 				text += "\t" + member.getDeclaration() + ";\n";
 			}
-			return text + "}\n\n";
+			text += "} " + r.getId() + ";\n\n";
 		}
 		
 		for (IProcedure p : builtinProcedures)
@@ -131,5 +133,25 @@ public class Module extends ProgramElement implements IModule {
 	public List<ISemanticProblem> checkSemantics() {
 		SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
 		return checker.check(this);
+	}
+	
+	@Override
+	public String translate(IModel2CodeTranslator t) {
+		String text = t.header(this);
+		for(IConstant c : constants)
+			text += t.declaration(c);
+
+		for(IRecordType r : records)
+			text += t.declaration(r);
+		
+		for (IProcedure p : builtinProcedures)
+			System.out.println(p.longSignature() + "\t(built-in)\n");
+		
+//		text += "\n";
+		
+		for (IProcedure p : procedures)
+			text += t.header(p) + t.statements(p.getBody()) + t.close(p);
+		
+		return text + t.close(this);
 	}
 }

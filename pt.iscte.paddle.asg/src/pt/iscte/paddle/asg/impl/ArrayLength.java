@@ -15,11 +15,11 @@ import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IReference;
 import pt.iscte.paddle.machine.IValue;
 
-class ArrayLengthExpression extends Expression implements IArrayLength {
+class ArrayLength extends Expression implements IArrayLength {
 	private final IVariable variable;
 	private final ImmutableList<IExpression> indexes;
 
-	public ArrayLengthExpression(IVariable variable, List<IExpression> indexes) {
+	public ArrayLength(IVariable variable, List<IExpression> indexes) {
 		this.variable = variable;
 		this.indexes = ImmutableList.copyOf(indexes);
 	}
@@ -63,8 +63,8 @@ class ArrayLengthExpression extends Expression implements IArrayLength {
 		assert values.size() == getIndexes().size();
 		IReference ref = null;
 		
-		if(variable instanceof VariableReferenceValue)
-			ref = (IReference) ((VariableReferenceValue) variable).evalutate(values, stack);
+		if(variable instanceof VariableDereference)
+			ref = (IReference) ((VariableDereference) variable).evalutate(values, stack);
 		else
 			ref = stack.getTopFrame().getVariableStore(getVariable());
 		

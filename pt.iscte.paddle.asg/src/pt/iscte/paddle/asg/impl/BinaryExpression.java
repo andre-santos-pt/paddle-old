@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.IModel2CodeTranslator;
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBinaryOperator;
 import pt.iscte.paddle.asg.IType;
@@ -59,6 +60,18 @@ public class BinaryExpression extends Expression implements IBinaryExpression {
 		if(getRightOperand() instanceof IBinaryExpression)
 			r = "(" + r + ")";
 		return l + " " + operator.getSymbol() + " " + r;
+	}
+	
+	@Override
+	public String translate(IModel2CodeTranslator t) {
+		String l = getLeftOperand().translate(t);
+		if(getLeftOperand() instanceof IBinaryExpression)
+			l = "(" + l + ")";
+		
+		String r = getRightOperand().translate(t);
+		if(getRightOperand() instanceof IBinaryExpression)
+			r = "(" + r + ")";
+		return l + " " + t.operator(operator) + " " + r;
 	}
 	
 	@Override

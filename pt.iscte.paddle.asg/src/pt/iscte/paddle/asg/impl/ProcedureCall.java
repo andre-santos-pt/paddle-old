@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.IModel2CodeTranslator;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
@@ -44,17 +45,22 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 
 	@Override
 	public String toString() {
-		return procedure.getId() + "(" + argsToString() + ")";
+		return procedure.getId() + "(...)";
 	}
 	
-	private String argsToString() {
+	private String argsToString(IModel2CodeTranslator t) {
 		String args = "";
 		for(IExpression e : arguments) {
 			if(!args.isEmpty())
 				args += ", ";
-			args += e.toString();
+			args += t.expression(e);
 		}
 		return args;
+	}
+	
+	@Override
+	public String translate(IModel2CodeTranslator t) {
+		return procedure.getId() + "(" + argsToString(t) + ")";
 	}
 	
 	@Override

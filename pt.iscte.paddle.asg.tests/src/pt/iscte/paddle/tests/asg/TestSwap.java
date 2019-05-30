@@ -14,24 +14,24 @@ import pt.iscte.paddle.machine.IExecutionData;
 public class TestSwap extends BaseTest {
 
 	IProcedure swap = module.addProcedure(VOID);
-	IVariable v = (IVariable) swap.addParameter(INT.array().reference());
+	IVariable v = swap.addParameter(INT.array().reference());
 	IVariable i = swap.addParameter(INT);
 	IVariable j = swap.addParameter(INT);
 	
-	IBlock swapBody = swap.getBody();
-	IVariable t = swapBody.addVariable(INT, v.value().element(i));
-	IArrayElementAssignment ass = swapBody.addArrayElementAssignment(v.value(), v.value().element(j), i);
-	IArrayElementAssignment ass0 = swapBody.addArrayElementAssignment(v.value(), t, j);
+	IBlock body = swap.getBody();
+	IVariable t = body.addVariable(INT, v.dereference().element(i));
+	IArrayElementAssignment ass = body.addArrayElementAssignment(v.dereference(), v.dereference().element(j), i);
+	IArrayElementAssignment ass0 = body.addArrayElementAssignment(v.dereference(), t, j);
 	
-	IProcedure main = module.addProcedure(INT);
-	IBlock body = main.getBody();
-	IVariable array = body.addVariable(INT.array());
-	IVariableAssignment ass1 = body.addAssignment(array, INT.array().allocation(INT.literal(3)));
+	IProcedure main = module.addProcedure(VOID);
+	IBlock mBody = main.getBody();
+	IVariable array = mBody.addVariable(INT.array());
+	IVariableAssignment ass1 = mBody.addAssignment(array, INT.array().allocation(INT.literal(3)));
 
-	IArrayElementAssignment ass2 = body.addArrayElementAssignment(array, INT.literal(5), INT.literal(0));
-	IArrayElementAssignment ass3 = body.addArrayElementAssignment(array, INT.literal(7), INT.literal(1));
-	IArrayElementAssignment ass4 = body.addArrayElementAssignment(array, INT.literal(9), INT.literal(2));
-	IProcedureCall call = body.addCall(swap, array.address(), INT.literal(0), INT.literal(2));
+	IArrayElementAssignment ass2 = mBody.addArrayElementAssignment(array, INT.literal(5), INT.literal(0));
+	IArrayElementAssignment ass3 = mBody.addArrayElementAssignment(array, INT.literal(7), INT.literal(1));
+	IArrayElementAssignment ass4 = mBody.addArrayElementAssignment(array, INT.literal(9), INT.literal(2));
+	IProcedureCall call = mBody.addCall(swap, array.address(), INT.literal(0), INT.literal(2));
 	
 	@Case
 	public void testSwap(IExecutionData data) {

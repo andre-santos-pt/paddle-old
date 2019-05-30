@@ -31,7 +31,7 @@ class ArrayElementAssignment extends VariableAssignment implements IArrayElement
 	
 	@Override
 	public String toString() {
-		String text = getVariable().toString();
+		String text = getVariable().getId();
 		for(IExpression e : indexes)
 			text += "[" + e + "]";
 		
@@ -46,8 +46,8 @@ class ArrayElementAssignment extends VariableAssignment implements IArrayElement
 		IStackFrame frame = callStack.getTopFrame();
 
 		IReference ref = null;
-		if(getVariable() instanceof VariableReferenceValue)
-			ref = (IReference) ((VariableReferenceValue) getVariable() ).evalutate(values, callStack);
+		if(getVariable() instanceof VariableDereference)
+			ref = (IReference) ((VariableDereference) getVariable() ).evalutate(values, callStack);
 		else
 			ref = frame.getVariableStore(getVariable());
 		

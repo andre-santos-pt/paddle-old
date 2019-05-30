@@ -3,7 +3,9 @@ package pt.iscte.paddle.asg.impl;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IType;
+import pt.iscte.paddle.IModel2CodeTranslator;
 import pt.iscte.paddle.asg.IRecordFieldExpression;
+import pt.iscte.paddle.asg.IReferenceType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IRecord;
@@ -38,8 +40,12 @@ class RecordFieldExpression extends Expression implements IRecordFieldExpression
 	
 	@Override
 	public String toString() {
-		return variable.getId() + "." + field.getId();
+		if(variable.getType() instanceof IReferenceType)
+			return variable.getId() + "->" + field.getId();
+		else
+			return variable.getId() + "." + field.getId();
 	}
+	
 	
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) {

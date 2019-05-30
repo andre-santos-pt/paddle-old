@@ -3,6 +3,7 @@ package pt.iscte.paddle.asg.impl;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IType;
+import pt.iscte.paddle.IModel2CodeTranslator;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IValueType;
 import pt.iscte.paddle.machine.ICallStack;
@@ -31,6 +32,11 @@ public class Literal extends Expression implements ILiteral {
 	
 	@Override
 	public String toString() {
+		return value;
+	}
+	
+	@Override
+	public String translate(IModel2CodeTranslator t) {
 		return value;
 	}
 	

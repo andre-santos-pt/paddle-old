@@ -14,7 +14,7 @@ public class TestReferences extends BaseTest {
 	IBlock body = proc.getBody();
 	IVariable a = body.addVariable(INT.reference());
 	IVariable b = body.addVariable(INT.reference());
-	IVariableAssignment ass1 = body.addAssignment(a.value(), INT.literal(5));
+	IVariableAssignment ass1 = body.addAssignment(a.dereference(), INT.literal(5));
 	IVariableAssignment ass2 = body.addAssignment(b, a);
 	IVariableAssignment ass3 = body.addAssignment(b, INT.literal(7));
 	

@@ -3,7 +3,7 @@ package pt.iscte.paddle.machine.impl;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IBlockChild;
+import pt.iscte.paddle.asg.IBlockElement;
 import pt.iscte.paddle.asg.IControlStructure;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILoop;
@@ -14,7 +14,7 @@ import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IValue;
 
 public class BlockIterator {
-	private List<IBlockChild> elements;
+	private List<IBlockElement> elements;
 	private int next;
 	private IExpression eval;
 	
@@ -38,7 +38,7 @@ public class BlockIterator {
 		if(last != null)
 			eval = null;
 		
-		IBlockChild current = elements.get(next);
+		IBlockElement current = elements.get(next);
 
 		if(current instanceof IStatement) {
 			next++;

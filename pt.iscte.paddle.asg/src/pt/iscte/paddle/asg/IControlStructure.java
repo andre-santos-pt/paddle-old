@@ -1,6 +1,6 @@
 package pt.iscte.paddle.asg;
 
-public interface IControlStructure extends IBlockChild, IStatementContainer {
+public interface IControlStructure extends IBlockElement, IStatementContainer {
 	IBlock getParent();
 //	IBlock getBlock();
 	IExpression getGuard(); 

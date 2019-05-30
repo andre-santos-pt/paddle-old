@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.IModel2CodeTranslator;
 import pt.iscte.paddle.asg.IArrayElement;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IVariable;
@@ -14,11 +15,11 @@ import pt.iscte.paddle.machine.IReference;
 import pt.iscte.paddle.machine.IStackFrame;
 import pt.iscte.paddle.machine.IValue;
 
-class ArrayElementExpression extends Expression implements IArrayElement {
+class ArrayElement extends Expression implements IArrayElement {
 	private final IVariable variable;
 	private final ImmutableList<IExpression> indexes;
 	
-	public ArrayElementExpression(IVariable variable, List<IExpression> indexes) {
+	public ArrayElement(IVariable variable, List<IExpression> indexes) {
 		this.variable = variable;
 		this.indexes = ImmutableList.copyOf(indexes);
 	}
@@ -36,6 +37,15 @@ class ArrayElementExpression extends Expression implements IArrayElement {
 		return text;
 	}
 	
+	
+	@Override
+	public String translate(IModel2CodeTranslator t) {
+		String text = getVariable().getId();
+		for(IExpression e : indexes)
+			text += "[" + e.translate(t) + "]";
+		return text;
+	}
+	
 	@Override
 	public List<IExpression> decompose() {
 		return indexes;
@@ -46,8 +56,8 @@ class ArrayElementExpression extends Expression implements IArrayElement {
 		assert values.size() == getIndexes().size();
 		
 		IReference ref = null;
-		if(variable instanceof VariableReferenceValue)
-			ref = (IReference) ((VariableReferenceValue) variable).evalutate(values, stack);
+		if(variable instanceof VariableDereference)
+			ref = (IReference) ((VariableDereference) variable).evalutate(values, stack);
 		else
 			ref = stack.getTopFrame().getVariableStore(getVariable());
 		

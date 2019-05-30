@@ -20,7 +20,7 @@ import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IUnaryOperator;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAssignment;
-import pt.iscte.paddle.asg.IVariableReferenceValue;
+import pt.iscte.paddle.asg.IVariableDereference;
 import pt.iscte.paddle.machine.IReference;
 
 public class Types extends Rule {
@@ -107,7 +107,7 @@ public class Types extends Rule {
 	}
 	
 	@Override
-	public void visit(IVariableReferenceValue exp) {
+	public void visit(IVariableDereference exp) {
 		if(!exp.getVariable().getType().isReference())
 			addProblem("not a reference type", exp);
 	}
@@ -123,6 +123,8 @@ public class Types extends Rule {
 			addProblem("the type of variable " + variable + " is not an array type", assignment);
 			return true;
 		}
+		
+//		checkAssignment(assignment.getVariable(), assignment.getExpression());
 		
 		//TODO int type on index
 		

@@ -119,14 +119,14 @@ public enum PrimitiveType implements IValueType {
 			return 1;
 		}
 		
-		private ILiteral TRUE = new Literal(IType.BOOLEAN, "true");
-		private ILiteral FALSE = new Literal(IType.BOOLEAN, "false");
-
 		@Override
 		public ILiteral literal(Object obj) {
 			return (Boolean) obj ? TRUE : FALSE;
 		}
 	};
+	
+	private static ILiteral TRUE = new Literal(BOOLEAN, "true");
+	private static ILiteral FALSE = new Literal(BOOLEAN, "false");
 
 	@Override
 	public String toString() {

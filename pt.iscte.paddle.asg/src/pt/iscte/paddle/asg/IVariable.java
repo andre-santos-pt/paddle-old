@@ -32,7 +32,7 @@ public interface IVariable extends ISimpleExpression, IStatement {
 	
 	IVariableAddress address();
 
-	IVariableReferenceValue value();
+	IVariableDereference dereference();
 
 //	default IVariable resolve() {
 //		return this;
@@ -49,6 +49,8 @@ public interface IVariable extends ISimpleExpression, IStatement {
 	}
 
 	IRecordFieldExpression field(IVariable field);
+	
+	IRecordFieldVariable fieldVariable(IVariable field);
 	
 	default String getDeclaration() {
 		return getType() + " " + getId();

@@ -19,8 +19,8 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 	
 	public VariableAssignment(IBlock parent, IVariable variable, IExpression expression) {
 		super(parent, true);
-		if(variable.getProcedure() != parent.getProcedure())
-			throw new RuntimeException("Violation: variable to assign must be within the same procedure");
+//		if(variable.getProcedure() != parent.getProcedure())
+//			throw new RuntimeException("Violation: variable to assign must be within the same procedure");
 		
 		this.variable = variable;
 		this.expression = expression;
@@ -48,9 +48,6 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 		IValue newValue = expressions.get(0);
 		IStackFrame topFrame = stack.getTopFrame();
 		IReference ref = topFrame.getVariableStore(variable);
-//		if(variable.getType().isReference())
-//			ref.setValue(newValue);
-//		else
-			ref.setTarget(newValue);
+		ref.setTarget(newValue);
 	}
 }

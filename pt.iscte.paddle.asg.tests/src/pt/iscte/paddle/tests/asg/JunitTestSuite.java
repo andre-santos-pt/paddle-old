@@ -2,11 +2,13 @@ package pt.iscte.paddle.tests.asg;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import pt.iscte.paddle.tests.toce.TestStack;
+
 @RunWith(Suite.class)
 
 @Suite.SuiteClasses({
 	TestArithmeticExpressions.class,
-	TestRandom.class,
+//	TestRandom.class,
 	TestSelection.class,
 	TestSum.class,
 	TestSwap.class,
@@ -15,7 +17,9 @@ import org.junit.runners.Suite;
 	TestConstants.class,
 	TestRecord.class,
 	TestRecursion.class,
-	TestBuiltinProcedures.class,
+//	TestBuiltinProcedures.class,
+	
+	TestStack.class
 })
 
 public class JunitTestSuite {   

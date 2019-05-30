@@ -4,10 +4,10 @@ public interface IReferenceType extends IType {
 
 	IType getTarget();
 	
-	@Override
-	default public String getId() {
-		return "*" + getTarget().getId();
-	}
+//	@Override
+//	default public String getId() {
+//		return getTarget().getId() + " *";
+//	}
 
 	@Override
 	default boolean isCompatible(IType type) {

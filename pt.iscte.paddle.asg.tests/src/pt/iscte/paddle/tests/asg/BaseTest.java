@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,6 +14,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -18,7 +22,9 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
+import pt.iscte.paddle.CTranslator;
+import pt.iscte.paddle.JavaTranslator;
+import pt.iscte.paddle.JavaTranslatorTOCE;
 import pt.iscte.paddle.asg.IConstant;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
@@ -36,11 +42,11 @@ public abstract class BaseTest {
 
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
-	@interface Case {
+	protected @interface Case {
 		String[] value() default {};
 	}
 
-	final IModule module;
+	final protected IModule module;
 
 	private IProcedure main;
 	private IProgramState state;
@@ -49,7 +55,6 @@ public abstract class BaseTest {
 
 
 	public BaseTest() {
-		System.out.println("\n\n------------------------\n" + getClass().getSimpleName() + ":\n");
 		module = IModule.create();
 		for(Class<?> builtin : getBuiltins())
 			module.loadBuildInProcedures(builtin);		
@@ -60,14 +65,17 @@ public abstract class BaseTest {
 	public void setup() {
 		try {
 			for (Field f : getClass().getDeclaredFields()) {
-				Object o = f.get(this);
-				if(isIdElement(o)) {
-					((IProgramElement) o).setId(f.getName());
+				if(!Modifier.isPrivate(f.getModifiers()) && !Modifier.isStatic(f.getModifiers())) {
+					f.setAccessible(true);
+					Object o = f.get(this);
+					if(isIdElement(o)) {
+						((IProgramElement) o).setId(f.getName().replaceAll("_*", ""));
 
-					if (o instanceof IProcedure) {
-						if (main == null || f.getName().equals("main"))
-							main = (IProcedure) o;
-					} 
+						if (o instanceof IProcedure) {
+							if (main == null || f.getName().equals("main"))
+								main = (IProcedure) o;
+						} 
+					}
 				}
 			}
 		} catch (IllegalArgumentException e) {
@@ -83,18 +91,30 @@ public abstract class BaseTest {
 	}
 
 	private void compile() {
-		System.out.println(module);
-		problems = module.checkSemantics();
-		for (ISemanticProblem p : problems) {
-			System.err.println(p);
+		String code = module.translate(new JavaTranslatorTOCE());
+		File file = new File("src/" + module.getId() + ".java");
+		System.out.println("\\begin{lstlisting}");
+		System.out.print(code);
+		System.out.println("\\end{lstlisting}");
+		try {
+			PrintWriter writer = new PrintWriter(file);
+			writer.println(code);
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
+		
+		problems = module.checkSemantics();
+//		for (ISemanticProblem p : problems) {
+//			System.err.println(p);
+//		}
 		assertTrue("Semantic errors", problems.isEmpty());
 	}
 
 	public IModule getModule() {
 		return module;
 	}
-	
+
 	@Test
 	public void run() throws Throwable {
 		if(!problems.isEmpty())

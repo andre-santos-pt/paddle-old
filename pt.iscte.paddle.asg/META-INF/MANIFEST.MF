@@ -6,6 +6,7 @@ Bundle-Version: 0.1
 Automatic-Module-Name: pt.iscte.pandionj.semanticmodel
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: com.google.guava;bundle-version="21.0.0";visibility:=reexport
-Export-Package: pt.iscte.paddle.asg,
+Export-Package: pt.iscte.paddle,
+ pt.iscte.paddle.asg,
  pt.iscte.paddle.asg.semantics,
  pt.iscte.paddle.machine
