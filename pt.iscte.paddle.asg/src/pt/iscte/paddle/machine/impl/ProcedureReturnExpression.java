@@ -28,11 +28,11 @@ class ProcedureReturnExpression implements ISimpleExpression, IEvaluable {
 		return stack.getLastTerminatedFrame().getReturn();
 	}
 	@Override
-	public Object getProperty(String key) {
+	public Object getProperty(Object key) {
 		return null;
 	}
 	@Override
-	public void setProperty(String key, Object value) {
+	public void setProperty(Object key, Object value) {
 		
 	}
 

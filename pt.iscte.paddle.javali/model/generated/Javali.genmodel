@@ -7,12 +7,18 @@
   <genPackages prefix="Javali" basePackage="pt.iscte.paddle" disposableProviderFactory="true"
       fileExtensions="javali" ecorePackage="Javali.ecore#/">
     <genClasses ecoreClass="Javali.ecore#//Module">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Module/constants"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Module/procedures"/>
     </genClasses>
     <genClasses ecoreClass="Javali.ecore#//Constant">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Constant/static"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Constant/type"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Constant/id"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Constant/exp"/>
+    </genClasses>
+    <genClasses ecoreClass="Javali.ecore#//Record">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Record/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Record/fields"/>
     </genClasses>
     <genClasses ecoreClass="Javali.ecore#//Procedure">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Procedure/comment"/>
@@ -36,12 +42,14 @@
     <genClasses ecoreClass="Javali.ecore#//VarDeclaration">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarDeclaration/type"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarDeclaration/id"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarDeclaration/annotation"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarDeclaration/exp"/>
+    </genClasses>
+    <genClasses ecoreClass="Javali.ecore#//VarDeclarationAssign">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarDeclarationAssign/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarDeclarationAssign/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarDeclarationAssign/exp"/>
     </genClasses>
     <genClasses ecoreClass="Javali.ecore#//VarAssign">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarAssign/id"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarAssign/arrayIndexes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarAssign/var"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarAssign/exp"/>
     </genClasses>
     <genClasses ecoreClass="Javali.ecore#//IfElse">
@@ -71,12 +79,18 @@
     <genClasses ecoreClass="Javali.ecore#//Decrement">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Decrement/id"/>
     </genClasses>
-    <genClasses ecoreClass="Javali.ecore#//Expression"/>
+    <genClasses ecoreClass="Javali.ecore#//Expression">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Expression/conditional"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Expression/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Expression/right"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Expression/uoperator"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Expression/expression"/>
+    </genClasses>
     <genClasses ecoreClass="Javali.ecore#//Literal">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Literal/value"/>
     </genClasses>
     <genClasses ecoreClass="Javali.ecore#//VarExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarExpression/id"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarExpression/parts"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//VarExpression/arrayIndexes"/>
     </genClasses>
     <genClasses ecoreClass="Javali.ecore#//ProcCall">
@@ -95,33 +109,25 @@
     <genClasses ecoreClass="Javali.ecore#//NewObject">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//NewObject/type"/>
     </genClasses>
-    <genClasses ecoreClass="Javali.ecore#//Annotation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Annotation/id"/>
-    </genClasses>
     <genClasses ecoreClass="Javali.ecore#//Id">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Id/id"/>
     </genClasses>
     <genClasses ecoreClass="Javali.ecore#//TypeDef">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//TypeDef/visibility"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//TypeDef/id"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//TypeDef/constants"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//TypeDef/fields"/>
     </genClasses>
-    <genClasses ecoreClass="Javali.ecore#//StaticClass"/>
+    <genClasses ecoreClass="Javali.ecore#//StaticClass">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//StaticClass/records"/>
+    </genClasses>
     <genClasses ecoreClass="Javali.ecore#//Relation">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Relation/left"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Relation/operator"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Relation/right"/>
     </genClasses>
     <genClasses ecoreClass="Javali.ecore#//Addition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Addition/left"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Addition/operator"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Addition/right"/>
     </genClasses>
     <genClasses ecoreClass="Javali.ecore#//Multiplication">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Multiplication/left"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Javali.ecore#//Multiplication/operator"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Javali.ecore#//Multiplication/right"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

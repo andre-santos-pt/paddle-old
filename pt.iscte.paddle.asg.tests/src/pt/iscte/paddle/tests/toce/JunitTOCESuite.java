@@ -6,15 +6,15 @@ import org.junit.runners.Suite;
 
 @Suite.SuiteClasses({
 	TestCheckEven.class,
-	TestMax.class,
 	TestMin.class,
 	TestCircle.class,
+	TestMax.class,
 	TestFactorial.class,
 	TestSumEven.class,
 	TestSum.class,
 	TestAverage.class,
 	TestMaxArray.class,
-	TestArrayCount.class,
+	TestNaturals.class,
 	TestArrayFind.class,
 	TestBinarySearch.class,
 	TestSwap.class,
@@ -23,7 +23,10 @@ import org.junit.runners.Suite;
 	TestMatrixScalar.class,
 	TestMatrixTranspose.class,
 	TestStack.class,
-	TestList.class
+	TestList.class,
+	
+	TestMaxBound.class,
+	TestArrayCount.class
 })
 
 public class JunitTOCESuite {   

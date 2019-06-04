@@ -1,12 +1,14 @@
 package pt.iscte.paddle.tests.toce;
-import static pt.iscte.paddle.asg.IOperator.*;
-import static pt.iscte.paddle.asg.IType.*;
+import static pt.iscte.paddle.asg.IOperator.ADD;
+import static pt.iscte.paddle.asg.IOperator.SMALLER;
+import static pt.iscte.paddle.asg.IOperator.SUB;
+import static pt.iscte.paddle.asg.IType.INT;
+import static pt.iscte.paddle.asg.IType.VOID;
 
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
-import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAssignment;
@@ -14,34 +16,7 @@ import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestSelectionSort extends BaseTest {
 
-	void sort(int arr[]) 
-	{ 
-		// One by one move boundary of unsorted subarray 
-		int i = 0;
-		while ( i < arr.length-1) 
-		{ 
-			// Find the minimum element in unsorted array 
-			int min = i; 
-			int j = i + 1;
-			while (j < arr.length) {
-				if (arr[j] < arr[min]) 
-					min = j; 
-				j++;
-			}
-
-			// Swap the found minimum element with the first 
-			// element 
-			int temp = arr[min]; 
-			arr[min] = arr[i]; 
-			arr[i] = temp; 
-			i++;
-		} 
-	} 
-
-	private static IProcedure swap = new TestSwap().swap;
-	static {
-		swap.setId("swap");
-	}
+	private static IProcedure swap = importProcedure(TestSwap.class, "swap");
 	
 	IProcedure sort = module.addProcedure(VOID);
 	IVariable array = sort.addParameter(INT.array().reference());

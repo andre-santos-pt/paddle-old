@@ -32,6 +32,7 @@ import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.semantics.ISemanticProblem;
+import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
@@ -93,9 +94,9 @@ public abstract class BaseTest {
 	private void compile() {
 		String code = module.translate(new JavaTranslatorTOCE());
 		File file = new File("src/" + module.getId() + ".java");
-		System.out.println("\\begin{lstlisting}");
-		System.out.print(code);
-		System.out.println("\\end{lstlisting}");
+//		System.out.println("\\begin{lstlisting}");
+		System.out.print(code + "\n");
+//		System.out.println("\\end{lstlisting}");
 		try {
 			PrintWriter writer = new PrintWriter(file);
 			writer.println(code);
@@ -148,7 +149,12 @@ public abstract class BaseTest {
 	}
 
 	private IExecutionData runCase(Object[] args) {
-		IExecutionData data = state.execute(main, args);
+		IExecutionData data = null;
+		try {
+			data = state.execute(main, args);
+		} catch (ExecutionError e) {
+			e.printStackTrace();
+		}
 		assertNotNull(data);
 		commonAsserts(data);
 		return data;
@@ -185,5 +191,27 @@ public abstract class BaseTest {
 	protected static void isFalse(IValue value) {
 		assertTrue("value is not Boolean", value.getValue() instanceof Boolean);
 		assertEquals(false, ((Boolean) value.getValue()).booleanValue());
+	}
+	
+	protected static IProcedure importProcedure(Class<? extends BaseTest> clazz, String fieldName) {
+		try {
+			Field f = clazz.getDeclaredField(fieldName);
+			f.setAccessible(true);
+			BaseTest testCase = clazz.newInstance();
+			IProcedure proc = (IProcedure) f.get(testCase);
+//			proc.setId(clazz.getSimpleName() + "." + fieldName);
+			proc.setId(fieldName);
+			return proc;
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 }

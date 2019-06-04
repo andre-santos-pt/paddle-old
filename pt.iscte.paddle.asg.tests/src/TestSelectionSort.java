@@ -7,8 +7,9 @@ void sort(int[] array) {
 		int j;
 		j = i + 1;
 		while(j < array.length) {
-			if(array[j] < array[min])
+			if(array[j] < array[min]) {
 				min = j;
+			}
 			j = j + 1;
 		}
 		swap(array, i, min);

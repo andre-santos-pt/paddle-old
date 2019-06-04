@@ -78,12 +78,12 @@ public interface IType extends IProgramElement  {
 	IType VOID = new IType() {
 
 		@Override
-		public void setProperty(String key, Object value) {
+		public void setProperty(Object key, Object value) {
 
 		}
 
 		@Override
-		public Object getProperty(String key) {
+		public Object getProperty(Object key) {
 			return null;
 		}
 
@@ -130,11 +130,11 @@ public interface IType extends IProgramElement  {
 			return 0;
 		}
 		@Override
-		public void setProperty(String key, Object value) {
+		public void setProperty(Object key, Object value) {
 
 		}
 		@Override
-		public Object getProperty(String key) {
+		public Object getProperty(Object key) {
 			return null;
 		}
 		

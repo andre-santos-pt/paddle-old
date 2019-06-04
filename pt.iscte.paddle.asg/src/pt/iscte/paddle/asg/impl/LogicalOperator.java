@@ -84,12 +84,12 @@ public enum LogicalOperator implements IBinaryOperator {
 	}
 	
 	@Override
-	public void setProperty(String key, Object value) {
+	public void setProperty(Object key, Object value) {
 		programElement.setProperty(key, value);
 	}
 	
 	@Override
-	public Object getProperty(String key) {
+	public Object getProperty(Object key) {
 		return programElement.getProperty(key);
 	}
 	

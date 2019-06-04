@@ -6,7 +6,7 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate javali "http://www.iscte.pt/paddle/Javali"
 
 Module:
-	TypeDef | StaticClass
+	StaticClass
 ;
 	
 TypeDef returns Module:
@@ -24,13 +24,20 @@ TypeDef returns Module:
 
 StaticClass returns Module:
 	{StaticClass} 
-	(procedures+=Procedure)+
+	(constants+=Constant |
+	records+=Record |
+	procedures+=Procedure)+
 ;
 
 Constant:
-	'static' 'final' type=Type id=Id '=' exp=Literal ';'
+	(static ?= 'static')? 'final' type=Type id=Id '=' exp=Literal ';'
 ;
 
+Record:
+	'class' id=IDENTIFIER '{'
+		(fields+=VarDeclaration ';')*
+	'}'
+;
 	
 Procedure:
 	(comment=ML_COMMENT_DOC)?
@@ -40,15 +47,15 @@ Procedure:
 
 
 Block:
-	{Block} ('{' (statements+=Statement)* '}' )
+	{Block} '{' (statements+=Statement)* '}'
 ;
 
 Statement:
-	(Return ';' | Break ';' | Continue ';' | VarDeclaration ';' | VarAssign ';' | Increment ';' | Decrement ';' | ProcCall ';' | IfElse | While | For | DoWhile ';')  //| Block)
+	(Return ';' | Break ';' | Continue ';' | VarDeclarationAssign ';' | VarAssign ';' | Increment ';' | Decrement ';' | ProcCall ';' | IfElse | While | For | DoWhile ';')  //| Block)
 ;
 
 Return:
-	'return' exp=Expression
+	{Return} 'return' (exp=Expression)?
 ;
 
 Break: {Break}
@@ -60,11 +67,15 @@ Continue: {Continue}
 ;
 
 VarDeclaration:
-	type=Type id=Id (annotation=Annotation)? ('=' exp=Expression)?
+	type=Type id=Id
+;
+
+VarDeclarationAssign:
+	type=Type id=Id ('=' exp=Expression)?
 ;
 
 VarAssign:
-	id=Id ('['arrayIndexes += Expression ']')* '=' exp=Expression
+	var=VarExpression '=' exp=Expression
 ;
 
 
@@ -106,11 +117,11 @@ AccessModifier:
 ;
 
 Expression:
-	Relation
+	Relation (conditional?='?' left=Expression ':' right=Expression)?
 ;
 
 Relation returns Expression:
-	Addition ({Relation.left=current} operator=('=='|'!='|'<'|'>') right=Addition)?
+	Addition ({Relation.left=current} operator=('=='|'!='|'<'|'<='|'>'|'>='|'&&'|'||'|'^') right=Addition)?
 ;
 
 Addition returns Expression:
@@ -118,17 +129,23 @@ Addition returns Expression:
 ;
  
 Multiplication returns Expression:
-  Primary ({Multiplication.left=current} operator=('*'|'/') right=Primary)*;
+  Primary ({Multiplication.left=current} operator=('*'|'/'|'%') right=Primary)*
+;
  
 Primary returns Expression:
-  Literal | ProcCall | VarExpression | NewArray | NewObject | '(' Expression ')';
+  Literal | ProcCall | VarExpression | NewArray | NewObject | UnaryExpression | '(' Expression ')'
+;
  
+UnaryExpression returns Expression:
+	uoperator=('!') expression=Primary
+;
+
 Literal:
 	(value=INTEGER|value=DOUBLE|value=BOOLEAN)
 ;
 
 VarExpression:
-	id=Id ('['arrayIndexes += Expression ']')*
+	(parts+=Id ('['arrayIndexes += Expression ']')*)('.' parts+=Id ('['arrayIndexes += Expression ']')*)*
 ;
 
 ProcCall:
@@ -136,7 +153,7 @@ ProcCall:
 ;
 
 Type:
-	id=('int' | 'double' | 'boolean' | 'char' | IDENTIFIER) (arrayDims+='['']')*
+	id=('int' | 'double' | 'boolean' | IDENTIFIER) (arrayDims+='['']')*
 ;
 
 NewArray:
@@ -147,16 +164,20 @@ NewObject:
 	'new' type=Id '(' ')'
 ;
 
-Annotation:
-	'@' id=IDENTIFIER
+
+
+ConditionalExpression returns Expression:
+	expression=Expression '?' left=Expression ':' right=Expression
 ;
 
 Id:
 	id=IDENTIFIER
 ;
-//ConditionalExpression:
-//	exp=Expression '?' trueValue=Expression ':' falseValue=Expression
+
+//Annotation:
+//	'@' id=IDENTIFIER
 //;
+
 
 terminal INTEGER: '-'?('0'..'9')+;
 terminal DOUBLE: INTEGER '.' ('0'..'9')+ ;

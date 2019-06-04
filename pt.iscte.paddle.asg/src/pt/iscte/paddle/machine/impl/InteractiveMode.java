@@ -6,6 +6,7 @@ import java.util.Scanner;
 import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.IExecutionData;
 
 public class InteractiveMode {
@@ -34,8 +35,13 @@ public class InteractiveMode {
 				if(p == null)
 					System.out.println("procedure not found");
 				else {
-					IExecutionData data = state.execute(p, Arrays.copyOfRange(parts, 1, parts.length));
-					System.out.println(data.getReturnValue());
+					IExecutionData data = null;
+					try {
+						data = state.execute(p, Arrays.copyOfRange(parts, 1, parts.length));
+					} catch (ExecutionError e) {
+						e.printStackTrace();
+					}
+					System.out.println(data);
 				}
 			}
 		}

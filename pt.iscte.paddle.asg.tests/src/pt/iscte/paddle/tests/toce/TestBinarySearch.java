@@ -61,5 +61,5 @@ public class TestBinarySearch extends BaseTest {
 	IVariableAssignment lAss = ifnot.getBlock().addAssignment(l, ADD.on(m, INT.literal(1)));
 	IVariableAssignment rAss = ifnot.getAlternativeBlock().addAssignment(r, SUB.on(m, INT.literal(1)));
 
-	IReturn ret = body.addReturn(BOOLEAN.literal(true));
+	IReturn ret = body.addReturn(BOOLEAN.literal(false));
 }

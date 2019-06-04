@@ -8,15 +8,15 @@ import pt.iscte.paddle.asg.IProgramElement;
 
 class ProgramElement implements IProgramElement {
 	
-	private Map<String, Object> properties = Collections.emptyMap();
+	private Map<Object, Object> properties = Collections.emptyMap();
 	
 	@Override
-	public Object getProperty(String key) {
+	public Object getProperty(Object key) {
 		return properties.get(key);
 	}
 	
 	@Override
-	public void setProperty(String key, Object value) {
+	public void setProperty(Object key, Object value) {
 		if(properties.isEmpty())
 			properties = new HashMap<>(5);
 		

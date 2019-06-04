@@ -8,14 +8,14 @@ import pt.iscte.paddle.asg.semantics.ISemanticProblem;
 
 public interface ISourceLocation {
 	int getStartChar();
-	
 	int getEndChar();
+	int getLine();
 	
 	default IMarker createMarker(IResource r, ISemanticProblem p) {
 		try {
 			IMarker marker = r.createMarker(IMarker.PROBLEM);
 			marker.setAttribute(IMarker.MESSAGE, p.getMessage());
-			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
 			//                 marker.setAttribute(IMarker.LINE_NUMBER, line);
 			marker.setAttribute(IMarker.CHAR_START, getStartChar());
 			marker.setAttribute(IMarker.CHAR_END, getEndChar());
@@ -24,5 +24,9 @@ public interface ISourceLocation {
 			ex.printStackTrace();
 			return null;
 		}
+	}
+	
+	default boolean contains(int offset) {
+		return offset >= getStartChar() && offset <= getEndChar(); 
 	}
 }

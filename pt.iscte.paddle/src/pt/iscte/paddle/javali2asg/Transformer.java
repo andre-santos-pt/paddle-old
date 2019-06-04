@@ -42,8 +42,10 @@ import pt.iscte.paddle.javali.Type;
 import pt.iscte.paddle.javali.TypeDef;
 import pt.iscte.paddle.javali.VarAssign;
 import pt.iscte.paddle.javali.VarDeclaration;
+import pt.iscte.paddle.javali.VarDeclarationAssign;
 import pt.iscte.paddle.javali.VarExpression;
 import pt.iscte.paddle.javali.While;
+import pt.iscte.paddle.javali2asg.ElementLocation.Part;
 
 public class Transformer {
 	private Map<String, IVariable> varTable;
@@ -86,9 +88,9 @@ public class Transformer {
 			
 			ICompositeNode pnode = NodeModelUtils.getNode(p);
 			ElementLocation loc = new ElementLocation(pnode);
-			proc.setProperty(ElementLocation.class, loc);
+			proc.setProperty(ElementLocation.Part.WHOLE, loc);
 			ICompositeNode idNode = NodeModelUtils.getNode(p.getId());
-			proc.setProperty(IdLocation.class, new IdLocation(idNode.getOffset(), idNode.getLength()));
+			proc.setProperty(ElementLocation.Part.ID, new ElementLocation(idNode));
 		}
 		
 		return program;
@@ -99,14 +101,14 @@ public class Transformer {
 		if(s instanceof Return) {
 			instr = block.addReturn(map(((Return) s).getExp()));
 		}
-		else if(s instanceof VarDeclaration) {
-			VarDeclaration varDec = (VarDeclaration) s;
+		else if(s instanceof VarDeclarationAssign) {
+			VarDeclarationAssign varDec = (VarDeclarationAssign) s;
 			String id = varDec.getId().getId();
 			IVariable var = block.addVariable(toModelType(varDec.getType()));
 			var.setId(id);
 			varTable.put(id, var);
-			if(varDec.getAnnotation() != null)
-				var.setProperty("ANNOTATION", varDec.getAnnotation().getId());
+//			if(varDec.getAnnotation() != null)
+//				var.setProperty("ANNOTATION", varDec.getAnnotation().getId());
 			if(varDec.getExp() != null) {
 				instr = block.addAssignment(var, map(varDec.getExp()));
 			}
@@ -114,7 +116,8 @@ public class Transformer {
 		else if(s instanceof VarAssign) {
 			// TODO array indexes
 			VarAssign ass = (VarAssign) s;
-			IVariable var = varTable.get(ass.getId());
+			VarExpression varExp = ass.getVar();
+			IVariable var = varTable.get(varExp.getParts().get(0).getId());
 			instr = block.addAssignment(var, map(ass.getExp()));
 		}
 		else if (s instanceof IfElse) {
@@ -155,8 +158,8 @@ public class Transformer {
 		
 		if(instr != null) {
 			ICompositeNode node = NodeModelUtils.getNode(s);
-			ElementLocation loc = new ElementLocation(node.getText(), node.getOffset(), node.getLength(), 0);
-			instr.setProperty(ElementLocation.class, loc);
+			ElementLocation loc = new ElementLocation(node);
+			instr.setProperty(ElementLocation.Part.WHOLE, loc);
 		}
 	}
 
@@ -165,7 +168,10 @@ public class Transformer {
 			return ILiteral.matchValue(((Literal) e).getValue());
 
 		else if(e instanceof VarExpression) {
-			return varTable.get(((VarExpression) e).getId().getId());
+			VarExpression var = (VarExpression) e;
+			boolean single = var.getParts().size() == 1;
+			if(single)
+				return varTable.get(var.getParts().get(0).getId());
 		}
 
 		// TODO repor : um unico tipo?
@@ -236,10 +242,23 @@ public class Transformer {
 	static IBinaryOperator map(String op) {
 		switch(op) {
 		case "+": return IOperator.ADD;
+		case "-": return IOperator.SUB;
 		case "*": return IOperator.MUL;
+		case "/": return IOperator.DIV;
+		case "%": return IOperator.MOD;
 
 		case "==": return IOperator.EQUAL;
+		case "!=": return IOperator.DIFFERENT;
 		case "<": return IOperator.SMALLER;
+		case "<=": return IOperator.SMALLER_EQ;
+		case ">": return IOperator.GREATER;
+		case ">=": return IOperator.GREATER_EQ;
+		
+		case "&&": return IOperator.AND;
+		case "||": return IOperator.OR;
+		case "^": return IOperator.XOR;
+		
+//		case "!": return IOperator.NOT;
 		}
 		return null;
 	}

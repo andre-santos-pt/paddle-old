@@ -13,6 +13,9 @@ import org.eclipse.jface.action.ICoolBarManager;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -21,15 +24,19 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.ui.texteditor.ITextEditor;
 
-import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IModule;
+import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProgramElement;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.semantics.ISemanticProblem;
 import pt.iscte.paddle.asg.semantics.SemanticChecker;
 import pt.iscte.paddle.javali2asg.ElementLocation;
-import pt.iscte.paddle.javali2asg.IdLocation;
+import pt.iscte.paddle.javali2asg.ISourceLocation;
 import pt.iscte.paddle.javali2asg.Transformer;
+import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
 import pt.iscte.paddle.semantics.java.JavaSemanticChecker;
@@ -50,11 +57,20 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		super.fillMenuBar(menuBar);
 	}
 
+	
+	
+	
 	@Override
 	protected void fillCoolBar(ICoolBarManager coolBar) {
 		super.fillCoolBar(coolBar);
 		IToolBarManager toolBar = new ToolBarManager(coolBar.getStyle());
 		coolBar.add(toolBar);
+		
+		toolBar.add(new RunAction(false));
+		RunAction debugAction = new RunAction(true);
+		toolBar.add(debugAction);
+		toolBar.add(new StepInAction(debugAction));
+		
 		toolBar.add(new Action("test") {
 			@Override
 			public void run() {
@@ -69,22 +85,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			}
 		});
 
-		toolBar.add(new Action("run") {
-			@Override
-			public void run() {
-				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-
-				IFileEditorInput editorInput = (IFileEditorInput) page.getActiveEditor().getEditorInput();
-
-				//				IDE.openEditor(page, new XtextReadonlyEditorInput(editorInput.getFile()), true); 
-
-				Transformer trans = new Transformer(editorInput.getFile());
-				IModule program = trans.createProgram();
-				
-				IProgramState state = IMachine.create(program);
-				state.execute(program.resolveProcedure("f", IType.INT), 2);
-			}
-		});
+		
 
 		toolBar.add(new Action("check") {
 			@Override
@@ -103,7 +104,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 				List<ISemanticProblem> problems = checker.check(program);
 				for(ISemanticProblem p : problems) {
 					IProgramElement e = p.getProgramElements().get(0);
-					IdLocation idProp = e.getProperty(IdLocation.class);
+					ISourceLocation idProp = (ISourceLocation) e.getProperty(ElementLocation.Part.ID);
 					if(idProp != null) {
 						idProp.createMarker(resource, p);
 					}

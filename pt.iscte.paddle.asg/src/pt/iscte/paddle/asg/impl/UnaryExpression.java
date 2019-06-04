@@ -47,12 +47,12 @@ class UnaryExpression extends Expression implements IUnaryExpression {
 	
 	@Override
 	public String toString() {
-		return operator.getSymbol() + "(" + getOperand() + ")";
+		return "(" + operator.getSymbol() + getOperand() + ")";
 	}
 	
 	@Override
 	public String translate(IModel2CodeTranslator t) {
-		return t.operator(operator) + "(" + t.expression(getOperand()) + ")";
+		return "(" + t.operator(operator) + t.expression(getOperand()) + ")";
 	}
 
 	@Override

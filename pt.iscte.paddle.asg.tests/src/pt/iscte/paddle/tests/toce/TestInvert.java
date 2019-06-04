@@ -1,8 +1,10 @@
 package pt.iscte.paddle.tests.toce;
-import static pt.iscte.paddle.asg.IType.*;
-import static pt.iscte.paddle.asg.IOperator.*;
+import static pt.iscte.paddle.asg.IOperator.DIV;
+import static pt.iscte.paddle.asg.IOperator.SMALLER;
+import static pt.iscte.paddle.asg.IOperator.SUB;
+import static pt.iscte.paddle.asg.IType.INT;
+import static pt.iscte.paddle.asg.IType.VOID;
 
-import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IProcedure;
@@ -12,10 +14,7 @@ import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestInvert extends BaseTest {
-	private static IProcedure swap = new TestSwap().swap;
-	static {
-		swap.setId("swap");
-	}
+	private static IProcedure swap = importProcedure(TestSwap.class, "swap");
 	
 	IProcedure invert = module.addProcedure(VOID);
 	IVariable array = invert.addParameter(INT.array().reference());

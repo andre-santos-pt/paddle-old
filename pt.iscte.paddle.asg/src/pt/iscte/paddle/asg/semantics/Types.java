@@ -33,7 +33,7 @@ public class Types extends Rule {
 			addProblem("operator " + operator.getSymbol() + " cannot be used with " + expType, exp);
 		return true;
 	}
-	
+
 	@Override
 	public boolean visit(IBinaryExpression exp) {
 		IType left = exp.getLeftOperand().getType();
@@ -42,18 +42,30 @@ public class Types extends Rule {
 			addProblem("operator " + exp.getOperator().getSymbol() + " cannot be used with " + left + " and " + right, exp);
 		return true;
 	}
-	
+
 	@Override
 	public boolean visit(IReturn returnStatement) {
 		IProcedure procedure = returnStatement.getParent().getProcedure();
-		IType expType = returnStatement.getExpression().getType();
-		IType procReturnType = procedure.getReturnType();
-		if(!procReturnType.isCompatible(expType))
-			addProblem("incompatible return at " + procedure.shortSignature() +
-					"; expected " + procReturnType + ", found " + expType, procReturnType , expType);
+		if(procedure.getReturnType().isVoid())  {
+			if(returnStatement.getExpression() != null)
+				addProblem("void procedures cannot return values", procedure, returnStatement);
+		}
+		else {
+			IExpression retExp = returnStatement.getExpression();
+			if(retExp == null) {
+				addProblem("procedure has to return a value of type " + procedure.getReturnType(), procedure, returnStatement);
+			}
+			else {
+				IType expType = retExp.getType();
+				IType procReturnType = procedure.getReturnType();
+				if(!procReturnType.isCompatible(expType))
+					addProblem("incompatible return at " + procedure.shortSignature() +
+							"; expected " + procReturnType + ", found " + expType, procReturnType , expType);
+			}
+		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean visit(IProcedureCall exp) {
 		List<IVariable> parameters = exp.getProcedure().getParameters();
@@ -69,7 +81,7 @@ public class Types extends Rule {
 		return true;
 	}
 
-	
+
 	@Override
 	public boolean visit(ISelection selection) {
 		checkGuard(selection);
@@ -81,68 +93,68 @@ public class Types extends Rule {
 		checkGuard(loop);
 		return true;
 	}
-	
+
 	private void checkGuard(IControlStructure control) {
 		IExpression guard = control.getGuard();
 		if(!guard.getType().equals(IType.BOOLEAN))
 			addProblem("guard must be a boolean expression, not " + guard.getType(), guard);
 	}
-	
+
 	@Override
 	public boolean visit(IVariableAssignment assignment) {
 		checkAssignment(assignment.getVariable(), assignment.getExpression());
 		return true;
 	}
-	
+
 	private void checkAssignment(IVariable var, IExpression exp) {
 		if(!var.getType().isCompatible(exp.getType()))
 			addProblem("incompatible assignment: " + exp.getType() + " cannot be assigned to " + var.getType(),
 					var, exp);	
 	}
-	
+
 	private void checkType(IType type, IExpression exp) {
 		if(!type.isCompatible(exp.getType()))
 			addProblem("incompatible assignment: " + exp.getType() + " cannot be assigned to " + type,
 					type, exp);	
 	}
-	
+
 	@Override
 	public void visit(IVariableDereference exp) {
 		if(!exp.getVariable().getType().isReference())
 			addProblem("not a reference type", exp);
 	}
-	
+
 	@Override
 	public boolean visit(IArrayElementAssignment assignment) {
 		IVariable variable = assignment.getVariable();
 		IType type = variable.getType();
 		if(type instanceof IReferenceType)
 			type = ((IReferenceType) type).resolveTarget();
-		
+
 		if(!(type instanceof IArrayType)) {
 			addProblem("the type of variable " + variable + " is not an array type", assignment);
 			return true;
 		}
-		
-//		checkAssignment(assignment.getVariable(), assignment.getExpression());
-		
+
+		//		checkAssignment(assignment.getVariable(), assignment.getExpression());
+
 		//TODO int type on index
-		
-//		IArrayType arrayType = (IArrayType) type;
-//		IDataType componentType = arrayType.getComponentTypeAt(assignment.getIndexes().size());
-//		IDataType expType = assignment.getExpression().getType();
-//		if(!componentType.isCompatible(expType))
-//			addProblem("incompatible assignment: " + expType + " cannot be assigned to " + componentType,
-//					arrayType, expType);	
+
+		//		IArrayType arrayType = (IArrayType) type;
+		//		IDataType componentType = arrayType.getComponentTypeAt(assignment.getIndexes().size());
+		//		IDataType expType = assignment.getExpression().getType();
+		//		if(!componentType.isCompatible(expType))
+		//			addProblem("incompatible assignment: " + expType + " cannot be assigned to " + componentType,
+		//					arrayType, expType);	
 		return true;
 	}
-	
+
 	@Override
 	public boolean visit(IRecordFieldAssignment assignment) {
 		checkAssignment(assignment.getField(), assignment.getExpression());
 		return true;
 	}
-	
+
 	@Override
 	public boolean visit(IArrayLength exp) {
 		return super.visit(exp);

@@ -23,13 +23,14 @@ public interface IProgramState {
 	IArray allocateArray(IType baseType, int ... dimensions);
 	IRecord allocateObject(IRecordType type);
 	
-	IExecutionData execute(IProcedure p, Object...args);
+	
+	void setupExecution(IProcedure procedure, Object... args) throws ExecutionError;
 
-	void setupExecution(IProcedure mockProcedure, Object... args)  throws ExecutionError;
+	IExecutionData execute(IProcedure p, Object...args) throws ExecutionError;
 
-	//	void launchExecution(IProcedure procedure, Object ... args);
-//
-//	void stepIn();
+	void stepIn() throws ExecutionError;
+
+	boolean isOver();
 	
 	default int getMemory() {
 		return getCallStack().getMemory() + getHeapMemory().getMemory();

@@ -6,13 +6,16 @@ boolean binarySearch(int[] array, int e) {
 	while(l <= r) {
 		int m;
 		m = l + ((r - l) / 2);
-		if(array[m] == e)
+		if(array[m] == e) {
 			return true;
-		if(array[m] < e)
+		}
+		if(array[m] < e) {
 			l = m + 1;
-		else
+		}
+		else {
 			r = m - 1;
+		}
 	}
-	return true;
+	return false;
 }
 

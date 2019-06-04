@@ -153,12 +153,12 @@ public enum PrimitiveType implements IValueType {
 	}
 
 	@Override
-	public Object getProperty(String key) {
+	public Object getProperty(Object key) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setProperty(String key, Object value) {
+	public void setProperty(Object key, Object value) {
 		throw new UnsupportedOperationException();
 	}
 	

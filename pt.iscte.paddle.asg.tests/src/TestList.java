@@ -27,8 +27,9 @@ boolean exists(IntList list, int e) {
 	Node n;
 	n = list.head;
 	while(n != null) {
-		if(n.element == e)
+		if(n.element == e) {
 			return true;
+		}
 		n = n.next;
 	}
 	return false;

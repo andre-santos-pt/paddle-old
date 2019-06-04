@@ -3,6 +3,12 @@ package pt.iscte.paddle.javali2asg;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 
 public class ElementLocation implements ISourceLocation {
+	public enum Part {
+		WHOLE,
+		ID,
+		EXPRESSION;
+	}
+	
 	private final String source;
 	private final int offset;
 	private final int length;
@@ -15,12 +21,12 @@ public class ElementLocation implements ISourceLocation {
 		this.line = node.getStartLine();
 	}
 	
-	public ElementLocation(String source, int offset, int length, int line) {
-		this.source = source;
-		this.offset = offset;
-		this.length = length;
-		this.line = line;
-	}
+//	public ElementLocation(String source, int offset, int length, int line) {
+//		this.source = source;
+//		this.offset = offset;
+//		this.length = length;
+//		this.line = line;
+//	}
 
 	@Override
 	public String toString() {
@@ -30,9 +36,16 @@ public class ElementLocation implements ISourceLocation {
 	public int getStartChar() {
 		return offset;
 	}
+	
 	public int getEndChar() {
 		return offset + length;
 	}
+	
+	@Override
+	public int getLine() {
+		return line;
+	}
+
 	
 //	@Override
 //	public String getSourceCode() {
@@ -48,9 +61,6 @@ public class ElementLocation implements ISourceLocation {
 //	public int getLength() {
 //		return length;
 //	}
-//
-//	@Override
-//	public int getLine() {
-//		return line;
-//	}
+
 }
+

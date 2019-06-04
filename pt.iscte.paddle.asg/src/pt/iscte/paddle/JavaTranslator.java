@@ -131,13 +131,13 @@ public class JavaTranslator implements IModel2CodeTranslator {
 			String tabs = tabs((IBlock) e.getParent());
 				
 			String text = "if(" + s.getGuard() + ") {\n" + statements(s.getBlock()) + tabs + "}\n";
-			if(s.getBlock().getSize() == 1)
-				text = "if(" + s.getGuard() + ")\n" + statements(s.getBlock());
+//			if(s.getBlock().getSize() == 1)
+//				text = "if(" + s.getGuard() + ")\n" + statements(s.getBlock());
 			
 			if(s.hasAlternativeBlock()) {
-				if(s.getAlternativeBlock().getSize() == 1)
-					text += tabs + "else\n" + statements(s.getAlternativeBlock());
-				else
+//				if(s.getAlternativeBlock().getSize() == 1)
+//					text += tabs + "else\n" + statements(s.getAlternativeBlock());
+//				else
 					text += tabs + "else {\n" + statements(s.getAlternativeBlock()) + tabs + "}\n";
 				
 			}

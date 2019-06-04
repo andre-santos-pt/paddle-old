@@ -133,7 +133,7 @@ public class ProgramState implements IProgramState {
 		return heap.allocateRecord(type);
 	}
 
-	
+
 
 	public void setupExecution(IProcedure procedure, Object... args) throws ExecutionError {
 		if(args.length != procedure.getParameters().size())
@@ -153,7 +153,7 @@ public class ProgramState implements IProgramState {
 			IValue arg = stack.evaluate((ILiteral) procArgs.get(i));
 			argsValues.add(arg);
 		}
-		IStackFrame newFrame = stack.newFrame(procedure, argsValues);
+		stack.newFrame(procedure, argsValues);
 	}
 
 	public boolean isOver() {
@@ -167,29 +167,22 @@ public class ProgramState implements IProgramState {
 
 	public void stepOver() throws ExecutionError {
 		assert !isOver();
-		// TODO
+		// TODO step over
 	}
 
-	
 
-
-	public IExecutionData execute(IProcedure procedure, Object ... args) {
+	public IExecutionData execute(IProcedure procedure, Object ... args) throws ExecutionError {
 		SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
 		List<ISemanticProblem> problems = checker.check(program);
 		problems.forEach(p -> System.err.println(p));
 		if(!problems.isEmpty())
 			return new ExecutionData();
 
-		try {
-			setupExecution(procedure, args);
-			while(!isOver()) {
-				stepIn();
-				while(!stack.isEmpty() && stack.getTopFrame().isOver())
-					stack.getTopFrame().terminateFrame();
-			}
-		}
-		catch (ExecutionError e) {
-			System.err.println("Execution error: " + e);
+		setupExecution(procedure, args);
+		while(!isOver()) {
+			stepIn();
+			while(!stack.isEmpty() && stack.getTopFrame().isOver())
+				stack.getTopFrame().terminateFrame();
 		}
 		return data;
 	}

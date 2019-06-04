@@ -3,9 +3,9 @@ package pt.iscte.paddle.asg;
 public interface IProgramElement {
 	String ID = "ID";
 	
-	void setProperty(String key, Object value);	
+	void setProperty(Object key, Object value);	
 
-	Object getProperty(String key);
+	Object getProperty(Object key);
 	
 	
 	default <T> void setProperty(Class<T> key, T value) {

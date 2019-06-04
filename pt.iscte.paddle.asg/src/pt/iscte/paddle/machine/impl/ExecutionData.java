@@ -96,6 +96,7 @@ public class ExecutionData implements IExecutionData  {
 	@Override
 	public String toString() {
 		String text = 
+				"result: " + getReturnValue() + "\n" +
 				"call stack depth: " + getCallStackDepth() + "\n" +
 				"procedure calls: " + callCount + "\n" +
 				"assignments: " + getTotalAssignments() + "\n" +
