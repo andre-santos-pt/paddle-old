@@ -10,6 +10,9 @@ public interface ISourceLocation {
 	int getStartChar();
 	int getEndChar();
 	int getLine();
+	default int getOffset() {
+		return getEndChar() - getStartChar();
+	}
 	
 	default IMarker createMarker(IResource r, ISemanticProblem p) {
 		try {

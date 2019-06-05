@@ -9,7 +9,7 @@ public interface IRecordType extends IType {
 	
 	List<IVariable> getFields();
 	
-	IVariable addMemberVariable(IType type);
+	IVariable addField(IType type);
 
 	@Override
 	default Object getDefaultValue() {

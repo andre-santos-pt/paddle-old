@@ -21,12 +21,12 @@ public class TestList extends BaseTest {
 
 //	void m() {
 		IRecordType Node = module.addRecordType();
-		IVariable element = Node.addMemberVariable(INT);
-		IVariable next = Node.addMemberVariable(Node); // TODO .reference()
+		IVariable element = Node.addField(INT);
+		IVariable next = Node.addField(Node); // TODO .reference()
 
 		IRecordType IntList = module.addRecordType();
-		IVariable head = IntList.addMemberVariable(Node);
-		IVariable tail = IntList.addMemberVariable(Node);
+		IVariable head = IntList.addField(Node);
+		IVariable tail = IntList.addField(Node);
 
 		IProcedure init = module.addProcedure(VOID);
 		IVariable list = init.addParameter(IntList);

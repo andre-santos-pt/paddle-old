@@ -23,7 +23,7 @@ class RecordType extends ProgramElement implements IRecordType {
 	}
 	
 	@Override
-	public IVariable addMemberVariable(IType type) {
+	public IVariable addField(IType type) {
 		IVariable var = new Variable(this, type);
 		variables.add(var);
 		return var;

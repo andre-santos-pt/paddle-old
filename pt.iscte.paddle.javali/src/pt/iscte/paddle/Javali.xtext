@@ -6,43 +6,45 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate javali "http://www.iscte.pt/paddle/Javali"
 
 Module:
-	StaticClass
-;
-	
-TypeDef returns Module:
-	{TypeDef} (
-	(visibility=AccessModifier)?
-	'class' id=IDENTIFIER '{' 
-	(
-		constants+=Constant |
-		procedures+=Procedure |
-		(fields+=VarDeclaration ';')
-	)*
-	'}'
-	)?
-;
-
-StaticClass returns Module:
-	{StaticClass} 
 	(constants+=Constant |
 	records+=Record |
-	procedures+=Procedure)+
+	procedures+=Procedure)*
 ;
+	
+//TypeDef returns Module:
+//	{TypeDef} (
+//	//(visibility=AccessModifier)?
+//	'class' id=Identifier '{' 
+//	(
+//		constants+=Constant |
+//		procedures+=Procedure |
+//		(fields+=VarDeclaration ';')
+//	)*
+//	'}'
+//	)?
+//;
+//
+//StaticClass:
+//	{StaticClass} 
+//	(constants+=Constant |
+//	records+=Record |
+//	procedures+=Procedure)+
+//;
 
 Constant:
-	(static ?= 'static')? 'final' type=Type id=Id '=' exp=Literal ';'
+	(static ?= 'static')? 'final' type=Type id=Identifier '=' value=Literal ';'
 ;
 
 Record:
-	'class' id=IDENTIFIER '{'
+	'class' id=Identifier '{'
 		(fields+=VarDeclaration ';')*
 	'}'
 ;
 	
 Procedure:
 	(comment=ML_COMMENT_DOC)?
-	(visibility=AccessModifier)?
-	(static ?= 'static')? (retType=Type|void?='void') id=Id '(' (params+=VarDeclaration (',' params+=VarDeclaration)*)? ')' body=Block
+	//(visibility=AccessModifier)?
+	(static ?= 'static')? (retType=Type|void?='void') id=Identifier '(' (params+=VarDeclaration (',' params+=VarDeclaration)*)? ')' body=Block
 ;
 
 
@@ -67,11 +69,11 @@ Continue: {Continue}
 ;
 
 VarDeclaration:
-	type=Type id=Id
+	type=Type id=Identifier
 ;
 
-VarDeclarationAssign:
-	type=Type id=Id ('=' exp=Expression)?
+VarDeclarationAssign returns VarDeclaration:
+	type=Type id=Identifier ('=' init=Expression)?
 ;
 
 VarAssign:
@@ -89,7 +91,7 @@ While:
 ;
 
 For:
-	'for' '(' (initStatements+=ForStatementInit (',' vars+=VarDeclaration)*)? ';' guard=Expression ';' (statements+=ForStatement (',' progressStatements+=ForStatement)*)? ')' block=Block
+	'for' '(' (initStatements+=ForStatementInit (',' initStatements+=ForStatementInit)*)? ';' guard=Expression ';' (progressStatements+=ForStatement (',' progressStatements+=ForStatement)*)? ')' block=Block
 ;
 
 DoWhile:
@@ -97,7 +99,7 @@ DoWhile:
 ;
 
 ForStatementInit returns Statement:
-	VarDeclaration | VarAssign
+	VarDeclarationAssign | VarAssign
 ;
 
 ForStatement returns Statement:
@@ -105,23 +107,41 @@ ForStatement returns Statement:
 ;
 
 Increment:
-	(id=Id '++') // | ('++' id=IDENTIFIER)
+	(id=Identifier '++') // | ('++' id=IDENTIFIER)
 ;
 
 Decrement:
-	(id=Id '--') // | ('--' id=IDENTIFIER)
+	(id=Identifier '--') // | ('--' id=IDENTIFIER)
 ;
 
-AccessModifier:
-	'public'|'private'|'protected'
-;
+
+
+//BinaryExpression returns Expression:
+//	Or | Xor | And | Equality | Relation | Addition | Multiplication
+//;
 
 Expression:
-	Relation (conditional?='?' left=Expression ':' right=Expression)?
+	Or  //(conditional+='?' trueCase+=Expression ':' falseCase+=Expression)?
+;
+
+Or returns Expression:
+	Xor ({Or.left=current} '||' right=Xor)*
+;
+
+Xor returns Expression:
+	And ({Xor.left=current} '^' right=And)*
+;
+
+And returns Expression:
+	Equality ({And.left=current} '&&' right=Equality)*
+;
+
+Equality returns Expression:
+	Relation ({Equality.left=current} operator=('=='|'!=') right=Relation)*
 ;
 
 Relation returns Expression:
-	Addition ({Relation.left=current} operator=('=='|'!='|'<'|'<='|'>'|'>='|'&&'|'||'|'^') right=Addition)?
+	Addition ({Relation.left=current} operator=('<'|'<='|'>'|'>=') right=Addition)*
 ;
 
 Addition returns Expression:
@@ -131,48 +151,59 @@ Addition returns Expression:
 Multiplication returns Expression:
   Primary ({Multiplication.left=current} operator=('*'|'/'|'%') right=Primary)*
 ;
- 
+
 Primary returns Expression:
-  Literal | ProcCall | VarExpression | NewArray | NewObject | UnaryExpression | '(' Expression ')'
+  Literal | Null | ProcCall | VarExpression | NewArray | NewObject | '!' Primary | '(' Expression ')'
 ;
  
-UnaryExpression returns Expression:
-	uoperator=('!') expression=Primary
-;
+//UnaryExpression returns Expression:
+//	uoperator=('!') expression=Primary
+//;
 
 Literal:
-	(value=INTEGER|value=DOUBLE|value=BOOLEAN)
+	value=PRIMITIVE_VALUE
+;
+
+Null:
+	{Null} 'null'
 ;
 
 VarExpression:
-	(parts+=Id ('['arrayIndexes += Expression ']')*)('.' parts+=Id ('['arrayIndexes += Expression ']')*)*
+	(parts+=Identifier ('['arrayIndexes += Expression ']')*)('.' parts+=Identifier ('['arrayIndexes += Expression ']')*)*
 ;
 
 ProcCall:
-	id=Id '(' (args+=Expression (',' args+=Expression)* )? ')'
+	id=Identifier '(' (args+=Expression (',' args+=Expression)* )? ')'
 ;
 
 Type:
-	id=('int' | 'double' | 'boolean' | IDENTIFIER) (arrayDims+='['']')*
+	id=Identifier (arrayDims+='['']')*
 ;
 
 NewArray:
-	'new' type=('int' | 'double' | 'boolean' | IDENTIFIER) (arrayDims+='[' dims+=Expression ']')+
+	'new' type=Identifier ('[' arrayDims+=Expression ']')+
 ;
 
 NewObject:
-	'new' type=Id '(' ')'
+	'new' type=Identifier '(' ')'
 ;
 
-
-
-ConditionalExpression returns Expression:
-	expression=Expression '?' left=Expression ':' right=Expression
+Identifier:
+	id=ID
 ;
 
-Id:
-	id=IDENTIFIER
-;
+//PrimitiveIdentifier returns Identifier:
+//	id=PRIMITIVE_TYPE
+//;
+
+//AccessModifier:
+//	'public'|'private'|'protected'
+//;
+
+//ConditionalExpression returns Expression:
+//	expression=Expression '?' left=Expression ':' right=Expression
+//;
+
 
 //Annotation:
 //	'@' id=IDENTIFIER
@@ -182,8 +213,9 @@ Id:
 terminal INTEGER: '-'?('0'..'9')+;
 terminal DOUBLE: INTEGER '.' ('0'..'9')+ ;
 terminal BOOLEAN: 'true'|'false' ;
-//terminal PRIMITIVE: 'int' | 'double' | 'boolean';
-terminal IDENTIFIER: ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+terminal PRIMITIVE_VALUE: INTEGER| DOUBLE | BOOLEAN;
+//terminal PRIMITIVE_TYPE: 'int' | 'double' | 'boolean';
+terminal ID: ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 
 terminal ML_COMMENT_DOC : '/**' -> '*/';
 terminal ML_COMMENT : '/*'!'*' -> '*/';

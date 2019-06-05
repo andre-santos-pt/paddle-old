@@ -32,6 +32,12 @@ public class ExpressionEvaluator implements IExpressionEvaluator {
 	}
 
 	@Override
+	public IExpression currentExpression() {
+		assert !isComplete();
+		return expStack.peek();
+	}
+	
+	@Override
 	public IValue evaluate() throws ExecutionError {
 		while(!expStack.isEmpty())
 			step();

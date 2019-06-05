@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ExecutionError.Type;
 import pt.iscte.paddle.machine.ICallStack;
@@ -102,5 +103,9 @@ class CallStack implements ICallStack {
 		return text;
 	}
 
+	public IProgramElement nextInstruction() {
+		assert !isEmpty();
+		return stack[next-1].nextInstruction();
+	}
 	
 }

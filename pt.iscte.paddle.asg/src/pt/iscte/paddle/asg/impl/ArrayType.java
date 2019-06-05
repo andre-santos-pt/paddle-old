@@ -1,14 +1,12 @@
 package pt.iscte.paddle.asg.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IArrayAllocation;
 import pt.iscte.paddle.asg.IArrayType;
-import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IReferenceType;
+import pt.iscte.paddle.asg.IType;
 
 public class ArrayType extends ProgramElement implements IArrayType {
 	private final IType componentType;

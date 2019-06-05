@@ -149,7 +149,8 @@ public class JavaTranslator implements IModel2CodeTranslator {
 			return text;
 		}
 		else if(e instanceof IReturn) {
-			return "return " + ((IReturn) e).getExpression().translate(this) + ";\n";
+			IExpression exp = ((IReturn) e).getExpression();
+			return exp == null ? "return;" : "return " + exp.translate(this) + ";\n";
 		}
 		else if(e instanceof IBreak)
 			return "break;\n";

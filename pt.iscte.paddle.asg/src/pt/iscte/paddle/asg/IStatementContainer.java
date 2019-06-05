@@ -63,10 +63,15 @@ public interface IStatementContainer {
 		return getBlock().addLoop(guard);
 	}
 
+	
+	default IReturn addReturn() {
+		return getBlock().addReturn();
+	}
+	
 	default IReturn addReturn(IExpression expression) {
 		return getBlock().addReturn(expression);
 	}
-
+	
 	default IBreak addBreak() {
 		return getBlock().addBreak();
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.logging.StreamHandler;
 
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IExpression;
@@ -46,10 +47,13 @@ public class ProcedureExecutor {
 			stack.pop();
 	}
 
-	//	public IProgramElement current() {
-	//		assert !isOver();
-	//		return stack.peek().current();
-	//	}
+	public IProgramElement nextInstruction() {
+		assert !isOver();
+		if(pendingExpression != null && !pendingExpression.isComplete())
+			return pendingExpression.currentExpression();
+		else
+			return stack.peek().current();
+	}
 
 
 
@@ -119,8 +123,6 @@ public class ProcedureExecutor {
 		else {
 			moveNext(null);
 		}
-//		if(isOver())
-//			frame.terminateFrame();
 	}
 
 }

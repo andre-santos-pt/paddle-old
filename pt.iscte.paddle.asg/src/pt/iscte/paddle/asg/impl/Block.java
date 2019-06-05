@@ -157,7 +157,6 @@ class Block extends ProgramElement implements IBlock {
 	@Override
 	public ISelection addSelectionWithAlternative(IExpression guard) {
 		return new Selection(this, guard, true);
-//		return new SelectionWithAlternative(this, guard);
 	}
 	
 	@Override
@@ -165,6 +164,11 @@ class Block extends ProgramElement implements IBlock {
 		return new Loop(this, guard);
 	}
 
+	@Override
+	public IReturn addReturn() {
+		return new Return(this);
+	}
+	
 	@Override
 	public IReturn addReturn(IExpression expression) {
 		return new Return(this, expression);

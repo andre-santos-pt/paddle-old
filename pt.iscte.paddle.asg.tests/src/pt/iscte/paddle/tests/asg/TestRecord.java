@@ -16,8 +16,8 @@ import pt.iscte.paddle.machine.IExecutionData;
 public class TestRecord extends BaseTest {
 
 	IRecordType Point = module.addRecordType();
-	IVariable x = Point.addMemberVariable(IType.INT);
-	IVariable y = Point.addMemberVariable(IType.INT);
+	IVariable x = Point.addField(IType.INT);
+	IVariable y = Point.addField(IType.INT);
 	
 	IProcedure move = module.addProcedure(IType.VOID);
 	IVariable p = move.addParameter(Point.reference());

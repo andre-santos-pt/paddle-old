@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IProcedure;
+import pt.iscte.paddle.asg.IProgramElement;
 import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.IStatement;
 import pt.iscte.paddle.asg.IVariable;
@@ -187,6 +188,11 @@ class StackFrame implements IStackFrame {
 		for(Entry<IVariable, IReference> e : variables.entrySet())
 			text += " " + e.getKey() + "=" + e.getValue();
 		return text;
+	}
+
+	public IProgramElement nextInstruction() {
+		assert !isOver();
+		return executor.nextInstruction();
 	}
 
 }

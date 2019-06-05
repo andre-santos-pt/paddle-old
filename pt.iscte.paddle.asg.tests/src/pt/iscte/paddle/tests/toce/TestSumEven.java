@@ -13,7 +13,7 @@ import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestSumEven extends BaseTest {
-
+	// TODO if not even!!!
 	IProcedure sumEven = module.addProcedure(INT);
 	IVariable from = sumEven.addParameter(INT);
 	IVariable to = sumEven.addParameter(INT);

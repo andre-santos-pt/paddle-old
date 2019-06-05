@@ -71,6 +71,10 @@ public class RunAction extends Action {
 			e1.printStackTrace();
 		}
 
+//		editor.setHighlightRange(0, 100, true);
+//		editor.showHighlightRangeOnly(false);
+		
+		
 		Transformer trans = new Transformer(editorInput.getFile());
 		IModule program = trans.createProgram();
 		System.out.println(program.translate(new JavaTranslator()));
@@ -80,10 +84,13 @@ public class RunAction extends Action {
 			List<ISemanticProblem> problems = program.checkSemantics();
 			for(ISemanticProblem p : problems) {
 				List<IProgramElement> elements = p.getProgramElements();
-				System.out.println("!! " + elements);
+				System.err.println("!! " + elements);
 				for(IProgramElement e : elements) {
-					ISourceLocation loc = (ISourceLocation) e.getProperty(ElementLocation.Part.WHOLE);
-					loc.createMarker(editorInput.getFile(), p);
+//					ISourceLocation loc = (ISourceLocation) e.getProperty(ElementLocation.Part.WHOLE);
+//					if(loc != null)
+//						loc.createMarker(editorInput.getFile(), p);
+//					else 
+//						System.err.println("no WHOLE for " + e);
 				}
 			} 
 		}

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.iscte.paddle.asg.IArrayAllocation;
-import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IArrayElement;
+import pt.iscte.paddle.asg.IArrayElementAssignment;
 import pt.iscte.paddle.asg.IArrayLength;
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBlock;
@@ -18,12 +18,11 @@ import pt.iscte.paddle.asg.ILoop;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProcedureCall;
-import pt.iscte.paddle.asg.IReturn;
-import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IRecordAllocation;
 import pt.iscte.paddle.asg.IRecordFieldAssignment;
 import pt.iscte.paddle.asg.IRecordFieldExpression;
-import pt.iscte.paddle.asg.IRecordType;
+import pt.iscte.paddle.asg.IReturn;
+import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IUnaryExpression;
 import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
@@ -54,7 +53,25 @@ public class SemanticChecker {
 		
 		CompleteVisitor v = new CompleteVisitor();
 		program.getProcedures().forEach(p -> p.getBody().accept(v));
-//		program.accept(v);
+		return v.getProblems();
+	}
+	
+	public List<ISemanticProblem> check(IModule program, IProcedure procedure) {
+		rules = new ArrayList<Rule>();
+		for (Class<? extends Rule> r : checker.getRules()) {
+			try {
+				Rule rule = r.newInstance();
+				rule.setup(program);
+				rules.add(rule);
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		CompleteVisitor v = new CompleteVisitor();
+		procedure.accept(v);
 		return v.getProblems();
 	}
 

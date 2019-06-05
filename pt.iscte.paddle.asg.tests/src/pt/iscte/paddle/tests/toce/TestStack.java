@@ -18,8 +18,8 @@ import pt.iscte.paddle.tests.asg.BaseTest;
 public class TestStack extends BaseTest {
 
 	IRecordType IntStack = module.addRecordType();
-	IVariable elements = IntStack.addMemberVariable(INT.array());
-	IVariable next = IntStack.addMemberVariable(INT);
+	IVariable elements = IntStack.addField(INT.array());
+	IVariable next = IntStack.addField(INT);
 	
 	
 	IProcedure init = module.addProcedure(VOID);

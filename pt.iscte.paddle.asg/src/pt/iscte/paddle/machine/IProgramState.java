@@ -23,6 +23,7 @@ public interface IProgramState {
 	IArray allocateArray(IType baseType, int ... dimensions);
 	IRecord allocateObject(IRecordType type);
 	
+	IExecutionData getExecutionData();
 	
 	void setupExecution(IProcedure procedure, Object... args) throws ExecutionError;
 

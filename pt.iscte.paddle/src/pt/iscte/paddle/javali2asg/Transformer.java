@@ -1,9 +1,13 @@
 package pt.iscte.paddle.javali2asg;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -11,12 +15,20 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.inject.Injector;
 
 import pt.iscte.paddle.JavaliStandaloneSetup;
+import pt.iscte.paddle.asg.IArrayType;
 import pt.iscte.paddle.asg.IBinaryOperator;
 import pt.iscte.paddle.asg.IBlock;
+import pt.iscte.paddle.asg.IConstant;
 import pt.iscte.paddle.asg.IType;
+import static pt.iscte.paddle.asg.IType.*;
+import static pt.iscte.paddle.asg.IOperator.*;
+
+
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.ILoop;
@@ -24,130 +36,214 @@ import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IOperator;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProgramElement;
+import pt.iscte.paddle.asg.IRecordType;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IVariable;
+import pt.iscte.paddle.javali.Addition;
+import pt.iscte.paddle.javali.And;
 import pt.iscte.paddle.javali.Block;
 import pt.iscte.paddle.javali.Break;
+import pt.iscte.paddle.javali.Constant;
 import pt.iscte.paddle.javali.Continue;
 import pt.iscte.paddle.javali.DoWhile;
+import pt.iscte.paddle.javali.Equality;
 import pt.iscte.paddle.javali.Expression;
 import pt.iscte.paddle.javali.For;
+import pt.iscte.paddle.javali.Identifier;
 import pt.iscte.paddle.javali.IfElse;
 import pt.iscte.paddle.javali.Literal;
 import pt.iscte.paddle.javali.Module;
+import pt.iscte.paddle.javali.Multiplication;
+import pt.iscte.paddle.javali.NewArray;
+import pt.iscte.paddle.javali.NewObject;
+import pt.iscte.paddle.javali.Null;
+import pt.iscte.paddle.javali.Or;
+import pt.iscte.paddle.javali.ProcCall;
 import pt.iscte.paddle.javali.Procedure;
+import pt.iscte.paddle.javali.Record;
+import pt.iscte.paddle.javali.Relation;
 import pt.iscte.paddle.javali.Return;
 import pt.iscte.paddle.javali.Statement;
 import pt.iscte.paddle.javali.Type;
-import pt.iscte.paddle.javali.TypeDef;
 import pt.iscte.paddle.javali.VarAssign;
 import pt.iscte.paddle.javali.VarDeclaration;
-import pt.iscte.paddle.javali.VarDeclarationAssign;
 import pt.iscte.paddle.javali.VarExpression;
 import pt.iscte.paddle.javali.While;
+import pt.iscte.paddle.javali.Xor;
 import pt.iscte.paddle.javali2asg.ElementLocation.Part;
 
 public class Transformer {
 	private Map<String, IVariable> varTable;
 	private Resource resource;
 	private IFile file;
-	
+
 	public Transformer(IFile file) {
 		this.file = file;
-//		new org.eclipse.emf.mwe.utils.StandaloneSetup().setPlatformUri("../");
 		Injector injector = new JavaliStandaloneSetup().createInjectorAndDoEMFRegistration();
 		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
 		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
-//		resource = resourceSet.getResource(URI.createURI("platform:/resource/Test/test.javali"), true);
 		resource = resourceSet.getResource(URI.createURI(file.getLocationURI().toString()), true);
 	}
-	
+
 	public IModule createProgram() {
 		Module module = (Module) resource.getContents().get(0);
 		ICompositeNode node = NodeModelUtils.getNode(module);
+
 		IModule program = IModule.create();
-		if(module instanceof TypeDef)
-			program.setId(((TypeDef) module).getId());
-		else
-			program.setId(file.getName());
-		
+		program.setId(file.getName());
+
+		handleConstants(module, program);
+		handleRecords(module, program);
+		handleProcedures(module, program);
+
+		return program;
+	}
+
+	private Map<String, IConstant> constantsTable = new HashMap<>();
+
+	private void handleConstants(Module module, IModule program) {
+		for(Constant c : module.getConstants()) {
+			IType type = matchValueType(c.getType().getId().getId());
+			if(type == null)
+				throw new RuntimeException("invalid constant type: " + c.getType());
+			
+			IConstant constant = program.addConstant(type, mapValue(c.getValue()));
+			constant.setId(c.getId().getId());
+			constantsTable.put(constant.getId(), constant);
+		}
+	}
+
+	private ILiteral mapValue(Literal value) {
+		try {
+			int i = Integer.parseInt(value.getValue());
+			return IType.INT.literal(i);
+		}
+		catch (NumberFormatException e) {
+		}
+		try {
+			double d = Double.parseDouble(value.getValue());
+			return IType.DOUBLE.literal(d);
+		}
+		catch (NumberFormatException e) {
+		}
+
+		if(value.getValue().matches("true|false"))
+			return IType.BOOLEAN.literal(value.getValue());
+
+		throw new RuntimeException("unsupported value: " + value);
+	}
+
+	private BiMap<IRecordType, Record> recordTypes = HashBiMap.create();
+
+	private void handleRecords(Module module, IModule program) {
+		for (Record r : module.getRecords()) {
+			IRecordType recordType = program.addRecordType();
+			recordType.setId(r.getId().getId());
+			recordTypes.put(recordType, r);
+		}			
+
+		for (Entry<IRecordType, Record> e : recordTypes.entrySet()) {
+			for (VarDeclaration f : e.getValue().getFields()) {
+				IVariable field = e.getKey().addField(toModelType(f.getType()));
+				field.setId(f.getId().getId());
+			}
+		}
+	}
+
+
+
+	private BiMap<IProcedure, Procedure> procedures = HashBiMap.create();
+
+	private void handleProcedures(Module module, IModule program) {
 		for (Procedure p : module.getProcedures()) {
-			varTable = new HashMap<>();
-			IProcedure proc = program.addProcedure(toModelType(p.getRetType()));
+			Type retType = p.getRetType();
+			IProcedure proc = program.addProcedure(retType == null ? IType.VOID : toModelType(retType));
 			proc.setId(p.getId().getId());
-			for (VarDeclaration paramDec : p.getParams()) {
-				IVariable param = proc.addParameter(toModelType(p.getRetType()));
-				param.setId(paramDec.getId().getId());
-				varTable.put(param.getId(), param);
-			}
-			for (Statement statement : p.getBody().getStatements()) {
-				map(statement, proc.getBody());
-			}
 			if(p.getComment() != null)
 				proc.setProperty("DOCUMENTATION", p.getComment());
-			
+
+			for (VarDeclaration paramDec : p.getParams()) {
+				IVariable param = proc.addParameter(toModelType(paramDec.getType()));
+				param.setId(paramDec.getId().getId());
+			}
+
+			procedures.put(proc, p);
+		}
+
+		for (Entry<IProcedure, Procedure> e : procedures.entrySet()) {
+			varTable = new HashMap<>();
+			IProcedure proc = e.getKey();
+			Procedure p = e.getValue();
+
+			for(IVariable param : proc.getParameters())
+				varTable.put(param.getId(), param);
+
+			p.getBody().getStatements().forEach(s -> mapStatement(s, proc.getBody()));
+
 			ICompositeNode pnode = NodeModelUtils.getNode(p);
 			ElementLocation loc = new ElementLocation(pnode);
 			proc.setProperty(ElementLocation.Part.WHOLE, loc);
 			ICompositeNode idNode = NodeModelUtils.getNode(p.getId());
 			proc.setProperty(ElementLocation.Part.ID, new ElementLocation(idNode));
 		}
-		
-		return program;
 	}
 
-	void map(Statement s, IBlock block) {
+	private void mapStatement(Statement s, IBlock block) {
 		IProgramElement instr = null;
 		if(s instanceof Return) {
-			instr = block.addReturn(map(((Return) s).getExp()));
+			Expression retExp = ((Return) s).getExp();
+			if(retExp == null)
+				instr = block.addReturn();
+			else
+				instr = block.addReturn(mapExpression(retExp));
 		}
-		else if(s instanceof VarDeclarationAssign) {
-			VarDeclarationAssign varDec = (VarDeclarationAssign) s;
+		else if(s instanceof VarDeclaration) {
+			VarDeclaration varDec = (VarDeclaration) s;
+
 			String id = varDec.getId().getId();
 			IVariable var = block.addVariable(toModelType(varDec.getType()));
 			var.setId(id);
 			varTable.put(id, var);
-//			if(varDec.getAnnotation() != null)
-//				var.setProperty("ANNOTATION", varDec.getAnnotation().getId());
-			if(varDec.getExp() != null) {
-				instr = block.addAssignment(var, map(varDec.getExp()));
-			}
+
+			if(varDec.getInit() != null)
+				instr = block.addAssignment(var, mapExpression(varDec.getInit()));
 		}
 		else if(s instanceof VarAssign) {
 			// TODO array indexes
 			VarAssign ass = (VarAssign) s;
 			VarExpression varExp = ass.getVar();
 			IVariable var = varTable.get(varExp.getParts().get(0).getId());
-			instr = block.addAssignment(var, map(ass.getExp()));
+			instr = block.addAssignment(var, mapExpression(ass.getExp()));
 		}
+
 		else if (s instanceof IfElse) {
 			IfElse ifElse = (IfElse) s;
-			IExpression guard = map(ifElse.getGuard());
+			IExpression guard = mapExpression(ifElse.getGuard());
 			Block elseBlock = ifElse.getAlternativeBlock();
 			ISelection sel = elseBlock == null ? block.addSelection(guard) : block.addSelectionWithAlternative(guard);
-			ifElse.getSelectionBlock().getStatements().forEach(st -> map(st, sel.getBlock()));
+			ifElse.getSelectionBlock().getStatements().forEach(st -> mapStatement(st, sel.getBlock()));
 			if(elseBlock != null)
-				elseBlock.getStatements().forEach(st -> map(st, sel.getAlternativeBlock()));
+				elseBlock.getStatements().forEach(st -> mapStatement(st, sel.getAlternativeBlock()));
 			instr = sel;
 		}
 		else if(s instanceof While) {
 			While whi = (While) s;
-			IExpression guard = map(whi.getGuard());
+			IExpression guard = mapExpression(whi.getGuard());
 			ILoop loop = block.addLoop(guard);
-			whi.getBlock().getStatements().forEach(st -> map(st, loop.getBlock()));
+			whi.getBlock().getStatements().forEach(st -> mapStatement(st, loop.getBlock()));
 			instr = loop;
 		}
 		else if(s instanceof For) {
 			For fo = (For) s;
-			IExpression guard = map(fo.getGuard());
+			IExpression guard = mapExpression(fo.getGuard());
 			IBlock fBlock = block.addBlock();
-			fo.getInitStatements().forEach(st -> map(st, fBlock));
+			fo.getInitStatements().forEach(st -> mapStatement(st, fBlock));
 			ILoop loop = fBlock.addLoop(guard);
-			fo.getBlock().getStatements().forEach(st -> map(st, loop.getBlock()));
-			fo.getProgressStatements().forEach(st -> map(st, loop.getBlock()));
+			fo.getBlock().getStatements().forEach(st -> mapStatement(st, loop.getBlock()));
+			fo.getProgressStatements().forEach(st -> mapStatement(st, loop.getBlock()));
 		}
 		else if(s instanceof DoWhile) {
-			
+			// TODO do while
 		}
 		else if(s instanceof Break) {
 			instr = block.addBreak();
@@ -155,91 +251,161 @@ public class Transformer {
 		else if(s instanceof Continue) {
 			instr = block.addContinue();
 		}
+		else if(s instanceof ProcCall) {
+			ProcCall call = (ProcCall) s;
+			EList<Expression> args = call.getArgs();
+			IProcedure target = matchProcedure(call.getId().getId(), args); 
+			List<IExpression> expArgs = new ArrayList<>();
+			args.forEach(a -> expArgs.add(mapExpression(a)));
+			instr = block.addCall(target, expArgs);
+		}
 		
 		if(instr != null) {
-			ICompositeNode node = NodeModelUtils.getNode(s);
-			ElementLocation loc = new ElementLocation(node);
-			instr.setProperty(ElementLocation.Part.WHOLE, loc);
+			instr.setProperty(ElementLocation.Part.WHOLE, new ElementLocation(s));
 		}
+		else if(!(s instanceof VarDeclaration)) 
+			throw new RuntimeException("unsupported statement: " + s);
 	}
 
-	IExpression map(Expression e) {
-		if(e instanceof Literal)
-			return ILiteral.matchValue(((Literal) e).getValue());
 
+	private IProcedure matchProcedure(String id, EList<Expression> args) {
+		// TODO match expressions
+		for(IProcedure p : procedures.keySet())
+			if(p.getId().equals(id))
+				return p;
+
+		throw new RuntimeException("cannot find procedure");
+	}
+
+	private IExpression mapExpression(Expression e) {
+		// TODO unary
+		IExpression exp = null;
+		if(e instanceof Literal) {
+			exp = ILiteral.matchValue(((Literal) e).getValue());
+		}
+		else if(e instanceof Null) {
+			exp = ILiteral.NULL;
+		}
 		else if(e instanceof VarExpression) {
+			// include constant
 			VarExpression var = (VarExpression) e;
+			String id = var.getParts().get(0).getId();
+			exp = varTable.get(id);
+
 			boolean single = var.getParts().size() == 1;
-			if(single)
-				return varTable.get(var.getParts().get(0).getId());
+			//			if(single)
+
+			if(exp == null)
+				exp = constantsTable.get(id);
+			if(exp == null)
+				System.err.println("var not found: " + id + " " + NodeModelUtils.getNode(var).getStartLine());
+		}
+		else if(e instanceof ProcCall) {
+			ProcCall call = (ProcCall) e;
+			EList<Expression> args = call.getArgs();
+			IProcedure target = matchProcedure(call.getId().getId(), args); 
+			List<IExpression> expArgs = new ArrayList<>();
+			args.forEach(a -> expArgs.add(mapExpression(a)));
+			exp = target.call(expArgs);
+		}
+		else if(e instanceof NewObject) {
+			NewObject o = (NewObject) e;
+			IType t = toModelType(o.getType().getId());
+			if(!(t instanceof IRecordType))
+				System.err.println("not record type");
+
+			exp = ((IRecordType) t).allocationExpression();
+		}
+		else if(e instanceof NewArray) {
+			NewArray a = (NewArray) e;
+			IType t = toModelType(a.getType().getId());
+			int dims = a.getArrayDims().size();
+			t = arrayType(t, dims);
+			List<IExpression> dimArgs = new ArrayList<>();
+			a.getArrayDims().forEach(d -> dimArgs.add(mapExpression(d)));
+			exp = ((IArrayType) t).allocation(dimArgs);
+		}		
+		else if(e instanceof Or) {
+			Or o = (Or) e;
+			exp = OR.on(mapExpression(o.getLeft()), mapExpression(o.getRight()));
+		}
+		else if(e instanceof Xor) {
+			Xor x = (Xor) e;
+			exp = XOR.on(mapExpression(x.getLeft()), mapExpression(x.getRight()));
+		}
+		else if(e instanceof And) {
+			And a = (And) e;
+			exp = AND.on(mapExpression(a.getLeft()), mapExpression(a.getRight()));
+		}
+		else if(e instanceof Equality) {
+			Equality eq = (Equality) e;
+			IBinaryOperator operator = mapBinaryOperator(eq.getOperator());
+			exp = operator.on(mapExpression(eq.getLeft()), mapExpression(eq.getRight()));
+		}
+		else if(e instanceof Relation) {
+			Relation r = (Relation) e;
+			IBinaryOperator operator = mapBinaryOperator(r.getOperator());
+			exp = operator.on(mapExpression(r.getLeft()), mapExpression(r.getRight()));
+		}
+		else if(e instanceof Addition) {
+			Addition a = (Addition) e;
+			IBinaryOperator operator = mapBinaryOperator(a.getOperator());
+			exp = operator.on(mapExpression(a.getLeft()), mapExpression(a.getRight()));
+		}
+		else if(e instanceof Multiplication) {
+			Multiplication m = (Multiplication) e;
+			IBinaryOperator operator = mapBinaryOperator(m.getOperator());
+			exp = operator.on(mapExpression(m.getLeft()), mapExpression(m.getRight()));
 		}
 
-		// TODO repor : um unico tipo?
-
-//		else if(e instanceof Relation) {
-//			Relation r = (Relation) e;
-//			return fact.binaryExpression(map(r.getOperator()), map(r.getLeft()), map(r.getRight()));
-//		}
-//		else if(e instanceof Addition) {
-//			Addition add = (Addition) e;
-//			return fact.binaryExpression(map(add.getOperator()), map(add.getLeft()), map(add.getRight()));
-//		}
-//		else if(e instanceof Multiplication) {
-//			Multiplication mul = (Multiplication) e;
-//			return fact.binaryExpression(map(mul.getOperator()), map(mul.getLeft()), map(mul.getRight()));
-//		}
-		return null;
+		if(exp == null)
+			throw new RuntimeException("unsupported expression: " + e);
+		
+		exp.setProperty(ElementLocation.Part.WHOLE, new ElementLocation(e));
+		return exp;
 	}
 
 
-//	public static void main(String[] args) {
-//		new org.eclipse.emf.mwe.utils.StandaloneSetup().setPlatformUri("../");
-//		Injector injector = new JavaliStandaloneSetup().createInjectorAndDoEMFRegistration();
-//		XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
-//		resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
-//		Resource resource = resourceSet.getResource(
-//				URI.createURI("platform:/resource/Test/test.javali"), true);
-//		Module module = (Module) resource.getContents().get(0);
-//
-//		Transformer v = new Transformer();
-//		IModule program = v.createProgram(module);
-//
-//		System.out.println(program);
-//
-//		program.accept(new IVisitor() {
-//			@Override
-//			public boolean visit(IReturn returnStatement) {
-//				System.out.println(returnStatement.getProperty("SOURCE"));
-//				return true;
-//			}
-//			
-//			@Override
-//			public boolean visit(IProcedure procedure) {
-//				System.out.println(procedure.getProperty("DOCUMENTATION").toString());
-//				System.out.println(procedure);
-//				return false;
-//			}
-//			
-//		});
-//		//		InteractiveMode interact = new InteractiveMode(program);
-//		//		interact.start();
-//		ProgramState state = new ProgramState(program);
-//		state.execute(program.getProcedures().iterator().next(), "-5");
-//
-//	}
-
-	static IType toModelType(Type retType) {
-		switch(retType.getId()) {
-		case "int": return IType.INT;
-		case "double": return IType.DOUBLE;
-		case "boolean": return IType.BOOLEAN;
+	
+	IType matchValueType(String retType) {
+		switch(retType) {
+		case "int": 	return INT;
+		case "double": 	return DOUBLE;
+		case "boolean": return BOOLEAN;
+		default:		return null;
 		}
-		return null;
+	}
+
+	IType toModelType(String retType) {
+		IType valueType = matchValueType(retType);
+		if(valueType == null) {
+			for (Entry<IRecordType, Record> e : recordTypes.entrySet())
+				if(e.getValue().getId().getId().equals(retType))
+					return e.getKey();
+		}
+		else
+			return valueType;
+		
+		throw new RuntimeException("unsupported type: " + retType);
 	}
 
 
+	IType toModelType(Type retType) {
+		String id = retType.getId().getId();
+		IType modelType = toModelType(id);
+		int dims = retType.getArrayDims().size();
+		return dims != 0 ? arrayType(modelType, dims).reference() : matchValueType(id) == null ? modelType.reference() : modelType;
+	}
 
-	static IBinaryOperator map(String op) {
+	static IType arrayType(IType base, int dims) {
+		IType t = base;
+		while(dims-- > 0)
+			t = t.array();
+		return t;
+	}
+
+
+	static IBinaryOperator mapBinaryOperator(String op) {
 		switch(op) {
 		case "+": return IOperator.ADD;
 		case "-": return IOperator.SUB;
@@ -253,13 +419,49 @@ public class Transformer {
 		case "<=": return IOperator.SMALLER_EQ;
 		case ">": return IOperator.GREATER;
 		case ">=": return IOperator.GREATER_EQ;
-		
+
 		case "&&": return IOperator.AND;
 		case "||": return IOperator.OR;
 		case "^": return IOperator.XOR;
-		
-//		case "!": return IOperator.NOT;
+
+		//		case "!": return IOperator.NOT;
 		}
-		return null;
+		throw new RuntimeException("unsupported operator:" + op);
 	}
+
+	//	public static void main(String[] args) {
+	//	new org.eclipse.emf.mwe.utils.StandaloneSetup().setPlatformUri("../");
+	//	Injector injector = new JavaliStandaloneSetup().createInjectorAndDoEMFRegistration();
+	//	XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
+	//	resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+	//	Resource resource = resourceSet.getResource(
+	//			URI.createURI("platform:/resource/Test/test.javali"), true);
+	//	Module module = (Module) resource.getContents().get(0);
+	//
+	//	Transformer v = new Transformer();
+	//	IModule program = v.createProgram(module);
+	//
+	//	System.out.println(program);
+	//
+	//	program.accept(new IVisitor() {
+	//		@Override
+	//		public boolean visit(IReturn returnStatement) {
+	//			System.out.println(returnStatement.getProperty("SOURCE"));
+	//			return true;
+	//		}
+	//		
+	//		@Override
+	//		public boolean visit(IProcedure procedure) {
+	//			System.out.println(procedure.getProperty("DOCUMENTATION").toString());
+	//			System.out.println(procedure);
+	//			return false;
+	//		}
+	//		
+	//	});
+	//	//		InteractiveMode interact = new InteractiveMode(program);
+	//	//		interact.start();
+	//	ProgramState state = new ProgramState(program);
+	//	state.execute(program.getProcedures().iterator().next(), "-5");
+	//
+	//}
 }

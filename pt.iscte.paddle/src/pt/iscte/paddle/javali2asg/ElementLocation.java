@@ -1,6 +1,8 @@
 package pt.iscte.paddle.javali2asg;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 public class ElementLocation implements ISourceLocation {
 	public enum Part {
@@ -14,6 +16,10 @@ public class ElementLocation implements ISourceLocation {
 	private final int length;
 	private final int line;
 
+	public ElementLocation(EObject node) {
+		this(NodeModelUtils.getNode(node));
+	}
+	
 	public ElementLocation(ICompositeNode node) {
 		this.source = node.getText();
 		this.offset = node.getOffset();
