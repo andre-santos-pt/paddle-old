@@ -75,10 +75,12 @@ public class ArrayType extends ProgramElement implements IArrayType {
 	}
 	
 	@Override
-	public IArrayAllocation allocation(List<IExpression> dimExpressions) {
-//		List<IExpression> dims = new ArrayList<IExpression>(dimExpressions);
-//		for(int i = 0; i < getDimensionsInternal() - dimExpressions.size(); i++)
-//			dims.add(ILiteral.literal(-1));
-		return new ArrayAllocation(this, dimExpressions);
+	public IArrayAllocation stackAllocation(List<IExpression> dimensions) {
+		return ArrayAllocation.stack(this, dimensions);
+	}
+	
+	@Override
+	public IArrayAllocation heapAllocation(List<IExpression> dimensions) {
+		return ArrayAllocation.heap(this, dimensions);
 	}
 }

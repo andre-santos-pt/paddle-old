@@ -10,6 +10,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.link.LinkedModeUI;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -57,10 +58,11 @@ public class RunAction extends Action {
 		IFileEditorInput editorInput = (IFileEditorInput) page.getActiveEditor().getEditorInput();
 
 		ITextEditor editor = (ITextEditor) page.getActiveEditor().getAdapter(ITextEditor.class);
-
+		
 		IDocumentProvider provider = editor.getDocumentProvider();
 		IDocument document = provider.getDocument(editorInput);
 		ITextSelection selection = (ITextSelection) editor.getSite().getSelectionProvider().getSelection();
+	
 		System.out.println(selection);
 		int offset = selection.getOffset();
 		int lineNumber = -1;

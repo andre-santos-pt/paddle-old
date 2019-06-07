@@ -14,12 +14,10 @@ import pt.iscte.paddle.machine.IHeapMemory;
 import pt.iscte.paddle.machine.IRecord;
 import pt.iscte.paddle.machine.IValue;
 
-public class HeapMemory implements IHeapMemory {
-	private final ProgramState state;
+public class Memory implements IHeapMemory {
 	private final List<IValue> objects;
 
-	public HeapMemory(ProgramState state) {
-		this.state = state;
+	public Memory() {
 		objects = new ArrayList<>();
 	}
 

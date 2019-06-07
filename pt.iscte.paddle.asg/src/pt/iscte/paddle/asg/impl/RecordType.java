@@ -43,7 +43,7 @@ class RecordType extends ProgramElement implements IRecordType {
 	}
 	
 	@Override
-	public IRecordAllocation allocationExpression() {
+	public IRecordAllocation heapAllocation() {
 		return new RecordAllocation(this);
 	}
 	

@@ -112,7 +112,7 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 	}
 
 	@Override
-	public List<IExpression> decompose() {
+	public List<IExpression> getParts() {
 		return arguments;
 	}
 }

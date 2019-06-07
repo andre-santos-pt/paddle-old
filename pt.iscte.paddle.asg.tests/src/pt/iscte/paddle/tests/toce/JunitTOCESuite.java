@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
 	TestMax.class,
 	TestFactorial.class,
 	TestSumEven.class,
-	TestSum.class,
+	TestSum.class, TestSumCopy.class,
 	TestAverage.class,
 	TestMaxArray.class,
 	TestNaturals.class,
@@ -20,13 +20,17 @@ import org.junit.runners.Suite;
 	TestSwap.class,
 	TestInvert.class,
 	TestSelectionSort.class,
+	
 	TestMatrixScalar.class,
 	TestMatrixTranspose.class,
+	
 	TestStack.class,
 	TestList.class,
 	
-	TestMaxBound.class,
-	TestArrayCount.class
+	TestArrayCount.class,
+	
+	IdMatrix.class
+//	TestMaxBound.class,
 })
 
 public class JunitTOCESuite {   

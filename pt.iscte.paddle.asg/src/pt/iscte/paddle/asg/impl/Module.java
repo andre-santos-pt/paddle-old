@@ -150,8 +150,12 @@ public class Module extends ProgramElement implements IModule {
 //		text += "\n";
 		
 		for (IProcedure p : procedures)
-			text += t.header(p) + t.statements(p.getBody()) + t.close(p);
+			text += p.translate(t);
 		
 		return text + t.close(this);
+	}
+	
+	public void addProcedure(IProcedure p) {
+		procedures.add(p);
 	}
 }

@@ -70,7 +70,7 @@ public class InvokeDialog extends Dialog {
 		Object[] args = new Object[argsText.size()];
 		int i = 0;
 		for(Text t : argsText) {
-			args[i++] =  Integer.parseInt(t.getText()); // TODO types
+			args[i++] = Integer.parseInt(t.getText()); // TODO types
 		}
 		try {
 			if(debug) {

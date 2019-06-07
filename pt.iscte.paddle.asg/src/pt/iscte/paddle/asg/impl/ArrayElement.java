@@ -47,7 +47,7 @@ class ArrayElement extends Expression implements IArrayElement {
 	}
 	
 	@Override
-	public List<IExpression> decompose() {
+	public List<IExpression> getParts() {
 		return indexes;
 	}
 	

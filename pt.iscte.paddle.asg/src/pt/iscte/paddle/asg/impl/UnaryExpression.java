@@ -41,7 +41,7 @@ class UnaryExpression extends Expression implements IUnaryExpression {
 	}
 
 	@Override
-	public List<IExpression> decompose() {
+	public List<IExpression> getParts() {
 		return operand;
 	}
 	

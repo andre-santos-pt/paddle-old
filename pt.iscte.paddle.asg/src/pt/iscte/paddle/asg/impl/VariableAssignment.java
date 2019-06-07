@@ -19,6 +19,8 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 	
 	public VariableAssignment(IBlock parent, IVariable variable, IExpression expression) {
 		super(parent, true);
+		
+		// TODO to Types
 //		if(variable.getProcedure() != parent.getProcedure())
 //			throw new RuntimeException("Violation: variable to assign must be within the same procedure");
 		

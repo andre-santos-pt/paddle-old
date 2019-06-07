@@ -20,16 +20,6 @@ class Array implements IArray {
 		return type;
 	}
 
-//	@Override
-//	public void setValue(Object array) {
-//		assert array instanceof IValue[];
-//		
-//		IValue[] vals = (IValue[]) array;
-//		this.elements = new IValue[vals.length];
-//		for(int i = 0; i < vals.length; i++)
-//			this.elements[i] = vals[i];
-//	}
-	
 	@Override
 	public IArray copy() {
 		Array copy = new Array(type, elements.length);
@@ -59,10 +49,6 @@ class Array implements IArray {
 	public void setElement(int i, IValue value) {
 		assert !isNull();
 		elements[i] = value;
-//		if(elements[i] == null)
-//			elements[i] = value;
-//		else
-//			elements[i].setValue(value.getValue());
 	}
 	
 	@Override

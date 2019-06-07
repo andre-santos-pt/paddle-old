@@ -25,7 +25,7 @@ public interface IExpression extends IProgramElement {
 	
 	int getNumberOfParts();
 
-	default List<IExpression> decompose() {
+	default List<IExpression> getParts() {
 		return ImmutableList.of();
 	}
 
@@ -48,40 +48,41 @@ public interface IExpression extends IProgramElement {
 		if(part instanceof IArrayAllocation) {
 			IArrayAllocation alloc = (IArrayAllocation) part; 
 			if(visitor.visit(alloc))
-				part.decompose().forEach(p -> visitPart(visitor, p));
+				part.getParts().forEach(p -> visitPart(visitor, p));
 		}
 		else if(part instanceof IArrayLength) {
 			IArrayLength len = (IArrayLength) part; 
 			if(visitor.visit(len))
-				part.decompose().forEach(p -> visitPart(visitor, p));
+				part.getParts().forEach(p -> visitPart(visitor, p));
 		}
 		else if(part instanceof IArrayElement) {
 			IArrayElement el = (IArrayElement) part; 
 			if(visitor.visit(el))
-				part.decompose().forEach(p -> visitPart(visitor, p));
+				part.getParts().forEach(p -> visitPart(visitor, p));
 		}
 		
 		else if(part instanceof IUnaryExpression) {
 			IUnaryExpression un = (IUnaryExpression) part; 
 			if(visitor.visit(un))
-				part.decompose().forEach(p -> visitPart(visitor, p));
+				part.getParts().forEach(p -> visitPart(visitor, p));
 		}
 		else if(part instanceof IBinaryExpression) {
 			IBinaryExpression bi = (IBinaryExpression) part; 
 			if(visitor.visit(bi))
-				part.decompose().forEach(p -> visitPart(visitor, p));
+				part.getParts().forEach(p -> visitPart(visitor, p));
 		}
 		
 		else if(part instanceof IProcedureCall) {
 			IProcedureCall call = (IProcedureCall) part; 
 			if(visitor.visit(call))
-				part.decompose().forEach(p -> visitPart(visitor, p));
+				part.getParts().forEach(p -> visitPart(visitor, p));
 		}
 
-//		else if(part instanceof IConstantExpression) {
-//			IConstantExpression con = (IConstantExpression) part; 
-//			visitor.visit(con);
-//		}
+		else if(part instanceof IConditionalExpression) {
+			IConditionalExpression con = (IConditionalExpression) part;
+			if(visitor.visit(con))
+				part.getParts().forEach(p -> visitPart(visitor, p));
+		}
 		
 		else if(part instanceof IConstant) {
 			IConstant con = (IConstant) part; 
@@ -92,8 +93,7 @@ public interface IExpression extends IProgramElement {
 			ILiteral lit = (ILiteral) part; 
 			visitor.visit(lit);
 		}
-		
-		
+
 		else if(part instanceof IRecordAllocation) {
 			IRecordAllocation str = (IRecordAllocation) part; 
 			visitor.visit(str);
@@ -113,10 +113,7 @@ public interface IExpression extends IProgramElement {
 			IVariable var = (IVariable) part; 
 			visitor.visit(var);
 		}
-//		else if(part instanceof IVariableExpression) {
-//			IVariableExpression var = (IVariableExpression) part; 
-//			visitor.visit(var);
-//		}
+
 		else if(part instanceof IVariableAddress) {
 			IVariableAddress varadd = (IVariableAddress) part; 
 			visitor.visit(varadd);
@@ -138,6 +135,8 @@ public interface IExpression extends IProgramElement {
 		
 		default boolean visit(IProcedureCall exp) 			{ return true; }
 
+		default boolean visit(IConditionalExpression exp) 	{ return true; }
+		
 //		default void 	visit(IConstantExpression exp) 		{ }
 		default void 	visit(IConstant exp) 				{ }
 		default void 	visit(ILiteral exp) 				{ }

@@ -23,9 +23,10 @@ public class ExpressionEvaluator implements IExpressionEvaluator {
 		expStack = new Stack<IExpression>();
 		valueStack = new Stack<IValue>();
 		expStack.push(expression);
+		System.out.println(expression + "  " + expression.getParts());
 	}
 
-
+	
 	@Override
 	public boolean isComplete() {
 		return expStack.isEmpty();
@@ -48,6 +49,7 @@ public class ExpressionEvaluator implements IExpressionEvaluator {
 	@Override
 	public IValue getValue() {
 		assert isComplete();
+		System.out.println("** " + valueStack.peek());
 		return valueStack.peek();
 	}
 
@@ -56,7 +58,7 @@ public class ExpressionEvaluator implements IExpressionEvaluator {
 		assert !isComplete();
 
 		while(expStack.peek().isDecomposable() && valueStack.size() < expStack.peek().getNumberOfParts()) {
-			expStack.peek().decompose().forEach(e -> expStack.push(e));
+			expStack.peek().getParts().forEach(e -> expStack.push(e));
 
 			while(!expStack.peek().isDecomposable())
 				valueStack.push(callStack.getTopFrame().evaluate(expStack.pop(), ImmutableList.of()));

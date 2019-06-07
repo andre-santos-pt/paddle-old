@@ -8,9 +8,15 @@ public interface IArrayType extends IType {
 	IType getComponentType();
 	IType getComponentTypeAt(int dim);
 	
-	IArrayAllocation allocation(List<IExpression> dimensions);
+	IArrayAllocation stackAllocation(List<IExpression> dimensions);
 	
-	default IArrayAllocation allocation(IExpression ... dimensions) {
-		return allocation(Arrays.asList(dimensions));
+	default IArrayAllocation stackAllocation(IExpression ... dimensions) {
+		return stackAllocation(Arrays.asList(dimensions));
+	}
+	
+	IArrayAllocation heapAllocation(List<IExpression> dimensions);
+	
+	default IArrayAllocation heapAllocation(IExpression ... dimensions) {
+		return heapAllocation(Arrays.asList(dimensions));
 	}
 }

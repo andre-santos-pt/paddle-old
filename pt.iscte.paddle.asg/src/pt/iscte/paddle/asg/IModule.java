@@ -32,6 +32,8 @@ public interface IModule extends IProgramElement {
 	IRecordType addRecordType();
 	IProcedure addProcedure(IType returnType);
 
+	void addProcedure(IProcedure procedure);
+	
 	void loadBuildInProcedures(Class<?> staticClass);
 
 

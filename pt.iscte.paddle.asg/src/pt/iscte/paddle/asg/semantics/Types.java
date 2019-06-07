@@ -76,7 +76,7 @@ public class Types extends Rule {
 		}
 		for (int i = 0; i < parameters.size(); i++) {
 			if(!parameters.get(i).getType().isCompatible(arguments.get(i).getType()))
-				addProblem(ISemanticProblem.create("incompatible argument", parameters.get(i), arguments.get(i)));
+				addProblem(ISemanticProblem.create(exp + ", incompatible argument (" + i + ")", parameters.get(i).getType(), arguments.get(i).getType()));
 		}
 		return true;
 	}

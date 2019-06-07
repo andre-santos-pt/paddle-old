@@ -2,6 +2,7 @@ package pt.iscte.paddle.asg;
 
 import java.util.List;
 
+import pt.iscte.paddle.IModel2CodeTranslator;
 import pt.iscte.paddle.asg.IBlock.IVisitor;
 
 /**
@@ -29,4 +30,7 @@ public interface IProcedure extends IProcedureDeclaration {
 		getBody().accept(visitor);
 	}
 	
+	default String translate(IModel2CodeTranslator t) {
+		return t.header(this) + t.statements(getBody()) + t.close(this);
+	}
 }

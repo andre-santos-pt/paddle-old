@@ -30,4 +30,9 @@ class JavaliUiModule extends AbstractJavaliUiModule {
 		IXtextEditorCallback.NullImpl
 	}	
 	
+	override bindITextHover() {
+		TestHover
+	}
+		
+		
 }

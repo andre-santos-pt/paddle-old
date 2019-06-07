@@ -44,7 +44,7 @@ class ConstantDeclaration extends Expression implements IConstant {
 	}
 
 	@Override
-	public List<IExpression> decompose() {
+	public List<IExpression> getParts() {
 		return ImmutableList.of();
 	}
 

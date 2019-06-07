@@ -8,6 +8,7 @@ import pt.iscte.paddle.asg.IConstant;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.IVariable;
+import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestCircle extends BaseTest {
@@ -18,5 +19,9 @@ public class TestCircle extends BaseTest {
 	IBlock body = circleArea.getBody();
 	IReturn ret = body.addReturn(MUL.on(MUL.on(PI, r), r));
 	
+	@Case("3")
+	public void test(IExecutionData data) {
+		equal(28.274333, data.getReturnValue());
+	}
 	
 }

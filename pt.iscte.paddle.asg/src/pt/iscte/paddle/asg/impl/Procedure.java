@@ -56,6 +56,8 @@ class Procedure extends ProgramElement implements IProcedure {
 	}
 
 
+	
+	
 //	@Override
 //	public IVariable getVariable(String id) {
 //		for(IVariable v : variables)

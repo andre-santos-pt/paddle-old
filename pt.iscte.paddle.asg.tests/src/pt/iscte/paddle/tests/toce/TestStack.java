@@ -26,7 +26,7 @@ public class TestStack extends BaseTest {
 	IVariable stack = init.addParameter(IntStack.reference());
 	IVariable size = init.addParameter(INT);
 	IBlock initBody = init.getBody();
-	IRecordFieldAssignment eAss = initBody.addRecordMemberAssignment(stack, elements, INT.array().allocation(size));
+	IRecordFieldAssignment eAss = initBody.addRecordMemberAssignment(stack, elements, INT.array().stackAllocation(size));
 	IRecordFieldAssignment nextAss = initBody.addRecordMemberAssignment(stack, next, INT.literal(0));
 	
 	IProcedure push = module.addProcedure(VOID);

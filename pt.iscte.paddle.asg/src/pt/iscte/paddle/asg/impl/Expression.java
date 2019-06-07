@@ -7,6 +7,8 @@ import com.google.common.collect.ImmutableList;
 import pt.iscte.paddle.asg.IConditionalExpression;
 import pt.iscte.paddle.asg.IExpression;
 import pt.iscte.paddle.asg.IExpressionIterator;
+import pt.iscte.paddle.machine.ExecutionError;
+import pt.iscte.paddle.machine.ICallStack;
 import pt.iscte.paddle.machine.IEvaluable;
 import pt.iscte.paddle.machine.IValue;
 
@@ -19,7 +21,7 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 
 	// TODO evaluate only one
 	// ideia: decompose() -> iterador que para quando nao e preciso mais
-	static class Conditional extends ProgramElement implements IConditionalExpression {
+	static class Conditional extends ProgramElement implements IConditionalExpression, IEvaluable {
 		private ImmutableList<IExpression> parts;
 		
 		public Conditional(IExpression condition, IExpression trueCase, IExpression falseCase) {
@@ -32,7 +34,7 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 		}
 
 		@Override
-		public List<IExpression> decompose() {
+		public List<IExpression> getParts() {
 			return parts;
 		}
 
@@ -55,6 +57,12 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 		public IExpression getFalseExpression() {
 			return parts.get(2);
 		}	
+		
+		@Override
+		public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
+			return values.get(0).isTrue() ? values.get(1) : values.get(2);
+		}
+
 		
 		class Iterator implements IExpressionIterator {
 			boolean condition = false;

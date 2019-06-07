@@ -27,7 +27,7 @@ public class TestRecord extends BaseTest {
 	IProcedure main = module.addProcedure(IType.INT);
 	IBlock mainBody = main.getBody();
 	IVariable point = mainBody.addVariable(Point);
-	IVariableAssignment ass2 = mainBody.addAssignment(point, Point.allocationExpression());
+	IVariableAssignment ass2 = mainBody.addAssignment(point, Point.heapAllocation());
 	IProcedureCall addCall = mainBody.addCall(move, point.address());
 	IReturn addReturn = mainBody.addReturn(point.field(x));
 

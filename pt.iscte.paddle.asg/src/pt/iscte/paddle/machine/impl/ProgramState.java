@@ -38,8 +38,6 @@ public class ProgramState implements IProgramState {
 	private final int loopIterationMax;
 	private final int availableMemory;
 
-	private IProgramElement instructionPointer;
-
 	private ExecutionData data;
 
 	public ProgramState(IModule program) {
@@ -54,7 +52,7 @@ public class ProgramState implements IProgramState {
 		this.loopIterationMax = loopIterationMax;
 		this.availableMemory = availableMemory;
 		stack = new CallStack(this);
-		heap = new HeapMemory(this); 
+		heap = new Memory(); 
 		addStateListener();
 	}
 
@@ -143,29 +141,6 @@ public class ProgramState implements IProgramState {
 		return heap.allocateRecord(type);
 	}
 
-
-
-	public void setupExecution(IProcedure procedure, Object... args) throws ExecutionError {
-		if(args.length != procedure.getParameters().size())
-			throw new RuntimeException("incorrect number of arguments for " + procedure);
-
-		data = new ExecutionData();
-
-		List<IExpression> procArgs = new ArrayList<>(args.length);
-		for(Object a : args)
-			procArgs.add(ILiteral.matchValue(a.toString()));
-
-		IProcedureCall call = procedure.call(procArgs);
-		instructionPointer = call;
-
-		List<IValue> argsValues = new ArrayList<>();
-		for(int i = 0; i < procedure.getParameters().size(); i++) {
-			IValue arg = stack.evaluate((ILiteral) procArgs.get(i));
-			argsValues.add(arg);
-		}
-		stack.newFrame(procedure, argsValues);		
-	}
-
 	public boolean isOver() {
 		return stack.isEmpty();
 	}
@@ -182,6 +157,25 @@ public class ProgramState implements IProgramState {
 		// TODO step over
 	}
 
+	public void setupExecution(IProcedure procedure, Object... args) throws ExecutionError {
+		if(args.length != procedure.getParameters().size())
+			throw new RuntimeException("incorrect number of arguments for " + procedure);
+
+		data = new ExecutionData();
+
+		List<IValue> argsValues = new ArrayList<>();
+		for(int i = 0; i < procedure.getParameters().size(); i++) {
+			if(args[i] instanceof IValue) {
+				argsValues.add((IValue) args[i]);
+			}
+			else {
+				ILiteral lit = ILiteral.matchValue(args[i].toString());
+				IValue arg = stack.evaluate(lit);
+				argsValues.add(arg);
+			}
+		}
+		stack.newFrame(procedure, argsValues);		
+	}
 
 	public IExecutionData execute(IProcedure procedure, Object ... args) throws ExecutionError {
 		SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
@@ -199,11 +193,9 @@ public class ProgramState implements IProgramState {
 
 	private void addStateListener() {
 		stack.addListener(new ICallStack.IListener() {
-//			@Override
 //			public void stackFrameCreated(IStackFrame stackFrame) {
 //				data.updateCallStackSize(stack);
 //				stackFrame.addListener(new IStackFrame.IListener() {
-//					@Override
 //					public void statementExecutionStart(IStatement statement) {
 //						instructionPointer = statement;
 //					}
@@ -213,14 +205,12 @@ public class ProgramState implements IProgramState {
 //							data.countAssignment(stackFrame.getProcedure());
 //					}
 //
-//					@Override
 //					public void expressionEvaluationStart(IExpression expression) {
 //						if(expression instanceof IBinaryExpression) {
 //							instructionPointer = expression;
 //						}
 //					}
 //
-//					@Override
 //					public void expressionEvaluationEnd(IExpression expression, IValue result) {
 //						data.countOperation(expression.getOperationType());
 //					}
@@ -242,7 +232,7 @@ public class ProgramState implements IProgramState {
 
 	@Override
 	public IExpressionEvaluator createExpressionEvaluator(IExpression e) {
-		return new ExpressionEvaluator(e, stack);
+		return new ExpressionEvaluator(e, stack); // TODO change?*
 	}
 
 }

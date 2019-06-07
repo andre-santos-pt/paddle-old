@@ -39,7 +39,7 @@ public class TestList extends BaseTest {
 		IVariable list_ = add.addParameter(IntList.reference());
 		IVariable e = add.addParameter(INT);
 		IBlock addBody = add.getBody();
-		IVariable n = addBody.addVariable(Node, Node.allocationExpression());
+		IVariable n = addBody.addVariable(Node, Node.heapAllocation());
 		IRecordFieldAssignment nAss = addBody.addRecordMemberAssignment(n, element, e);
 		ISelection checkEmpty = addBody.addSelectionWithAlternative(EQUAL.on(list_.fieldVariable(head), ILiteral.NULL));
 		IRecordFieldAssignment hAss_ = checkEmpty.getBlock().addRecordMemberAssignment(list_, head, n);

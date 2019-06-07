@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface ICompositeExpression extends IExpression {
 	default int getNumberOfParts() {
-		return decompose().size();
+		return getParts().size();
 	}
 
-	List<IExpression> decompose();
+	List<IExpression> getParts();
 
 }

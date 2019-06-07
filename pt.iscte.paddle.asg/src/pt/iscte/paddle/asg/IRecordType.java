@@ -16,5 +16,9 @@ public interface IRecordType extends IType {
 		return null;
 	}
 
-	IRecordAllocation allocationExpression();
+	IRecordAllocation heapAllocation();
+
+	
+//	TODO IRecordAllocation stackAllocation();
+
 }

@@ -22,10 +22,14 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.omg.CORBA.INTERNAL;
+
 import pt.iscte.paddle.CTranslator;
+import pt.iscte.paddle.IModel2CodeTranslator;
 import pt.iscte.paddle.JavaTranslator;
 import pt.iscte.paddle.JavaTranslatorTOCE;
 import pt.iscte.paddle.asg.IConstant;
+import pt.iscte.paddle.asg.ILiteral;
 import pt.iscte.paddle.asg.IModule;
 import pt.iscte.paddle.asg.IProcedure;
 import pt.iscte.paddle.asg.IProgramElement;
@@ -37,6 +41,7 @@ import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.machine.IMachine;
 import pt.iscte.paddle.machine.IProgramState;
 import pt.iscte.paddle.machine.IValue;
+import static pt.iscte.paddle.asg.IType.INT;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class BaseTest {
@@ -45,6 +50,7 @@ public abstract class BaseTest {
 	@Retention(RetentionPolicy.RUNTIME)
 	protected @interface Case {
 		String[] value() default {};
+//		int[] intArray() default {};
 	}
 
 	final protected IModule module;
@@ -54,7 +60,8 @@ public abstract class BaseTest {
 
 	private List<ISemanticProblem> problems;
 
-
+	private IModel2CodeTranslator translator =  new JavaTranslatorTOCE();
+	
 	public BaseTest() {
 		module = IModule.create();
 		for(Class<?> builtin : getBuiltins())
@@ -64,6 +71,9 @@ public abstract class BaseTest {
 
 	@Before
 	public void setup() {
+		main = main();
+		if(main != null)
+			main.setId("main");
 		try {
 			for (Field f : getClass().getDeclaredFields()) {
 				if(!Modifier.isPrivate(f.getModifiers()) && !Modifier.isStatic(f.getModifiers())) {
@@ -92,28 +102,32 @@ public abstract class BaseTest {
 	}
 
 	private void compile() {
-		String code = module.translate(new JavaTranslatorTOCE());
+		String code = module.translate(translator);
 		File file = new File("src/" + module.getId() + ".java");
 //		System.out.println("\\begin{lstlisting}");
 		System.out.print(code + "\n");
 //		System.out.println("\\end{lstlisting}");
-		try {
-			PrintWriter writer = new PrintWriter(file);
-			writer.println(code);
-			writer.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			PrintWriter writer = new PrintWriter(file);
+//			writer.println(code);
+//			writer.close();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
 		
 		problems = module.checkSemantics();
-//		for (ISemanticProblem p : problems) {
-//			System.err.println(p);
-//		}
+		for (ISemanticProblem p : problems) {
+			System.err.println(p);
+		}
 		assertTrue("Semantic errors", problems.isEmpty());
 	}
 
 	public IModule getModule() {
 		return module;
+	}
+	
+	protected IProcedure main() {
+		return null;
 	}
 
 	@Test
@@ -122,7 +136,7 @@ public abstract class BaseTest {
 			return;
 
 		state = IMachine.create(module);
-
+		boolean foundCase = false;
 		for (Method method : getClass().getMethods()) {
 			if (method.isAnnotationPresent(Case.class)) {
 				if (method.getParameterCount() == 1 && method.getParameterTypes()[0].equals(IExecutionData.class)) {
@@ -141,17 +155,20 @@ public abstract class BaseTest {
 					} catch (IllegalAccessException | IllegalArgumentException e) {
 						e.printStackTrace();
 					}
+					foundCase = true;
+					System.out.println("\n");
 				} else
 					System.err.println("Method should have a single parameter of type "
 							+ IExecutionData.class.getSimpleName() + " " + method);
 			}
 		}
+		assert foundCase : this.getClass().getSimpleName() + " has no @Case";
 	}
 
 	private IExecutionData runCase(Object[] args) {
 		IExecutionData data = null;
 		try {
-			data = state.execute(main, args);
+			data = state.execute(main, args);	
 		} catch (ExecutionError e) {
 			e.printStackTrace();
 		}
@@ -167,6 +184,29 @@ public abstract class BaseTest {
 	protected void commonAsserts(IExecutionData data) {
 
 	}
+	
+	protected IProcedure importProcedure(Class<? extends BaseTest> clazz, String fieldName) {
+		try {
+			Field f = clazz.getDeclaredField(fieldName);
+			f.setAccessible(true);
+			BaseTest testCase = clazz.newInstance();
+			IProcedure proc = (IProcedure) f.get(testCase);
+			proc.setId(fieldName);
+			module.addProcedure(proc);
+			System.out.println(proc.translate(translator));
+			return proc;
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 
 	protected static void equal(int expected, IValue value) {
 		assertTrue("value is not BigDecimal: " + value, value.getValue() instanceof BigDecimal);
@@ -175,7 +215,7 @@ public abstract class BaseTest {
 
 	protected static void equal(double expected, IValue value) {
 		assertTrue("value is not BigDecimal", value.getValue() instanceof BigDecimal);
-		assertEquals(expected, ((BigDecimal) value.getValue()).doubleValue(), 0.0001);
+		assertEquals(expected, ((BigDecimal) value.getValue()).doubleValue(), 0.000001);
 	}
 
 	protected static void equal(String expected, IValue value) {
@@ -193,25 +233,11 @@ public abstract class BaseTest {
 		assertEquals(false, ((Boolean) value.getValue()).booleanValue());
 	}
 	
-	protected static IProcedure importProcedure(Class<? extends BaseTest> clazz, String fieldName) {
-		try {
-			Field f = clazz.getDeclaredField(fieldName);
-			f.setAccessible(true);
-			BaseTest testCase = clazz.newInstance();
-			IProcedure proc = (IProcedure) f.get(testCase);
-//			proc.setId(clazz.getSimpleName() + "." + fieldName);
-			proc.setId(fieldName);
-			return proc;
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
+	protected ILiteral[] literalIntArray(int ... array) {
+		ILiteral[] lits = new ILiteral[array.length];
+		for(int i = 0; i < array.length; i++)
+			lits[i] = INT.literal(array[i]);
+		return lits;
 	}
+	
 }

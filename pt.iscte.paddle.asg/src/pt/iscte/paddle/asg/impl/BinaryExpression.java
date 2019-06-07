@@ -46,8 +46,14 @@ public class BinaryExpression extends Expression implements IBinaryExpression {
 	}
 
 	@Override
-	public List<IExpression> decompose() {
+	public List<IExpression> getParts() {
 		return parts;
+	}
+	
+	@Override
+	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
+		assert values.size() == 2;
+		return getOperator().apply(values.get(0), values.get(1));
 	}
 	
 	@Override
@@ -74,9 +80,5 @@ public class BinaryExpression extends Expression implements IBinaryExpression {
 		return l + " " + t.operator(operator) + " " + r;
 	}
 	
-	@Override
-	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
-		assert values.size() == 2;
-		return getOperator().apply(values.get(0), values.get(1));
-	}
+	
 }

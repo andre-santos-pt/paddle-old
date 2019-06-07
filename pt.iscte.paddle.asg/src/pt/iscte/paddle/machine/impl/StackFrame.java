@@ -31,8 +31,10 @@ class StackFrame implements IStackFrame {
 	private final Map<IVariable, IReference> variables;
 	private IValue returnValue;
 	private ProcedureExecutor executor;
-
+	private Memory memory;
+	
 	private List<IListener> listeners = new ArrayList<>(5);
+	
 	public void addListener(IListener listener) {
 		listeners.add(listener);
 	}
@@ -43,12 +45,11 @@ class StackFrame implements IStackFrame {
 		this.callStack = callStack;
 		this.procedure = procedure;
 		this.variables = new LinkedHashMap<>();
-		this.returnValue = IValue.NULL;
-
-
+		this.returnValue = null;
+		memory = new Memory();
+		
 		int i = 0;
 		for(IVariable param : procedure.getParameters()) {
-//			IValue arg = param.getType().isReference() ? arguments.get(i) : arguments.get(i).copy();
 			IValue copy = arguments.get(i).copy();
 			IReference ref = param.getType().isReference() ? (IReference) copy : new Reference(copy);
 			variables.put(param, ref);
@@ -60,7 +61,7 @@ class StackFrame implements IStackFrame {
 			Reference ref = new Reference(defValue);
 			variables.put(var, ref);
 		}
-
+		
 		executor = new ProcedureExecutor(this);
 	}
 
@@ -130,7 +131,8 @@ class StackFrame implements IStackFrame {
 
 	@Override
 	public IArray allocateArray(IType baseType, int[] dimensions) {
-		return callStack.getProgramState().allocateArray(baseType, dimensions);
+		return memory.allocateArray(baseType, dimensions);
+//		return callStack.getProgramState().allocateArray(baseType, dimensions);
 	}
 
 	@Override
@@ -139,7 +141,7 @@ class StackFrame implements IStackFrame {
 	}
 
 	public boolean isOver() {
-		return executor.isOver();
+		return returnValue != null || executor.isOver();
 	}
 
 	@Override

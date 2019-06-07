@@ -26,7 +26,7 @@ public class TestMaxBound extends BaseTest {
 
 	ILoop loop = body.addLoop(SMALLER.on(i, bound));
 	IArrayElement e = array.element(i);
-	ISelection ifstat = loop.addSelection(GREATER.on(e, bound));
+	ISelection ifstat = loop.addSelection(GREATER.on(e, m));
 	IVariableAssignment mAss_ = ifstat.addAssignment(m, e);
 	IVariableAssignment iAss_ = loop.addAssignment(i, ADD.on(i, INT.literal(1)));
 	IReturn ret = body.addReturn(m);

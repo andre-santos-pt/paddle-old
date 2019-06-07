@@ -49,7 +49,7 @@ class ArrayLength extends Expression implements IArrayLength {
 
 
 	@Override
-	public List<IExpression> decompose() {
+	public List<IExpression> getParts() {
 		return indexes;
 	}
 

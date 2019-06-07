@@ -11,6 +11,7 @@ public interface IOperator extends IProgramElement {
 	IBinaryOperator SUB = ArithmeticOperator.SUB;
 	IBinaryOperator MUL = ArithmeticOperator.MUL;
 	IBinaryOperator DIV = ArithmeticOperator.DIV;
+	IBinaryOperator IDIV = ArithmeticOperator.IDIV;
 	IBinaryOperator MOD = ArithmeticOperator.MOD;
 	
 	IBinaryOperator EQUAL = RelationalOperator.EQUAL;

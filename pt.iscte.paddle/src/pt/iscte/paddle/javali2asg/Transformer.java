@@ -314,7 +314,7 @@ public class Transformer {
 			if(!(t instanceof IRecordType))
 				System.err.println("not record type");
 
-			exp = ((IRecordType) t).allocationExpression();
+			exp = ((IRecordType) t).heapAllocation();
 		}
 		else if(e instanceof NewArray) {
 			NewArray a = (NewArray) e;
@@ -323,7 +323,7 @@ public class Transformer {
 			t = arrayType(t, dims);
 			List<IExpression> dimArgs = new ArrayList<>();
 			a.getArrayDims().forEach(d -> dimArgs.add(mapExpression(d)));
-			exp = ((IArrayType) t).allocation(dimArgs);
+			exp = ((IArrayType) t).heapAllocation(dimArgs);
 		}		
 		else if(e instanceof Or) {
 			Or o = (Or) e;
@@ -339,23 +339,31 @@ public class Transformer {
 		}
 		else if(e instanceof Equality) {
 			Equality eq = (Equality) e;
-			IBinaryOperator operator = mapBinaryOperator(eq.getOperator());
-			exp = operator.on(mapExpression(eq.getLeft()), mapExpression(eq.getRight()));
+			IExpression left = mapExpression(eq.getLeft());
+			IExpression right = mapExpression(eq.getRight());
+			IBinaryOperator operator = mapBinaryOperator(eq.getOperator(), left, right);
+			exp = operator.on(left, right);
 		}
 		else if(e instanceof Relation) {
 			Relation r = (Relation) e;
-			IBinaryOperator operator = mapBinaryOperator(r.getOperator());
-			exp = operator.on(mapExpression(r.getLeft()), mapExpression(r.getRight()));
+			IExpression left = mapExpression(r.getLeft());
+			IExpression right = mapExpression(r.getRight());
+			IBinaryOperator operator = mapBinaryOperator(r.getOperator(), left, right);
+			exp = operator.on(left, right);
 		}
 		else if(e instanceof Addition) {
 			Addition a = (Addition) e;
-			IBinaryOperator operator = mapBinaryOperator(a.getOperator());
-			exp = operator.on(mapExpression(a.getLeft()), mapExpression(a.getRight()));
+			IExpression left = mapExpression(a.getLeft());
+			IExpression right = mapExpression(a.getRight());
+			IBinaryOperator operator = mapBinaryOperator(a.getOperator(), left, right);
+			exp = operator.on(left, right);
 		}
 		else if(e instanceof Multiplication) {
 			Multiplication m = (Multiplication) e;
-			IBinaryOperator operator = mapBinaryOperator(m.getOperator());
-			exp = operator.on(mapExpression(m.getLeft()), mapExpression(m.getRight()));
+			IExpression left = mapExpression(m.getLeft());
+			IExpression right = mapExpression(m.getRight());
+			IBinaryOperator operator = mapBinaryOperator(m.getOperator(), left, right);
+			exp = operator.on(left, right);
 		}
 
 		if(exp == null)
@@ -405,12 +413,12 @@ public class Transformer {
 	}
 
 
-	static IBinaryOperator mapBinaryOperator(String op) {
+	static IBinaryOperator mapBinaryOperator(String op, IExpression left, IExpression right) {
 		switch(op) {
 		case "+": return IOperator.ADD;
 		case "-": return IOperator.SUB;
 		case "*": return IOperator.MUL;
-		case "/": return IOperator.DIV;
+		case "/": return left.getType().equals(INT) && right.getType().equals(INT) ? IOperator.IDIV : IOperator.DIV;
 		case "%": return IOperator.MOD;
 
 		case "==": return IOperator.EQUAL;

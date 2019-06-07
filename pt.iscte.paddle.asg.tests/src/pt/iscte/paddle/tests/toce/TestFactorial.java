@@ -12,6 +12,7 @@ import pt.iscte.paddle.asg.IProcedureCall;
 import pt.iscte.paddle.asg.IReturn;
 import pt.iscte.paddle.asg.ISelection;
 import pt.iscte.paddle.asg.IVariable;
+import pt.iscte.paddle.machine.IExecutionData;
 import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestFactorial extends BaseTest {	
@@ -24,4 +25,14 @@ public class TestFactorial extends BaseTest {
 	IBinaryExpression retExp = MUL.on(n, recCall);
 	IBlock elseBlock = sel.getAlternativeBlock();
 	IReturn return2 = elseBlock.addReturn(retExp);
+	
+	@Case("0")
+	public void testBaseCase(IExecutionData data) {
+		equal(1, data.getReturnValue());
+	}
+	
+	@Case("5")
+	public void testRecursiveCase(IExecutionData data) {
+		equal(120, data.getReturnValue());
+	}
 }

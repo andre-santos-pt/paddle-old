@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableList;
 import pt.iscte.paddle.asg.IArrayAllocation;
 import pt.iscte.paddle.asg.IArrayType;
 import pt.iscte.paddle.asg.IExpression;
+import pt.iscte.paddle.asg.IType;
 import pt.iscte.paddle.machine.ExecutionError;
 import pt.iscte.paddle.machine.ExecutionError.Type;
 import pt.iscte.paddle.machine.IArray;
@@ -18,20 +19,36 @@ class ArrayAllocation extends Expression implements IArrayAllocation {
 	private final IArrayType type;
 	private final ImmutableList<IExpression> dimensions;
 
-	public ArrayAllocation(IArrayType arrayType, List<IExpression> dimensions) {
+	private final boolean onHeap;
+	
+	private ArrayAllocation(IArrayType arrayType, List<IExpression> dimensions, boolean onHeap) {
 		this.type = arrayType;
 		this.dimensions = ImmutableList.copyOf(dimensions);
+		this.onHeap = onHeap;
+	}
+
+	public static ArrayAllocation heap(IArrayType arrayType, List<IExpression> dimensions) {
+		return new ArrayAllocation(arrayType, dimensions, true);
+	}
+	
+	public static ArrayAllocation stack(IArrayType arrayType, List<IExpression> dimensions) {
+		return new ArrayAllocation(arrayType, dimensions, false);
+	}
+	
+	@Override
+	public IType getType() {
+		return onHeap ? type.reference() : type;
 	}
 
 	@Override
-	public IArrayType getType() {
-		return type;
+	public boolean onHeapMemory() {
+		return onHeap;
 	}
-
-	@Override
-	public IArrayType getArrayType() {
-		return type;
-	}
+	
+//	@Override
+//	public IArrayType getArrayType() {
+//		return type;
+//	}
 
 	@Override
 	public List<IExpression> getDimensions() {
@@ -49,7 +66,7 @@ class ArrayAllocation extends Expression implements IArrayAllocation {
 	}
 
 	@Override
-	public List<IExpression> decompose() {
+	public List<IExpression> getParts() {
 		return dimensions;
 	}
 
@@ -75,7 +92,10 @@ class ArrayAllocation extends Expression implements IArrayAllocation {
 				dims[i] = -1;
 		}
 
-		IArray array = frame.allocateArray(getType().getComponentTypeAt(dims.length), dims); 
+		IType baseType = type.getComponentTypeAt(dims.length);
+		IArray array = onHeap ? 
+				frame.getCallStack().getProgramState().allocateArray(baseType, dims) :
+				frame.allocateArray(baseType, dims);
 		return array;
 	}
 }

@@ -11,6 +11,7 @@ import pt.iscte.paddle.asg.IArrayLength;
 import pt.iscte.paddle.asg.IBinaryExpression;
 import pt.iscte.paddle.asg.IBlock;
 import pt.iscte.paddle.asg.IBreak;
+import pt.iscte.paddle.asg.IConditionalExpression;
 import pt.iscte.paddle.asg.IConstant;
 import pt.iscte.paddle.asg.IContinue;
 import pt.iscte.paddle.asg.ILiteral;
@@ -28,6 +29,7 @@ import pt.iscte.paddle.asg.IVariable;
 import pt.iscte.paddle.asg.IVariableAddress;
 import pt.iscte.paddle.asg.IVariableAssignment;
 import pt.iscte.paddle.asg.IVariableDereference;
+import pt.iscte.paddle.asg.IBlock.IVisitor;
 
 public class SemanticChecker {
 	private ISemanticChecker checker;
@@ -141,11 +143,6 @@ public class SemanticChecker {
 		}
 
 		@Override
-		public void visit(IContinue continueStatement) {
-			rules.forEach(r -> r.visit(continueStatement));
-		}
-
-		@Override
 		public boolean visit(ISelection selection) {
 			rules.forEach(r -> r.visit(selection));
 			return true;
@@ -192,6 +189,12 @@ public class SemanticChecker {
 		}
 
 		@Override
+		public boolean visit(IConditionalExpression conditional) {
+			rules.forEach(r -> r.visit(conditional));
+			return true;
+		}
+
+		@Override
 		public void visit(IVariableAddress exp) {
 			rules.forEach(r -> r.visit(exp));
 		}
@@ -216,6 +219,12 @@ public class SemanticChecker {
 		public void visit(IBreak breakStatement) {
 			rules.forEach(r -> r.visit(breakStatement));
 		}
+		
+		@Override
+		public void visit(IContinue continueStatement) {
+			rules.forEach(r -> r.visit(continueStatement));
+		}
+		
 	}
 	
 	static {

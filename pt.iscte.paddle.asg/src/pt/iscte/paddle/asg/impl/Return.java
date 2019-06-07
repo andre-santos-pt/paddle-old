@@ -33,7 +33,9 @@ class Return extends Statement implements IReturn {
 	
 	@Override
 	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
-		if(expressions.size() == 1)
+		if(expressions.size() == 1) {
 			stack.getTopFrame().setReturn(expressions.get(0));
+			System.out.println("RET " + expressions.get(0) );
+		}
 	}
 }

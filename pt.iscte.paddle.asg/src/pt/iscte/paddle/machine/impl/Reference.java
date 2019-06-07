@@ -31,11 +31,6 @@ public class Reference implements IReference {
 		target = value;
 	}
 
-//	@Override
-//	public void setValue(IValue v) {
-//		target 
-//	}
-
 	@Override
 	public IReference copy() {
 		return new Reference(target);
