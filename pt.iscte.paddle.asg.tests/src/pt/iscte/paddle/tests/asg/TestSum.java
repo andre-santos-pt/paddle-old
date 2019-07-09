@@ -1,18 +1,18 @@
 package pt.iscte.paddle.tests.asg;
 import static org.junit.Assert.assertEquals;
-import static pt.iscte.paddle.asg.IOperator.ADD;
-import static pt.iscte.paddle.asg.IOperator.DIFFERENT;
-import static pt.iscte.paddle.asg.IType.INT;
+import static pt.iscte.paddle.model.IOperator.ADD;
+import static pt.iscte.paddle.model.IOperator.DIFFERENT;
+import static pt.iscte.paddle.model.IType.INT;
 
-import pt.iscte.paddle.asg.IArrayAllocation;
-import pt.iscte.paddle.asg.IArrayElementAssignment;
-import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.ILoop;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IReturn;
-import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.asg.IVariableAssignment;
-import pt.iscte.paddle.machine.IExecutionData;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.model.IArrayAllocation;
+import pt.iscte.paddle.model.IArrayElementAssignment;
+import pt.iscte.paddle.model.IBlock;
+import pt.iscte.paddle.model.ILoop;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IReturn;
+import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableAssignment;
 
 public class TestSum extends BaseTest {
 

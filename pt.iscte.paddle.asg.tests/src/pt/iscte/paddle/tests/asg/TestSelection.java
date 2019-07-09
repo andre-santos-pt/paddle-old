@@ -1,17 +1,17 @@
 package pt.iscte.paddle.tests.asg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static pt.iscte.paddle.asg.IType.INT;
-import static pt.iscte.paddle.asg.IOperator.GREATER;
+import static pt.iscte.paddle.model.IOperator.GREATER;
+import static pt.iscte.paddle.model.IType.INT;
 
-import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IOperator;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IReturn;
-import pt.iscte.paddle.asg.ISelection;
-import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.machine.IExecutionData;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.model.IBinaryExpression;
+import pt.iscte.paddle.model.IBlock;
+import pt.iscte.paddle.model.IOperator;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IReturn;
+import pt.iscte.paddle.model.ISelection;
+import pt.iscte.paddle.model.IVariable;
 
 // TODO if if
 public class TestSelection extends BaseTest {

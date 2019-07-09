@@ -1,15 +1,15 @@
 package pt.iscte.paddle.tests.asg;
-import static pt.iscte.paddle.asg.IType.INT;
-import static pt.iscte.paddle.asg.IType.VOID;
+import static pt.iscte.paddle.model.IType.INT;
+import static pt.iscte.paddle.model.IType.VOID;
 
-import pt.iscte.paddle.asg.IArrayElementAssignment;
-import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IProcedureCall;
-import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.asg.IVariableAssignment;
-import pt.iscte.paddle.machine.IArray;
-import pt.iscte.paddle.machine.IExecutionData;
+import pt.iscte.paddle.interpreter.IArray;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.model.IArrayElementAssignment;
+import pt.iscte.paddle.model.IBlock;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableAssignment;
 
 public class TestSwap extends BaseTest {
 

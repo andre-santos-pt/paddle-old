@@ -6,9 +6,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
-import pt.iscte.paddle.javali2asg.ElementLocation;
-import pt.iscte.paddle.javali2asg.ISourceLocation;
-import pt.iscte.paddle.machine.ExecutionError;
+
+import pt.iscte.paddle.interpreter.ExecutionError;
+import pt.iscte.paddle.javali.translator.ElementLocation;
+import pt.iscte.paddle.javali.translator.ISourceLocation;
 
 public class StepInAction extends Action {
 	RunAction runAction;

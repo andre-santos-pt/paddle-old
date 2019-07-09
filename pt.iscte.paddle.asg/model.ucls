@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <class-diagram version="1.2.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
   associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
-  <interface id="1" language="java" name="pt.iscte.paddle.asg.IConstant" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IConstant.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="1" language="java" name="pt.iscte.paddle.model.IConstant" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IConstant.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="88" width="143" x="3691" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -10,8 +10,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="2" language="java" name="pt.iscte.paddle.asg.IControlStructure" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IControlStructure.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="2" language="java" name="pt.iscte.paddle.model.IControlStructure" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IControlStructure.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="70" width="151" x="1242" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -19,8 +19,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="3" language="java" name="pt.iscte.paddle.asg.IBinaryExpression" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IBinaryExpression.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="3" language="java" name="pt.iscte.paddle.model.IBinaryExpression" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IBinaryExpression.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="124" width="384" x="5036" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -28,8 +28,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="4" language="java" name="pt.iscte.paddle.asg.IConditionalExpression" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IConditionalExpression.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="4" language="java" name="pt.iscte.paddle.model.IConditionalExpression" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IConditionalExpression.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="106" width="206" x="5695" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -37,8 +38,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="5" language="java" name="pt.iscte.paddle.asg.IBinaryOperator" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IBinaryOperator.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="5" language="java" name="pt.iscte.paddle.model.IBinaryOperator" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IBinaryOperator.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="124" width="298" x="2615" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -46,8 +47,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="6" language="java" name="pt.iscte.paddle.asg.IArrayElementAssignment" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IArrayElementAssignment.java" binary="false" 
+  <interface id="6" language="java" name="pt.iscte.paddle.model.IArrayElementAssignment" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IArrayElementAssignment.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="106" width="237" x="1374" y="1069"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -56,8 +57,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="7" language="java" name="pt.iscte.paddle.asg.IArrayLength" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IArrayLength.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="7" language="java" name="pt.iscte.paddle.model.IArrayLength" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IArrayLength.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="70" width="192" x="4326" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -65,8 +66,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="8" language="java" name="pt.iscte.paddle.asg.IContinue" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IContinue.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="8" language="java" name="pt.iscte.paddle.model.IContinue" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IContinue.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="70" width="237" x="2066" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -74,8 +75,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="9" language="java" name="pt.iscte.paddle.asg.IArrayAllocation" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IArrayAllocation.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="9" language="java" name="pt.iscte.paddle.model.IArrayAllocation" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IArrayAllocation.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="70" width="213" x="4783" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -83,8 +84,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="10" language="java" name="pt.iscte.paddle.asg.IArrayElement" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IArrayElement.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="10" language="java" name="pt.iscte.paddle.model.IArrayElement" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IArrayElement.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="195" x="5460" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -92,8 +93,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="11" language="java" name="pt.iscte.paddle.asg.IExpression" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IExpression.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="11" language="java" name="pt.iscte.paddle.model.IExpression" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IExpression.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="178" width="347" x="3453" y="37"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -101,8 +102,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="12" language="java" name="pt.iscte.paddle.asg.IExpression.IVisitor" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IExpression.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="12" language="java" name="pt.iscte.paddle.model.IExpression.IVisitor" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IExpression.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1796" y="551"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -110,8 +111,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="13" language="java" name="pt.iscte.paddle.asg.IBreak" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IBreak.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="13" language="java" name="pt.iscte.paddle.model.IBreak" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IBreak.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="70" width="237" x="1789" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -119,8 +120,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="14" language="java" name="pt.iscte.paddle.asg.IBlock.IVisitor" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IBlock.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="14" language="java" name="pt.iscte.paddle.model.IBlock.IVisitor" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IBlock.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="286" width="243" x="1229" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -128,8 +129,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="15" language="java" name="pt.iscte.paddle.asg.IBlock" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IBlock.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="15" language="java" name="pt.iscte.paddle.model.IBlock" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IBlock.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="124" width="192" x="1433" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -137,8 +138,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <class id="16" language="java" name="pt.iscte.paddle.asg.IType.Instances" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IType.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="16" language="java" name="pt.iscte.paddle.model.IType.Instances" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IType.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="34" width="96" x="475" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -146,8 +147,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <interface id="17" language="java" name="pt.iscte.paddle.asg.IType" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IType.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="17" language="java" name="pt.iscte.paddle.model.IType" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IType.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="322" width="300" x="592" y="37"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -155,8 +156,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="18" language="java" name="pt.iscte.paddle.asg.IArrayType" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IArrayType.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="18" language="java" name="pt.iscte.paddle.model.IArrayType" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IArrayType.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="574" y="661"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -164,8 +165,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="19" language="java" name="pt.iscte.paddle.asg.ICompositeExpression" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/ICompositeExpression.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="19" language="java" name="pt.iscte.paddle.model.ICompositeExpression" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/ICompositeExpression.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="70" width="195" x="4558" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -173,8 +175,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="20" language="java" name="pt.iscte.paddle.asg.IVariableAssignment" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IVariableAssignment.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="20" language="java" name="pt.iscte.paddle.model.IVariableAssignment" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IVariableAssignment.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="124" width="237" x="1512" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -182,8 +185,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="21" language="java" name="pt.iscte.paddle.asg.IValueType" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IValueType.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="21" language="java" name="pt.iscte.paddle.model.IValueType" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IValueType.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="249" x="953" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -191,8 +194,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="22" language="java" name="pt.iscte.paddle.asg.IProcedureCall" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IProcedureCall.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="22" language="java" name="pt.iscte.paddle.model.IProcedureCall" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IProcedureCall.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="88" width="229" x="3000" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -200,8 +203,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="23" language="java" name="pt.iscte.paddle.asg.ISimpleExpression" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/ISimpleExpression.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="23" language="java" name="pt.iscte.paddle.model.ISimpleExpression" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/ISimpleExpression.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="52" width="151" x="3453" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -209,8 +212,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <enumeration id="24" language="java" name="pt.iscte.paddle.asg.IOperator.OperationType" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IOperator.java" binary="false" corner="BOTTOM_RIGHT">    
+  <enumeration id="24" language="java" name="pt.iscte.paddle.model.IOperator.OperationType" 
+    project="pt.iscte.paddle.model" file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IOperator.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="124" width="186" x="2953" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -218,8 +222,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </enumeration>  
-  <interface id="25" language="java" name="pt.iscte.paddle.asg.IRecordType" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IRecordType.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="25" language="java" name="pt.iscte.paddle.model.IRecordType" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IRecordType.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="281" x="632" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -227,8 +231,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="26" language="java" name="pt.iscte.paddle.asg.IVariableDereference" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IVariableDereference.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="26" language="java" name="pt.iscte.paddle.model.IVariableDereference" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IVariableDereference.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="52" width="186" x="2620" y="1069"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -236,8 +241,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="27" language="java" name="pt.iscte.paddle.asg.ILoop" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/ILoop.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="27" language="java" name="pt.iscte.paddle.model.ILoop" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/ILoop.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1151" y="665"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -245,8 +250,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="28" language="java" name="pt.iscte.paddle.asg.ILiteral" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/ILiteral.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="28" language="java" name="pt.iscte.paddle.model.ILiteral" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/ILiteral.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="160" width="231" x="4055" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -254,8 +259,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="29" language="java" name="pt.iscte.paddle.asg.IStatement" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IStatement.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="29" language="java" name="pt.iscte.paddle.model.IStatement" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IStatement.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2167" y="331"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -263,8 +268,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="30" language="java" name="pt.iscte.paddle.asg.IVariableAddress" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IVariableAddress.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="30" language="java" name="pt.iscte.paddle.model.IVariableAddress" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IVariableAddress.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="52" width="144" x="3269" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -272,8 +277,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="31" language="java" name="pt.iscte.paddle.asg.IOperator" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IOperator.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="31" language="java" name="pt.iscte.paddle.model.IOperator" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IOperator.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="358" width="212" x="2615" y="37"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -281,8 +286,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="32" language="java" name="pt.iscte.paddle.asg.IUnaryExpression" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IUnaryExpression.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="32" language="java" name="pt.iscte.paddle.model.IUnaryExpression" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IUnaryExpression.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="70" width="185" x="4558" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -290,8 +295,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="33" language="java" name="pt.iscte.paddle.asg.IUnaryOperator" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IUnaryOperator.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="33" language="java" name="pt.iscte.paddle.model.IUnaryOperator" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IUnaryOperator.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="232" x="2343" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -299,8 +304,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="34" language="java" name="pt.iscte.paddle.asg.IVariable" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IVariable.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="34" language="java" name="pt.iscte.paddle.model.IVariable" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IVariable.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="286" width="340" x="2620" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -308,8 +313,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="35" language="java" name="pt.iscte.paddle.asg.IRecordFieldAssignment" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IRecordFieldAssignment.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="35" language="java" name="pt.iscte.paddle.model.IRecordFieldAssignment" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IRecordFieldAssignment.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="70" width="237" x="1651" y="1069"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -317,8 +323,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="36" language="java" name="pt.iscte.paddle.asg.IRecordFieldExpression" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IRecordFieldExpression.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="36" language="java" name="pt.iscte.paddle.model.IRecordFieldExpression" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IRecordFieldExpression.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="70" width="198" x="3453" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -326,8 +333,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="37" language="java" name="pt.iscte.paddle.asg.IProcedureDeclaration" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IProcedureDeclaration.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="37" language="java" name="pt.iscte.paddle.model.IProcedureDeclaration" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IProcedureDeclaration.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="214" width="302" x="41" y="37"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -335,8 +343,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="38" language="java" name="pt.iscte.paddle.asg.IProcedure" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IProcedure.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="38" language="java" name="pt.iscte.paddle.model.IProcedure" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IProcedure.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="142" width="211" x="41" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -344,8 +352,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="39" language="java" name="pt.iscte.paddle.asg.IReturn" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IReturn.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="39" language="java" name="pt.iscte.paddle.model.IReturn" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IReturn.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="106" width="237" x="2343" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -353,8 +361,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="40" language="java" name="pt.iscte.paddle.asg.IReferenceType" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IReferenceType.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="40" language="java" name="pt.iscte.paddle.model.IReferenceType" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IReferenceType.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="70" width="143" x="292" y="435"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -362,8 +370,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="41" language="java" name="pt.iscte.paddle.asg.IRecordAllocation" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IRecordAllocation.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="41" language="java" name="pt.iscte.paddle.model.IRecordAllocation" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IRecordAllocation.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="52" width="141" x="3874" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -371,8 +379,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="42" language="java" name="pt.iscte.paddle.asg.ISelection" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/ISelection.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="42" language="java" name="pt.iscte.paddle.model.ISelection" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/ISelection.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1296" y="678"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -380,8 +388,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="43" language="java" name="pt.iscte.paddle.asg.IModule" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IModule.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="43" language="java" name="pt.iscte.paddle.model.IModule" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IModule.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="268" width="310" x="242" y="743"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -389,8 +397,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="44" language="java" name="pt.iscte.paddle.asg.IBlockElement" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/IBlockElement.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="44" language="java" name="pt.iscte.paddle.model.IBlockElement" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/IBlockElement.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1627" y="252"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -398,8 +406,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="45" language="java" name="pt.iscte.paddle.machine.IStackFrame.IListener" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IStackFrame.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="45" language="java" name="pt.iscte.paddle.interpreter.IStackFrame.IListener" 
+    project="pt.iscte.paddle.model" file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IStackFrame.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2847" y="1876"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -407,8 +416,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="46" language="java" name="pt.iscte.paddle.machine.IExpressionEvaluator" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IExpressionEvaluator.java" binary="false" 
+  <interface id="46" language="java" name="pt.iscte.paddle.interpreter.IExpressionEvaluator" 
+    project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IExpressionEvaluator.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1897" y="1460"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -417,8 +427,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="47" language="java" name="pt.iscte.paddle.machine.IArray.IListener" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IArray.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="47" language="java" name="pt.iscte.paddle.interpreter.IArray.IListener" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IArray.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1913" y="2485"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -426,8 +436,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="48" language="java" name="pt.iscte.paddle.machine.IEvaluable" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IEvaluable.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="48" language="java" name="pt.iscte.paddle.interpreter.IEvaluable" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IEvaluable.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="418" y="1433"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -435,8 +445,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="49" language="java" name="pt.iscte.paddle.machine.IValue" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IValue.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="49" language="java" name="pt.iscte.paddle.interpreter.IValue" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IValue.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1911" y="2148"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -444,8 +454,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="50" language="java" name="pt.iscte.paddle.machine.IRecord" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IRecord.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="50" language="java" name="pt.iscte.paddle.interpreter.IRecord" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IRecord.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1688" y="2330"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -453,8 +463,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="51" language="java" name="pt.iscte.paddle.machine.IExecutionData" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IExecutionData.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="51" language="java" name="pt.iscte.paddle.interpreter.IExecutionData" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IExecutionData.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="719" y="1496"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -462,8 +473,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="52" language="java" name="pt.iscte.paddle.machine.IExecutable" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IExecutable.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="52" language="java" name="pt.iscte.paddle.interpreter.IExecutable" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IExecutable.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1419" y="1433"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -471,8 +482,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="53" language="java" name="pt.iscte.paddle.machine.ICallStack.IListener" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/ICallStack.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="53" language="java" name="pt.iscte.paddle.interpreter.ICallStack.IListener" 
+    project="pt.iscte.paddle.model" file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/ICallStack.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2164" y="1822"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -480,8 +492,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="54" language="java" name="pt.iscte.paddle.machine.IArray" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IArray.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="54" language="java" name="pt.iscte.paddle.interpreter.IArray" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IArray.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1897" y="2357"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -489,8 +501,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <class id="55" language="java" name="pt.iscte.paddle.machine.IExpressionEvaluator.Step" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IExpressionEvaluator.java" binary="false" 
+  <class id="55" language="java" name="pt.iscte.paddle.interpreter.IExpressionEvaluator.Step" 
+    project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IExpressionEvaluator.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1892" y="1822"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -499,8 +512,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <interface id="56" language="java" name="pt.iscte.paddle.machine.IHeapMemory" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IHeapMemory.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="56" language="java" name="pt.iscte.paddle.interpreter.IHeapMemory" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IHeapMemory.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="135" y="1451"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -508,8 +521,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="57" language="java" name="pt.iscte.paddle.machine.IProgramState" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IProgramState.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="57" language="java" name="pt.iscte.paddle.interpreter.IProgramState" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IProgramState.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1077" y="1568"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -517,8 +531,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="58" language="java" name="pt.iscte.paddle.machine.IHeapMemory.IListener" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IHeapMemory.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="58" language="java" name="pt.iscte.paddle.interpreter.IHeapMemory.IListener" 
+    project="pt.iscte.paddle.model" file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IHeapMemory.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="90" y="1822"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -526,8 +541,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="59" language="java" name="pt.iscte.paddle.machine.IMachine" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IMachine.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="59" language="java" name="pt.iscte.paddle.interpreter.IMachine" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IMachine.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1677" y="1433"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -535,8 +550,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="60" language="java" name="pt.iscte.paddle.machine.IReference" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IReference.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="60" language="java" name="pt.iscte.paddle.interpreter.IReference" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IReference.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2093" y="2330"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -544,8 +559,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="61" language="java" name="pt.iscte.paddle.machine.ICallStack" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/ICallStack.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="61" language="java" name="pt.iscte.paddle.interpreter.ICallStack" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/ICallStack.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2166" y="1523"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -553,8 +568,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <class id="62" language="java" name="pt.iscte.paddle.machine.ExecutionError" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/ExecutionError.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="62" language="java" name="pt.iscte.paddle.interpreter.ExecutionError" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/ExecutionError.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2505" y="1523"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -562,8 +578,9 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <enumeration id="63" language="java" name="pt.iscte.paddle.machine.ExecutionError.Type" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/ExecutionError.java" binary="false" corner="BOTTOM_RIGHT">    
+  <enumeration id="63" language="java" name="pt.iscte.paddle.interpreter.ExecutionError.Type" 
+    project="pt.iscte.paddle.model" file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/ExecutionError.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2451" y="1894"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -571,8 +588,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </enumeration>  
-  <interface id="64" language="java" name="pt.iscte.paddle.machine.IProgramState.IListener" 
-    project="pt.iscte.paddle.asg" file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IProgramState.java" 
+  <interface id="64" language="java" name="pt.iscte.paddle.interpreter.IProgramState.IListener" 
+    project="pt.iscte.paddle.model" file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IProgramState.java" 
     binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1040" y="1831"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -581,8 +598,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <interface id="65" language="java" name="pt.iscte.paddle.machine.IStackFrame" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/machine/IStackFrame.java" binary="false" corner="BOTTOM_RIGHT">    
+  <interface id="65" language="java" name="pt.iscte.paddle.interpreter.IStackFrame" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/interpreter/IStackFrame.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="2859" y="1577"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -590,8 +607,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </interface>  
-  <class id="66" language="java" name="pt.iscte.paddle.asg.impl.VariableDereference" project="pt.iscte.paddle.asg" 
-    file="/pt.iscte.paddle.asg/src/pt/iscte/paddle/asg/impl/VariableDereference.java" binary="false" 
+  <class id="66" language="java" name="pt.iscte.paddle.model.impl.VariableDereference" project="pt.iscte.paddle.model" 
+    file="/pt.iscte.paddle.model/src/pt/iscte/paddle/model/impl/VariableDereference.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="1997" y="1257"/>    
     <display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
@@ -601,193 +618,193 @@
     </display>  
   </class>  
   <generalization id="67">    
-    <end type="SOURCE" refId="36"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <generalization id="68">    
-    <end type="SOURCE" refId="23"/>    
-    <end type="TARGET" refId="11"/>  
-  </generalization>  
-  <generalization id="69">    
-    <end type="SOURCE" refId="38"/>    
-    <end type="TARGET" refId="37"/>  
-  </generalization>  
-  <nesting id="70">    
-    <end type="SOURCE" refId="11"/>    
-    <end type="TARGET" refId="12"/>  
-  </nesting>  
-  <generalization id="71">    
-    <end type="SOURCE" refId="7"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="72">    
-    <end type="SOURCE" refId="22"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <nesting id="73">    
-    <end type="SOURCE" refId="62"/>    
-    <end type="TARGET" refId="63"/>  
-  </nesting>  
-  <nesting id="74">    
-    <end type="SOURCE" refId="31"/>    
-    <end type="TARGET" refId="24"/>  
-  </nesting>  
-  <generalization id="75">    
-    <end type="SOURCE" refId="5"/>    
-    <end type="TARGET" refId="31"/>  
-  </generalization>  
-  <generalization id="76">    
-    <end type="SOURCE" refId="39"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <generalization id="77">    
-    <end type="SOURCE" refId="13"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <generalization id="78">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="44"/>  
-  </generalization>  
-  <generalization id="79">    
-    <end type="SOURCE" refId="60"/>    
-    <end type="TARGET" refId="49"/>  
-  </generalization>  
-  <generalization id="80">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="81">    
-    <end type="SOURCE" refId="22"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="82">    
-    <end type="SOURCE" refId="8"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <generalization id="83">    
-    <bendpoint x="601" y="435"/>    
-    <end type="SOURCE" refId="18"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="84">    
-    <end type="SOURCE" refId="50"/>    
-    <end type="TARGET" refId="49"/>  
-  </generalization>  
-  <generalization id="85">    
-    <end type="SOURCE" refId="34"/>    
-    <end type="TARGET" refId="29"/>  
-  </generalization>  
-  <generalization id="86">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <association id="87">    
-    <end type="SOURCE" refId="62" navigable="false">      
-      <attribute id="88" name="type">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="89" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="63" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="90">    
-    <end type="SOURCE" refId="42"/>    
-    <end type="TARGET" refId="2"/>  
-  </generalization>  
-  <nesting id="91">    
-    <end type="SOURCE" refId="65"/>    
-    <end type="TARGET" refId="45"/>  
-  </nesting>  
-  <generalization id="92">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="93">    
     <end type="SOURCE" refId="6"/>    
     <end type="TARGET" refId="20"/>  
   </generalization>  
-  <generalization id="94">    
-    <end type="SOURCE" refId="28"/>    
-    <end type="TARGET" refId="23"/>  
+  <generalization id="68">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="31"/>  
   </generalization>  
-  <generalization id="95">    
-    <end type="SOURCE" refId="4"/>    
-    <end type="TARGET" refId="19"/>  
-  </generalization>  
-  <generalization id="96">    
-    <end type="SOURCE" refId="54"/>    
+  <nesting id="69">    
+    <end type="SOURCE" refId="17"/>    
+    <end type="TARGET" refId="16"/>  
+  </nesting>  
+  <generalization id="70">    
+    <end type="SOURCE" refId="60"/>    
     <end type="TARGET" refId="49"/>  
   </generalization>  
-  <generalization id="97">    
-    <end type="SOURCE" refId="25"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <association id="98">    
-    <end type="SOURCE" refId="66" navigable="false">      
-      <attribute id="99" name="variable">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </attribute>      
-      <multiplicity id="100" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="34" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="101">    
-    <end type="SOURCE" refId="40"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <generalization id="102">    
+  <generalization id="71">    
     <end type="SOURCE" refId="41"/>    
     <end type="TARGET" refId="23"/>  
   </generalization>  
-  <generalization id="103">    
-    <end type="SOURCE" refId="20"/>    
-    <end type="TARGET" refId="29"/>  
+  <generalization id="72">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="44"/>  
   </generalization>  
-  <nesting id="104">    
-    <end type="SOURCE" refId="57"/>    
-    <end type="TARGET" refId="64"/>  
-  </nesting>  
-  <generalization id="105">    
-    <end type="SOURCE" refId="19"/>    
-    <end type="TARGET" refId="11"/>  
+  <generalization id="73">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="19"/>  
   </generalization>  
-  <generalization id="106">    
-    <end type="SOURCE" refId="34"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <generalization id="107">    
+  <generalization id="74">    
     <end type="SOURCE" refId="29"/>    
     <end type="TARGET" refId="44"/>  
   </generalization>  
-  <nesting id="108">    
-    <end type="SOURCE" refId="46"/>    
-    <end type="TARGET" refId="55"/>  
+  <nesting id="75">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="47"/>  
   </nesting>  
-  <generalization id="109">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="44"/>  
+  <generalization id="76">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="19"/>  
   </generalization>  
-  <association id="110">    
+  <generalization id="77">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <generalization id="78">    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <generalization id="79">    
+    <end type="SOURCE" refId="30"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <association id="80">    
     <end type="SOURCE" refId="55" navigable="false">      
-      <attribute id="111" name="expression">        
+      <attribute id="81" name="expression">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="112" minimum="0" maximum="1">        
+      <multiplicity id="82" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="11" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="113">    
+  <generalization id="83">    
+    <end type="SOURCE" refId="23"/>    
+    <end type="TARGET" refId="11"/>  
+  </generalization>  
+  <generalization id="84">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="85">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="44"/>  
+  </generalization>  
+  <generalization id="86">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="87">    
+    <end type="SOURCE" refId="50"/>    
+    <end type="TARGET" refId="49"/>  
+  </generalization>  
+  <generalization id="88">    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <generalization id="89">    
+    <end type="SOURCE" refId="20"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <nesting id="90">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="12"/>  
+  </nesting>  
+  <generalization id="91">    
+    <end type="SOURCE" refId="40"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="92">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <generalization id="93">    
+    <end type="SOURCE" refId="21"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <generalization id="94">    
+    <end type="SOURCE" refId="36"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <generalization id="95">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="2"/>  
+  </generalization>  
+  <generalization id="96">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="97">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="19"/>  
+  </generalization>  
+  <generalization id="98">    
+    <end type="SOURCE" refId="35"/>    
+    <end type="TARGET" refId="20"/>  
+  </generalization>  
+  <nesting id="99">    
+    <end type="SOURCE" refId="46"/>    
+    <end type="TARGET" refId="55"/>  
+  </nesting>  
+  <generalization id="100">    
+    <end type="SOURCE" refId="26"/>    
+    <end type="TARGET" refId="34"/>  
+  </generalization>  
+  <nesting id="101">    
+    <end type="SOURCE" refId="65"/>    
+    <end type="TARGET" refId="45"/>  
+  </nesting>  
+  <nesting id="102">    
+    <end type="SOURCE" refId="61"/>    
+    <end type="TARGET" refId="53"/>  
+  </nesting>  
+  <generalization id="103">    
+    <end type="SOURCE" refId="54"/>    
+    <end type="TARGET" refId="49"/>  
+  </generalization>  
+  <association id="104">    
+    <end type="SOURCE" refId="62" navigable="false">      
+      <attribute id="105" name="type">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="106" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="63" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="107">    
+    <end type="SOURCE" refId="25"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <nesting id="108">    
     <end type="SOURCE" refId="56"/>    
     <end type="TARGET" refId="58"/>  
+  </nesting>  
+  <generalization id="109">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <generalization id="110">    
+    <bendpoint x="601" y="435"/>    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="17"/>  
+  </generalization>  
+  <realization id="111">    
+    <end type="SOURCE" refId="66"/>    
+    <end type="TARGET" refId="26"/>  
+  </realization>  
+  <generalization id="112">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <nesting id="113">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="24"/>  
   </nesting>  
   <association id="114">    
     <end type="SOURCE" refId="55" navigable="false">      
@@ -802,61 +819,61 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <generalization id="117">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <nesting id="118">    
-    <end type="SOURCE" refId="54"/>    
-    <end type="TARGET" refId="47"/>  
-  </nesting>  
-  <nesting id="119">    
-    <end type="SOURCE" refId="15"/>    
-    <end type="TARGET" refId="14"/>  
-  </nesting>  
-  <generalization id="120">    
     <end type="SOURCE" refId="32"/>    
     <end type="TARGET" refId="19"/>  
   </generalization>  
-  <realization id="121">    
-    <end type="SOURCE" refId="66"/>    
-    <end type="TARGET" refId="26"/>  
-  </realization>  
-  <generalization id="122">    
-    <end type="SOURCE" refId="33"/>    
-    <end type="TARGET" refId="31"/>  
+  <generalization id="118">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="11"/>  
   </generalization>  
-  <generalization id="123">    
-    <end type="SOURCE" refId="21"/>    
-    <end type="TARGET" refId="17"/>  
-  </generalization>  
-  <nesting id="124">    
-    <end type="SOURCE" refId="61"/>    
-    <end type="TARGET" refId="53"/>  
-  </nesting>  
-  <generalization id="125">    
-    <end type="SOURCE" refId="35"/>    
-    <end type="TARGET" refId="20"/>  
-  </generalization>  
-  <generalization id="126">    
-    <end type="SOURCE" refId="30"/>    
-    <end type="TARGET" refId="23"/>  
-  </generalization>  
-  <generalization id="127">    
-    <end type="SOURCE" refId="27"/>    
+  <generalization id="119">    
+    <end type="SOURCE" refId="42"/>    
     <end type="TARGET" refId="2"/>  
   </generalization>  
-  <generalization id="128">    
-    <end type="SOURCE" refId="26"/>    
-    <end type="TARGET" refId="34"/>  
-  </generalization>  
-  <generalization id="129">    
+  <nesting id="120">    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="14"/>  
+  </nesting>  
+  <generalization id="121">    
     <end type="SOURCE" refId="14"/>    
     <end type="TARGET" refId="12"/>  
   </generalization>  
-  <nesting id="130">    
-    <end type="SOURCE" refId="17"/>    
-    <end type="TARGET" refId="16"/>  
+  <generalization id="122">    
+    <end type="SOURCE" refId="34"/>    
+    <end type="TARGET" refId="23"/>  
+  </generalization>  
+  <nesting id="123">    
+    <end type="SOURCE" refId="62"/>    
+    <end type="TARGET" refId="63"/>  
   </nesting>  
+  <generalization id="124">    
+    <end type="SOURCE" refId="38"/>    
+    <end type="TARGET" refId="37"/>  
+  </generalization>  
+  <generalization id="125">    
+    <end type="SOURCE" refId="33"/>    
+    <end type="TARGET" refId="31"/>  
+  </generalization>  
+  <generalization id="126">    
+    <end type="SOURCE" refId="39"/>    
+    <end type="TARGET" refId="29"/>  
+  </generalization>  
+  <nesting id="127">    
+    <end type="SOURCE" refId="57"/>    
+    <end type="TARGET" refId="64"/>  
+  </nesting>  
+  <association id="128">    
+    <end type="SOURCE" refId="66" navigable="false">      
+      <attribute id="129" name="variable">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="130" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="false" package="false" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

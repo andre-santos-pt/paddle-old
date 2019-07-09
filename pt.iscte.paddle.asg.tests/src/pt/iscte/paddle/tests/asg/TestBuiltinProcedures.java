@@ -2,13 +2,13 @@ package pt.iscte.paddle.tests.asg;
 
 import java.util.Scanner;
 
-import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IReturn;
-import pt.iscte.paddle.asg.IType;
-import pt.iscte.paddle.machine.ExecutionError;
-import pt.iscte.paddle.machine.ExecutionError.Type;
-import pt.iscte.paddle.machine.IExecutionData;
+import pt.iscte.paddle.interpreter.ExecutionError;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.interpreter.ExecutionError.Type;
+import pt.iscte.paddle.model.IBlock;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IReturn;
+import pt.iscte.paddle.model.IType;
 
 // TODO read system.in
 public class TestBuiltinProcedures extends BaseTest {

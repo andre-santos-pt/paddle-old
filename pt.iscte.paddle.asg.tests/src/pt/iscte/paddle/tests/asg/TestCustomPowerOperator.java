@@ -1,20 +1,20 @@
 package pt.iscte.paddle.tests.asg;
 
-import static pt.iscte.paddle.asg.IType.DOUBLE;
+import static pt.iscte.paddle.model.IType.DOUBLE;
 
 import java.math.BigDecimal;
 
-import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IBinaryOperator;
-import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IType;
-import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IReturn;
-import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.machine.ExecutionError;
-import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IValue;
+import pt.iscte.paddle.interpreter.ExecutionError;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.interpreter.IValue;
+import pt.iscte.paddle.model.IBinaryExpression;
+import pt.iscte.paddle.model.IBinaryOperator;
+import pt.iscte.paddle.model.IBlock;
+import pt.iscte.paddle.model.IExpression;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IReturn;
+import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.IVariable;
 
 public class TestCustomPowerOperator extends BaseTest {
 

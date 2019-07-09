@@ -27,18 +27,18 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import pt.iscte.paddle.asg.IModule;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IProgramElement;
-import pt.iscte.paddle.asg.IType;
-import pt.iscte.paddle.asg.semantics.ISemanticProblem;
-import pt.iscte.paddle.asg.semantics.SemanticChecker;
-import pt.iscte.paddle.javali2asg.ElementLocation;
-import pt.iscte.paddle.javali2asg.ISourceLocation;
-import pt.iscte.paddle.javali2asg.Transformer;
-import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.interpreter.IMachine;
+import pt.iscte.paddle.interpreter.IProgramState;
+import pt.iscte.paddle.javali.translator.ElementLocation;
+import pt.iscte.paddle.javali.translator.ISourceLocation;
+import pt.iscte.paddle.javali.translator.Translator;
+import pt.iscte.paddle.model.IModule;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IProgramElement;
+import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.validation.ISemanticProblem;
+import pt.iscte.paddle.model.validation.SemanticChecker;
 import pt.iscte.paddle.semantics.java.JavaSemanticChecker;
 
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
@@ -98,25 +98,41 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 				} catch (CoreException e1) {
 					e1.printStackTrace();
 				}
-				Transformer trans = new Transformer(editorInput.getFile());
+				Translator trans = new Translator(editorInput.getFile());
 				IModule program = trans.createProgram();
+				program.setId(editorInput.getFile().getName());
 				SemanticChecker checker = new SemanticChecker(new JavaSemanticChecker());
 				List<ISemanticProblem> problems = checker.check(program);
 				for(ISemanticProblem p : problems) {
 					IProgramElement e = p.getProgramElements().get(0);
 					ISourceLocation idProp = (ISourceLocation) e.getProperty(ElementLocation.Part.ID);
 					if(idProp != null) {
-						idProp.createMarker(resource, p);
+						createMarker(idProp, resource, p);
 					}
 					else {
 						ElementLocation loc = e.getProperty(ElementLocation.class);
 						if(loc != null)
-							loc.createMarker(resource, p);
+							createMarker(loc, resource, p);
 					}
 				}
 			}
 		});
 
+	}
+	
+	static IMarker createMarker(ISourceLocation loc, IResource r, ISemanticProblem p) {
+		try {
+			IMarker marker = r.createMarker(IMarker.PROBLEM);
+			marker.setAttribute(IMarker.MESSAGE, p.getMessage());
+			marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
+			//                 marker.setAttribute(IMarker.LINE_NUMBER, line);
+			marker.setAttribute(IMarker.CHAR_START, loc.getStartChar());
+			marker.setAttribute(IMarker.CHAR_END, loc.getEndChar());
+			return marker;
+		} catch (CoreException ex) {
+			ex.printStackTrace();
+			return null;
+		}
 	}
 
 }

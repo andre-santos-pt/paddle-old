@@ -1,22 +1,22 @@
 package pt.iscte.paddle.tests.asg;
 import static org.junit.Assert.assertTrue;
-import static pt.iscte.paddle.asg.IOperator.DIFFERENT;
-import static pt.iscte.paddle.asg.IOperator.EQUAL;
-import static pt.iscte.paddle.asg.IOperator.MOD;
-import static pt.iscte.paddle.asg.IOperator.NOT;
-import static pt.iscte.paddle.asg.IType.BOOLEAN;
-import static pt.iscte.paddle.asg.IType.INT;
+import static pt.iscte.paddle.model.IOperator.DIFFERENT;
+import static pt.iscte.paddle.model.IOperator.EQUAL;
+import static pt.iscte.paddle.model.IOperator.MOD;
+import static pt.iscte.paddle.model.IOperator.NOT;
+import static pt.iscte.paddle.model.IType.BOOLEAN;
+import static pt.iscte.paddle.model.IType.INT;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IReturn;
-import pt.iscte.paddle.asg.IUnaryExpression;
-import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.machine.IExecutionData;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.model.IBinaryExpression;
+import pt.iscte.paddle.model.IBlock;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IReturn;
+import pt.iscte.paddle.model.IUnaryExpression;
+import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.tests.asg.BooleanFuncions.IsEven;
 import pt.iscte.paddle.tests.asg.BooleanFuncions.IsOdd;
 import pt.iscte.paddle.tests.asg.BooleanFuncions.IsOddNotEven;

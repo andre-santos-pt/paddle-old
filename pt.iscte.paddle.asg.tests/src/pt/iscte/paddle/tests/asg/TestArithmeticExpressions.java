@@ -1,26 +1,26 @@
 package pt.iscte.paddle.tests.asg;
 
 import static org.junit.Assert.assertEquals;
-import static pt.iscte.paddle.asg.IOperator.ADD;
-import static pt.iscte.paddle.asg.IOperator.MUL;
-import static pt.iscte.paddle.asg.IType.DOUBLE;
-import static pt.iscte.paddle.asg.IType.INT;
-import static pt.iscte.paddle.asg.IType.VOID;
+import static pt.iscte.paddle.model.IOperator.ADD;
+import static pt.iscte.paddle.model.IOperator.MUL;
+import static pt.iscte.paddle.model.IType.DOUBLE;
+import static pt.iscte.paddle.model.IType.INT;
+import static pt.iscte.paddle.model.IType.VOID;
 
 import java.math.BigDecimal;
 
 import org.junit.Test;
 
-import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IExpression;
-import pt.iscte.paddle.asg.ILiteral;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IType;
-import pt.iscte.paddle.machine.ExecutionError;
-import pt.iscte.paddle.machine.IExpressionEvaluator;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
-import pt.iscte.paddle.machine.IValue;
+import pt.iscte.paddle.interpreter.ExecutionError;
+import pt.iscte.paddle.interpreter.IExpressionEvaluator;
+import pt.iscte.paddle.interpreter.IMachine;
+import pt.iscte.paddle.interpreter.IProgramState;
+import pt.iscte.paddle.interpreter.IValue;
+import pt.iscte.paddle.model.IBinaryExpression;
+import pt.iscte.paddle.model.IExpression;
+import pt.iscte.paddle.model.ILiteral;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IType;
 
 
 // TODO more arithmetic cases

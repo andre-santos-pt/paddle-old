@@ -20,16 +20,17 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import pt.iscte.paddle.asg.IModule;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IProgramElement;
-import pt.iscte.paddle.asg.semantics.ISemanticProblem;
-import pt.iscte.paddle.javali2asg.ElementLocation;
-import pt.iscte.paddle.javali2asg.ISourceLocation;
-import pt.iscte.paddle.javali2asg.Transformer;
-import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.interpreter.IMachine;
+import pt.iscte.paddle.interpreter.IProgramState;
+import pt.iscte.paddle.javali.translator.ElementLocation;
+import pt.iscte.paddle.javali.translator.ISourceLocation;
+import pt.iscte.paddle.javali.translator.Model2Java;
+import pt.iscte.paddle.javali.translator.Translator;
+import pt.iscte.paddle.model.IModule;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IProgramElement;
+import pt.iscte.paddle.model.validation.ISemanticProblem;
 
 public class RunAction extends Action {
 	
@@ -77,9 +78,9 @@ public class RunAction extends Action {
 //		editor.showHighlightRangeOnly(false);
 		
 		
-		Transformer trans = new Transformer(editorInput.getFile());
+		Translator trans = new Translator(editorInput.getFile());
 		IModule program = trans.createProgram();
-		System.out.println(program.translate(new JavaTranslator()));
+		System.out.println(program.translate(new Model2Java()));
 
 		try {
 			editorInput.getFile().deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);    

@@ -3,10 +3,9 @@ package pt.iscte.paddle.tests.asg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static pt.iscte.paddle.model.IType.INT;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,26 +21,22 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import org.omg.CORBA.INTERNAL;
 
-import pt.iscte.paddle.CTranslator;
-import pt.iscte.paddle.IModel2CodeTranslator;
-import pt.iscte.paddle.JavaTranslator;
-import pt.iscte.paddle.JavaTranslatorTOCE;
-import pt.iscte.paddle.asg.IConstant;
-import pt.iscte.paddle.asg.ILiteral;
-import pt.iscte.paddle.asg.IModule;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IProgramElement;
-import pt.iscte.paddle.asg.IRecordType;
-import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.asg.semantics.ISemanticProblem;
-import pt.iscte.paddle.machine.ExecutionError;
-import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IMachine;
-import pt.iscte.paddle.machine.IProgramState;
-import pt.iscte.paddle.machine.IValue;
-import static pt.iscte.paddle.asg.IType.INT;
+import pt.iscte.paddle.interpreter.ExecutionError;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.interpreter.IMachine;
+import pt.iscte.paddle.interpreter.IProgramState;
+import pt.iscte.paddle.interpreter.IValue;
+import pt.iscte.paddle.javali.translator.Model2Java;
+import pt.iscte.paddle.model.IConstant;
+import pt.iscte.paddle.model.ILiteral;
+import pt.iscte.paddle.model.IModel2CodeTranslator;
+import pt.iscte.paddle.model.IModule;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IProgramElement;
+import pt.iscte.paddle.model.IRecordType;
+import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.validation.ISemanticProblem;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class BaseTest {
@@ -60,7 +55,7 @@ public abstract class BaseTest {
 
 	private List<ISemanticProblem> problems;
 
-	private IModel2CodeTranslator translator =  new JavaTranslatorTOCE();
+	private IModel2CodeTranslator translator =  new Model2Java();
 	
 	public BaseTest() {
 		module = IModule.create();

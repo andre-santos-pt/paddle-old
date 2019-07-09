@@ -1,18 +1,18 @@
 package pt.iscte.paddle.tests.asg;
 
-import static pt.iscte.paddle.asg.IOperator.EQUAL;
-import static pt.iscte.paddle.asg.IOperator.MUL;
-import static pt.iscte.paddle.asg.IOperator.SUB;
-import static pt.iscte.paddle.asg.IType.INT;
+import static pt.iscte.paddle.model.IOperator.EQUAL;
+import static pt.iscte.paddle.model.IOperator.MUL;
+import static pt.iscte.paddle.model.IOperator.SUB;
+import static pt.iscte.paddle.model.IType.INT;
 
-import pt.iscte.paddle.asg.IBinaryExpression;
-import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IProcedureCall;
-import pt.iscte.paddle.asg.IReturn;
-import pt.iscte.paddle.asg.ISelection;
-import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.machine.IExecutionData;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.model.IBinaryExpression;
+import pt.iscte.paddle.model.IBlock;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IReturn;
+import pt.iscte.paddle.model.ISelection;
+import pt.iscte.paddle.model.IVariable;
 
 public class TestRecursion extends BaseTest {	
 	IProcedure fact = module.addProcedure(INT);

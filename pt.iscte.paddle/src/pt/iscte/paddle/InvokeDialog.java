@@ -17,13 +17,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.javali2asg.ElementLocation;
-import pt.iscte.paddle.javali2asg.ISourceLocation;
-import pt.iscte.paddle.machine.ExecutionError;
-import pt.iscte.paddle.machine.IExecutionData;
-import pt.iscte.paddle.machine.IProgramState;
+import pt.iscte.paddle.interpreter.ExecutionError;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.interpreter.IProgramState;
+import pt.iscte.paddle.javali.translator.ElementLocation;
+import pt.iscte.paddle.javali.translator.ISourceLocation;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IVariable;
 
 public class InvokeDialog extends Dialog {
 	private IProgramState state;

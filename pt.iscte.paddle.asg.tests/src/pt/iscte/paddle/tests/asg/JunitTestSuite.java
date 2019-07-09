@@ -2,7 +2,7 @@ package pt.iscte.paddle.tests.asg;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import pt.iscte.paddle.tests.toce.TestStack;
+import pt.iscte.paddle.model.tests.TestStack;
 
 @RunWith(Suite.class)
 

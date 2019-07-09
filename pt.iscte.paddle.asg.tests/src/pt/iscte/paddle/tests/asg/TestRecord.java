@@ -1,16 +1,16 @@
 package pt.iscte.paddle.tests.asg;
 
 
-import pt.iscte.paddle.asg.IBlock;
-import pt.iscte.paddle.asg.IProcedure;
-import pt.iscte.paddle.asg.IProcedureCall;
-import pt.iscte.paddle.asg.IRecordFieldAssignment;
-import pt.iscte.paddle.asg.IRecordType;
-import pt.iscte.paddle.asg.IReturn;
-import pt.iscte.paddle.asg.IType;
-import pt.iscte.paddle.asg.IVariable;
-import pt.iscte.paddle.asg.IVariableAssignment;
-import pt.iscte.paddle.machine.IExecutionData;
+import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.model.IBlock;
+import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IRecordFieldAssignment;
+import pt.iscte.paddle.model.IRecordType;
+import pt.iscte.paddle.model.IReturn;
+import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableAssignment;
 
 
 public class TestRecord extends BaseTest {
