@@ -34,21 +34,12 @@ public interface ICallStack {
 	default IValue evaluate(ILiteral literal) {
 		return getProgramState().getValue(literal.getStringValue());
 	}
-//	default IValue evaluate(IExpression expression) throws ExecutionError {
-//		if(expression instanceof ILiteral)
-//			return getProgramState().getValue(((ILiteral) expression).getStringValue());
-//		else
-//			return getTopFrame().evaluate(expression);
-//	}
-	
+
 	interface IListener {
 		default void stackFrameCreated(IStackFrame stackFrame) { }
 		default void stackFrameTerminated(IStackFrame stackFrame, IValue returnValue) { }
 	}
 
 	void addListener(IListener listener);
-
-	
-	
 	
 }

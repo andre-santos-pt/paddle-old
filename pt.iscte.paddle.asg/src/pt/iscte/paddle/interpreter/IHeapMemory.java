@@ -11,6 +11,7 @@ public interface IHeapMemory {
 
 	IRecord allocateRecord(IRecordType type) throws ExecutionError;
 	
+	// TODO
 	default int getMemory() {
 		return 0;
 	}

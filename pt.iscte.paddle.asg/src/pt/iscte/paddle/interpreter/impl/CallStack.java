@@ -15,7 +15,6 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProgramElement;
 
 class CallStack implements ICallStack {
-
 	private final ProgramState programState;
 	private StackFrame[] stack;
 	private int next;

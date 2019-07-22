@@ -117,8 +117,6 @@ public interface IExpression extends IProgramElement {
 			IVariableAddress varadd = (IVariableAddress) part; 
 			visitor.visit(varadd);
 		}
-		
-		
 		else
 			assert false: "missing case " + part.getClass().getName();
 	}
@@ -148,8 +146,4 @@ public interface IExpression extends IProgramElement {
 		default void	visit(IVariableAddress exp) 		{ }
 		default void	visit(IVariableDereference exp) 	{ }
 	}
-
-
-
-	
 }

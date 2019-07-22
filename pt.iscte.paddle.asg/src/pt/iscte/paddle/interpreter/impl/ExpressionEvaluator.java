@@ -1,9 +1,8 @@
 package pt.iscte.paddle.interpreter.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ICallStack;
@@ -11,72 +10,106 @@ import pt.iscte.paddle.interpreter.IExpressionEvaluator;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.ISimpleExpression;
 
 public class ExpressionEvaluator implements IExpressionEvaluator {
 
+	private IExpression expression;
 	private ICallStack callStack;
-	private Stack<IExpression> expStack;
-	private Stack<IValue> valueStack;
 
+	private List<IExpression> parts;
+	private List<Object> partial;
+	private int next;
+	private IValue result;
+	
 	public ExpressionEvaluator(IExpression expression, ICallStack callStack)  {
+		this.expression = expression;
 		this.callStack = callStack;
-		expStack = new Stack<IExpression>();
-		valueStack = new Stack<IValue>();
-		expStack.push(expression);
-		System.out.println(expression + "  " + expression.getParts());
+
+		parts = expression.getParts();
+		partial = new ArrayList<>(parts.size());	
+		for(IExpression e : parts) {
+			if(e instanceof ISimpleExpression)
+				partial.add(e);
+			else 
+				partial.add(new ExpressionEvaluator(e, callStack));
+		}
+		next = 0;
+		result = null;
 	}
 
+	@Override
+	public String toString() {
+		return expression + " = " + parts + " * " + next;
+	}
 	
 	@Override
 	public boolean isComplete() {
-		return expStack.isEmpty();
-	}
-
-	@Override
-	public IExpression currentExpression() {
-		assert !isComplete();
-		return expStack.peek();
-	}
-	
-	@Override
-	public IValue evaluate() throws ExecutionError {
-		while(!expStack.isEmpty())
-			step();
-
-		return getValue();
+		return result != null;
 	}
 
 	@Override
 	public IValue getValue() {
 		assert isComplete();
-		System.out.println("** " + valueStack.peek());
-		return valueStack.peek();
+		return result;
 	}
+
+	@Override
+	public IExpression currentExpression() {
+		assert !isComplete();
+		if(next == parts.size())
+			return expression;
+		else if(partial.get(next) instanceof ISimpleExpression)
+			return (ISimpleExpression) partial.get(next);
+		else
+			return ((ExpressionEvaluator) partial.get(next)).currentExpression();
+	}
+	
+	@Override
+	public IValue evaluate() throws ExecutionError {
+		while(!isComplete())
+			step();
+
+		return getValue();
+	}
+
 
 	@Override
 	public Step step() throws ExecutionError {
 		assert !isComplete();
-
-		while(expStack.peek().isDecomposable() && valueStack.size() < expStack.peek().getNumberOfParts()) {
-			expStack.peek().getParts().forEach(e -> expStack.push(e));
-
-			while(!expStack.peek().isDecomposable())
-				valueStack.push(callStack.getTopFrame().evaluate(expStack.pop(), ImmutableList.of()));
+		
+		if(next == parts.size()) {
+			List<IValue> values = new ArrayList<>();
+			partial.forEach(p -> values.add((IValue) p));
+			result = callStack.getTopFrame().evaluate(expression, values);
+			if(result == null) {
+				expression = new ProcedureReturnExpression(((IProcedureCall) expression).getProcedure());
+			}
+			return new Step(result == null ? null : expression, result);
 		}
-
-		int parts = expStack.peek().getNumberOfParts();
-		List<IValue> values = new ArrayList<>();
-		while(parts-- > 0)
-			values.add(valueStack.pop());
-
-		IValue val = callStack.getTopFrame().evaluate(expStack.peek(), values);
-		if(val == null) {
-			IProcedureCall callExp = (IProcedureCall) expStack.pop();
-			expStack.push(new ProcedureReturnExpression(callExp.getProcedure()));
+		else {
+			
+			if(partial.get(next) instanceof ISimpleExpression) {
+				ISimpleExpression exp = (ISimpleExpression) partial.get(next);
+				IValue r = callStack.getTopFrame().evaluate(exp, Collections.emptyList());
+				Step step = new Step(parts.get(next), r);
+				partial.set(next, r);
+				next++;
+				return step;
+			}
+			else {
+				ExpressionEvaluator eval = (ExpressionEvaluator) partial.get(next);
+				if(eval.isComplete()) {
+					IValue r = eval.getValue();
+					Step step = new Step(parts.get(next), r);
+					partial.set(next, r);
+					next++;
+					return step;
+				}
+				else {
+					return eval.step();
+				}
+			}
 		}
-		else
-			valueStack.push(val);
-
-		return new Step(val == null ? null : expStack.pop(), val);
 	}
 }

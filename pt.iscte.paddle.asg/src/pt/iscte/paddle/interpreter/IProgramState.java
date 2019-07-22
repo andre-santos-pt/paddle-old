@@ -20,8 +20,14 @@ public interface IProgramState {
 	IValue getValue(String literal);
 	IValue getValue(Object object);
 	
-	IArray allocateArray(IType baseType, int ... dimensions);
-	IRecord allocateObject(IRecordType type);
+	
+	default IArray allocateArray(IType baseType, int ... dimensions) {
+		return getHeapMemory().allocateArray(baseType, dimensions);
+	}
+
+	default IRecord allocateObject(IRecordType type) {
+		return getHeapMemory().allocateRecord(type);
+	}
 	
 	IExecutionData getExecutionData();
 	
@@ -39,14 +45,19 @@ public interface IProgramState {
 
 	IExpressionEvaluator createExpressionEvaluator(IExpression e);
 	
+	String nextStepExplanation();
+	
 	void addListener(IListener listener);
 	
 	interface IListener {
-		default void programEnded() { }
+		default void programStarted() { }
 		default void step(IProgramElement currentInstruction) { }
+		default void executionError(ExecutionError e) { }
 		default void infiniteLoop() { }
-		
+		default void programEnded() { }
 	}
+
+	
 
 
 

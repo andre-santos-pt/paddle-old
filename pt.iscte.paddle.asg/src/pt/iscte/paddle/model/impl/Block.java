@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import pt.iscte.paddle.interpreter.ExecutionError;
-import pt.iscte.paddle.interpreter.ICallStack;
-import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IBlockElement;
@@ -44,11 +41,9 @@ class Block extends ProgramElement implements IBlock {
 	
 	@Override
 	public boolean isEmpty() {
-//		return children.isEmpty();
 		return onlyEmptyBlocks();
 	}
 	
-	// TODO
 	private boolean onlyEmptyBlocks() {
 		for(IBlockElement child : children)
 			if(!(child instanceof Block) || child instanceof Block && !((Block) child).onlyEmptyBlocks())
@@ -138,14 +133,12 @@ class Block extends ProgramElement implements IBlock {
 	@Override
 	public IArrayElementAssignment addArrayElementAssignment(IVariable var, IExpression exp, List<IExpression> indexes) {
 		// TODO OCL: variable must be owned by the same procedure of expression
-
 		return new ArrayElementAssignment(this, var, indexes, exp);
 	}
 	
 	@Override
 	public IRecordFieldAssignment addRecordMemberAssignment(IVariable var, IVariable field, IExpression exp) {
 		// TODO OCL: variable must be owned by the same procedure of expression
-
 		return new RecordFieldAssignment(this, var, field, exp);
 	}
 	
@@ -187,37 +180,5 @@ class Block extends ProgramElement implements IBlock {
 	@Override
 	public IContinue addContinue() {
 		return new Continue(this);
-	}
-	
-	private static class Break extends Statement implements IBreak {
-		public Break(IBlock parent) {
-			super(parent, true);
-		}
-		
-		@Override
-		public String toString() {
-			return "break";
-		}
-		
-		@Override
-		public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
-
-		}
-	}
-	
-	private static class Continue extends Statement implements IContinue {
-		public Continue(IBlock parent) {
-			super(parent, true);
-		}
-		
-		@Override
-		public String toString() {
-			return "continue";
-		}
-		
-		@Override
-		public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
-
-		}
 	}
 }

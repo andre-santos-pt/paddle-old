@@ -28,12 +28,20 @@ class Return extends Statement implements IReturn {
 	
 	@Override
 	public String toString() {
-		return "return " + expression;
+		return isVoid() ? "return" : "return " + expression;
 	}
 	
 	@Override
 	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
 		if(expressions.size() == 1)
 			stack.getTopFrame().setReturn(expressions.get(0));
+	}
+	
+	@Override
+	public String getExplanation(ICallStack stack, List<IValue> expressions) {
+		String msg = "Terminates the execution of procedure " + getParent().getProcedure().getId();
+		if(!isVoid())
+			msg += " and returns value " + expressions.get(0);
+		return msg;
 	}
 }

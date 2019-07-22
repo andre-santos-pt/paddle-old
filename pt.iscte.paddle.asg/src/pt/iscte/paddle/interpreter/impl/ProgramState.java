@@ -6,6 +6,7 @@ import java.util.List;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
+import pt.iscte.paddle.interpreter.IExecutable;
 import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.interpreter.IExpressionEvaluator;
 import pt.iscte.paddle.interpreter.IHeapMemory;
@@ -40,6 +41,8 @@ public class ProgramState implements IProgramState {
 
 	private ExecutionData data;
 
+	private List<IListener> listeners;
+	
 	public ProgramState(IModule program) {
 		this(program, 1024, 100, 1024); // TODO Constants?
 	}
@@ -53,6 +56,8 @@ public class ProgramState implements IProgramState {
 		this.availableMemory = availableMemory;
 		stack = new CallStack(this);
 		heap = new Memory(); 
+		
+		listeners = new ArrayList<>();
 		addStateListener();
 	}
 
@@ -131,16 +136,6 @@ public class ProgramState implements IProgramState {
 	}
 
 
-	@Override
-	public IArray allocateArray(IType baseType, int ... dimensions) {
-		return heap.allocateArray(baseType, dimensions);
-	}
-
-	@Override
-	public IRecord allocateObject(IRecordType type) {
-		return heap.allocateRecord(type);
-	}
-
 	public boolean isOver() {
 		return stack.isEmpty();
 	}
@@ -150,6 +145,8 @@ public class ProgramState implements IProgramState {
 		stack.stepIn();
 		while(!stack.isEmpty() && stack.getTopFrame().isOver())
 			stack.getTopFrame().terminateFrame();
+		
+		// TODO stop on frame termination?
 	}
 
 	public void stepOver() throws ExecutionError {
@@ -174,7 +171,8 @@ public class ProgramState implements IProgramState {
 				argsValues.add(arg);
 			}
 		}
-		stack.newFrame(procedure, argsValues);		
+		stack.newFrame(procedure, argsValues);
+		listeners.forEach(l -> l.programStarted());
 	}
 
 	public IExecutionData execute(IProcedure procedure, Object ... args) throws ExecutionError {
@@ -207,6 +205,8 @@ public class ProgramState implements IProgramState {
 				data.setVariableState(stackFrame.getVariables());
 				data.setReturnValue(returnValue);
 				data.countCall();
+				if(isOver())
+					listeners.forEach(l -> l.programEnded());
 			}
 		});
 	}
@@ -217,13 +217,21 @@ public class ProgramState implements IProgramState {
 
 	@Override
 	public IExpressionEvaluator createExpressionEvaluator(IExpression e) {
-		return new ExpressionEvaluator(e, stack); // TODO change?*
+		return new ExpressionEvaluator(e, stack); 
 	}
 	
-	private List<IListener> listeners = new ArrayList<>();
-	@Override
+
+
 	public void addListener(IListener listener) {
 		listeners.add(listener);
 	}
 
+	@Override
+	public String nextStepExplanation() {
+//		IProgramElement ip = getInstructionPointer();
+//		stack.getTopFrame().get
+//		if(ip instanceof IExecutable)
+//		return ((IExecutable) ip).getExplanation(stack, expressions);
+		return "?";
+	}
 }

@@ -15,15 +15,29 @@ public interface IProcedure extends IProcedureDeclaration {
 	IBlock getBody();
 	
 	default boolean isRecursive() {
-		IVisitor v = new IVisitor() {
-			@Override
+		class RecFind implements IVisitor {
+			boolean foundRecursiveCall = false;
+
 			public boolean visit(IProcedureCall call) {
-				return IVisitor.super.visit(call);
+				if(call.getProcedure().equals(IProcedure.this))
+					foundRecursiveCall = true;
+				return true;
 			}
 		};
-		getBody().accept(v);
-		return false;
+		RecFind r = new RecFind();
+		getBody().accept(r);
+		return r.foundRecursiveCall;
 	}
+	
+//	default boolean isFunction() {
+//		if(getReturnType().isVoid())
+//			return false;
+//	}
+//	
+//	default boolean isStateLessFunction() {
+//		if(getReturnType().isVoid())
+//			return false;
+//	}
 	
 	default void accept(IBlock.IVisitor visitor) {
 		getBody().accept(visitor);

@@ -5,8 +5,8 @@ import java.util.List;
 /**
  * Immutable
  */
-public interface IStatement extends IBlockElement {
+public interface IStatement extends IBlockElement, IStep {
 	
 	List<IExpression> getExpressionParts();
-	
+
 }

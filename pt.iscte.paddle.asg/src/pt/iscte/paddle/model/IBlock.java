@@ -23,6 +23,13 @@ public interface IBlock extends IBlockElement, IStatementContainer, Iterable<IBl
 		return this;
 	}
 	
+	default boolean contains(Class<? extends IBlockElement> type) {
+		for(IBlockElement e : getChildren())
+			if(type.isInstance(e))
+				return true;
+		return false;
+	}
+	
 	@Override
 	default Iterator<IBlockElement> iterator() {
 		return getChildren().iterator();

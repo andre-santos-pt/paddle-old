@@ -67,7 +67,7 @@ public class ProcedureExecutor {
 				pendingEvaluations = new ArrayDeque<>();
 				values = new ArrayList<IValue>();
 				for(IExpression e : s.getExpressionParts())
-					pendingEvaluations.offer(new ExpressionEvaluator2(e, frame.getCallStack()));
+					pendingEvaluations.offer(new ExpressionEvaluator(e, frame.getCallStack()));
 
 				if(pendingEvaluations.isEmpty()) {
 					frame.execute(s, values);
@@ -104,7 +104,7 @@ public class ProcedureExecutor {
 		else if(current instanceof IExpression) {
 			IExpression e = (IExpression) current;
 			if(pendingExpression == null) {
-				pendingExpression = new ExpressionEvaluator2(e, frame.getCallStack());
+				pendingExpression = new ExpressionEvaluator(e, frame.getCallStack());
 				Step step = pendingExpression.step();
 			}
 			else if(!pendingExpression.isComplete()) {

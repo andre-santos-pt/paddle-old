@@ -8,8 +8,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 
 import pt.iscte.paddle.interpreter.ExecutionError;
+import pt.iscte.paddle.interpreter.IExecutable;
 import pt.iscte.paddle.javali.translator.ElementLocation;
 import pt.iscte.paddle.javali.translator.ISourceLocation;
+import pt.iscte.paddle.model.IProgramElement;
 
 public class StepInAction extends Action {
 	RunAction runAction;
@@ -39,6 +41,10 @@ public class StepInAction extends Action {
 					}
 					System.out.println(runAction.state);
 				}
+				IProgramElement ip = runAction.state.getInstructionPointer();
+				String msg = runAction.state.nextStepExplanation();
+//				if(ip instanceof IExecutable)
+//					System.out.println(((IExecutable) ip).getExplanation(stack, expressions));
 			} catch (ExecutionError e) {
 				MessageDialog.open(MessageDialog.ERROR, Display.getDefault().getActiveShell(), "Runtime error", e.getMessage(), SWT.NONE);
 			}

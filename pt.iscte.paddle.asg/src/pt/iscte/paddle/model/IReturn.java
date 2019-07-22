@@ -9,9 +9,12 @@ public interface IReturn extends IStatement {
 	IExpression getExpression(); // may be null (void)
 	IBlock getParent();
 
-	
+	default boolean isVoid() {
+		return getExpression() == null;
+		
+	}
 	default IType getReturnValueType() {
-		return getExpression() == null ? IType.VOID : getExpression().getType();
+		return isVoid() ? IType.VOID : getExpression().getType();
 	}
 	
 	@Override
