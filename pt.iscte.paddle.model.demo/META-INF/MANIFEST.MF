@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: DemoAPI
+Bundle-SymbolicName: pt.iscte.paddle.model.demo
+Bundle-Version: 1.0.0.qualifier
+Export-Package: .
+Require-Bundle: pt.iscte.paddle.model;bundle-version="0.1.0",
+ pt.iscte.paddle.javali;bundle-version="1.0.0"
