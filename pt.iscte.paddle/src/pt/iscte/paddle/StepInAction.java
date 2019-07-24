@@ -41,8 +41,9 @@ public class StepInAction extends Action {
 					}
 					System.out.println(runAction.state);
 				}
-				IProgramElement ip = runAction.state.getInstructionPointer();
-				String msg = runAction.state.nextStepExplanation();
+				
+//				IProgramElement ip = runAction.state.getInstructionPointer();
+//				String msg = runAction.state.nextStepExplanation();
 //				if(ip instanceof IExecutable)
 //					System.out.println(((IExecutable) ip).getExplanation(stack, expressions));
 			} catch (ExecutionError e) {
