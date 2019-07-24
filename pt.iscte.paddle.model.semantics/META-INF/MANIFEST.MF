@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Semantics
-Bundle-SymbolicName: pt.iscte.paddle.semantics
+Bundle-SymbolicName: pt.iscte.paddle.model.semantics
 Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: pt.iscte.paddle.asg.semantics
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
