@@ -61,9 +61,15 @@ class ArrayElementAssignment extends VariableAssignment implements IArrayElement
 		IValue v = array;
 		for(int i = 0; i < indexes.size()-1; i++) {
 			int index = ((Number) values.get(i).getValue()).intValue();
+			if(index < 0 || index >= ((IArray)v).getLength())
+				throw new ExecutionError(ExecutionError.Type.ARRAY_INDEX_BOUNDS, this, "invalid index", index);
 			v = array.getElement(index);
 		}
 		int index = ((Number) values.get(indexes.size()-1).getValue()).intValue();
+		
+		if(index < 0 || index >= array.getLength())
+			throw new ExecutionError(ExecutionError.Type.ARRAY_INDEX_BOUNDS, this, "invalid index", index);
+		
 		IValue val = values.get(values.size()-1);
 		((IArray) v).setElement(index, val);
 	}

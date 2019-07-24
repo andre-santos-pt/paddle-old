@@ -4,7 +4,6 @@ import java.util.List;
 
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IValue;
-import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.IRecordAllocation;
 import pt.iscte.paddle.model.IRecordType;
 

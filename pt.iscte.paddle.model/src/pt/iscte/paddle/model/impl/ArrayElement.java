@@ -8,7 +8,6 @@ import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IReference;
-import pt.iscte.paddle.interpreter.IStackFrame;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IArrayElement;
 import pt.iscte.paddle.model.IExpression;

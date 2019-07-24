@@ -5,11 +5,11 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.interpreter.ExecutionError;
+import pt.iscte.paddle.interpreter.ExecutionError.Type;
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.IValue;
-import pt.iscte.paddle.interpreter.ExecutionError.Type;
 import pt.iscte.paddle.model.IArrayLength;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IType;

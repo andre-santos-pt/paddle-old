@@ -2,7 +2,7 @@ import java.io.File;
 
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.javali.translator.ElementLocation;
-import pt.iscte.paddle.javali.translator.ISourceLocation;
+import pt.iscte.paddle.javali.translator.Model2Java;
 import pt.iscte.paddle.javali.translator.Translator;
 import pt.iscte.paddle.model.IBlock.IVisitor;
 import pt.iscte.paddle.model.IModule;
@@ -18,7 +18,9 @@ public class DemoModelFromJavaAndVisitor {
 		IModule module = translator.createProgram();
 		IProcedure nats = module.getProcedures().iterator().next(); // first procedure
 
-		System.out.println(module);
+		// prints model as code
+		String src = module.translate(new Model2Java());
+		System.out.println(src);
 
 		// Model visitor
 		System.out.println("Assignments to variable i:");

@@ -18,17 +18,19 @@ public class DemoModelInstantiation {
 	public static void main(String[] args) {
 		
 		// instantiate model manually
-		IModule module = IModule.create();
-		IProcedure naturals = module.addProcedure(INT.array().reference());
-		IVariable n = naturals.addParameter(INT);
-		IBlock body = naturals.getBody();
-		IVariable array = body.addVariable(INT.array().reference());
-		body.addAssignment(array, INT.array().heapAllocation(n));
-		IVariable i = body.addVariable(INT, INT.literal(0));
-		ILoop loop = body.addLoop(SMALLER.on(i, n));
-		loop.addArrayElementAssignment(array, ADD.on(i, INT.literal(1)), i);
-		loop.addAssignment(i, ADD.on(i, INT.literal(1)));
-		body.addReturn(array);
+		IModule module = IModule.create();									// class DemoModule {
+		IProcedure naturals = module.addProcedure(INT.array().reference());	// static int[] naturals(
+		IVariable n = naturals.addParameter(INT);							// int n)						
+		IBlock body = naturals.getBody();									// {
+		IVariable array = body.addVariable(INT.array().reference());		// 		int[] array;
+		body.addAssignment(array, INT.array().heapAllocation(n));			// 		array = new int[n];
+		IVariable i = body.addVariable(INT, INT.literal(0));				// 		int i; i = 0;
+		ILoop loop = body.addLoop(SMALLER.on(i, n));						// 		while(i < n) {
+		loop.addArrayElementAssignment(array, ADD.on(i, INT.literal(1)), i);// 			array[i] = i + 1;
+		loop.addAssignment(i, ADD.on(i, INT.literal(1)));					//			i = i + 1;
+																			//		}
+		body.addReturn(array);												//		return array;
+																			// }
 
 		// optional ids
 		module.setId("DemoModule");
