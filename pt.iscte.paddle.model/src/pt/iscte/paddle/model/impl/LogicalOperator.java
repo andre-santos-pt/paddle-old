@@ -69,8 +69,8 @@ public enum LogicalOperator implements IBinaryOperator {
 	}
 	
 	@Override
-	public boolean isValidFor(IType left, IType right) {
-		return left.isBoolean() && right.isBoolean();
+	public boolean isValidFor(IExpression left, IExpression right) {
+		return left.getType().isBoolean() && right.getType().isBoolean();
 	}
 	
 	@Override

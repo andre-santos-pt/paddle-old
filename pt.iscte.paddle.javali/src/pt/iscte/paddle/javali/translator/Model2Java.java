@@ -180,7 +180,7 @@ public class Model2Java implements IModel2CodeTranslator {
 		else if(e instanceof IVariableDereference)
 			return ((IVariableDereference) e).getVariable().getId();
 		else if(e instanceof IRecordAllocation)
-			return "new " + ((IRecordAllocation) e).getType().getId() + "()";
+			return "new " + ((IRecordAllocation) e).getRecordType().getId() + "()";
 		else if(e instanceof IArrayElement) {
 			IArrayElement el = (IArrayElement) e;
 			String text = el.getVariable().getId();

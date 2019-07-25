@@ -5,4 +5,5 @@ public interface IReference extends IValue {
 	
 	void setTarget(IValue r);
 	
+	IReference copy();
 }

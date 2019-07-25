@@ -27,6 +27,7 @@ import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.interpreter.IMachine;
 import pt.iscte.paddle.interpreter.IProgramState;
 import pt.iscte.paddle.interpreter.IValue;
+import pt.iscte.paddle.interpreter.IProgramState.IListener;
 import pt.iscte.paddle.javali.translator.Model2Java;
 import pt.iscte.paddle.model.IConstant;
 import pt.iscte.paddle.model.ILiteral;
@@ -45,7 +46,6 @@ public abstract class BaseTest {
 	@Retention(RetentionPolicy.RUNTIME)
 	protected @interface Case {
 		String[] value() default {};
-//		int[] intArray() default {};
 	}
 
 	final protected IModule module;
@@ -98,7 +98,7 @@ public abstract class BaseTest {
 
 	private void compile() {
 		String code = module.translate(translator);
-		File file = new File("src/" + module.getId() + ".java");
+//		File file = new File("src/" + module.getId() + ".java");
 //		System.out.println("\\begin{lstlisting}");
 		System.out.print(code + "\n");
 //		System.out.println("\\end{lstlisting}");
@@ -131,6 +131,12 @@ public abstract class BaseTest {
 			return;
 
 		state = IMachine.create(module);
+//		state.addListener(new IProgramState.IListener() {
+//			@Override
+//			public void step(IProgramElement currentInstruction) {
+//				System.out.println(currentInstruction);
+//			}
+//		});
 		boolean foundCase = false;
 		for (Method method : getClass().getMethods()) {
 			if (method.isAnnotationPresent(Case.class)) {

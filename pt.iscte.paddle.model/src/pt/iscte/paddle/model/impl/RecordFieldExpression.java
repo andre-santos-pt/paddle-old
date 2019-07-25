@@ -48,8 +48,8 @@ class RecordFieldExpression extends Expression implements IRecordFieldExpression
 	
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) {
-		IRecord object = (IRecord) stack.getTopFrame().getVariableStore(getVariable()).getTarget();
-		IValue field = object.getField(this.field);
+		IRecord object = (IRecord) stack.getTopFrame().getVariableStore(variable).getTarget();
+		IValue field = object.getField(this.field).getTarget();
 		return field;
 	}
 }

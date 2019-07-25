@@ -25,7 +25,7 @@ public interface IProgramState {
 		return getHeapMemory().allocateArray(baseType, dimensions);
 	}
 
-	default IRecord allocateObject(IRecordType type) {
+	default IRecord allocateRecord(IRecordType type) {
 		return getHeapMemory().allocateRecord(type);
 	}
 	

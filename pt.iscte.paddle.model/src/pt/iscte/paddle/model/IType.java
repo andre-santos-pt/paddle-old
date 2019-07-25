@@ -111,6 +111,11 @@ public interface IType extends IProgramElement  {
 		public IArrayType array() {
 			throw new UnsupportedOperationException();
 		}
+		
+		@Override
+		public String getId() {
+			return "void";
+		}
 	};
 
 

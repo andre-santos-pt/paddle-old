@@ -36,6 +36,10 @@ public interface IExpression extends IProgramElement {
 		return t.expression(this);
 	}
 	
+	default boolean isNull() {
+		return this == ILiteral.NULL;
+	}
+	
 	IConditionalExpression conditional(IExpression trueCase, IExpression falseCase);
 	
 	

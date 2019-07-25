@@ -47,10 +47,14 @@ public interface IStatementContainer {
 		return addArrayElementAssignment(var, exp, Arrays.asList(indexes));
 	}
 
-	default IRecordFieldAssignment addRecordMemberAssignment(IVariable var, IVariable field, IExpression exp) {
-		return getBlock().addRecordMemberAssignment(var, field, exp);
+	default IRecordFieldAssignment addRecordFieldAssignment(IVariable var, IVariable field, IExpression exp) {
+		return getBlock().addRecordFieldAssignment(var, field, exp);
 	}
 
+	default IRecordFieldAssignment addRecordFieldAssignment2(IRecordFieldVariable var, IExpression exp) {
+		return getBlock().addRecordFieldAssignment2(var, exp);
+	}
+	
 	default ISelection addSelection(IExpression guard) {
 		return getBlock().addSelection(guard);
 	}
@@ -87,4 +91,5 @@ public interface IStatementContainer {
 	default IProcedureCall addCall(IProcedure procedure, IExpression ... args) {
 		return addCall(procedure, Arrays.asList(args));
 	}
+
 }

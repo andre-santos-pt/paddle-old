@@ -14,6 +14,7 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IRecordFieldAssignment;
+import pt.iscte.paddle.model.IRecordFieldVariable;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatement;
@@ -137,11 +138,16 @@ class Block extends ProgramElement implements IBlock {
 	}
 	
 	@Override
-	public IRecordFieldAssignment addRecordMemberAssignment(IVariable var, IVariable field, IExpression exp) {
+	public IRecordFieldAssignment addRecordFieldAssignment(IVariable var, IVariable field, IExpression exp) {
 		// TODO OCL: variable must be owned by the same procedure of expression
 		return new RecordFieldAssignment(this, var, field, exp);
 	}
-	
+	@Override
+	public IRecordFieldAssignment addRecordFieldAssignment2(IRecordFieldVariable var, IExpression exp) {
+		// TODO Auto-generated method stub
+		return new RecordFieldAssignment2(this, var, exp);
+	}
+		
 	@Override
 	public ISelection addSelection(IExpression guard) {
 		return new Selection(this, guard, false);

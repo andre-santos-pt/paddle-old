@@ -36,8 +36,8 @@ public class Types extends Rule {
 
 	@Override
 	public boolean visit(IBinaryExpression exp) {
-		IType left = exp.getLeftOperand().getType();
-		IType right = exp.getRightOperand().getType();
+		IExpression left = exp.getLeftOperand();
+		IExpression right = exp.getRightOperand();
 		if(!exp.getOperator().isValidFor(left, right))
 			addProblem("operator " + exp.getOperator().getSymbol() + " cannot be used with " + left + " and " + right, exp);
 		return true;
@@ -102,20 +102,18 @@ public class Types extends Rule {
 
 	@Override
 	public boolean visit(IVariableAssignment assignment) {
-		checkAssignment(assignment.getVariable(), assignment.getExpression());
+		checkAssignmentTypes(assignment.getVariable(), assignment.getExpression());
+		
+		if(!assignment.getOwnerProcedure().getVariables().contains(assignment.getVariable()))
+			addProblem("unknown variable " + assignment.getVariable().getId(), assignment.getVariable());
+		
 		return true;
 	}
 
-	private void checkAssignment(IVariable var, IExpression exp) {
-		if(!var.getType().isCompatible(exp.getType()))
+	private void checkAssignmentTypes(IVariable var, IExpression exp) {
+		if(!var.getType().isCompatible(exp.getType()) && !exp.isNull())
 			addProblem("incompatible assignment: " + exp.getType() + " cannot be assigned to " + var.getType(),
 					var, exp);	
-	}
-
-	private void checkType(IType type, IExpression exp) {
-		if(!type.isCompatible(exp.getType()))
-			addProblem("incompatible assignment: " + exp.getType() + " cannot be assigned to " + type,
-					type, exp);	
 	}
 
 	@Override
@@ -151,7 +149,7 @@ public class Types extends Rule {
 
 	@Override
 	public boolean visit(IRecordFieldAssignment assignment) {
-		checkAssignment(assignment.getField(), assignment.getExpression());
+		checkAssignmentTypes(assignment.getField(), assignment.getExpression());
 		return true;
 	}
 

@@ -6,7 +6,7 @@ import pt.iscte.paddle.model.impl.ArithmeticOperator;
 
 public interface IBinaryOperator extends IOperator {
 	
-	boolean isValidFor(IType left, IType right);
+	boolean isValidFor(IExpression left, IExpression right);
 	
 	IType getResultType(IExpression left, IExpression right);
 	

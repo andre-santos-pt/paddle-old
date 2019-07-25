@@ -31,8 +31,8 @@ public class TestCustomPowerOperator extends BaseTest {
 		}
 
 		@Override
-		public boolean isValidFor(IType left, IType right) {
-			return left.isNumber() && right.isNumber();
+		public boolean isValidFor(IExpression left, IExpression right) {
+			return left.getType().isNumber() && right.getType().isNumber();
 		}
 
 		@Override

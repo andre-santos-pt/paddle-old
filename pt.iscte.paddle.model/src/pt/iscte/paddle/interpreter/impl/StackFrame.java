@@ -79,9 +79,7 @@ class StackFrame implements IStackFrame {
 
 	@Override 
 	public IReference getVariableStore(IVariable variable) {
-		assert variables.containsKey(variable);
-		
-		// TODO copy?
+		assert variables.containsKey(variable) : variable.toString();
 		return variables.get(variable);
 	}
 
@@ -132,12 +130,11 @@ class StackFrame implements IStackFrame {
 	@Override
 	public IArray allocateArray(IType baseType, int[] dimensions) {
 		return memory.allocateArray(baseType, dimensions);
-//		return callStack.getProgramState().allocateArray(baseType, dimensions);
 	}
 
 	@Override
 	public IRecord allocateRecord(IRecordType type) {
-		return callStack.getProgramState().allocateObject(type);
+		return memory.allocateRecord(type);
 	}
 
 	public boolean isOver() {

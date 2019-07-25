@@ -18,7 +18,8 @@ public class Reference implements IReference {
 
 	@Override
 	public Object getValue() {
-		return target == IValue.NULL ? null : target;
+		return getTarget();
+//		return target == IValue.NULL ? null : target;
 	}
 
 	@Override

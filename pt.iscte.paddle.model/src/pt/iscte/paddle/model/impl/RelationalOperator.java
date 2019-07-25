@@ -47,12 +47,13 @@ public enum RelationalOperator implements IBinaryOperator {
 	public IType getResultType(IExpression left, IExpression right) {
 		return IType.BOOLEAN;
 	}
+	
 	@Override
-	public boolean isValidFor(IType left, IType right) {
+	public boolean isValidFor(IExpression left, IExpression right) {
 		if(this == EQUAL || this == DIFFERENT)
-			return left.equals(right);
+			return left.isNull() || right.isNull() || left.getType().equals(right.getType());
 		else
-			return left.isNumber() && right.isNumber();
+			return left.getType().isNumber() && right.getType().isNumber();
 	}
 
 	@Override
