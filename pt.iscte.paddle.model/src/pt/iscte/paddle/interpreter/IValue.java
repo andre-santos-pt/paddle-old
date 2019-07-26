@@ -8,8 +8,6 @@ public interface IValue {
 	IType getType();
 	Object getValue();
 	
-//	void setValue(Object o);
-	
 	IValue copy();
 	
 	default boolean isNull() {
@@ -29,6 +27,8 @@ public interface IValue {
 	}
 	
 	IValue NULL = new IValue() {
+		final Object NULL_OBJECT = new Object();
+		
 		@Override
 		public IType getType() {
 			return null;
@@ -36,12 +36,8 @@ public interface IValue {
 
 		@Override
 		public Object getValue() {
-			return null;
+			return NULL_OBJECT;
 		}
-//		@Override
-//		public void setValue(Object o) {
-//			assert false;
-//		}
 		
 		@Override
 		public String toString() {

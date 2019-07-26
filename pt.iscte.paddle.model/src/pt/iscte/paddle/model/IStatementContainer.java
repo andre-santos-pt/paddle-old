@@ -39,20 +39,16 @@ public interface IStatementContainer {
 		return addAssignment(var, IOperator.SUB.on(var, IType.INT.literal(1)));
 	}
 
-	default IArrayElementAssignment addArrayElementAssignment(IVariable var, IExpression exp, List<IExpression> indexes) {
-		return getBlock().addArrayElementAssignment(var, exp, indexes);
+	default IArrayElementAssignment addArrayElementAssignment(IExpression target, IExpression exp, List<IExpression> indexes) {
+		return getBlock().addArrayElementAssignment(target, exp, indexes);
 	}
 	
-	default IArrayElementAssignment addArrayElementAssignment(IVariable var, IExpression exp, IExpression ... indexes) {
-		return addArrayElementAssignment(var, exp, Arrays.asList(indexes));
+	default IArrayElementAssignment addArrayElementAssignment(IExpression target, IExpression exp, IExpression ... indexes) {
+		return addArrayElementAssignment(target, exp, Arrays.asList(indexes));
 	}
 
-	default IRecordFieldAssignment addRecordFieldAssignment(IVariable var, IVariable field, IExpression exp) {
-		return getBlock().addRecordFieldAssignment(var, field, exp);
-	}
-
-	default IRecordFieldAssignment addRecordFieldAssignment2(IRecordFieldVariable var, IExpression exp) {
-		return getBlock().addRecordFieldAssignment2(var, exp);
+	default IRecordFieldAssignment addRecordFieldAssignment(IRecordFieldExpression target, IExpression exp) {
+		return getBlock().addRecordFieldAssignment(target, exp);
 	}
 	
 	default ISelection addSelection(IExpression guard) {

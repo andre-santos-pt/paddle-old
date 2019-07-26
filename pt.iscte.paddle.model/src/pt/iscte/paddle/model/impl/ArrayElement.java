@@ -9,20 +9,17 @@ import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IRecord;
 import pt.iscte.paddle.interpreter.IReference;
-import pt.iscte.paddle.interpreter.IStackFrame;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IArrayElement;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IModel2CodeTranslator;
-import pt.iscte.paddle.model.IRecordFieldVariable;
-import pt.iscte.paddle.model.IVariable;
 
 class ArrayElement extends Expression implements IArrayElement {
-	private final IVariable variable;
+	private final IExpression target;
 	private final ImmutableList<IExpression> indexes;
 	
-	public ArrayElement(IVariable variable, List<IExpression> indexes) {
-		this.variable = variable;
+	public ArrayElement(IExpression target, List<IExpression> indexes) {
+		this.target = target;
 		this.indexes = ImmutableList.copyOf(indexes);
 	}
 	
@@ -32,8 +29,14 @@ class ArrayElement extends Expression implements IArrayElement {
 	}
 	
 	@Override
+	public IExpression getTarget() {
+		return target;
+	}
+	
+	
+	@Override
 	public String toString() {
-		String text = getVariable().toString();
+		String text = getTarget().toString();
 		for(IExpression e : indexes)
 			text += "[" + e + "]";
 		return text;
@@ -42,7 +45,7 @@ class ArrayElement extends Expression implements IArrayElement {
 	
 	@Override
 	public String translate(IModel2CodeTranslator t) {
-		String text = getVariable().getId();
+		String text = getTarget().getId();
 		for(IExpression e : indexes)
 			text += "[" + e.translate(t) + "]";
 		return text;
@@ -57,20 +60,18 @@ class ArrayElement extends Expression implements IArrayElement {
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
 		assert values.size() == getIndexes().size();
 		
-		IVariable var = getVariable();
-		IStackFrame frame = stack.getTopFrame();
-
 		IReference ref = null;
-		if(variable instanceof VariableDereference)
-			ref = (IReference) ((VariableDereference) variable).evalutate(values, stack);
-		else if(var instanceof IRecordFieldVariable) {
-			IVariable parent = (IVariable) var.getParent();
-			ref = frame.getVariableStore(parent);
-			IRecord rec = (IRecord) ref.getTarget();
-			ref = (IReference) rec.getField(((IRecordFieldVariable) var).getField());
+		if(target instanceof VariableDereference)
+			ref = (IReference) ((VariableDereference) target).evalutate(values, stack);
+		else if(target instanceof RecordFieldExpression) {
+			RecordFieldExpression rexp = (RecordFieldExpression) target;
+			IRecord r = rexp.resolveTarget(stack);
+			ref = (IReference) r.getField(rexp.getField());
 		}
+		else if(target instanceof Variable)
+			ref = stack.getTopFrame().getVariableStore((Variable) target);
 		else
-			ref = stack.getTopFrame().getVariableStore(getVariable());
+			assert false;
 		
 		IValue element = ref.getTarget();
 		for(IValue v : values) {
@@ -83,9 +84,4 @@ class ArrayElement extends Expression implements IArrayElement {
 		return element;
 	}
 
-	@Override
-	public IVariable getVariable() {
-		return variable;
-	}
-	
 }

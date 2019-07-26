@@ -14,7 +14,7 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IRecordFieldAssignment;
-import pt.iscte.paddle.model.IRecordFieldVariable;
+import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatement;
@@ -132,22 +132,16 @@ class Block extends ProgramElement implements IBlock {
 	}
 
 	@Override
-	public IArrayElementAssignment addArrayElementAssignment(IVariable var, IExpression exp, List<IExpression> indexes) {
+	public IArrayElementAssignment addArrayElementAssignment(IExpression target, IExpression exp, List<IExpression> indexes) {
 		// TODO OCL: variable must be owned by the same procedure of expression
-		return new ArrayElementAssignment(this, var, indexes, exp);
-	}
-	
-	@Override
-	public IRecordFieldAssignment addRecordFieldAssignment(IVariable var, IVariable field, IExpression exp) {
-		// TODO OCL: variable must be owned by the same procedure of expression
-		return new RecordFieldAssignment(this, var, field, exp);
-	}
-	@Override
-	public IRecordFieldAssignment addRecordFieldAssignment2(IRecordFieldVariable var, IExpression exp) {
-		// TODO Auto-generated method stub
-		return new RecordFieldAssignment2(this, var, exp);
+		return new ArrayElementAssignment(this, target, indexes, exp);
 	}
 		
+	@Override
+	public IRecordFieldAssignment addRecordFieldAssignment(IRecordFieldExpression target, IExpression exp) {
+		return new RecordFieldAssignment(this, target, exp);
+	}
+	
 	@Override
 	public ISelection addSelection(IExpression guard) {
 		return new Selection(this, guard, false);

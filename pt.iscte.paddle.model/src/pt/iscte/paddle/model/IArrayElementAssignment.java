@@ -3,13 +3,15 @@ package pt.iscte.paddle.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface IArrayElementAssignment extends IVariableAssignment {
+public interface IArrayElementAssignment extends IStatement {
 	List<IExpression> getIndexes(); // not null, length > 0 && length <= getDimensions
 	default int getDimensions() {
 		return getIndexes().size();
 	}
 	
-	IVariable getVariable();
+	IExpression getTarget();
+	IExpression getExpression();
+	IBlock getParent();
 	
 	@Override
 	default List<IExpression> getExpressionParts() {

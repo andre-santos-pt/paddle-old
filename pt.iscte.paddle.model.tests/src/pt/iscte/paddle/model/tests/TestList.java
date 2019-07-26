@@ -32,8 +32,8 @@ public class TestList extends BaseTest {
 	IProcedure init = module.addProcedure(VOID);
 	IVariable list = init.addParameter(IntList.reference());
 	IBlock initBody = init.getBody();
-	IRecordFieldAssignment hAss = initBody.addRecordFieldAssignment2(list.fieldVariable(head), ILiteral.NULL);
-	IRecordFieldAssignment tAss = initBody.addRecordFieldAssignment2(list.fieldVariable(tail), ILiteral.NULL);
+	IRecordFieldAssignment hAss = initBody.addRecordFieldAssignment(list.field(head), ILiteral.NULL);
+	IRecordFieldAssignment tAss = initBody.addRecordFieldAssignment(list.field(tail), ILiteral.NULL);
 
 
 	IProcedure add = module.addProcedure(VOID);
@@ -41,14 +41,14 @@ public class TestList extends BaseTest {
 	IVariable e = add.addParameter(INT);
 	IBlock addBody = add.getBody();
 	IVariable n = addBody.addVariable(Node.reference(), Node.heapAllocation());
-	IRecordFieldAssignment nAss = addBody.addRecordFieldAssignment2(n.fieldVariable(element), e);
-	ISelection checkEmpty = addBody.addSelectionWithAlternative(EQUAL.on(list_.fieldVariable(head), ILiteral.NULL));
-	IRecordFieldAssignment hAss_ = checkEmpty.getBlock().addRecordFieldAssignment2(list_.fieldVariable(head), n);
-	IRecordFieldAssignment tAss_ = checkEmpty.getBlock().addRecordFieldAssignment2(list_.fieldVariable(tail), n);
+	IRecordFieldAssignment nAss = addBody.addRecordFieldAssignment(n.field(element), e);
+	ISelection checkEmpty = addBody.addSelectionWithAlternative(EQUAL.on(list_.field(head), ILiteral.NULL));
+	IRecordFieldAssignment hAss_ = checkEmpty.getBlock().addRecordFieldAssignment(list_.field(head), n);
+	IRecordFieldAssignment tAss_ = checkEmpty.getBlock().addRecordFieldAssignment(list_.field(tail), n);
 
 	IBlock elseBlock = checkEmpty.getAlternativeBlock();
-	IRecordFieldAssignment tNextAss = elseBlock.addRecordFieldAssignment2(list_.fieldVariable(tail).fieldVariable(next), n);
-	IRecordFieldAssignment tAss__ = elseBlock.addRecordFieldAssignment2(list_.fieldVariable(tail), n);
+	IRecordFieldAssignment tNextAss = elseBlock.addRecordFieldAssignment(list_.field(tail).field(next), n);
+	IRecordFieldAssignment tAss__ = elseBlock.addRecordFieldAssignment(list_.field(tail), n);
 
 
 	IProcedure exists = module.addProcedure(BOOLEAN);

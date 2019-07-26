@@ -6,6 +6,7 @@ import static pt.iscte.paddle.model.IType.INT;
 
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.IExecutionData;
+import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
@@ -23,10 +24,9 @@ public class TestSumCopy extends BaseTest {
 	IVariable i = sumBody.addVariable(INT, INT.literal(0));
 	ILoop loop = sumBody.addLoop(DIFFERENT.on(i, array.dereference().length()));
 	IVariableAssignment ass1 = loop.addAssignment(sum, ADD.on(sum, array.dereference().element(i)));
-	IVariableAssignment ass0 = loop.addArrayElementAssignment(array, DOUBLE.literal(0.0), i);
+	IArrayElementAssignment ass0 = loop.addArrayElementAssignment(array, DOUBLE.literal(0.0), i);
 	IVariableAssignment ass2 = loop.addIncrement(i);
 	IReturn ret = sumBody.addReturn(sum);
-	
 	
 	
 	private IVariable a;

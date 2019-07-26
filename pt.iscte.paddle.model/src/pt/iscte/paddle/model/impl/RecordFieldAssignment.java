@@ -1,5 +1,6 @@
 package pt.iscte.paddle.model.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import pt.iscte.paddle.interpreter.ExecutionError;
@@ -9,29 +10,28 @@ import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IRecordFieldAssignment;
+import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IReferenceType;
 import pt.iscte.paddle.model.IVariable;
 
 class RecordFieldAssignment extends Statement implements IRecordFieldAssignment {
-	private final IVariable variable;
-	private final IVariable field;
+	private final IRecordFieldExpression target;
 	private final IExpression expression;
 	
-	public RecordFieldAssignment(IBlock parent, IVariable variable, IVariable field, IExpression expression) {
+	public RecordFieldAssignment(IBlock parent, IRecordFieldExpression target, IExpression expression) {
 		super(parent, true);
-		this.variable = variable;
-		this.field = field;
+		this.target = target;
 		this.expression = expression;
 	}
-
+	
 	@Override
-	public IVariable getVariable() {
-		return variable;
+	public IRecordFieldExpression getTarget() {
+		return target;
 	}
 	
 	@Override
 	public IVariable getField() {
-		return field;
+		return target.getField();
 	}	
 
 	@Override
@@ -41,23 +41,18 @@ class RecordFieldAssignment extends Statement implements IRecordFieldAssignment 
 	
 	@Override
 	public String toString() {
-		if(variable.getType() instanceof IReferenceType)
-			return variable.getId() + "->" + field.getId() + " = " + expression;
+		IExpression target = getTarget();
+		IVariable field = getField();
+		if(target.getType() instanceof IReferenceType)
+			return target.getId() + "->" + field.getId() + " = " + expression;
 		else
-			return variable.getId() + "." + field.getId() + " = " + expression;
+			return target.getId() + "." + field.getId() + " = " + expression;
 	}
 	
 	@Override
 	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
-		// TODO recursive field access?
-		
-
-//		IVariable f = field;
-//		while(f.getParent() != variable) {
-//			IRecord rec = (IRecord) stack.getTopFrame().getVariableStore(getVariable()).getTarget();
-//		}
-		
-		IRecord object = (IRecord) stack.getTopFrame().getVariableStore(variable).getTarget();
-		object.setField(field, expressions.get(0));
+		IRecord r = target.resolveTarget(stack);
+		r.setField(target.getField(), expressions.get(0));
 	}
+
 }

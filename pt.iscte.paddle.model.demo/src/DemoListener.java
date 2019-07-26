@@ -30,8 +30,8 @@ public class DemoListener {
 			public void step(IProgramElement statement) {
 				if(statement instanceof IVariableAssignment) {
 					IVariableAssignment a = (IVariableAssignment) statement;
-					if(a.getVariable().getId().equals("i"))
-						System.out.println(state.getCallStack().getTopFrame().getVariableStore(a.getVariable()));
+					if(a.getTarget().getId().equals("i"))
+						System.out.println(state.getCallStack().getTopFrame().getVariableStore(a.getTarget()));
 				}
 			}
 		});

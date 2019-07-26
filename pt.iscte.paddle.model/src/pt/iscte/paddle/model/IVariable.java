@@ -50,7 +50,7 @@ public interface IVariable extends ISimpleExpression, IStatement {
 
 	IRecordFieldExpression field(IVariable field);
 	
-	IRecordFieldVariable fieldVariable(IVariable field);
+//	IRecordFieldVariable fieldVariable(IVariable field);
 	
 	default String getDeclaration() {
 		return getType() + " " + getId();

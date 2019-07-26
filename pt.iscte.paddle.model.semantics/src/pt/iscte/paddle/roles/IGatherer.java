@@ -29,7 +29,7 @@ public interface IGatherer extends IVariableRole {
 		
 		@Override
 		public boolean visit(IVariableAssignment assignment) {
-			if(assignment.getVariable().equals(var)) {
+			if(assignment.getTarget().equals(var)) {
 				if(first)
 					first = false; // FIXME
 				else {
@@ -80,8 +80,8 @@ public interface IGatherer extends IVariableRole {
 			IExpression right = e.getRightOperand();
 			if(e.getOperator().isArithmetic() && 
 				(
-				left instanceof IVariable && ((IVariable) left).equals(var.getVariable()) ||
-				right instanceof IVariable && ((IVariable) right).equals(var.getVariable()))
+				left instanceof IVariable && ((IVariable) left).equals(var.getTarget()) ||
+				right instanceof IVariable && ((IVariable) right).equals(var.getTarget()))
 				)
 				return e.getOperator();
 		}

@@ -4,12 +4,11 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import java.util.logging.StreamHandler;
 
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IExpressionEvaluator;
-import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.interpreter.IExpressionEvaluator.Step;
+import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProgramElement;

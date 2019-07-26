@@ -99,7 +99,7 @@ public class Model2Java implements IModel2CodeTranslator {
 		return tabs;
 	}
 	
-	public String id(IVariable v) {
+	public String id(IExpression v) {
 		// TODO
 		return v.getId();
 	}
@@ -112,7 +112,7 @@ public class Model2Java implements IModel2CodeTranslator {
 		}
 		else if(e instanceof IArrayElementAssignment) {
 			IArrayElementAssignment a = (IArrayElementAssignment) e;
-			String text = id(a.getVariable());
+			String text = id(a.getTarget());
 			for(IExpression i : a.getIndexes())
 				text += "[" + expression(i) + "]";
 			
@@ -121,11 +121,11 @@ public class Model2Java implements IModel2CodeTranslator {
 		}
 		else if(e instanceof IRecordFieldAssignment) {
 			IRecordFieldAssignment a = (IRecordFieldAssignment) e;
-			return a.getVariable().getId() + "." + a.getField().getId() + " = " + a.getExpression().translate(this) + ";\n";
+			return a.getTarget().getId() + "." + a.getField().getId() + " = " + a.getExpression().translate(this) + ";\n";
 		}
 		else if(e instanceof IVariableAssignment) {
 			IVariableAssignment a = (IVariableAssignment) e;
-			return a.getVariable().getId() + " = " + a.getExpression().translate(this) + ";\n";
+			return a.getTarget().getId() + " = " + a.getExpression().translate(this) + ";\n";
 		}
 		else if(e instanceof ISelection) {
 			ISelection s = (ISelection) e;
@@ -170,7 +170,7 @@ public class Model2Java implements IModel2CodeTranslator {
 	
 	@Override
 	public String assignment(IVariableAssignment a) {
-		return a.getVariable().getId() + " = " + a.getExpression().translate(this) + ";\n";
+		return a.getTarget().getId() + " = " + a.getExpression().translate(this) + ";\n";
 	}
 
 	@Override
@@ -183,14 +183,14 @@ public class Model2Java implements IModel2CodeTranslator {
 			return "new " + ((IRecordAllocation) e).getRecordType().getId() + "()";
 		else if(e instanceof IArrayElement) {
 			IArrayElement el = (IArrayElement) e;
-			String text = el.getVariable().getId();
+			String text = el.getTarget().getId();
 			for(IExpression ex : el.getIndexes())
 				text += "[" + ex.translate(this) + "]";
 			return text;
 		}
 		else if(e instanceof IRecordFieldExpression) {
 			IRecordFieldExpression r = (IRecordFieldExpression) e;
-			return r.getVariable().getId()  + "." + r.getField().getId();
+			return r.getTarget().getId()  + "." + r.getField().getId();
 		}
 		else if(e instanceof IConditionalExpression) {
 			IConditionalExpression c = (IConditionalExpression) e;

@@ -22,7 +22,7 @@ public class TestRecord extends BaseTest {
 	IProcedure move = module.addProcedure(IType.VOID);
 	IVariable p = move.addParameter(Point.reference());
 	IBlock moveBody = move.getBody();
-	IRecordFieldAssignment ass = moveBody.addRecordFieldAssignment(p, x, IType.INT.literal(7));
+	IRecordFieldAssignment ass = moveBody.addRecordFieldAssignment(p.field(x), IType.INT.literal(7));
 	
 	IProcedure main = module.addProcedure(IType.INT);
 	IBlock mainBody = main.getBody();

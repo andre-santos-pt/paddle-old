@@ -9,32 +9,42 @@ import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IRecord;
 import pt.iscte.paddle.interpreter.IReference;
-import pt.iscte.paddle.interpreter.IStackFrame;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IExpression;
-import pt.iscte.paddle.model.IProgramElement;
-import pt.iscte.paddle.model.IRecordFieldVariable;
-import pt.iscte.paddle.model.IVariable;
 
-class ArrayElementAssignment extends VariableAssignment implements IArrayElementAssignment {
-
-	private ImmutableList<IExpression> indexes;
-
-	public ArrayElementAssignment(IBlock parent, IVariable variable, List<IExpression> indexes, IExpression expression) {
-		super(parent, variable, expression);
+class ArrayElementAssignment extends Statement implements IArrayElementAssignment {
+	private final IExpression target;
+	private final ImmutableList<IExpression> indexes;
+	private final IExpression expression;
+	
+	public ArrayElementAssignment(IBlock parent, IExpression target, List<IExpression> indexes, IExpression expression) {
+		super(parent, true);
+		this.target = target;
 		this.indexes = ImmutableList.copyOf(indexes);
+		this.expression = expression;
 	}
 
+	@Override
+	public IExpression getTarget() {
+		return target;
+	}
+	
 	@Override
 	public List<IExpression> getIndexes() {
 		return indexes;
 	}
 	
+
+	@Override
+	public IExpression getExpression() {
+		return expression;
+	}
+	
 	@Override
 	public String toString() {
-		String text = getVariable().getId();
+		String text = getTarget().getId();
 		for(IExpression e : indexes)
 			text += "[" + e + "]";
 		
@@ -43,29 +53,25 @@ class ArrayElementAssignment extends VariableAssignment implements IArrayElement
 	}
 	
 	@Override
-	public void execute(ICallStack callStack, List<IValue> values) throws ExecutionError {
+	public void execute(ICallStack stack, List<IValue> values) throws ExecutionError {
 		assert values.size() == getIndexes().size() + 1;
 		
-		IStackFrame frame = callStack.getTopFrame();
-
-		// TODO record resolve
-		
-		IVariable var = getVariable();
 		IReference ref = null;
-		if(var instanceof VariableDereference)
-			ref = (IReference) ((VariableDereference) var).evalutate(values, callStack);
-		else if(var instanceof IRecordFieldVariable) {
-				IVariable parent = (IVariable) var.getParent();
-				ref = frame.getVariableStore(parent);
-				IRecord rec = (IRecord) ref.getTarget();
-				ref = (IReference) rec.getField(((IRecordFieldVariable) var).getField());
+		if(target instanceof VariableDereference)
+			ref = (IReference) ((VariableDereference) target).evalutate(values, stack);
+		else if(target instanceof RecordFieldExpression) {
+			RecordFieldExpression rexp = (RecordFieldExpression) target;
+			IRecord r = rexp.resolveTarget(stack);
+			ref = (IReference) r.getField(rexp.getField());
 		}
+		else if(target instanceof Variable)
+			ref = stack.getTopFrame().getVariableStore((Variable) target);
 		else
-			ref = frame.getVariableStore(var);
+			assert false;
 		
 		IValue valueArray = ref.getTarget();
 		if(valueArray.isNull())
-			throw new ExecutionError(ExecutionError.Type.NULL_POINTER, this, "null pointer", var);
+			throw new ExecutionError(ExecutionError.Type.NULL_POINTER, this, "null pointer", target);
 		
 		IArray array = (IArray) valueArray;
 		

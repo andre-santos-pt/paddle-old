@@ -24,7 +24,7 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 	}
 	
 	@Override
-	public IVariable getVariable() {
+	public IVariable getTarget() {
 		return variable;
 	}
 
@@ -49,6 +49,6 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 	
 	@Override
 	public String getExplanation(ICallStack stack, List<IValue> expressions) {
-		return "Modifies variable " + getVariable().getId() + " to value " + expressions.get(0);
+		return "Modifies variable " + getTarget().getId() + " to value " + expressions.get(0);
 	}
 }

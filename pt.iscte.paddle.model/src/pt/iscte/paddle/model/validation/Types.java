@@ -102,10 +102,10 @@ public class Types extends Rule {
 
 	@Override
 	public boolean visit(IVariableAssignment assignment) {
-		checkAssignmentTypes(assignment.getVariable(), assignment.getExpression());
+		checkAssignmentTypes(assignment.getTarget(), assignment.getExpression());
 		
-		if(!assignment.getOwnerProcedure().getVariables().contains(assignment.getVariable()))
-			addProblem("unknown variable " + assignment.getVariable().getId(), assignment.getVariable());
+		if(!assignment.getOwnerProcedure().getVariables().contains(assignment.getTarget()))
+			addProblem("unknown variable " + assignment.getTarget().getId(), assignment.getTarget());
 		
 		return true;
 	}
@@ -124,7 +124,7 @@ public class Types extends Rule {
 
 	@Override
 	public boolean visit(IArrayElementAssignment assignment) {
-		IVariable variable = assignment.getVariable();
+		IExpression variable = assignment.getTarget();
 		IType type = variable.getType();
 		if(type instanceof IReferenceType)
 			type = ((IReferenceType) type).resolveTarget();

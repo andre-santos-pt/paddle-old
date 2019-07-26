@@ -11,7 +11,6 @@ import pt.iscte.paddle.model.IArrayLength;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordFieldExpression;
-import pt.iscte.paddle.model.IRecordFieldVariable;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAddress;
@@ -83,10 +82,10 @@ public class VariableDereference extends Expression implements IVariableDerefere
 		return new RecordFieldExpression(this, field); 
 	}
 	
-	@Override
-	public IRecordFieldVariable fieldVariable(IVariable field) {
-		return new RecordFieldVariable(this, field);
-	}
+//	@Override
+//	public IRecordFieldVariable fieldVariable(IVariable field) {
+//		return new RecordFieldVariable(this, field);
+//	}
 
 	@Override
 	public IProgramElement getParent() {

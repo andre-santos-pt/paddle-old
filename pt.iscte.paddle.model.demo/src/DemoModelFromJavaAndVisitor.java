@@ -27,7 +27,7 @@ public class DemoModelFromJavaAndVisitor {
 		nats.accept(new IVisitor() {
 			public boolean visit(IVariableAssignment assignment) {
 				ElementLocation loc = (ElementLocation) assignment.getProperty(ElementLocation.Part.WHOLE);
-				if (assignment.getVariable().getId().equals("i"))
+				if (assignment.getTarget().getId().equals("i"))
 					System.out.println(assignment + "\n" + loc + "\n");
 				return true;
 			}

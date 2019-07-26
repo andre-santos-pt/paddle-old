@@ -95,7 +95,7 @@ public class CTranslator implements IModel2CodeTranslator {
 			return "";
 		if(e instanceof IArrayElementAssignment) {
 			IArrayElementAssignment a = (IArrayElementAssignment) e;
-			String text = a.getVariable().getId();
+			String text = a.getTarget().getId();
 			for(IExpression i : a.getIndexes())
 				text += "[" + i + "]";
 			
@@ -106,7 +106,7 @@ public class CTranslator implements IModel2CodeTranslator {
 			;
 		else if(e instanceof IVariableAssignment) {
 			IVariableAssignment a = (IVariableAssignment) e;
-			return a.getVariable().getId() + " = " + a.getExpression() + ";\n";
+			return a.getTarget().getId() + " = " + a.getExpression() + ";\n";
 		}
 		else if(e instanceof ISelection) {
 			ISelection s = (ISelection) e;
@@ -137,7 +137,7 @@ public class CTranslator implements IModel2CodeTranslator {
 	
 	@Override
 	public String assignment(IVariableAssignment a) {
-		return a.getVariable().getId() + " = " + a.getExpression() + ";\n";
+		return a.getTarget().getId() + " = " + a.getExpression() + ";\n";
 	}
 
 	@Override
