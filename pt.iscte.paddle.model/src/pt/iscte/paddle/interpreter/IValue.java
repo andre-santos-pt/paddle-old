@@ -11,7 +11,7 @@ public interface IValue {
 	IValue copy();
 	
 	default boolean isNull() {
-		return getValue() == null;
+		return false;
 	}
 	
 	default boolean isTrue() {

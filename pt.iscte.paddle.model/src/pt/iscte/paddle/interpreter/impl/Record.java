@@ -33,7 +33,10 @@ public class Record implements IRecord {
 	@Override
 	public void setField(IVariable field, IValue value) {
 		assert fields.containsKey(field) : field;
-		fields.put(field, fields.get(field)).setTarget(value);
+		if(value instanceof IReference)
+			fields.get(field).setTarget(((IReference) value).getTarget());
+		else
+			fields.get(field).setTarget(value);
 	}
 	
 	@Override

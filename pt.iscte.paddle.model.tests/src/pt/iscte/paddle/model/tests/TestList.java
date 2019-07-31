@@ -47,7 +47,7 @@ public class TestList extends BaseTest {
 	IRecordFieldAssignment tAss_ = checkEmpty.getBlock().addRecordFieldAssignment(list_.field(tail), n);
 
 	IBlock elseBlock = checkEmpty.getAlternativeBlock();
-	IRecordFieldAssignment tNextAss = elseBlock.addRecordFieldAssignment(list_.field(tail).field(next), n);
+	IRecordFieldAssignment tNextAss = elseBlock.addRecordFieldAssignment(list_.field(tail).field(next), n); // problem
 	IRecordFieldAssignment tAss__ = elseBlock.addRecordFieldAssignment(list_.field(tail), n);
 
 

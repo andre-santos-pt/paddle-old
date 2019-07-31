@@ -3,7 +3,6 @@ import static org.junit.Assert.assertEquals;
 import static pt.iscte.paddle.model.IOperator.EQUAL;
 import static pt.iscte.paddle.model.IOperator.SMALLER;
 import static pt.iscte.paddle.model.IType.INT;
-import static pt.iscte.paddle.model.IType.VOID;
 
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.IExecutionData;

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.function.BiFunction;
 
 import pt.iscte.paddle.interpreter.ExecutionError;
+import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.interpreter.impl.Value;
 import pt.iscte.paddle.model.IBinaryExpression;
@@ -40,6 +41,12 @@ public enum RelationalOperator implements IBinaryOperator {
 
 	@Override
 	public IValue apply(IValue left, IValue right) throws ExecutionError {
+		if(left instanceof IReference)
+			left = ((IReference) left).getTarget();
+		
+		if(right instanceof IReference)
+			right = ((IReference) right).getTarget();
+		
 		return Value.create(IType.BOOLEAN, f.apply(left, right));
 	}
 	

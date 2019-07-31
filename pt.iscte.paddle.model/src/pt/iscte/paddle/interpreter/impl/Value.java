@@ -2,6 +2,8 @@ package pt.iscte.paddle.interpreter.impl;
 
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IArrayType;
+import pt.iscte.paddle.model.IRecordType;
+import pt.iscte.paddle.model.IReferenceType;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IValueType;
 
@@ -17,7 +19,7 @@ public final class Value implements IValue {
 	public static IValue create(IType type, Object value) {
 		if(type instanceof IValueType)
 			return new Value(type, ((IValueType)type).create(value.toString()));			
-		else if(type instanceof IArrayType)
+		else if(type instanceof IArrayType || type instanceof IRecordType || type instanceof IReferenceType)
 			return IValue.NULL;
 		else
 			return new Value(type, value);

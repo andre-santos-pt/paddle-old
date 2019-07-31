@@ -1,7 +1,6 @@
 package pt.iscte.paddle.model.tests;
 import static pt.iscte.paddle.model.IOperator.GREATER;
 import static pt.iscte.paddle.model.IOperator.SMALLER;
-import static pt.iscte.paddle.model.IType.DOUBLE;
 import static pt.iscte.paddle.model.IType.INT;
 
 import pt.iscte.paddle.interpreter.IExecutionData;

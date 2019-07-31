@@ -5,9 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 
+import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IRecord;
 import pt.iscte.paddle.interpreter.IReference;
+import pt.iscte.paddle.interpreter.ExecutionError.Type;
 
 public interface IRecordFieldExpression extends ISimpleExpression {
 
@@ -21,7 +23,7 @@ public interface IRecordFieldExpression extends ISimpleExpression {
 		return element(Arrays.asList(indexes));
 	}
 
-	default IRecord resolveTarget(ICallStack stack) {
+	default IRecord resolveTarget(ICallStack stack) throws ExecutionError {
 		IExpression f = getTarget();
 		Queue<IVariable> queue = new ArrayDeque<>();
 		
@@ -29,10 +31,13 @@ public interface IRecordFieldExpression extends ISimpleExpression {
 			queue.add(((IRecordFieldExpression) f).getField());
 			f = ((IRecordFieldExpression) f).getTarget();
 		}
+		IReference ref = stack.getTopFrame().getVariableStore((IVariable) f);
+		if(ref.isNull())
+			throw new ExecutionError(Type.NULL_POINTER, f, this.toString());
 			
-		IRecord r = (IRecord) stack.getTopFrame().getVariableStore((IVariable) f).getTarget();
-		while(queue.size() > 1) {
-			IReference ref = r.getField(queue.remove());
+		IRecord r = (IRecord) ref.getTarget();
+		while(!queue.isEmpty()) {
+			ref = r.getField(queue.remove());
 			r = (IRecord) ref.getTarget();
 		}
 		

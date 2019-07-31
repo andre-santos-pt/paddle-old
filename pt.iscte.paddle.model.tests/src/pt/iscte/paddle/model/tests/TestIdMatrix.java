@@ -1,8 +1,9 @@
 package pt.iscte.paddle.model.tests;
 
 import static org.junit.Assert.assertEquals;
-import static pt.iscte.paddle.model.IOperator.*;
-import static pt.iscte.paddle.model.IType.*;
+import static pt.iscte.paddle.model.IOperator.ADD;
+import static pt.iscte.paddle.model.IOperator.DIFFERENT;
+import static pt.iscte.paddle.model.IType.INT;
 
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.IExecutionData;

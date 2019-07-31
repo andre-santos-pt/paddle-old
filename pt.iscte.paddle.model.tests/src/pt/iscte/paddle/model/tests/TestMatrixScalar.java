@@ -2,18 +2,15 @@ package pt.iscte.paddle.model.tests;
 
 import static pt.iscte.paddle.model.IOperator.DIFFERENT;
 import static pt.iscte.paddle.model.IOperator.MUL;
-import static pt.iscte.paddle.model.IType.BOOLEAN;
 import static pt.iscte.paddle.model.IType.INT;
 import static pt.iscte.paddle.model.IType.VOID;
 
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.IExecutionData;
-import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
-import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.tests.asg.BaseTest;

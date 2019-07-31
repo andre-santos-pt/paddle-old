@@ -2,6 +2,7 @@ package pt.iscte.paddle.model.impl;
 
 import java.util.List;
 
+import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IRecord;
 import pt.iscte.paddle.interpreter.IValue;
@@ -58,7 +59,7 @@ class RecordFieldExpression extends Expression implements IRecordFieldExpression
 	}
 	
 	@Override
-	public IValue evalutate(List<IValue> values, ICallStack stack) {
+	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
 		assert target instanceof IVariable;
 		IRecord r = resolveTarget(stack); 
 		IValue field = r.getField(this.field).getTarget();

@@ -1,6 +1,9 @@
 package pt.iscte.paddle.model.tests;
 
-import static pt.iscte.paddle.model.IOperator.*;
+import static pt.iscte.paddle.model.IOperator.ADD;
+import static pt.iscte.paddle.model.IOperator.DIFFERENT;
+import static pt.iscte.paddle.model.IOperator.MOD;
+import static pt.iscte.paddle.model.IOperator.SMALLER_EQ;
 import static pt.iscte.paddle.model.IType.INT;
 
 import pt.iscte.paddle.interpreter.IExecutionData;

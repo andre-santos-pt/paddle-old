@@ -6,4 +6,8 @@ public interface IReference extends IValue {
 	void setTarget(IValue r);
 	
 	IReference copy();
+	
+	default boolean isNull() {
+		return getTarget() == IValue.NULL;
+	}
 }
