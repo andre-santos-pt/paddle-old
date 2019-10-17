@@ -17,7 +17,7 @@ public class DemoListener {
 	public static void main(String[] args) throws ExecutionError {
 
 		// instantiate model from file
-		Translator translator = new Translator(new File("TestFile.javali").getAbsolutePath());
+		Translator translator = new Translator(new File("naturals.javali").getAbsolutePath());
 		IModule module = translator.createProgram();
 		IProcedure nats = module.getProcedures().iterator().next(); // first
 

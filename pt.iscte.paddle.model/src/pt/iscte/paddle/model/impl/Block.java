@@ -127,7 +127,6 @@ class Block extends ProgramElement implements IBlock {
 	@Override
 	public IVariableAssignment addAssignment(IVariable variable, IExpression expression) {
 		// TODO OCL: variable must be owned by the same procedure of expression
-
 		return new VariableAssignment(this, variable, expression);
 	}
 
