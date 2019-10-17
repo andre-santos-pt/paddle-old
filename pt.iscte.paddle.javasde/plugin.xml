@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="pt.iscte.paddle.javasde.JavaSDE"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            extensions="java"
+            icon="icons/sample.png"
+            id="pt.iscte.paddle.javasde.JavaSDE"
+            name="Java Syntax-Directed Editor">
+      </editor>
+   </extension>
+
+</plugin>

@@ -9,6 +9,7 @@ import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IRecord;
 import pt.iscte.paddle.interpreter.IReference;
+import pt.iscte.paddle.interpreter.NullPointerError;
 import pt.iscte.paddle.interpreter.ExecutionError.Type;
 
 public interface IRecordFieldExpression extends ISimpleExpression {
@@ -33,7 +34,7 @@ public interface IRecordFieldExpression extends ISimpleExpression {
 		}
 		IReference ref = stack.getTopFrame().getVariableStore((IVariable) f);
 		if(ref.isNull())
-			throw new ExecutionError(Type.NULL_POINTER, f, this.toString());
+			throw new NullPointerError(f);
 			
 		IRecord r = (IRecord) ref.getTarget();
 		while(!queue.isEmpty()) {

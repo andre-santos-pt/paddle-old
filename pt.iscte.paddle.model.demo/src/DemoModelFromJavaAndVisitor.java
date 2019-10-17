@@ -5,8 +5,11 @@ import pt.iscte.paddle.javali.translator.ElementLocation;
 import pt.iscte.paddle.javali.translator.Model2Java;
 import pt.iscte.paddle.javali.translator.Translator;
 import pt.iscte.paddle.model.IBlock.IVisitor;
+import pt.iscte.paddle.model.IArrayElementAssignment;
+import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
 
 public class DemoModelFromJavaAndVisitor {
@@ -25,12 +28,21 @@ public class DemoModelFromJavaAndVisitor {
 		// Model visitor
 		System.out.println("Assignments to variable i:");
 		nats.accept(new IVisitor() {
-			public boolean visit(IVariableAssignment assignment) {
-				ElementLocation loc = (ElementLocation) assignment.getProperty(ElementLocation.Part.WHOLE);
-				if (assignment.getTarget().getId().equals("i"))
-					System.out.println(assignment + "\n" + loc + "\n");
-				return true;
+//			public boolean visit(IVariableAssignment assignment) {
+//				ElementLocation loc = (ElementLocation) assignment.getProperty(ElementLocation.Part.WHOLE);
+//				if (assignment.getTarget().getId().equals("i"))
+//					System.out.println(assignment + "\n" + loc + "\n");
+//				return true;
+//			}
+			
+			@Override
+			public boolean visit(IArrayElementAssignment assignment) {
+				IProcedure p = assignment.getOwnerProcedure();
+				p.getVariables().forEach(v -> System.out.println(v.getId() + " : " + v.getType()));
+			
+				return IVisitor.super.visit(assignment);
 			}
+			
 		});
 	}
 }

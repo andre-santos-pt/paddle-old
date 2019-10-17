@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.interpreter.ArrayIndexError;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
@@ -74,11 +75,13 @@ class ArrayElement extends Expression implements IArrayElement {
 			assert false;
 		
 		IValue element = ref.getTarget();
-		for(IValue v : values) {
+		for(int i = 0; i < values.size(); i++) {
+			IValue v = values.get(i);
 			int index = ((Number) v.getValue()).intValue();
 			if(index < 0 || index >= ((IArray)element).getLength())
-				throw new ExecutionError(ExecutionError.Type.ARRAY_INDEX_BOUNDS, this, "invalid index", index);
-			
+				throw new ArrayIndexError(this, index, target, indexes.get(i), index);
+//				throw new ExecutionError(ExecutionError.Type.ARRAY_INDEX_BOUNDS, this, "invalid index", index);
+				
 			element = ((IArray) element).getElement(index);
 		}
 		return element;

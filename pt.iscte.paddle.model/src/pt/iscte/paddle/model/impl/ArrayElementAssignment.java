@@ -4,12 +4,14 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.interpreter.ArrayIndexError;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IRecord;
 import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.IValue;
+import pt.iscte.paddle.interpreter.NullPointerError;
 import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IExpression;
@@ -71,7 +73,7 @@ class ArrayElementAssignment extends Statement implements IArrayElementAssignmen
 		
 		IValue valueArray = ref.getTarget();
 		if(valueArray.isNull())
-			throw new ExecutionError(ExecutionError.Type.NULL_POINTER, this, "null pointer", target);
+			throw new NullPointerError(target);
 		
 		IArray array = (IArray) valueArray;
 		
@@ -79,14 +81,16 @@ class ArrayElementAssignment extends Statement implements IArrayElementAssignmen
 		IValue v = array;
 		for(int i = 0; i < indexes.size()-1; i++) {
 			int index = ((Number) values.get(i).getValue()).intValue();
-			if(index < 0 || index >= ((IArray)v).getLength())
-				throw new ExecutionError(ExecutionError.Type.ARRAY_INDEX_BOUNDS, this, "invalid index", index);
+			if(index < 0 || index >= ((IArray)v).getLength()) {
+				throw new ArrayIndexError(this, index, target, indexes.get(i), i);
+			}
 			v = array.getElement(index);
 		}
 		
 		int index = ((Number) values.get(indexes.size()-1).getValue()).intValue();
-		if(index < 0 || index >= ((IArray)v).getLength())
-			throw new ExecutionError(ExecutionError.Type.ARRAY_INDEX_BOUNDS, this, "invalid index", index);
+		if(index < 0 || index >= ((IArray)v).getLength())			
+			throw new ArrayIndexError(this, index, target, indexes.get(indexes.size()-1), indexes.size()-1);
+
 		
 		IValue val = values.get(values.size()-1);
 		((IArray) v).setElement(index, val);

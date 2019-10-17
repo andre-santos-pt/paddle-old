@@ -4,12 +4,14 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.interpreter.ArrayIndexError;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ExecutionError.Type;
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.IValue;
+import pt.iscte.paddle.interpreter.NullPointerError;
 import pt.iscte.paddle.model.IArrayLength;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IType;
@@ -19,6 +21,7 @@ class ArrayLength extends Expression implements IArrayLength {
 	private final IVariable variable;
 	private final ImmutableList<IExpression> indexes;
 
+	// TODO target as expression
 	public ArrayLength(IVariable variable, List<IExpression> indexes) {
 		this.variable = variable;
 		this.indexes = ImmutableList.copyOf(indexes);
@@ -69,11 +72,15 @@ class ArrayLength extends Expression implements IArrayLength {
 			ref = stack.getTopFrame().getVariableStore(getVariable());
 		
 		IArray array = (IArray) ref.getTarget();
+		
+		if(array.isNull())
+			throw new NullPointerError(variable);
+		
 		IValue v = array;
 		for(int i = 0; i < values.size(); i++) {
 			int index = ((Number) values.get(i).getValue()).intValue();
 			if(index < 0 || index >= ((IArray) v).getLength())
-				throw new ExecutionError(Type.ARRAY_INDEX_BOUNDS, this, Integer.toString(index));
+				throw new ArrayIndexError(this, index, variable, indexes.get(i), i);
 			v = ((IArray) v).getElement(index);
 		}
 		return stack.getTopFrame().getValue(((IArray) v).getLength());
