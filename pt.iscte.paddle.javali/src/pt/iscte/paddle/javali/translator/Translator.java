@@ -85,7 +85,7 @@ public class Translator {
 		new JavaliStandaloneSetup().createInjectorAndDoEMFRegistration();
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new XMIResourceFactoryImpl());
 		ResourceSet rs = new ResourceSetImpl();
-		resource = rs.getResource(URI.createURI(locationURI), true);
+		resource = rs.getResource(URI.createURI("file:///" + locationURI), true);
 	}
 
 	public IModule createProgram() {
