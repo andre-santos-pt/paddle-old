@@ -1,20 +1,23 @@
 package pt.iscte.paddle.javasde;
-import java.util.Collections;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Composite;
 
 public class CallWidget extends StatementWidget {
-	public CallWidget(Composite parent, boolean statement) {
+	private Id id;
+	
+	public CallWidget(EditorWidget parent, String id, boolean statement) {
 		super(parent);
-		setLayout(new RowLayout(SWT.HORIZONTAL));
+		setLayout(ROW_LAYOUT_H_ZERO);
 		
-		Id id = ClassWidget.createId(this, "func", () -> Collections.emptyList());
+		this.id = ClassWidget.createId(this, id);
 		new Token(this, "(");
+		// TODO call arguments
 		new Token(this, ")");
 		if(statement)
 			new Token(this, ";");
+	}
+	
+	@Override
+	public void toCode(StringBuffer buffer) {
+		buffer.append(id).append("()"); // TODO call arguments
 	}
 	
 }

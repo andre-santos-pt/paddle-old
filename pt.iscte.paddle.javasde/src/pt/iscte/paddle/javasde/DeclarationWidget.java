@@ -4,32 +4,27 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseMoveListener;
-import org.eclipse.swt.events.MouseTrackListener;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 public class DeclarationWidget extends StatementWidget implements Selectable {
 	
+	private Id type;
 	private Id id;
+	private ExpressionWidget expression;
 
-	public DeclarationWidget(Composite parent) {
+	public DeclarationWidget(EditorWidget parent) {
 		super(parent);
-		RowLayout layout = new RowLayout(SWT.HORIZONTAL);
-		layout.spacing = 2;
-		setLayout(layout);
-		Id type = ClassWidget.createId(this, "int", () -> Arrays.asList("int", "double"));
-		id = ClassWidget.createId(this, "var", () -> Collections.emptyList());
-		Token equal = new Token(this, "=");
-		
-		new ExpressionWidget(this);
+		type = ClassWidget.createId(this, "type", PRIMITIVE_TYPES_SUPPLIER);
+		type.addArrayPart();
+		id = ClassWidget.createId(this, "variable");
+		Token token = new Token(this, "=");
+		expression = new ExpressionWidget(this);
 		new Token(this, ";");
-	
-		
+		Menu menu = token.getMenu();
+		MenuItem item = new MenuItem(menu, SWT.NONE);
+		item.setText("to assignment"); // TODO convert to assignment
+		token.setMenu(menu);
 	}
 	
 	@Override
@@ -37,4 +32,15 @@ public class DeclarationWidget extends StatementWidget implements Selectable {
 		return id;
 	}
 	
+	@Override
+	public void toCode(StringBuffer buffer) {
+		buffer.append(type).append(" ").append(id).append(" = ");
+		expression.toCode(buffer);
+		buffer.append(";");
+	}
+	
+	@Override
+	public boolean setFocus() {
+		return type.setFocus();
+	}
 }

@@ -3,14 +3,18 @@ package pt.iscte.paddle.javasde;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
-public class JavaSDE extends EditorPart {
+public class JavaSDElipsePart extends EditorPart {
 
 	private String name;
 	private ClassWidget classWidget;
@@ -24,7 +28,6 @@ public class JavaSDE extends EditorPart {
 
 	@Override
 	public void doSaveAs() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -55,32 +58,23 @@ public class JavaSDE extends EditorPart {
 
 		Composite child = new Composite(sc, SWT.NONE);
 		child.setLayout(new FillLayout());
-		classWidget = new ClassWidget(child, name);
+		classWidget = new ClassWidget(child, name, new UiMode());
 
 		sc.setContent(child);
 	    sc.setMinSize(400, 400);
 	    sc.setExpandHorizontal(true);
 	    sc.setExpandVertical(true);
 	    
-//		Button button = new Button(parent, SWT.PUSH);
-//		button.setText("code");
-//		button.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				StringBuffer buffer = new StringBuffer();
-//				classWidget.toCode(buffer);
-//				System.out.println(buffer);
-//			}
-//		});
-
-//		Button hide = new Button(parent, SWT.PUSH);
-//		hide.setText("hide/show +");
-//		hide.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				ClassWidget.hideAddLabels();
-//			}
-//		});
+	    Menu menu = new Menu(classWidget);
+	    MenuItem item = new MenuItem(menu, SWT.TOGGLE);
+	    item.setText("test");
+	    item.addSelectionListener(new SelectionAdapter() {
+	    	public void widgetSelected(SelectionEvent e) {
+				ClassWidget.hideAddLabels();
+			}
+		});
+	    classWidget.setMenu(menu);
+	    
 	}
 
 	@Override

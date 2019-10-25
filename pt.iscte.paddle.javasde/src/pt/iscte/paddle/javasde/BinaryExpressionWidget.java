@@ -1,22 +1,66 @@
 package pt.iscte.paddle.javasde;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 public class BinaryExpressionWidget extends EditorWidget {
-	boolean test = false;
+	private ExpressionWidget left;
+	private ExpressionWidget right;
+	private Token op;
+	private boolean brackets;
 	
-	public BinaryExpressionWidget(Composite parent, String operator) {
+	public BinaryExpressionWidget(EditorWidget parent, String operator) {
 		super(parent);
-		setLayout(ROW_LAYOUT_ZERO);
+		setLayout(ROW_LAYOUT_H_ZERO);
+		Token lBracket = new Token(this, "(");
+		lBracket.setVisible(false);
+		left = new ExpressionWidget(this);
+		op = new Token(this, operator, BINARY_OPERATORS_SUPPLIER);
+		right = new ExpressionWidget(this);
+		Token rBracket = new Token(this, ")");
+		rBracket.setVisible(false);
 		
-		ExpressionWidget left = new ExpressionWidget(this);
+		Menu menu = op.getMenu();
+		new MenuItem(menu, SWT.SEPARATOR);
+		
+		MenuItem brack = new MenuItem(menu, SWT.NONE);
+		brack.setText("( ... )");
+		brack.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				brackets = true;
+				lBracket.setVisible(true);
+				rBracket.setVisible(true);
+			}
+		});
+		
+		MenuItem simple = new MenuItem(menu, SWT.NONE);
+		simple.setText("simple expression");
+		simple.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				ExpressionWidget parent = (ExpressionWidget) getParent();
+				parent.expression = new SimpleExpression(parent, left.toString());
+				dispose();
+				parent.expression.requestLayout();
+			}
+		});
+	}
 	
-		Token op = new Token(this, operator);
+	@Override
+	public boolean setFocus() {
+		left.setFocus();
+		return true;
+	}
 
-		ExpressionWidget right = new ExpressionWidget(this);
-				
-		setToolTipText("Identifier\nCan only contain letters and underscores (_)");
+	@Override
+	public void toCode(StringBuffer buffer) {
+		if(brackets) buffer.append("(");
+		left.toCode(buffer);
+		buffer.append(" " + op + " ");
+		right.toCode(buffer);
+		if(brackets) buffer.append(")");
 	}
 
 }

@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="pt.iscte.paddle.javasde.JavaSDE"
+            class="pt.iscte.paddle.javasde.JavaSDElipsePart"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             extensions="java"
             icon="icons/sample.png"

@@ -1,28 +1,39 @@
 package pt.iscte.paddle.javasde;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
-
 public class ControlWidget extends StatementWidget implements Selectable {
 	
-	public ControlWidget(SequenceWidget parent, boolean whileLoop) {
+	private final boolean loop;
+	private final SequenceWidget block;
+	private ExpressionWidget expression;
+
+	public ControlWidget(SequenceWidget parent, boolean loop) {
 		super(parent);
-		RowLayout layout = new RowLayout(SWT.VERTICAL);
-		layout.spacing = 2;
-		setLayout(layout);
+		this.loop = loop;
+		setLayout(ROW_LAYOUT_V_ZERO);
 		EditorWidget header = new EditorWidget(this);
-		header.setLayout(new RowLayout(SWT.HORIZONTAL));
-		new Token(header, whileLoop ? "while" : "if", "(");
-		new ExpressionWidget(header);
-		new Token(header, ")", "{");
-		
-		new SequenceWidget(this);
-		
+		header.setLayout(ROW_LAYOUT_H_ZERO);
+		new Token(header, loop ? "while" : "if");
+		new Token(header, "(");
+		expression = new ExpressionWidget(header, "true");
+		new Token(header, ")");
+		new Token(header, "{");
+		block = new SequenceWidget(this);
 		new Token(this, "}");
 	}
-
-
+	
+	@Override
+	public boolean setFocus() {
+		expression.setFocus();
+		return true;
+	}
+	
+	@Override
+	public void toCode(StringBuffer buffer) {
+		buffer.append((loop ? "while" : "if") + "(");
+		expression.toCode(buffer);
+		buffer.append(") {").append(System.lineSeparator());
+		block.toCode(buffer);
+		buffer.append("}").append(System.lineSeparator());
+	}
 	
 }
