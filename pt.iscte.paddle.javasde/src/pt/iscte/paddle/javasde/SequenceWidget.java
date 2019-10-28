@@ -15,7 +15,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -27,36 +26,30 @@ public class SequenceWidget extends EditorWidget {
 		super(parent, parent.mode);
 		GridLayout layout = new GridLayout(2, false);
 		setLayout(layout);
-		Label addLabel = ClassWidget.createAddLabel(this);
-		addLabel.setLayoutData(ALIGN_TOP);
-		addLabel.setMenu(createMenu(addLabel));
 	}
-	
-	
-	
-	private Menu createMenu(Label label) {
+
+	Menu createMenu(Control label, boolean delete) {
 		Menu menu = new Menu(label);
-		addDeleteItem(label, menu);
-		new MenuItem(menu, SWT.SEPARATOR);
+		if(delete) {
+			addDeleteItem(label, menu);
+			new MenuItem(menu, SWT.SEPARATOR);
+		}
 		
-		// TODO ideia: plugins
-		addMenuItem(menu, label, "variable declaration", () -> new DeclarationWidget(this));
-		addMenuItem(menu, label, "variable assignment", () -> new AssignmentWidget(this));
-		addMenuItem(menu, label, "if statement", () -> new ControlWidget(this, false));
-		addMenuItem(menu, label, "while loop", () -> new ControlWidget(this, true));
-		addMenuItem(menu, label, "function call", () -> new CallWidget(this, "function", true));
-		addMenuItem(menu, label, "procedure call", () -> new CallWidget(this, "procedure", true));
-		addMenuItem(menu, label, "return statement", () -> new ReturnWidget(this));
-		
+		// TODO if-else
+		addMenuItem(menu, label, "variable declaration", 'v', () -> new DeclarationWidget(this));
+		addMenuItem(menu, label, "variable assignment", 'a', () -> new AssignmentWidget(this));
+		addMenuItem(menu, label, "while loop", 'w', () -> new WhileWidget(this, "true"));
+		addMenuItem(menu, label, "procedure call", 'c', () -> new CallWidget(this, "procedure", true));
+		addMenuItem(menu, label, "return statement", 'r', () -> new ReturnWidget(this));
+
 		addDragNDrop(label);
 		return menu;
 	}
 
-
-
-	private void addDeleteItem(Label label, Menu menu) {
+	private void addDeleteItem(Control label, Menu menu) {
 		MenuItem del = new MenuItem(menu, SWT.NONE);
 		del.setText("delete");
+		del.setAccelerator('d');
 		del.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				EditorWidget parent = (EditorWidget) label.getParent();
@@ -66,108 +59,138 @@ public class SequenceWidget extends EditorWidget {
 						children[i].dispose();
 						children[i+1].dispose();
 						parent.requestLayout();
+//						parent.getChildren()[i].setFocus(); // FIXME
 						return;
 					}
 				}
 			}
 		});
 	}
-	
-	
-	
-	
-	private void addMenuItem(Menu menu, Control statement, String text, Supplier<StatementWidget> provider) {
+
+
+
+
+	private void addMenuItem(Menu menu, Control statement, String text, char key, Supplier<EditorWidget> provider) {
 		MenuItem item = new MenuItem(menu, SWT.NONE);
 		item.setText(text);
 		item.setData(statement);
+		item.setAccelerator(key);
 		item.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				MenuItem item = (MenuItem) e.getSource();
-				Menu m = ((Menu) ((MenuItem) e.getSource()).getParent());
-				StatementWidget stat =  provider.get();
-				stat.moveBelow((Label) item.getData());
-				
-				Label addLabel = ClassWidget.createAddLabel(SequenceWidget.this);
-				addLabel.setLayoutData(ALIGN_TOP);
-				addLabel.setMenu(createMenu(addLabel));
-				addLabel.moveBelow(stat);
-				
-				stat.requestLayout();
-				stat.setFocus();
-				
+				Control label = (Control) item.getData();
+				createStatement(provider, label);
 			};
 		});
 	}
 	
+	public <T extends Control> T createStatement(Supplier<T> provider, Control location) {
+		T stat =  provider.get();
+		stat.moveAbove(location);
+		
+		Control addLabel = createAddLabel(SequenceWidget.this);
+		addLabel.setLayoutData(ALIGN_TOP);
+		addLabel.setMenu(createMenu(addLabel, true));
+		addLabel.moveAbove(stat);
+		addLabel.requestLayout();
+		
+		stat.requestLayout();
+		stat.setFocus();
+		return stat;
+	}
+	
+	public DeclarationWidget createDeclaration(String type, String id, String expression, Control location) {
+		return createStatement(() -> new DeclarationWidget(this, type, id, expression), location);
+	}
+	
+	public AssignmentWidget createAssignment(String id, String expression, Control location) {
+		return createStatement(() -> new AssignmentWidget(this, id, expression), location);
+	}
+	
+	public WhileWidget createLoop(String expression, Control location) {
+		return createStatement(() -> new WhileWidget(this, expression), location);
+	}
+	
+	public CallWidget createCall(String id, Control location) { // TODO arguments
+		return createStatement(() -> new CallWidget(this, id, true), location);
+	}
+	
+	public ReturnWidget createReturn(String expression, Control location) {
+		return createStatement(() -> new ReturnWidget(this, expression), location);
+	}
+	
+
 	public void toCode(StringBuffer buffer, int level) {
 		for (Control control : getChildren())
 			if(control instanceof EditorWidget)
 				((EditorWidget) control).toCode(buffer, level);
 	}
-	
-	
+
+
 	// TODO drag n drop to move statements
-	private void addDragNDrop(Label label) {
+	private void addDragNDrop(Control label) {
 		DragSource source = new DragSource(label, DND.DROP_NONE);
-        source.setTransfer(TextTransfer.getInstance()); 
-        source.addDragListener(new DragSourceListener() {
-			
+		source.setTransfer(TextTransfer.getInstance()); 
+		source.addDragListener(new DragSourceListener() {
+
 			@Override
 			public void dragStart(DragSourceEvent event) {
 				System.out.println("start - " + event);
 			}
-			
+
 			@Override
 			public void dragSetData(DragSourceEvent event) {
 				System.out.println("set");
 				event.data = "test";
 			}
-			
+
 			@Override
 			public void dragFinished(DragSourceEvent event) {
 				System.out.println("end - " + event);
 			}
 		});
-        
-        DropTarget target = new DropTarget(label, DND.DROP_NONE);
-        target.setTransfer(TextTransfer.getInstance());
-        target.addDropListener(new DropTargetListener() {
-			
+
+		DropTarget target = new DropTarget(label, DND.DROP_NONE);
+		target.setTransfer(TextTransfer.getInstance());
+		target.addDropListener(new DropTargetListener() {
+
 			@Override
 			public void dropAccept(DropTargetEvent event) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void drop(DropTargetEvent event) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void dragOver(DropTargetEvent event) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void dragOperationChanged(DropTargetEvent event) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void dragLeave(DropTargetEvent event) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void dragEnter(DropTargetEvent event) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 	}
+
+	
 }

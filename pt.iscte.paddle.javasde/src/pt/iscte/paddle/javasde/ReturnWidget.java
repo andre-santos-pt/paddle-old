@@ -1,13 +1,17 @@
 package pt.iscte.paddle.javasde;
 
-public class ReturnWidget extends StatementWidget implements Selectable {
+public class ReturnWidget extends EditorWidget {
 	private ExpressionWidget expressionWidget;
 	
-	public ReturnWidget(EditorWidget parent) {
+	ReturnWidget(EditorWidget parent) {
+		this(parent, "expression");
+	}
+	
+	ReturnWidget(EditorWidget parent, String expression) {
 		super(parent);
 		setLayout(ROW_LAYOUT_H_ZERO);
 		new Token(this, "return");
-		expressionWidget = new ExpressionWidget(this);
+		expressionWidget = new ExpressionWidget(this, expression);
 		new Token(this, ";");
 	}
 	

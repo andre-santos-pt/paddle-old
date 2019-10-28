@@ -4,29 +4,28 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class AssignmentWidget extends StatementWidget implements Selectable {
+public class AssignmentWidget extends EditorWidget {
 
-	private Id id;
+	private EditorWidget id;
 	private ExpressionWidget expression;
 
-	public AssignmentWidget(EditorWidget parent) {
+	AssignmentWidget(EditorWidget parent) {
+		this(parent, "variable", "expression");
+	}
+
+	AssignmentWidget(EditorWidget parent, String id, String expression) {
 		super(parent);
-		id = ClassWidget.createId(this, "variable");
+		this.id = createId(this, id);
 		Token token = new Token(this, "=");
-		expression = new ExpressionWidget(this);
+		this.expression = new ExpressionWidget(this, expression);
 		new Token(this, ";");
 
 		Menu menu = token.getMenu();
 		MenuItem item = new MenuItem(menu, SWT.NONE);
-		item.setText("to declaration");
+		item.setText("to declaration"); // TODO convert to declaration
 		token.setMenu(menu);
 	}
-
-	@Override
-	public EditorWidget initControl() {
-		return id;
-	}
-
+	
 	@Override
 	public void toCode(StringBuffer buffer) {
 		buffer.append(id).append(" = ");

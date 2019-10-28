@@ -18,11 +18,16 @@ public class ExpressionWidget extends EditorWidget {
 		super(parent);
 		setLayout(ROW_LAYOUT_H_ZERO);
 		initLiteral = literal;
-		//		expression = ClassWidget.createId(this, "expression");
 		expression = new SimpleExpression(this, literal);
 		addMenu(expression);
 	}
 
+	public void set(String expression) {
+		this.expression.dispose();
+		this.expression = new SimpleExpression(this, expression);
+		this.expression.requestLayout();
+	}
+	
 	private void addMenu(EditorWidget widget) {
 		Menu menu = new Menu(widget);
 		MenuItem item1 = new MenuItem(menu, SWT.NONE);
@@ -34,6 +39,7 @@ public class ExpressionWidget extends EditorWidget {
 				expression = new UnaryExpressionWidget(ExpressionWidget.this, "!", target);
 				addMenu(expression);
 				expression.requestLayout();
+				expression.setFocus();
 			}
 		});
 		MenuItem item2 = new MenuItem(menu, SWT.NONE);
@@ -44,6 +50,7 @@ public class ExpressionWidget extends EditorWidget {
 				expression = new BinaryExpressionWidget(ExpressionWidget.this, "+");
 				addMenu(expression);
 				expression.requestLayout();
+				expression.setFocus();
 			}
 		});
 		
@@ -55,6 +62,7 @@ public class ExpressionWidget extends EditorWidget {
 				expression = new CallWidget(ExpressionWidget.this, "func", false);
 				addMenu(expression);
 				expression.requestLayout();
+				expression.setFocus();
 			}
 		});
 		
@@ -70,6 +78,18 @@ public class ExpressionWidget extends EditorWidget {
 			}
 		});
 		
+		MenuItem item5 = new MenuItem(menu, SWT.NONE);
+		item5.setText("array element");
+		item5.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				expression.dispose();
+				expression = new ArrayElementExpression(ExpressionWidget.this, "variable");
+				addMenu(expression);
+				expression.requestLayout();
+				expression.setFocus();
+			}
+		});
+		
 		widget.setMenu(menu);
 	}
 
@@ -77,4 +97,6 @@ public class ExpressionWidget extends EditorWidget {
 	public void toCode(StringBuffer buffer) {
 		expression.toCode(buffer);
 	}
+
+	
 }

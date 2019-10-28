@@ -1,37 +1,33 @@
 package pt.iscte.paddle.javasde;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class DeclarationWidget extends StatementWidget implements Selectable {
+public class DeclarationWidget extends EditorWidget {
 	
 	private Id type;
-	private Id id;
+	private EditorWidget id;
 	private ExpressionWidget expression;
 
-	public DeclarationWidget(EditorWidget parent) {
+	DeclarationWidget(SequenceWidget parent) {
+		this(parent, "type", "variable", "expression");
+	}
+	
+	DeclarationWidget(SequenceWidget parent, String type, String id, String expression) {
 		super(parent);
-		type = ClassWidget.createId(this, "type", PRIMITIVE_TYPES_SUPPLIER);
-		type.addArrayPart();
-		id = ClassWidget.createId(this, "variable");
+		this.type = createId(this, type, PRIMITIVE_TYPES_SUPPLIER);
+		this.type.addArrayPart();
+		this.id = createId(this, id);
 		Token token = new Token(this, "=");
-		expression = new ExpressionWidget(this);
+		this.expression = new ExpressionWidget(this, expression);
 		new Token(this, ";");
 		Menu menu = token.getMenu();
 		MenuItem item = new MenuItem(menu, SWT.NONE);
 		item.setText("to assignment"); // TODO convert to assignment
 		token.setMenu(menu);
 	}
-	
-	@Override
-	public EditorWidget initControl() {
-		return id;
-	}
-	
+
 	@Override
 	public void toCode(StringBuffer buffer) {
 		buffer.append(type).append(" ").append(id).append(" = ");

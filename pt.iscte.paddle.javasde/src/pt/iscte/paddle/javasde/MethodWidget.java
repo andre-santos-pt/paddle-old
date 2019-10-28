@@ -2,27 +2,25 @@ package pt.iscte.paddle.javasde;
 
 import static java.lang.System.lineSeparator;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class MethodWidget extends EditorWidget {
+public class MethodWidget extends EditorWidget implements StatementContainer {
 
 	private Id retType;
-	private Id id;
-	private SequenceWidget sequence;
+	private EditorWidget id;
+	private SequenceWidget body;
 	private ParamList params;
+	private Control addLabel;
 
-	public MethodWidget(Composite parent, String name, String returnType, UiMode mode) {
-		super(parent, mode);
+	MethodWidget(ClassWidget parent, String name, String returnType) {
+		super(parent, parent.getMode());
 
 		RowLayout layout = new RowLayout(SWT.VERTICAL);
 		layout.marginLeft = mode.staticClass ? 10 : TAB;
@@ -34,40 +32,55 @@ public class MethodWidget extends EditorWidget {
 		if (!mode.staticClass)
 			new Token(header, "static");
 
-		retType = ClassWidget.createId(header, returnType, PRIMITIVE_TYPES_SUPPLIER);
+		retType = createId(header, returnType, PRIMITIVE_TYPES_SUPPLIER);
 		retType.addArrayPart();
 		retType.setFont(Token.FONT);
 
-		id = ClassWidget.createId(header, name);
+		id = createId(header, name);
 
 		new Token(header, "(");
 		params = new ParamList(header);
 		new Token(header, ")");
 		new Token(header, "{");
-		sequence = new SequenceWidget(this);
-		new Token(this, "}");
+		body = new SequenceWidget(this);
+		addLabel = createAddLabel(this, "}");
+		addLabel.setMenu(body.createMenu(addLabel, false));
 	}
 
 	private class ParamList extends EditorWidget {
 		public ParamList(Composite parent) {
 			super(parent, MethodWidget.this.mode);
 			setLayout(ROW_LAYOUT_H_ZERO);
-			Label add = ClassWidget.createAddLabel(this);
+			Control add = createAddLabel(this);
 			Menu menu = new Menu(add);
+			
+			MenuItem delete = new MenuItem(menu, SWT.NONE);
+			delete.setText("delete");
+			delete.setAccelerator('d');
+			delete.setEnabled(false);
+			delete.addSelectionListener(new SelectionAdapter() {
+				public void widgetSelected(SelectionEvent e) {
+					Control[] children = params.getChildren();
+					children[children.length-2].dispose();
+					delete.setEnabled(children.length > 2);
+					requestLayout();
+				}
+			});
+			new MenuItem(menu, SWT.SEPARATOR);
 			MenuItem addParam = new MenuItem(menu, SWT.NONE);
 			addParam.setText("parameter");
+			addParam.setAccelerator('p');
 			addParam.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					if (ParamList.this.getChildren()[0] != add) {
-						Token comma = new Token(ParamList.this, ",");
-						comma.moveBelow(add);
-					}
-					Param param = new Param();
-					param.moveBelow(add);
+					delete.setEnabled(true);
+					boolean comma = ParamList.this.getChildren()[0] != add;
+					Param param = new Param(comma);
+					param.moveAbove(add);
 					param.requestLayout();
 					param.setFocus();
 				}
 			});
+			
 			add.setMenu(menu);
 		}
 
@@ -75,12 +88,15 @@ public class MethodWidget extends EditorWidget {
 			private Id type;
 			private Id var;
 
-			public Param() {
+			public Param(boolean comma) {
 				super(ParamList.this, ParamList.this.mode);
 				setLayout(ROW_LAYOUT_H_ZERO);
-				type = ClassWidget.createId(this, "type", PRIMITIVE_TYPES_SUPPLIER);
+				if(comma)
+					new Token(this, ",");
+				type = createId(this, "type", PRIMITIVE_TYPES_SUPPLIER);
+				type.addArrayPart();
 				type.setToolTip("Parameter type");
-				var = ClassWidget.createId(this, "parameter");
+				var = createId(this, "parameter");
 				var.setToolTip("Parameter name");
 			}
 			
@@ -92,17 +108,28 @@ public class MethodWidget extends EditorWidget {
 		}
 	}
 
+	@Override
+	public SequenceWidget getBody() {
+		return body;
+	}
+	
+	@Override
+	public Control getTail() {
+		return addLabel;
+	}
+	
+	
 	public void toCode(StringBuffer buffer) {
 		buffer.append("\tpublic static ").append(retType).append(" ").append(id.toString())
 		.append("(...)") // TODO parameters to code
 		.append(" {").append(lineSeparator());
-		sequence.toCode(buffer, 2);
+		body.toCode(buffer, 2);
 		buffer.append("\t}").append(lineSeparator());
 
 	}
 
 	public SequenceWidget getSequence() {
-		return sequence;
+		return body;
 	}
 
 	@Override

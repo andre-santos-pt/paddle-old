@@ -6,13 +6,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Text;
 
 public class Token extends EditorWidget {
-	private final Label label;
+	private final Control label;
 
 	public Token(EditorWidget parent, String token) {
 		this(parent, token, EMPTY_TOKEN_SUPPLIER);
@@ -22,8 +24,15 @@ public class Token extends EditorWidget {
 		super(parent, parent.mode);
 		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		setLayout(new FillLayout());
-		label = new Label(this, SWT.NONE);
-		label.setText(token);
+		List<String> list = alternatives.get();
+		label = list.isEmpty() ? new Label(this, SWT.NONE) : new Text(this, SWT.NONE);
+		if(label instanceof Label)
+			((Label) label).setText(token);
+		else {
+			((Text) label).setText(token);
+			((Text) label).setEditable(false);
+		}
+		
 		if(isKeyword(token)) {
 			label.setFont(FONT_KW);
 			label.setForeground(COLOR_KW);
@@ -37,7 +46,7 @@ public class Token extends EditorWidget {
 			item.setText(t);
 			item.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					label.setText(item.getText());
+					((Text) label).setText(item.getText());
 					label.requestLayout();
 				}
 			});
@@ -48,7 +57,10 @@ public class Token extends EditorWidget {
 	
 	@Override
 	public void toCode(StringBuffer buffer) {
-		buffer.append(label.getText());
+		if(label instanceof Label)
+			buffer.append(((Label) label).getText());
+		else
+			buffer.append(((Text) label).getText());
 	}
 	
 	@Override

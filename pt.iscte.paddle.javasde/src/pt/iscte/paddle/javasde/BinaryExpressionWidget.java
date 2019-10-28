@@ -54,6 +54,15 @@ public class BinaryExpressionWidget extends EditorWidget {
 		return true;
 	}
 
+	void setLeft(String expression) {
+		left.set(expression);
+	}
+	
+	public void focusRight() {
+		left.setForeground(FONT_COLOR);
+		right.setFocus();
+	}
+
 	@Override
 	public void toCode(StringBuffer buffer) {
 		if(brackets) buffer.append("(");
@@ -62,5 +71,6 @@ public class BinaryExpressionWidget extends EditorWidget {
 		right.toCode(buffer);
 		if(brackets) buffer.append(")");
 	}
+
 
 }

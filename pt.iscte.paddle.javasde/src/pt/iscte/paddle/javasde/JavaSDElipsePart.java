@@ -70,7 +70,7 @@ public class JavaSDElipsePart extends EditorPart {
 	    item.setText("test");
 	    item.addSelectionListener(new SelectionAdapter() {
 	    	public void widgetSelected(SelectionEvent e) {
-				ClassWidget.hideAddLabels();
+				classWidget.hideAddLabels();
 			}
 		});
 	    classWidget.setMenu(menu);
