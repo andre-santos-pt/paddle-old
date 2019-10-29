@@ -17,7 +17,7 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 	private EditorWidget id;
 	private SequenceWidget body;
 	private ParamList params;
-	private Control addLabel;
+	private Control closeBody;
 
 	MethodWidget(ClassWidget parent, String name, String returnType) {
 		super(parent, parent.getMode());
@@ -32,7 +32,7 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 		if (!mode.staticClass)
 			new Token(header, "static");
 
-		retType = createId(header, returnType, PRIMITIVE_TYPES_SUPPLIER);
+		retType = createId(header, returnType, PRIMITIVE_TYPES_VOID_SUPPLIER);
 		retType.addArrayPart();
 		retType.setFont(Token.FONT);
 
@@ -41,10 +41,11 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 		new Token(header, "(");
 		params = new ParamList(header);
 		new Token(header, ")");
-		new Token(header, "{");
+		Token openBody = new Token(header, "{");
 		body = new SequenceWidget(this);
-		addLabel = createAddLabel(this, "}");
-		addLabel.setMenu(body.createMenu(addLabel, false));
+		closeBody = createAddLabel(this, "}");	
+		closeBody.setMenu(body.createMenu(closeBody, false));
+		openBody.setSibling(closeBody);
 	}
 
 	private class ParamList extends EditorWidget {
@@ -115,7 +116,7 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 	
 	@Override
 	public Control getTail() {
-		return addLabel;
+		return closeBody;
 	}
 	
 	

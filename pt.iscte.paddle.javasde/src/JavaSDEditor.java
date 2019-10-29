@@ -59,7 +59,7 @@ public class JavaSDEditor {
 
 		UiMode mode = new UiMode();
 		
-		ClassWidget c = instantiateExample(area, mode);
+		ClassWidget c = instantiationExample(area, mode);
 		
 		Button button = new Button(area, SWT.PUSH);
 		button.setText("code");
@@ -94,7 +94,7 @@ public class JavaSDEditor {
 		display.dispose();
 	}
 
-	private static ClassWidget instantiateExample(Composite area, UiMode mode) {
+	private static ClassWidget instantiationExample(Composite area, UiMode mode) {
 		ClassWidget c = new ClassWidget(area, "Name", mode);
 		MethodWidget m = c.createMethod("f", "int");
 		WhileWidget l = m.createLoop("true");

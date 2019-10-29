@@ -2,7 +2,7 @@ package pt.iscte.paddle.javasde;
 
 import org.eclipse.swt.widgets.Control;
 
-public interface StatementContainer {
+interface StatementContainer {
 
 	SequenceWidget getBody();
 	Control getTail();

@@ -3,6 +3,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -15,7 +19,8 @@ import org.eclipse.swt.widgets.Text;
 
 public class Token extends EditorWidget {
 	private final Control label;
-
+	private Token sibling;
+	
 	public Token(EditorWidget parent, String token) {
 		this(parent, token, EMPTY_TOKEN_SUPPLIER);
 	}
@@ -67,4 +72,6 @@ public class Token extends EditorWidget {
 	public Menu getMenu() {
 		return label.getMenu();
 	}
+	
+	
 }

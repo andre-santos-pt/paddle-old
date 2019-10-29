@@ -13,11 +13,9 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
@@ -26,9 +24,9 @@ import org.eclipse.swt.widgets.Text;
 public class ClassWidget extends EditorWidget {
 
 	private Id id;
-	private Text addLabel;
+	private Text closeBlock;
 	private UiMode mode;
-	
+
 	public ClassWidget(Composite parent, String name, UiMode mode) {
 		super(parent, mode);
 		this.mode = mode;
@@ -36,27 +34,31 @@ public class ClassWidget extends EditorWidget {
 		layout.verticalSpacing = 10;
 		setLayout(layout);
 
+		Token openBlock = null;
 		if(!mode.staticClass) {
 			EditorWidget header = new EditorWidget(this, mode);
 			header.setLayout(ROW_LAYOUT_H_ZERO);
 			new Token(header, "class");
 			id = createId(header, name);
-			new Token(header, "{");
+			openBlock = new Token(header, "{");
 		}
 
 		Menu menu = createMenu(mode);
 
-		addLabel = createAddLabel(this);
-		addLabel.setMenu(menu);
-
+		closeBlock = createAddLabel(this, mode.staticClass ? " " : "}");
 		if(!mode.staticClass)
-			new Token(this, "}");		
+			openBlock.setSibling(closeBlock);
+
+		closeBlock.setMenu(menu);
+
+//		if(!mode.staticClass)
+//			new Token(this, "}");		
 	}
 
 	public UiMode getMode() {
 		return mode;
 	}
-	
+
 	private Menu createMenu(UiMode mode) {
 		Menu menu = new Menu(this);
 		MenuItem item = new MenuItem(menu, SWT.NONE);
@@ -64,7 +66,7 @@ public class ClassWidget extends EditorWidget {
 		item.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				MethodWidget m = new MethodWidget(ClassWidget.this, "func", "type");
-				m.moveAbove(addLabel);
+				m.moveAbove(closeBlock);
 				m.requestLayout();
 				m.setFocus();
 			}
@@ -74,7 +76,7 @@ public class ClassWidget extends EditorWidget {
 		item2.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				MethodWidget m = new MethodWidget(ClassWidget.this, "proc", "void");
-				m.moveAbove(addLabel);
+				m.moveAbove(closeBlock);
 				m.requestLayout();
 				m.setFocus();
 			}
@@ -97,9 +99,6 @@ public class ClassWidget extends EditorWidget {
 	private List<Id> idWidgets = new ArrayList<>();
 
 
-	static Color WHITE = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
-	static Color GRAY = new Color(Display.getDefault(), 245, 245, 245);
-
 	private static final Supplier<List<String>> EMPTY_SUPPLIER = () -> Collections.emptyList();
 
 	Id createId(EditorWidget parent, String id) {
@@ -115,11 +114,11 @@ public class ClassWidget extends EditorWidget {
 	Text createAddLabel(Composite parent) {
 		return createAddLabel(parent, " ");
 	}
-	
+
 	Text createAddLabel(Composite parent, String token) {
 		Text label = new Text(parent, SWT.NONE);
 		label.setForeground(FONT_COLOR);
-		label.setBackground(GRAY);
+		label.setBackground(COLOR_ADDLABEL);
 		label.setEditable(false);
 		label.setFont(FONT);
 		label.setText(token);
@@ -139,7 +138,6 @@ public class ClassWidget extends EditorWidget {
 							children[i-2].setFocus();
 							return;
 						}
-
 					}
 				}
 				else if(e.keyCode == SWT.ARROW_DOWN) {
@@ -155,32 +153,32 @@ public class ClassWidget extends EditorWidget {
 				}
 			}
 		});
-				addLabels.add(label);
+		addLabels.add(label);
 		return label;
 	}
 
 
 	private static final Predicate<Control> isDisposed = c -> c.isDisposed();
-	
+
 	public void hideAddLabels() {
 
 		// dispose
 		editMode = !editMode;
 		addLabels.removeIf(isDisposed);
 		for(Control l : addLabels) {
-//			l.setForeground(editMode ? WHITE : FONT_COLOR);
-			l.setBackground(editMode ? GRAY : WHITE);
+			//			l.setForeground(editMode ? WHITE : FONT_COLOR);
+			l.setBackground(editMode ? COLOR_ADDLABEL : COLOR_BACKGROUND);
 			//			l.setVisible(editMode);
 		}
 		idWidgets.removeIf(isDisposed);
-//		for(Id id : idWidgets)
-//			id.setEditable(!editMode);
+		//		for(Id id : idWidgets)
+		//			id.setEditable(!editMode);
 	}
 
 	public MethodWidget createMethod(String name, String returnType) {
 		MethodWidget m = new MethodWidget(this, name, returnType);
-		m.moveAbove(addLabel);
+		m.moveAbove(closeBlock);
 		return m;
 	}
-	
+
 }

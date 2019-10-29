@@ -6,7 +6,7 @@ public class WhileWidget extends EditorWidget implements StatementContainer {
 	
 	private final SequenceWidget block;
 	private ExpressionWidget expression;
-	private Control addLabel;
+	private Control closeBlock;
 	
 	WhileWidget(SequenceWidget parent, String expression) {
 		super(parent);
@@ -17,10 +17,11 @@ public class WhileWidget extends EditorWidget implements StatementContainer {
 		new Token(header, "(");
 		this.expression = new ExpressionWidget(header, expression);
 		new Token(header, ")");
-		new Token(header, "{");
+		Token openBlock = new Token(header, "{");
 		block = new SequenceWidget(this);
-		addLabel = createAddLabel(this, "}");
-		addLabel.setMenu(block.createMenu(addLabel, false));
+		closeBlock = createAddLabel(this, "}");
+		closeBlock.setMenu(block.createMenu(closeBlock, false));
+		openBlock.setSibling(closeBlock);
 	}
 	
 	@Override
@@ -36,7 +37,7 @@ public class WhileWidget extends EditorWidget implements StatementContainer {
 	
 	@Override
 	public Control getTail() {
-		return addLabel;
+		return closeBlock;
 	}
 	
 	@Override

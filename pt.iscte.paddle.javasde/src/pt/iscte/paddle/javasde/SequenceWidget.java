@@ -25,6 +25,7 @@ public class SequenceWidget extends EditorWidget {
 	public SequenceWidget(EditorWidget parent) {
 		super(parent, parent.mode);
 		GridLayout layout = new GridLayout(2, false);
+		layout.marginLeft = TAB;
 		setLayout(layout);
 	}
 
@@ -108,7 +109,11 @@ public class SequenceWidget extends EditorWidget {
 	}
 	
 	public WhileWidget createLoop(String expression, Control location) {
-		return createStatement(() -> new WhileWidget(this, expression), location);
+		 WhileWidget w = createStatement(() -> new WhileWidget(this, expression), location);
+//		 GridData data = new GridData(SWT.LEFT, SWT.TOP, true, true);
+//		 data.verticalSpan = 2;
+//		 w.setLayoutData(data);
+		 return w;
 	}
 	
 	public CallWidget createCall(String id, Control location) { // TODO arguments
