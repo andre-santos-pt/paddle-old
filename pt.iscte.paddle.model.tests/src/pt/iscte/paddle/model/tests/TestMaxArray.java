@@ -16,7 +16,7 @@ import pt.iscte.paddle.tests.asg.BaseTest;
 public class TestMaxArray extends BaseTest {
 
 	IProcedure max = module.addProcedure(INT);
-	IVariable array = max.addParameter(INT.array().reference());
+	IVariable array = max.addParameter(INT.array().reference());  // FIXME type toString is null
 	IBlock body = max.getBody();
 	IVariable m = body.addVariable(INT);
 	IVariableAssignment mAss = body.addAssignment(m, array.element(INT.literal(0)));
