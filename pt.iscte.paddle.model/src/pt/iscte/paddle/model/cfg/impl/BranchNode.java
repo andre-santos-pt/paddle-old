@@ -33,10 +33,19 @@ public class BranchNode extends Node implements IBranchNode {
 	@Override
 	public String toString() {
 		INode next = getNext();
-		if(next == null)
-			return expression + "\t\t (no next!)";
-		else
-			return expression + " -> " + (!next.isExit() ? next.getElement().toString() : next.toString());
+		String s = "";
+		String nextText = "(NO NEXT!)";
+		if(next != null)
+			nextText = next.isExit() ? next.toString() : next.getElement().toString();
+			
+		s += expression + " >>>> " + nextText + "\n";
+		
+		String altText = "(NO BRANCH!)";
+		if(alternative != null)
+			altText = alternative.isExit() ? alternative.toString() : alternative.getElement().toString();
+		s += expression + " >..> " + altText;
+
+		return s;
 	}
 
 }

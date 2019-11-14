@@ -21,9 +21,9 @@ public class StatementNode extends Node implements IStatementNode {
 	public String toString() {
 		INode next = getNext();
 		if(next == null)
-			return statement + "\t\t (no next!)";
+			return statement + " (NO NEXT!)";
 		else
-			return statement + " -> " + (!next.isExit() ? next.getElement().toString() : next.toString());
+			return statement + " >>>> " + (!next.isExit() ? next.getElement().toString() : next.toString());
 	}
 
 }
