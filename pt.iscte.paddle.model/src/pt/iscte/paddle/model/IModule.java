@@ -11,8 +11,13 @@ import pt.iscte.paddle.model.validation.ISemanticProblem;
 /**
  * Mutable
  */
-public interface IModule extends IProgramElement {
-
+public interface IModule extends IProgramElement, IListenable<IModule.IListener> {
+	
+	interface IListener {
+		default void constantAdded(IProcedure procedure) { }
+		default void procedureAdded(IProcedure procedure) { }
+	}
+	
 	static IModule create() {
 		return new Module();
 	}

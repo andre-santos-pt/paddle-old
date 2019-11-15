@@ -9,7 +9,7 @@ class Selection extends ControlStructure implements ISelection {
 
 	public Selection(Block parent, IExpression guard, boolean hasAlternative) {
 		super(parent, guard);
-		alternativeBlock = hasAlternative ? parent.addLooseBlock() : null;
+		alternativeBlock = hasAlternative ? parent.addLooseBlock(this) : null;
 	}
 
 	@Override

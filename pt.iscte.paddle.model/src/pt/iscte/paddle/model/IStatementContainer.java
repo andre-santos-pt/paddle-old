@@ -7,12 +7,13 @@ public interface IStatementContainer {
 	
 	IBlock getBlock();
 	
+	
 	default boolean isEmpty() {
 		return getBlock().isEmpty();
 	}
 	
-	default IBlock addBlock() {
-		return getBlock().addBlock();
+	default IBlock addBlock(IProgramElement parent) {
+		return getBlock().addBlock(parent);
 	}
 
 	default IVariable addVariable(IType type) {

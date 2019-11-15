@@ -6,7 +6,14 @@ import java.util.List;
 /**
  * Mutable
  */
-public interface IBlock extends IBlockElement, IStatementContainer, Iterable<IBlockElement> {
+public interface IBlock extends IBlockElement, IStatementContainer, Iterable<IBlockElement>,
+IListenable<IBlock.IListener> {
+	
+	interface IListener {
+		default void elementAdded(IProgramElement element, int index) { }
+		default void elementRemoved(IProgramElement element, int index) { }
+	}
+	
 	IProcedure getProcedure();
 
 	List<IBlockElement> getChildren();

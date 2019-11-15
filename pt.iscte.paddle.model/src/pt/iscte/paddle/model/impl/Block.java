@@ -13,20 +13,22 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordFieldAssignment;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatement;
+import pt.iscte.paddle.model.IStatementContainer;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
 
-class Block extends ProgramElement implements IBlock {
-	private final ProgramElement parent;
+class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock {
+	private final IProgramElement parent;
 	private final List<IBlockElement> children;
 
-	Block(ProgramElement parent, boolean addToParent) {
+	Block(IProgramElement parent, boolean addToParent) {
 		assert !addToParent || parent instanceof Block;
 		
 		this.parent = parent;
@@ -36,7 +38,7 @@ class Block extends ProgramElement implements IBlock {
 	}
 
 	@Override
-	public ProgramElement getParent() {
+	public IProgramElement getParent() {
 		return parent;
 	}
 	
@@ -62,18 +64,26 @@ class Block extends ProgramElement implements IBlock {
 		return children.size();
 	}
 	
-	void addChild(IBlockElement statement) {
-		assert statement != null;
-		children.add(statement);
+	void addChild(IBlockElement e) {
+		assert e != null;
+		children.add(e);
+		getListeners().forEachRemaining(l -> l.elementAdded(e, children.size()-1));
 	}
 
-	@Override
-	public IBlock addBlock() {
-		return new Block(this, true);
+	void remove(Statement e) {
+		int i = children.indexOf(e);
+		if(children.remove(e)) {
+			getListeners().forEachRemaining(l -> l.elementRemoved(e, i));
+		}
 	}
 	
-	IBlock addLooseBlock() {
-		return new Block(this, false);
+	@Override
+	public IBlock addBlock(IProgramElement parent) {
+		return new Block(parent, true);
+	}
+	
+	IBlock addLooseBlock(IProgramElement parent) {
+		return new Block(parent, false);
 	}
 	
 	@Override
@@ -105,11 +115,13 @@ class Block extends ProgramElement implements IBlock {
 			return 1 + ((Block) parent).getDepth();
 	}
 	
-	public Procedure getProcedure() {
+	public IProcedure getProcedure() {
 		if(parent instanceof Procedure)
 			return (Procedure) parent;
 		else if(parent == null)
 			return null;
+		else if(parent instanceof ControlStructure)
+			return ((ControlStructure) parent).getParent().getProcedure();
 		else
 			return ((Block)  parent).getProcedure();
 	}
@@ -117,12 +129,11 @@ class Block extends ProgramElement implements IBlock {
 	@Override
 	public IVariable addVariable(IType type) {		
 		Variable var = new Variable(this, type);
-		Procedure procedure = getProcedure();
-		procedure.addVariableDeclaration(var);
-		children.add(var);
+		IProcedure procedure = getProcedure();
+		((Procedure) procedure).addVariableDeclaration(var);
+		addChild(var);
 		return var;
 	}
-	
 	
 	@Override
 	public IVariableAssignment addAssignment(IVariable variable, IExpression expression) {

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import pt.iscte.paddle.model.IProgramElement;
 
-class ProgramElement implements IProgramElement {
+public class ProgramElement implements IProgramElement {
 	
 	private Map<Object, Object> properties = Collections.emptyMap();
 	

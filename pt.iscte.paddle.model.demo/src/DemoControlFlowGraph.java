@@ -67,5 +67,7 @@ public class DemoControlFlowGraph {
 		s_ret.setNext(cfg.getExitNode());
 		
 		cfg.getNodes().forEach(n -> System.out.println(n));
+	   
+	
 	}
 }

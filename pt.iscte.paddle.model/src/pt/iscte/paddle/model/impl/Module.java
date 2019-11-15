@@ -21,7 +21,7 @@ import pt.iscte.paddle.model.validation.AsgSemanticChecks;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
 import pt.iscte.paddle.model.validation.SemanticChecker;
 
-public class Module extends ProgramElement implements IModule {
+public class Module extends ListenableProgramElement<IModule.IListener> implements IModule {
 	private final List<IConstant> constants;
 	private final List<IRecordType> records;
 	private final List<IProcedure> procedures;
@@ -79,6 +79,7 @@ public class Module extends ProgramElement implements IModule {
 	public IProcedure addProcedure(IType returnType) {
 		IProcedure proc = new Procedure(returnType);
 		procedures.add(proc);
+		getListeners().forEachRemaining(l -> l.procedureAdded(proc));
 		return proc;
 	}
 
