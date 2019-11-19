@@ -17,8 +17,8 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 	private final IVariable variable;
 	private final IExpression expression;
 	
-	public VariableAssignment(IBlock parent, IVariable variable, IExpression expression) {
-		super(parent, true);
+	public VariableAssignment(IBlock parent, IVariable variable, IExpression expression, int index) {
+		super(parent, true, index);
 		this.variable = variable;
 		this.expression = expression;
 	}
@@ -35,7 +35,7 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 	
 	@Override
 	public String toString() {
-		return variable.getId() + " = " + expression;
+		return (variable == null ? "NULL" : variable.getId()) + " = " + expression;
 	}
 
 	@Override

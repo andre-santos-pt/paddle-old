@@ -13,6 +13,7 @@ import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariable;
 
 class Procedure extends ProgramElement implements IProcedure {
+	private final Module parent;
 	private final List<IVariable> variables;
 	private final List<IVariable> variablesView;
 	private final ParamsView paramsView;
@@ -20,8 +21,9 @@ class Procedure extends ProgramElement implements IProcedure {
 	private final IType returnType;
 	private final Block body;
 	private int parameters;
-
-	public Procedure(IType returnType) {
+	
+	public Procedure(Module parent, IType returnType) {
+		this.parent = parent;
 		this.variables = new ArrayList<>(5);
 		this.parameters = 0;
 		this.returnType = returnType;
@@ -29,9 +31,13 @@ class Procedure extends ProgramElement implements IProcedure {
 		variablesView = Collections.unmodifiableList(variables);
 		paramsView = new ParamsView();
 		localVarsView = new LocalVariablesView();
-		body = new Block(this, false);
+		body = new Block(this, false, -1);
 	}
-
+	
+	public Module getModule() {
+		return parent;
+	}
+	
 	@Override
 	public List<IVariable> getVariables() {
 		return variablesView;
@@ -119,6 +125,6 @@ class Procedure extends ProgramElement implements IProcedure {
 
 	@Override
 	public IProcedureCall call(List<IExpression> args) {
-		return new ProcedureCall(null, this, args);
+		return new ProcedureCall(null, this, -1, args);
 	}
 }

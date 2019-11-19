@@ -14,13 +14,19 @@ import pt.iscte.paddle.model.validation.ISemanticProblem;
 public interface IModule extends IProgramElement, IListenable<IModule.IListener> {
 	
 	interface IListener {
+//		default void commandExecuted(ICommand<?> command) { }
 		default void constantAdded(IProcedure procedure) { }
 		default void procedureAdded(IProcedure procedure) { }
+		default void procedureDeleted(IProcedure procedure) { }
 	}
 	
 	static IModule create() {
-		return new Module();
+		return new Module(true);
 	}
+	
+	void undo();
+	
+	void redo();
 	
 	default Collection<IModule> getImports() {
 		// TODO imports
@@ -47,7 +53,6 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	IProcedure resolveProcedure(IProcedureDeclaration procedureDeclaration);
 	
 	List<ISemanticProblem> checkSemantics();
-
 
 	String translate(IModel2CodeTranslator t);
 }

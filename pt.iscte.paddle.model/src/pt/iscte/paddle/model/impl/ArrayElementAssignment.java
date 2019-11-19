@@ -21,8 +21,8 @@ class ArrayElementAssignment extends Statement implements IArrayElementAssignmen
 	private final ImmutableList<IExpression> indexes;
 	private final IExpression expression;
 	
-	public ArrayElementAssignment(IBlock parent, IExpression target, List<IExpression> indexes, IExpression expression) {
-		super(parent, true);
+	public ArrayElementAssignment(IBlock parent, IExpression target, IExpression expression, int index, List<IExpression> indexes) {
+		super(parent, true, index);
 		this.target = target;
 		this.indexes = ImmutableList.copyOf(indexes);
 		this.expression = expression;

@@ -24,13 +24,13 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 	private final IProcedureDeclaration procedure;
 	private final ImmutableList<IExpression> arguments;
 	
-	public ProcedureCall(Block parent, IProcedure procedure, List<IExpression> arguments) {
+	public ProcedureCall(Block parent, IProcedure procedure, int index, List<IExpression> arguments) {
 		assert procedure != null;
 		this.parent = parent;
 		this.procedure = procedure;
 		this.arguments = ImmutableList.copyOf(arguments);
 		if(parent != null)
-			parent.addChild(this);
+			parent.addChild(this, index);
 	}
 
 	@Override

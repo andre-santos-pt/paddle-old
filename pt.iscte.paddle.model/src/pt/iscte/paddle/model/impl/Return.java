@@ -12,12 +12,12 @@ class Return extends Statement implements IReturn {
 
 	private final IExpression expression;
 	
-	public Return(Block parent) {
-		this(parent, null);
+	public Return(Block parent, int index) {
+		this(parent, null, index);
 	}
 	
-	public Return(Block parent, IExpression expression) {
-		super(parent, true);
+	public Return(Block parent, IExpression expression, int index) {
+		super(parent, true, index);
 		this.expression = expression;
 	}
 

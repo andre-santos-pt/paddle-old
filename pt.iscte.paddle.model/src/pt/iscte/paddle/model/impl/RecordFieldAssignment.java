@@ -18,8 +18,8 @@ class RecordFieldAssignment extends Statement implements IRecordFieldAssignment 
 	private final IRecordFieldExpression target;
 	private final IExpression expression;
 	
-	public RecordFieldAssignment(IBlock parent, IRecordFieldExpression target, IExpression expression) {
-		super(parent, true);
+	public RecordFieldAssignment(IBlock parent, IRecordFieldExpression target, IExpression expression, int index) {
+		super(parent, true, index);
 		this.target = target;
 		this.expression = expression;
 	}

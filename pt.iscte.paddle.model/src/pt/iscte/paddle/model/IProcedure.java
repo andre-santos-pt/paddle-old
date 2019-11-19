@@ -8,6 +8,7 @@ import pt.iscte.paddle.model.IBlock.IVisitor;
  * Mutable
  */
 public interface IProcedure extends IProcedureDeclaration {
+	IModule getModule();
 	List<IVariable> getLocalVariables();
 	List<IVariable> getVariables();
 	IType getReturnType();

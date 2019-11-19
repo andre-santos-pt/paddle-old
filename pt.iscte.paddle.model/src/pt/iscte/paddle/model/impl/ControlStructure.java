@@ -9,15 +9,15 @@ abstract class ControlStructure extends ProgramElement implements IControlStruct
 	private final IBlock block;
 	private final IExpression guard;
 
-	public ControlStructure(Block parent, IExpression guard) {
+	public ControlStructure(Block parent, IExpression guard, int index) {
 		assert parent != null;
 		assert guard != null;
 		
 		this.parent = parent;
-		parent.addChild(this);
+		parent.addChild(this, index);
 
 		this.guard = guard;
-		this.block = parent.addLooseBlock(this);
+		this.block = parent.addLooseBlock(this, index);
 	}
 	
 	@Override

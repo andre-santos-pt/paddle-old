@@ -19,22 +19,22 @@ import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatement;
-import pt.iscte.paddle.model.IStatementContainer;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.commands.IAddCommand;
 
 class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock {
 	private final IProgramElement parent;
 	private final List<IBlockElement> children;
 
-	Block(IProgramElement parent, boolean addToParent) {
+	Block(IProgramElement parent, boolean addToParent, int index) {
 		assert !addToParent || parent instanceof Block;
 		
 		this.parent = parent;
 		this.children = new ArrayList<>();
 		if(parent != null && addToParent)
-			((Block) parent).addChild(this);
+			((Block) parent).addChild(this, index);
 	}
 
 	@Override
@@ -64,10 +64,44 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 		return children.size();
 	}
 	
-	void addChild(IBlockElement e) {
+	private class AddChild implements IAddCommand<IBlockElement> {
+		final IBlockElement element;
+		final int index;
+		
+		AddChild(IBlockElement element, int index) {
+			this.element = element;
+			this.index = index;
+		}
+		
+		@Override
+		public void execute() {
+			children.add(index, element);
+			getListeners().forEachRemaining(l -> l.elementAdded(element, children.size()-1));
+		}
+
+		@Override
+		public void undo() {
+			int i = children.indexOf(element);
+			children.remove(element);
+			getListeners().forEachRemaining(l -> l.elementRemoved(element, i));
+		}
+
+		@Override
+		public IBlockElement getElement() {
+			return element;
+		}
+
+		@Override
+		public IProgramElement getParent() {
+			return Block.this;
+		}
+	}
+	
+	void addChild(IBlockElement e, int index) {
 		assert e != null;
-		children.add(e);
-		getListeners().forEachRemaining(l -> l.elementAdded(e, children.size()-1));
+		((Module) getProcedure().getModule()).executeCommand(new AddChild(e, index));
+//		children.add(e);
+//		getListeners().forEachRemaining(l -> l.elementAdded(e, children.size()-1));
 	}
 
 	void remove(Statement e) {
@@ -78,12 +112,12 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	}
 	
 	@Override
-	public IBlock addBlock(IProgramElement parent) {
-		return new Block(parent, true);
+	public IBlock addBlock(IProgramElement parent, int index) {
+		return new Block(parent, true, index);
 	}
 	
-	IBlock addLooseBlock(IProgramElement parent) {
-		return new Block(parent, false);
+	IBlock addLooseBlock(IProgramElement parent, int index) {
+		return new Block(parent, false, index);
 	}
 	
 	@Override
@@ -127,68 +161,68 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	}
 
 	@Override
-	public IVariable addVariable(IType type) {		
+	public IVariable addVariable(IType type, int index) {		
 		Variable var = new Variable(this, type);
 		IProcedure procedure = getProcedure();
 		((Procedure) procedure).addVariableDeclaration(var);
-		addChild(var);
+		addChild(var, index);
 		return var;
 	}
 	
 	@Override
-	public IVariableAssignment addAssignment(IVariable variable, IExpression expression) {
+	public IVariableAssignment addAssignment(IVariable variable, IExpression expression, int index) {
 		// TODO OCL: variable must be owned by the same procedure of expression
-		return new VariableAssignment(this, variable, expression);
+		return new VariableAssignment(this, variable, expression, index);
 	}
 
 	@Override
-	public IArrayElementAssignment addArrayElementAssignment(IExpression target, IExpression exp, List<IExpression> indexes) {
+	public IArrayElementAssignment addArrayElementAssignment(IExpression target, IExpression exp, int index, List<IExpression> indexes) {
 		// TODO OCL: variable must be owned by the same procedure of expression
-		return new ArrayElementAssignment(this, target, indexes, exp);
+		return new ArrayElementAssignment(this, target, exp, index, indexes);
 	}
 		
 	@Override
-	public IRecordFieldAssignment addRecordFieldAssignment(IRecordFieldExpression target, IExpression exp) {
-		return new RecordFieldAssignment(this, target, exp);
+	public IRecordFieldAssignment addRecordFieldAssignment(IRecordFieldExpression target, IExpression exp, int index) {
+		return new RecordFieldAssignment(this, target, exp, index);
 	}
 	
 	@Override
-	public ISelection addSelection(IExpression guard) {
-		return new Selection(this, guard, false);
+	public ISelection addSelection(IExpression guard, int index) {
+		return new Selection(this, guard, false, index);
 	}
 
 	@Override
-	public ISelection addSelectionWithAlternative(IExpression guard) {
-		return new Selection(this, guard, true);
+	public ISelection addSelectionWithAlternative(IExpression guard, int index) {
+		return new Selection(this, guard, true, index);
 	}
 	
 	@Override
-	public ILoop addLoop(IExpression guard) {
-		return new Loop(this, guard);
+	public ILoop addLoop(IExpression guard, int index) {
+		return new Loop(this, guard, index);
 	}
 
 	@Override
-	public IReturn addReturn() {
-		return new Return(this);
+	public IReturn addReturn(int index) {
+		return new Return(this, index);
 	}
 	
 	@Override
-	public IReturn addReturn(IExpression expression) {
-		return new Return(this, expression);
+	public IReturn addReturn(IExpression expression, int index) {
+		return new Return(this, expression, index);
 	}
 	
 	@Override
-	public IProcedureCall addCall(IProcedure procedure, List<IExpression> args) {
-		return new ProcedureCall(this, procedure, args);
+	public IProcedureCall addCall(IProcedure procedure, int index, List<IExpression> args) {
+		return new ProcedureCall(this, procedure, index, args);
 	}
 	
 	@Override
-	public IBreak addBreak() {
-		return new Break(this);
+	public IBreak addBreak(int index) {
+		return new Break(this, index);
 	}
 	
 	@Override
-	public IContinue addContinue() {
-		return new Continue(this);
+	public IContinue addContinue(int index) {
+		return new Continue(this, index);
 	}
 }

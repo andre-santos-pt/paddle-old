@@ -10,8 +10,8 @@ import pt.iscte.paddle.model.IBlockElement;
 import pt.iscte.paddle.model.IBreak;
 
 class Break extends Statement implements IBreak {
-		public Break(IBlock parent) {
-			super(parent, true);
+		public Break(IBlock parent, int index) {
+			super(parent, true, index);
 		}
 		
 		@Override

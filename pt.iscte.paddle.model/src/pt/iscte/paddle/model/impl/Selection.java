@@ -7,9 +7,9 @@ import pt.iscte.paddle.model.ISelection;
 class Selection extends ControlStructure implements ISelection {
 	private final IBlock alternativeBlock;
 
-	public Selection(Block parent, IExpression guard, boolean hasAlternative) {
-		super(parent, guard);
-		alternativeBlock = hasAlternative ? parent.addLooseBlock(this) : null;
+	public Selection(Block parent, IExpression guard, boolean hasAlternative, int index) {
+		super(parent, guard, index);
+		alternativeBlock = hasAlternative ? parent.addLooseBlock(this, index) : null;
 	}
 
 	@Override

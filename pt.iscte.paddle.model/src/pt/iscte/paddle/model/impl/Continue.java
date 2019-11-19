@@ -9,8 +9,8 @@ import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IContinue;
 
 class Continue extends Statement implements IContinue {
-	public Continue(IBlock parent) {
-		super(parent, true);
+	public Continue(IBlock parent, int index) {
+		super(parent, true, index);
 	}
 
 	@Override

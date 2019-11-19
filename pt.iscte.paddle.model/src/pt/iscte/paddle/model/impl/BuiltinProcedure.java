@@ -15,8 +15,8 @@ public class BuiltinProcedure extends Procedure {
 
 	private Method method;
 	
-	public BuiltinProcedure(Method method) {
-		super(matchType(method.getReturnType()));
+	public BuiltinProcedure(Module parent, Method method) {
+		super(parent, matchType(method.getReturnType()));
 		assert isValidForBuiltin(method);
 		this.method = method;
 		for (Parameter p : method.getParameters()) {
