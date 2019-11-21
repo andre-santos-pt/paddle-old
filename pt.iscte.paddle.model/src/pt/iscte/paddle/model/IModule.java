@@ -15,7 +15,8 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	
 	interface IListener {
 //		default void commandExecuted(ICommand<?> command) { }
-		default void constantAdded(IProcedure procedure) { }
+		default void constantAdded(IConstant constant) { }
+		default void constantDeleted(IConstant constant) { }
 		default void procedureAdded(IProcedure procedure) { }
 		default void procedureDeleted(IProcedure procedure) { }
 	}

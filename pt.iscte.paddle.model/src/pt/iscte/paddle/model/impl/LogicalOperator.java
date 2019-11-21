@@ -93,6 +93,11 @@ public enum LogicalOperator implements IBinaryOperator {
 		return programElement.getProperty(key);
 	}
 	
+	@Override
+	public void addPropertyListener(IPropertyListener listener) {
+		programElement.addPropertyListener(listener);
+	}
+	
 	// TODO expression iterator?
 	private class Iterator implements IExpressionIterator {
 

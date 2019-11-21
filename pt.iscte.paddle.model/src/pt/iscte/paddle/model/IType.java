@@ -119,7 +119,7 @@ public interface IType extends IProgramElement  {
 	};
 
 
-	IType UNKNOWN = new IType() {
+	IType UNBOUND = new IType() {
 		@Override
 		public Object getDefaultValue() {
 			return null;

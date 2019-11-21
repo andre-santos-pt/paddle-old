@@ -5,11 +5,13 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ISelection;
 
 class Selection extends ControlStructure implements ISelection {
-	private final IBlock alternativeBlock;
+	private IBlock alternativeBlock;
 
 	public Selection(Block parent, IExpression guard, boolean hasAlternative, int index) {
 		super(parent, guard, index);
-		alternativeBlock = hasAlternative ? parent.addLooseBlock(this, index) : null;
+		alternativeBlock = hasAlternative ? parent.addLooseBlock(this) : null;
+		if(hasAlternative)
+			setFlag("ELSE");
 	}
 
 	@Override
@@ -27,6 +29,13 @@ class Selection extends ControlStructure implements ISelection {
 
 	@Override
 	public IBlock getAlternativeBlock() {
+		return alternativeBlock;
+	}
+	
+	@Override
+	public IBlock createAlternativeBlock() {
+		alternativeBlock = ((Block) getParent()).addLooseBlock(this);
+		setFlag("ELSE");
 		return alternativeBlock;
 	}
 }

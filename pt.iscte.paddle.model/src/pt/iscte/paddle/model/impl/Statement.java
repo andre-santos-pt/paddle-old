@@ -7,7 +7,8 @@ import pt.iscte.paddle.model.IStatement;
 abstract class Statement extends ProgramElement implements IStatement, IExecutable {
 	private final IBlock parent;
 
-	public Statement(IBlock parent, boolean addToParent, int index) {
+	public Statement(IBlock parent, boolean addToParent, int index, String ... flags) {
+		super(flags);
 		this.parent = parent;
 		if(parent != null && addToParent) {
 			Block block = (Block) parent;

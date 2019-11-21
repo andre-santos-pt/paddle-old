@@ -4,8 +4,8 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILoop;
 
 class Loop extends ControlStructure implements ILoop {
-	public Loop(Block parent, IExpression guard, int index) {
-		super(parent, guard, index);
+	public Loop(Block parent, IExpression guard, int index, String ... flags) {
+		super(parent, guard, index, flags);
 	}
 	
 	@Override

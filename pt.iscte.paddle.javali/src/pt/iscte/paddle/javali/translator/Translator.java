@@ -242,7 +242,7 @@ public class Translator {
 		else if(s instanceof For) {
 			For fo = (For) s;
 			IExpression guard = mapExpression(fo.getGuard());
-			IBlock fBlock = block.addBlock(block);
+			IBlock fBlock = block.addBlock();
 			ILoop loop = fBlock.addLoop(guard);
 			fo.getInitStatements().forEach(st -> mapStatement(st, fBlock));
 			fo.getBlock().getStatements().forEach(st -> mapStatement(st, loop.getBlock()));

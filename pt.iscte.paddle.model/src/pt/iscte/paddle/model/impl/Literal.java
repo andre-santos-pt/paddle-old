@@ -16,7 +16,7 @@ public class Literal extends Expression implements ILiteral {
 	
 	public Literal(IValueType type, String value) {
 		assert value != null && !value.isEmpty();
-		this.type = type == null ? IType.UNKNOWN : type;
+		this.type = type == null ? IType.UNBOUND : type;
 		this.value = value;
 	}
 	

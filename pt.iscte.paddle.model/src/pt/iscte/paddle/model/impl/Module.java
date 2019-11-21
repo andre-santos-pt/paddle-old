@@ -111,13 +111,49 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		return Collections.unmodifiableList(procedures);
 	}
 
+	private class AddConstant implements IAddCommand<IConstant> {
+		final IType type;
+		final ILiteral literal;
+		IConstant constant;
+
+		AddConstant(IType type, ILiteral literal) {
+			this.type = type;
+			this.literal = literal;
+		}
+
+		@Override
+		public void execute() {
+			if(constant == null)
+				constant = new ConstantDeclaration(Module.this, type, literal);
+			constants.add(constant);
+			getListeners().forEachRemaining(l -> l.constantAdded(constant));
+		}
+
+		@Override
+		public void undo() {
+			constants.remove(constant);
+			getListeners().forEachRemaining(l -> l.constantDeleted(constant));
+		}
+
+		@Override
+		public IProgramElement getParent() {
+			return Module.this;
+		}
+
+		@Override
+		public IConstant getElement() {
+			return constant;
+		}
+	}
+
+	
 	@Override
 	public IConstant addConstant(IType type, ILiteral value) {
 		assert type != null;
 		assert value != null;
-		ConstantDeclaration dec = new ConstantDeclaration(this, type, value);
-		constants.add(dec);
-		return dec;
+		AddConstant add = new AddConstant(type, value);
+		executeCommand(add);
+		return add.getElement();
 	}
 
 	@Override
@@ -166,10 +202,6 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		AddProcedure proc = new AddProcedure(returnType);
 		executeCommand(proc);
 		return proc.getElement();
-		//		IProcedure proc = new Procedure(returnType);
-		//		procedures.add(proc);
-		//		getListeners().forEachRemaining(l -> l.procedureAdded(proc));
-		//		return proc;
 	}
 
 	@Override

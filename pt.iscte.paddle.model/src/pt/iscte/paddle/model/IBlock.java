@@ -42,6 +42,17 @@ IListenable<IBlock.IListener> {
 		return getChildren().iterator();
 	}
 	
+	default boolean isInLoop() {
+		IProgramElement p = getParent();
+		while(!(p instanceof IProcedure))
+			if(p instanceof ILoop)
+				return true;
+			else
+				p = ((IBlockElement) p).getParent();
+		
+		return false;
+	}
+	
 	default void accept(IVisitor visitor) {
 		for(IProgramElement s : getChildren()) {
 			if(s instanceof IReturn) {

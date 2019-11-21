@@ -17,13 +17,13 @@ public interface IVariable extends ISimpleExpression, IStatement {
 		return getParent() instanceof IBlock;
 	}
 
-	default IProcedure getProcedure() {
-		IProgramElement e = getParent();
-		while(e != null && !(e instanceof IProcedure))
-			e = ((IBlock) e).getParent();
-		
-		return e == null ? null : (IProcedure) e;
-	}
+//	default IProcedure getProcedure() {
+//		IProgramElement e = getParent();
+//		while(e != null && !(e instanceof IProcedure))
+//			e = ((IBlock) e).getParent();
+//		
+//		return e == null ? null : (IProcedure) e;
+//	}
 	
 	@Override
 	default List<IExpression> getExpressionParts() {

@@ -28,11 +28,13 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	private final IProgramElement parent;
 	private final List<IBlockElement> children;
 
-	Block(IProgramElement parent, boolean addToParent, int index) {
+	Block(IProgramElement parent, boolean addToParent, int index, String ... flags) {
+		super(flags);
 		assert !addToParent || parent instanceof Block;
 		
 		this.parent = parent;
 		this.children = new ArrayList<>();
+		
 		if(parent != null && addToParent)
 			((Block) parent).addChild(this, index);
 	}
@@ -75,15 +77,16 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 		
 		@Override
 		public void execute() {
+			assert index >= 0 && index <= Block.this.getChildren().size() : index + ": block contains " + Block.this.getChildren().size() + " children";
 			children.add(index, element);
-			getListeners().forEachRemaining(l -> l.elementAdded(element, children.size()-1));
+			getListeners().forEachRemaining(l -> l.elementAdded(element, index));
 		}
 
 		@Override
 		public void undo() {
-			int i = children.indexOf(element);
-			children.remove(element);
-			getListeners().forEachRemaining(l -> l.elementRemoved(element, i));
+//			int i = children.indexOf(element);
+			children.remove(index);
+			getListeners().forEachRemaining(l -> l.elementRemoved(element, index));
 		}
 
 		@Override
@@ -112,12 +115,12 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	}
 	
 	@Override
-	public IBlock addBlock(IProgramElement parent, int index) {
-		return new Block(parent, true, index);
+	public IBlock addBlockAt(int index, String ... flags) {
+		return new Block(this, true, index, flags);
 	}
 	
-	IBlock addLooseBlock(IProgramElement parent, int index) {
-		return new Block(parent, false, index);
+	IBlock addLooseBlock(IProgramElement parent) {
+		return new Block(parent, false, -1);
 	}
 	
 	@Override
@@ -161,8 +164,8 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	}
 
 	@Override
-	public IVariable addVariable(IType type, int index) {		
-		Variable var = new Variable(this, type);
+	public IVariable addVariableAt(IType type, int index, String ... flags) {		
+		Variable var = new Variable(this, type, flags);
 		IProcedure procedure = getProcedure();
 		((Procedure) procedure).addVariableDeclaration(var);
 		addChild(var, index);
@@ -170,59 +173,59 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	}
 	
 	@Override
-	public IVariableAssignment addAssignment(IVariable variable, IExpression expression, int index) {
+	public IVariableAssignment addAssignmentAt(IVariable variable, IExpression expression, int index, String ... flags) {
 		// TODO OCL: variable must be owned by the same procedure of expression
-		return new VariableAssignment(this, variable, expression, index);
+		return new VariableAssignment(this, variable, expression, index, flags);
 	}
 
 	@Override
-	public IArrayElementAssignment addArrayElementAssignment(IExpression target, IExpression exp, int index, List<IExpression> indexes) {
+	public IArrayElementAssignment addArrayElementAssignmentAt(IExpression target, IExpression exp, int index, List<IExpression> indexes) {
 		// TODO OCL: variable must be owned by the same procedure of expression
 		return new ArrayElementAssignment(this, target, exp, index, indexes);
 	}
 		
 	@Override
-	public IRecordFieldAssignment addRecordFieldAssignment(IRecordFieldExpression target, IExpression exp, int index) {
+	public IRecordFieldAssignment addRecordFieldAssignmentAt(IRecordFieldExpression target, IExpression exp, int index) {
 		return new RecordFieldAssignment(this, target, exp, index);
 	}
 	
 	@Override
-	public ISelection addSelection(IExpression guard, int index) {
+	public ISelection addSelectionAt(IExpression guard, int index) {
 		return new Selection(this, guard, false, index);
 	}
 
 	@Override
-	public ISelection addSelectionWithAlternative(IExpression guard, int index) {
+	public ISelection addSelectionWithAlternativeAt(IExpression guard, int index) {
 		return new Selection(this, guard, true, index);
 	}
 	
 	@Override
-	public ILoop addLoop(IExpression guard, int index) {
-		return new Loop(this, guard, index);
+	public ILoop addLoopAt(IExpression guard, int index, String...flags) {
+		return new Loop(this, guard, index, flags);
 	}
 
 	@Override
-	public IReturn addReturn(int index) {
+	public IReturn addReturnAt(int index) {
 		return new Return(this, index);
 	}
 	
 	@Override
-	public IReturn addReturn(IExpression expression, int index) {
+	public IReturn addReturnAt(IExpression expression, int index) {
 		return new Return(this, expression, index);
 	}
 	
 	@Override
-	public IProcedureCall addCall(IProcedure procedure, int index, List<IExpression> args) {
+	public IProcedureCall addCallAt(IProcedure procedure, int index, List<IExpression> args) {
 		return new ProcedureCall(this, procedure, index, args);
 	}
 	
 	@Override
-	public IBreak addBreak(int index) {
+	public IBreak addBreakAt(int index) {
 		return new Break(this, index);
 	}
 	
 	@Override
-	public IContinue addContinue(int index) {
+	public IContinue addContinueAt(int index) {
 		return new Continue(this, index);
 	}
 }

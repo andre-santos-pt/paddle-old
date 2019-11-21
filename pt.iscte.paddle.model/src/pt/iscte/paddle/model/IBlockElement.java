@@ -4,6 +4,8 @@ public interface IBlockElement extends IProgramElement {
 	
 	IProgramElement getParent();
 	
+//	void moveTo(IBlock block); // TODO move
+	
 	default IProcedure getOwnerProcedure() {
 		IProgramElement p = getParent();
 		while(!(p instanceof IProcedure))

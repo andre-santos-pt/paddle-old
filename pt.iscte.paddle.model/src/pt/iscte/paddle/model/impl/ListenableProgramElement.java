@@ -11,6 +11,10 @@ public class ListenableProgramElement<L> extends ProgramElement implements IList
 
 	private List<L> listeners;
 	
+	ListenableProgramElement(String ... flags) {
+		super(flags);
+	}
+	
 	public void addListener(L listener) {
 		if(listeners == null)
 			listeners = new ArrayList<>(3);

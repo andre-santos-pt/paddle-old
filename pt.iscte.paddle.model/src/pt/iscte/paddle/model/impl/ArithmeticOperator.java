@@ -38,7 +38,7 @@ public enum ArithmeticOperator implements IBinaryOperator {
 		else if(left.equals(IType.DOUBLE) && right.equals(IType.DOUBLE))
 			return IType.DOUBLE;
 		else
-			return IType.UNKNOWN;
+			return IType.UNBOUND;
 	}
 	
 	@Override
@@ -75,5 +75,10 @@ public enum ArithmeticOperator implements IBinaryOperator {
 	@Override
 	public Object getProperty(Object key) {
 		return programElement.getProperty(key);
+	}
+	
+	@Override
+	public void addPropertyListener(IPropertyListener listener) {
+		programElement.addPropertyListener(listener);
 	}
 }

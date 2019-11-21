@@ -1,7 +1,16 @@
 package pt.iscte.paddle.model;
 
 public interface IProgramElement {
+	interface IPropertyListener {
+		void propertyChanged(Object key, Object newValue, Object oldValue);
+	}
+
+	default void addPropertyListener(IPropertyListener listener) {
+		throw new UnsupportedOperationException();
+	}
+	
 	String ID = "ID";
+	
 	
 	void setProperty(Object key, Object value);	
 
@@ -28,6 +37,10 @@ public interface IProgramElement {
 		return Boolean.TRUE.equals(getProperty(key));
 	}
 	
+	default boolean not(String key) {
+		return !Boolean.TRUE.equals(getProperty(key));
+	}
+	
 	default String getId() {
 		return (String) getProperty(ID);
 	}
@@ -35,4 +48,6 @@ public interface IProgramElement {
 	default void setId(String id) {
 		setProperty(ID, id);
 	}
+	
+	
 }

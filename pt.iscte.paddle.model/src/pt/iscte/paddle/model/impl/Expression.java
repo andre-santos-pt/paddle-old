@@ -14,6 +14,10 @@ import pt.iscte.paddle.model.IExpressionIterator;
 
 abstract class Expression extends ProgramElement implements IEvaluable, IExpression {
 
+	Expression(String...flags) {
+		super(flags);
+	}
+	
 	@Override
 	public IConditionalExpression conditional(IExpression trueCase, IExpression falseCase) {
 		return new Conditional(this, trueCase, falseCase);

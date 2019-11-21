@@ -1,4 +1,6 @@
 package pt.iscte.paddle.model.commands;
 
-public interface IDeleteCommand<E> extends ICommand<E> {		
+import pt.iscte.paddle.model.IProgramElement;
+
+public interface IDeleteCommand<E extends IProgramElement> extends ICommand<E> {		
 }

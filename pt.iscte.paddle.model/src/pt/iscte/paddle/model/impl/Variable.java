@@ -25,7 +25,8 @@ class Variable extends Expression implements IVariable, IEvaluable, IExecutable 
 	private final IProgramElement parent;
 	private final IType type;
 
-	public Variable(IProgramElement parent, IType type) {
+	public Variable(IProgramElement parent, IType type, String...flags) {
+		super(flags);
 		this.parent = parent;
 		this.type = type;
 	}
@@ -92,7 +93,7 @@ class Variable extends Expression implements IVariable, IEvaluable, IExecutable 
 	public String getId() {
 		String id = super.getId();
 		if(id == null) {
-			IProcedure procedure = getProcedure();
+			IProcedure procedure = getOwnerProcedure();
 			if(procedure != null)
 				id = "$" + procedure.getVariables().indexOf(this);
 			else if(isRecordField())

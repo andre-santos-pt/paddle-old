@@ -13,11 +13,11 @@ import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IType;
 
 class ConstantDeclaration extends Expression implements IConstant {
-	private final IModule program;
+	private final Module program;
 	private final IType type;
-	private final ILiteral value;
+	private ILiteral value;
 	
-	public ConstantDeclaration(IModule program, IType type, ILiteral value) {
+	public ConstantDeclaration(Module program, IType type, ILiteral value) {
 		this.program = program;
 		this.type = type;
 		this.value = value;
@@ -53,4 +53,13 @@ class ConstantDeclaration extends Expression implements IConstant {
 		return stack.getProgramState().getValue(value.getStringValue());
 	}
 
+	@Override
+	public void setValue(ILiteral value) {
+		assert value != null;
+		this.value = value;
+		setProperty("VALUE", value);
+		
+		program.executeCommand(new PropertyModifyCommand<IConstant>(this, "VALUE", value));
+	}
+	
 }

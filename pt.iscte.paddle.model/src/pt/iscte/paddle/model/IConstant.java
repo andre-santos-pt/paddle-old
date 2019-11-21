@@ -8,4 +8,6 @@ public interface IConstant extends IProgramElement, ISimpleExpression {
 	
 	ILiteral getValue();
 	
+	void setValue(ILiteral value);
+	
 }

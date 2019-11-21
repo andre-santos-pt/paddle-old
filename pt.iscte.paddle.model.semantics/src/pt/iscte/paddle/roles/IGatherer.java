@@ -50,7 +50,7 @@ public interface IGatherer extends IVariableRole {
 
 	static boolean isGatherer(IVariable var) {
 		Visitor v = new Visitor(var);
-		var.getProcedure().accept(v);
+		var.getOwnerProcedure().accept(v);
 		return v.allSameAcc && v.operator != null;
 	}
 
@@ -74,7 +74,7 @@ public interface IGatherer extends IVariableRole {
 	static IVariableRole createGatherer(IVariable var) {
 		assert isGatherer(var);
 		Visitor v = new Visitor(var);
-		var.getProcedure().accept(v);
+		var.getOwnerProcedure().accept(v);
 		return new Gatherer(v.operator);
 	}
 
