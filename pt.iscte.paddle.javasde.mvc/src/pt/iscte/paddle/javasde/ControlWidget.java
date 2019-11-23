@@ -6,13 +6,14 @@ public class ControlWidget extends EditorWidget implements StatementContainer {
 	
 	private final SequenceWidget blockSeq;
 	private ExpressionWidget expression;
+	private Token keyword;
 	
-	ControlWidget(SequenceWidget parent, String token, String expression, IBlock block) {
+	ControlWidget(SequenceWidget parent, String keyword, String expression, IBlock block) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_V_ZERO);
 		EditorWidget header = new EditorWidget(this);
 		header.setLayout(Constants.ROW_LAYOUT_H_ZERO);
-		new Token(header, token);
+		this.keyword = new Token(header, keyword);
 		if(expression != null) {
 			new Token(header, "(");
 			this.expression = new ExpressionWidget(header, expression);
@@ -46,4 +47,7 @@ public class ControlWidget extends EditorWidget implements StatementContainer {
 		super.accept(visitor);
 	}
 	
+	boolean is(String keyword) {
+		return this.keyword.isKeyword(keyword);
+	}
 }

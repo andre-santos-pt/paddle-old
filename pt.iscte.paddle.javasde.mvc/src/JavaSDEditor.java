@@ -1,8 +1,4 @@
 
-import static pt.iscte.paddle.model.IOperator.GREATER;
-import static pt.iscte.paddle.model.IOperator.SMALLER;
-import static pt.iscte.paddle.model.IType.*;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.PaintEvent;
@@ -17,23 +13,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import pt.iscte.paddle.javasde.CallWidget;
 import pt.iscte.paddle.javasde.ClassWidget;
-import pt.iscte.paddle.javasde.ConstantWidget;
-import pt.iscte.paddle.javasde.ControlWidget;
-import pt.iscte.paddle.model.IBlock;
-import pt.iscte.paddle.model.IConstant;
-import pt.iscte.paddle.model.ILoop;
-import pt.iscte.paddle.model.IModule;
-import pt.iscte.paddle.model.IProcedure;
-import pt.iscte.paddle.model.IReturn;
-import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
-import pt.iscte.paddle.model.IVariableAssignment;
-import pt.iscte.paddle.javasde.MethodWidget;
-import pt.iscte.paddle.javasde.InstructionWidget;
 import pt.iscte.paddle.javasde.UiMode;
-import pt.iscte.paddle.javasde.Visitor;
+import pt.iscte.paddle.model.IModule;
 
 
 public class JavaSDEditor {
@@ -68,10 +50,6 @@ public class JavaSDEditor {
 				scroll.requestLayout();
 			}
 		});
-//		area.addControlListener(ControlListener.controlResizedAdapter(
-//				e -> { 
-//					scroll.setMinSize(area.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-//					scroll.requestLayout();}));
 
 		UiMode mode = new UiMode();
 		
@@ -80,75 +58,42 @@ public class JavaSDEditor {
 
 		ClassWidget c = instantiationExample(module, area, mode);
 		
-		Button modelCode = new Button(area, SWT.PUSH);
-		modelCode.setText("model code");
-		modelCode.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				System.out.println(module);
-			}
-		});
-		
-		Button button = new Button(area, SWT.PUSH);
-		button.setText("code");
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				
-				c.accept(new Visitor() {
-					@Override
-					public void visit(MethodWidget w) {
-						System.out.println(w);
-					}
-					
-					@Override
-					public void visit(ControlWidget w) {
-						System.out.println("while(...) {");
-					}
-					
-					@Override
-					public void visit(ConstantWidget w) {
-						System.out.println(w);
-					}
-					
-					@Override
-					public void visit(CallWidget w) {
-						System.out.println(w);
-					}
-				});
-//				StringBuffer buffer = new StringBuffer();
-//				c.toCode(buffer);
-//				System.out.println(buffer);
-			}
-		});
-
-		Button hide = new Button(area, SWT.PUSH);
-		hide.setText("hide/show +");
-		hide.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				c.hideAddLabels();
-			}
-		});
-		
-		Button undo = new Button(area, SWT.PUSH);
-		undo.setText("undo");
-		undo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				module.undo();
-			}
-		});
-		
-		
-		Button redo = new Button(area, SWT.PUSH);
-		redo.setText("redo");
-		redo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				module.redo();
-			}
-		});
+//		Button modelCode = new Button(area, SWT.PUSH);
+//		modelCode.setText("model code");
+//		modelCode.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				System.out.println(module);
+//			}
+//		});
+//		
+//		Button hide = new Button(area, SWT.PUSH);
+//		hide.setText("hide/show +");
+//		hide.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				c.hideAddLabels();
+//			}
+//		});
+//		
+//		Button undo = new Button(area, SWT.PUSH);
+//		undo.setText("undo");
+//		undo.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				module.undo();
+//			}
+//		});
+//		
+//		
+//		Button redo = new Button(area, SWT.PUSH);
+//		redo.setText("redo");
+//		redo.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent e) {
+//				module.redo();
+//			}
+//		});
 		
 		shell.setSize(600, 800);
 		shell.open();
@@ -164,26 +109,26 @@ public class JavaSDEditor {
 	}
 
 	private static ClassWidget instantiationExample(IModule module, Composite area, UiMode mode) {
-		IConstant pi = module.addConstant(DOUBLE, DOUBLE.literal(3.14));
-		pi.setId("PI");
-		
-		IProcedure max = module.addProcedure(INT);
-		IVariable array = max.addParameter(INT.array());
-		IBlock body = max.getBody();
-		IVariable m = body.addVariable(INT);
-		IVariableAssignment mAss = body.addAssignment(m, array.element(INT.literal(0)));
-		IVariable i = body.addVariable(INT);
-		IVariableAssignment iAss = body.addAssignment(i, INT.literal(1));
-		ILoop loop = body.addLoop(SMALLER.on(i, array.length()));
-		ISelection ifstat = loop.addSelection(GREATER.on(array.element(i), m));
-		IVariableAssignment mAss_ = ifstat.addAssignment(m, array.element(i));
-		IVariableAssignment iInc = loop.addIncrement(i);
-		IReturn ret = body.addReturn(m);
-		
-		max.setId("max");
-		array.setId("array");
-		m.setId("m");
-		i.setId("i");
+//		IConstant pi = module.addConstant(DOUBLE, DOUBLE.literal(3.14));
+//		pi.setId("PI");
+//		
+//		IProcedure max = module.addProcedure(INT);
+//		IVariable array = max.addParameter(INT.array());
+//		IBlock body = max.getBody();
+//		IVariable m = body.addVariable(INT);
+//		IVariableAssignment mAss = body.addAssignment(m, array.element(INT.literal(0)));
+//		IVariable i = body.addVariable(INT);
+//		IVariableAssignment iAss = body.addAssignment(i, INT.literal(1));
+//		ILoop loop = body.addLoop(SMALLER.on(i, array.length()));
+//		ISelection ifstat = loop.addSelection(GREATER.on(array.element(i), m));
+//		IVariableAssignment mAss_ = ifstat.addAssignment(m, array.element(i));
+//		IVariableAssignment iInc = loop.addIncrement(i);
+//		IReturn ret = body.addReturn(m);
+//		
+//		max.setId("max");
+//		array.setId("array");
+//		m.setId("m");
+//		i.setId("i");
 		
 		ClassWidget c = new ClassWidget(area, module, mode);
 		

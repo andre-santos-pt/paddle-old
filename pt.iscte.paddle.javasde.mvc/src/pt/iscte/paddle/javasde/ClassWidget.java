@@ -9,6 +9,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -16,6 +18,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
@@ -59,7 +62,7 @@ public class ClassWidget extends EditorWidget {
 
 		body = new SequenceWidget(this, mode.staticClass ? 0 : Constants.TAB);
 		body.addChildCommand("constant", 'c', i -> module.addConstant(IType.INT, ILiteral.matchValue("1")));
-		body.addChildCommand("function", 'f', i -> module.addProcedure(IType.INT));
+		body.addChildCommand("procedure", 'p', i -> module.addProcedure(IType.VOID));
 
 		module.getConstants().forEach(c -> body.addElement(new ConstantWidget(body, c)));
 		module.getProcedures().forEach(p -> body.addElement(new MethodWidget(body, p)));
@@ -127,13 +130,13 @@ public class ClassWidget extends EditorWidget {
 	}
 
 	Text createAddLabel(Composite parent) {
-		return createAddLabel(parent, " ");
+		return createAddLabel(parent, "  ");
 	}
 
 	Text createAddLabel(Composite parent, String token) {
 		Text label = new Text(parent, SWT.NONE);
 		label.setForeground(Constants.FONT_COLOR);
-		//		label.setBackground(Constants.COLOR_ADDLABEL);
+		label.setBackground(Constants.COLOR_ADDLABEL);
 		label.setEditable(false);
 		label.setFont(Constants.FONT);
 		label.setText(token);
@@ -143,7 +146,6 @@ public class ClassWidget extends EditorWidget {
 				if(e.keyCode == Constants.MENU_KEY && menu != null) {
 					menu.setLocation(label.toDisplay(0, 20));
 					menu.setVisible(true);
-					menu.setDefaultItem(menu.getItem(0));
 				}
 				else if(e.keyCode == SWT.ARROW_UP) {
 					Composite p = label.getParent();
@@ -167,11 +169,17 @@ public class ClassWidget extends EditorWidget {
 				}
 			}
 		});
+//		label.addFocusListener(focusListener);
 		addLabels.add(label);
 		return label;
 	}
 
-
+	private FocusAdapter focusListener = new FocusAdapter() {
+		public void focusGained(FocusEvent e) {
+			((Text)e.widget).selectAll();
+		}
+	};
+	
 	private static final Predicate<Control> isDisposed = c -> c.isDisposed();
 	//	private Text addLabel;
 
@@ -190,9 +198,9 @@ public class ClassWidget extends EditorWidget {
 		//			id.setEditable(!editMode);
 	}
 
-	public ConstantWidget createConstant(String name, String type, String value) {
-		return createConstant(name, type, value);
-	}
+//	public ConstantWidget createConstant(String name, String type, String value) {
+//		return createConstant(name, type, value);
+//	}
 
 //	public ConstantWidget createConstant(String id, String type, String value, Control location) {
 //		ConstantWidget m = new ConstantWidget(constants, type, id, value);

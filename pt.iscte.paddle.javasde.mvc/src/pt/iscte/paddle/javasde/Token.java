@@ -19,46 +19,43 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
 public class Token {
-	private final Control label;
-	private Token sibling;
+	private final Control control;
+//	private Token sibling;
 
 	public Token(EditorWidget parent, String token) {
 		this(parent, token, Constants.EMPTY_TOKEN_SUPPLIER);
 	}
 
 	public Token(EditorWidget parent, String token, Supplier<List<String>> alternatives) {
-		//		super(parent, SWT.NONE);
-		//		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-		//		setLayout(new FillLayout());
 		List<String> list = alternatives.get();
-		label = list.isEmpty() ? new Label(parent, SWT.NONE) : new Text(parent, SWT.NONE);
-		if(label instanceof Label)
-			((Label) label).setText(token);
+		control = list.isEmpty() ? new Label(parent, SWT.NONE) : new Text(parent, SWT.NONE);
+		if(control instanceof Label)
+			((Label) control).setText(token);
 		else {
-			((Text) label).setText(token);
-			((Text) label).setEditable(false);
+			((Text) control).setText(token);
+			((Text) control).setEditable(false);
 		}
 
 		if(Constants.isKeyword(token)) {
-			label.setFont(Constants.FONT_KW);
-			label.setForeground(Constants.COLOR_KW);
+			control.setFont(Constants.FONT_KW);
+			control.setForeground(Constants.COLOR_KW);
 		}
 		else
-			label.setFont(Constants.FONT);
+			control.setFont(Constants.FONT);
 
-		Menu menu = new Menu(label);
+		Menu menu = new Menu(control);
 		for(String t : alternatives.get()) {
 			MenuItem item = new MenuItem(menu, SWT.NONE);
 			item.setText(t);
 			item.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					((Text) label).setText(item.getText());
-					label.requestLayout();
+					((Text) control).setText(item.getText());
+					control.requestLayout();
 				}
 			});
 		}
 
-		label.setMenu(menu);
+		control.setMenu(menu);
 	}
 
 	//	@Override
@@ -71,20 +68,24 @@ public class Token {
 
 
 	public Menu getMenu() {
-		return label.getMenu();
+		return control.getMenu();
 	}
 
 	public void setMenu(Menu menu) {
-		label.setMenu(menu);
+		control.setMenu(menu);
 	}
 
 	public void moveBelow(Control control) {
-		label.moveBelow(control);
-		label.requestLayout();
+		control.moveBelow(control);
+		control.requestLayout();
 	}
 
 	public void setVisible(boolean visible) {
-		label.setVisible(visible);
+		control.setVisible(visible);
+	}
+	
+	boolean isKeyword(String keyword) {
+		return control instanceof Label && ((Label) control).getText().equals(keyword);
 	}
 
 

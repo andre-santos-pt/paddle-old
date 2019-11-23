@@ -3,6 +3,8 @@ package pt.iscte.paddle.javasde;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
@@ -12,15 +14,20 @@ public class BinaryExpressionWidget extends EditorWidget {
 	private Token op;
 	private boolean brackets;
 	
+	private RowData data = new RowData(0,0);
+
 	public BinaryExpressionWidget(EditorWidget parent, String operator) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		Token lBracket = new Token(this, "(");
 		lBracket.setVisible(false);
+		data.exclude = true;
 		left = new ExpressionWidget(this);
+//		left.setLayoutData(data);
 		op = new Token(this, operator, Constants.BINARY_OPERATORS_SUPPLIER);
 		right = new ExpressionWidget(this);
 		Token rBracket = new Token(this, ")");
+//		right.setLayoutData(data);
 		rBracket.setVisible(false);
 		
 		Menu menu = op.getMenu();
@@ -30,9 +37,11 @@ public class BinaryExpressionWidget extends EditorWidget {
 		brack.setText("( ... )");
 		brack.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				brackets = true;
-				lBracket.setVisible(true);
-				rBracket.setVisible(true);
+				brackets = !brackets;
+//				lBracket.setVisible(brackets);
+//				rBracket.setVisible(brackets);
+				data.exclude = !brackets;
+				BinaryExpressionWidget.this.requestLayout();
 			}
 		});
 		
@@ -61,6 +70,7 @@ public class BinaryExpressionWidget extends EditorWidget {
 	public void focusRight() {
 		left.setForeground(Constants.FONT_COLOR);
 		right.setFocus();
+		requestLayout();
 	}
 
 	@Override

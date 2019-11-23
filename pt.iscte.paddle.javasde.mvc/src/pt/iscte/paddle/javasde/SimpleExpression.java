@@ -1,4 +1,6 @@
 package pt.iscte.paddle.javasde;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -9,7 +11,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 
@@ -46,8 +47,8 @@ public class SimpleExpression extends Canvas {
 						else if(Id.isValid(text.getText()))
 							literalType = null;
 						else {
-							text.setForeground(Constants.COLOR_ERROR);
-							text.setFont(Constants.FONT_PH);
+							text.setBackground(Constants.COLOR_ERROR);
+//							text.setFont(Constants.FONT_PH);
 							text.setToolTipText("invalid literal");
 							text.requestLayout();
 							literalType = null;
@@ -65,18 +66,25 @@ public class SimpleExpression extends Canvas {
 			public void focusGained(FocusEvent e) {
 				text.selectAll();
 			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				Constants.setFont(text, false);
+				text.requestLayout();
+			}
 		});
+		
 		text.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.character == '!') {
-					UnaryExpressionWidget w = new UnaryExpressionWidget((EditorWidget) getParent(), "!", text.getText());
+				String match = match(e.character, Constants.UNARY_OPERATORS);
+				if(match != null) {
+					UnaryExpressionWidget w = new UnaryExpressionWidget((EditorWidget) getParent(), match, text.getText());
 					w.setFocus();
 					dispose();
 					w.requestLayout();
 				}
-				else if(e.character == '+') {
-					BinaryExpressionWidget w = new BinaryExpressionWidget((EditorWidget) getParent(), "+");
+				else if((match = match(e.character, Constants.BINARY_OPERATORS)) != null) {
+					BinaryExpressionWidget w = new BinaryExpressionWidget((EditorWidget) getParent(), match);
 					w.setLeft(text.getText());
 					w.focusRight();
 					dispose();
@@ -95,8 +103,16 @@ public class SimpleExpression extends Canvas {
 					w.requestLayout();
 				}
 			}
+
 		});
 		text.setMenu(new Menu(text));
+	}
+
+	private String match(char character, List<String> operators) {
+		for(String o : operators)
+			if(o.charAt(0) == character)
+				return o;
+		return null;
 	}
 
 	private boolean validCharacter(char c) {

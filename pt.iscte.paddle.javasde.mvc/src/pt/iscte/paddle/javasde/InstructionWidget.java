@@ -2,6 +2,7 @@ package pt.iscte.paddle.javasde;
 
 public class InstructionWidget extends EditorWidget {
 	private ExpressionWidget expressionWidget;
+	private Token keyword;
 	
 	InstructionWidget(EditorWidget parent, String keyword) {
 		this(parent, keyword, null);
@@ -10,7 +11,7 @@ public class InstructionWidget extends EditorWidget {
 	InstructionWidget(EditorWidget parent, String keyword, String expression) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
-		new Token(this, keyword);
+		this.keyword = new Token(this, keyword);
 		if(expression != null)
 			expressionWidget = new ExpressionWidget(this, expression);
 		new Token(this, ";");
@@ -21,5 +22,9 @@ public class InstructionWidget extends EditorWidget {
 		if(expressionWidget != null)
 			expressionWidget.setFocus();
 		return expressionWidget != null;
+	}
+	
+	boolean is(String keyword) {
+		return this.keyword.isKeyword(keyword);
 	}
 }

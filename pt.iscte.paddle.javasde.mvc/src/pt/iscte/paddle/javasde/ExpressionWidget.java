@@ -2,6 +2,7 @@ package pt.iscte.paddle.javasde;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -95,6 +96,10 @@ public class ExpressionWidget extends EditorWidget {
 		widget.setMenu(menu);
 	}
 
+	@Override
+	public void setForeground(Color color) {
+		expression.setForeground(color);
+	}
 //	@Override
 //	public void toCode(StringBuffer buffer) {
 //		expression.toCode(buffer);

@@ -40,9 +40,9 @@ public class EditorWidget extends Composite {
 		return root.createAddLabel(parent);
 	}
 
-	Text createAddLabel(Composite parent, String token) {
-		return root.createAddLabel(parent, token);
-	}
+//	Text createAddLabel(Composite parent, String token) {
+//		return root.createAddLabel(parent, token);
+//	}
 
 	Id createId(EditorWidget parent, String id) {
 		return root.createId(parent, id);

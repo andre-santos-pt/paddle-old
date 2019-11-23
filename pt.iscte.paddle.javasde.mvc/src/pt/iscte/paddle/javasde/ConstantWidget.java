@@ -50,7 +50,7 @@ public class ConstantWidget extends EditorWidget {
 			@Override
 			public void propertyChanged(Object key, Object newValue, Object oldValue) {
 				if(key.equals("ID"))
-					ConstantWidget.this.id.set(oldValue.toString());
+					ConstantWidget.this.id.set(oldValue == null ? "" : oldValue.toString());
 				else if(key.equals("VALUE"))
 					ConstantWidget.this.expression.set(newValue.toString());
 			}

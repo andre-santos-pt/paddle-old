@@ -35,8 +35,8 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 
 		retType = createId(header, procedure.getReturnType().toString(), Constants.PRIMITIVE_TYPES_VOID_SUPPLIER);
 		retType.addArrayPart();
-		retType.setFont(Constants.FONT);
-
+		retType.setToolTip("Return type");
+		
 		String name = procedure.getId();
 		if(name == null)
 			name = "procedure";
@@ -103,7 +103,7 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 				setLayout(Constants.ROW_LAYOUT_H_ZERO);
 				if(comma)
 					new Token(this, ",");
-				type = createId(this, "type", Constants.PRIMITIVE_TYPES_SUPPLIER);
+				type = createId(this, "int", Constants.PRIMITIVE_TYPES_SUPPLIER);
 				type.addArrayPart();
 				type.setToolTip("Parameter type");
 				var = createId(this, "parameter");

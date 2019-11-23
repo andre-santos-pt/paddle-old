@@ -19,7 +19,7 @@ public class ForWidget extends EditorWidget implements StatementContainer {
 		dec = new DeclarationWidget(header, type, id, expression);
 		this.guard = new ExpressionWidget(header, guard);
 		new Token(header, ";");
-		assignment = new AssignmentWidget(header,id,id+"+1", false);
+		assignment = new AssignmentWidget(header,id,"expression", false);
 		new Token(header, ")");
 		new Token(header, "{");
 		blockSeq = new SequenceWidget(this, Constants.TAB);
