@@ -13,7 +13,7 @@ public class UnaryExpressionWidget extends EditorWidget {
 	public UnaryExpressionWidget(EditorWidget parent, String operator, String target) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
-		op = new Token(this, operator, Constants.UNARY_OPERATORS_SUPPLIER);
+		op = new Token(this, operator, Constants.UNARY_OPERATORS);
 		expression = new ExpressionWidget(this, target);
 
 		Menu menu = op.getMenu();
@@ -21,13 +21,6 @@ public class UnaryExpressionWidget extends EditorWidget {
 		MenuItem simple = new MenuItem(menu, SWT.NONE);
 		simple.setText("simple expression");
 		simple.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				dispose(); // TODO
-			}
-		});
-		MenuItem binary = new MenuItem(menu, SWT.NONE);
-		binary.setText("binary expression");
-		binary.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				dispose(); // TODO
 			}

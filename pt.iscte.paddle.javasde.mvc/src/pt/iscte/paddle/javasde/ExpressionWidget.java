@@ -21,13 +21,13 @@ public class ExpressionWidget extends EditorWidget {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		initLiteral = literal;
-		expression = new SimpleExpression(this, literal);
+		expression = new SimpleExpressionWidget(this, literal, false);
 		addMenu(expression);
 	}
 
 	public void set(String expression) {
 		this.expression.dispose();
-		this.expression = new SimpleExpression(this, expression);
+		this.expression = new SimpleExpressionWidget(this, expression, false);
 		this.expression.requestLayout();
 	}
 	
@@ -100,6 +100,12 @@ public class ExpressionWidget extends EditorWidget {
 	public void setForeground(Color color) {
 		expression.setForeground(color);
 	}
+	
+	@Override
+	public boolean setFocus() {
+		return expression.setFocus();
+	}
+	
 //	@Override
 //	public void toCode(StringBuffer buffer) {
 //		expression.toCode(buffer);

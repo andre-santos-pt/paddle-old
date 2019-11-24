@@ -9,6 +9,8 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -43,11 +45,6 @@ public class Id extends EditorWidget {
 					menuMode = true;
 					text.setText(initialId);
 					menuMode = false;
-					
-//					menuMode = true;
-//					if(!text.getText().matches("[A-Z_]+"))
-//						text.setText(text.getText().toUpperCase());
-//					menuMode = false;
 					text.requestLayout();
 				}
 				Constants.setFont(text, false); 
@@ -60,7 +57,6 @@ public class Id extends EditorWidget {
 
 		text.addModifyListener(e -> { 
 			Constants.setFont(text, false);
-			
 			text.requestLayout();
 		});
 
@@ -68,6 +64,8 @@ public class Id extends EditorWidget {
 			addMenu(provider);
 			addKeyListeners();
 		}
+		else
+			text.setMenu(new Menu(text)); // prevent system menu
 	}
 	
 	public void setEditAction(Runnable editAction) {
@@ -192,5 +190,10 @@ public class Id extends EditorWidget {
 
 	public void set(String id) {
 		text.setText(id);
+	}
+	
+	@Override
+	public void setForeground(Color color) {
+		text.setForeground(color);
 	}
 }

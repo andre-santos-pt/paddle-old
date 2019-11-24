@@ -41,19 +41,15 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 		if(name == null)
 			name = "procedure";
 		id = createId(header, name);
-
 		new Token(header, "(");
 		params = new ParamList(header);
 		new Token(header, ")");
 		Token openBody = new Token(header, "{");
 		body = new SequenceWidget(this, Constants.TAB);
-		
 		body.addStatementCommands(procedure.getBody());
 		body.addBlockListener(procedure.getBody());
-//		closeBody = createAddLabel(this, "}");	
-//		Control closeBody = createAddLabel(this, "}");
-//		closeBody.setMenu(body.createMenu(closeBody, false));
 		Token closeBody = new Token(this, "}");
+		
 		new Label(this, SWT.NONE); // line
 	}
 
@@ -61,12 +57,13 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 		public ParamList(Composite parent) {
 			super(parent, MethodWidget.this.mode);
 			setLayout(Constants.ROW_LAYOUT_H_ZERO);
-			Control add = createAddLabel(this);
-			Menu menu = new Menu(add);
+			Control addLabel = createAddLabel(this);
+//			addLabel.addFocusListener(Constants.ADD_HIDE);
 			
+			Menu menu = new Menu(addLabel);
 			MenuItem delete = new MenuItem(menu, SWT.NONE);
 			delete.setText("delete");
-			delete.setAccelerator('d');
+			delete.setAccelerator(Constants.DEL_KEY);
 			delete.setEnabled(false);
 			delete.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
@@ -83,15 +80,15 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 			addParam.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					delete.setEnabled(true);
-					boolean comma = ParamList.this.getChildren()[0] != add;
+					boolean comma = ParamList.this.getChildren()[0] != addLabel;
 					Param param = new Param(comma);
-					param.moveAbove(add);
+					param.moveAbove(addLabel);
 					param.requestLayout();
 					param.setFocus();
 				}
 			});
 			
-			add.setMenu(menu);
+			addLabel.setMenu(menu);
 		}
 
 		private class Param extends EditorWidget {

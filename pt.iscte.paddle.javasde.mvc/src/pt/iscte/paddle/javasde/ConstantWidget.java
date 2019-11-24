@@ -12,7 +12,7 @@ public class ConstantWidget extends EditorWidget {
 	final IConstant constant;
 	private Id type;
 	private Id id;
-	private SimpleExpression expression;
+	private SimpleExpressionWidget expression;
 	
 	public ConstantWidget(EditorWidget parent, IConstant constant) {
 		super(parent);
@@ -31,7 +31,7 @@ public class ConstantWidget extends EditorWidget {
 		this.id.setEditAction(() -> constant.setId(this.id.getText()));
 		
 		new Token(this, "=");
-		this.expression = new SimpleExpression(this, constant.getValue().getStringValue());
+		this.expression = new SimpleExpressionWidget(this, constant.getValue().getStringValue(), false);
 		new Token(this, ";");
 		
 		

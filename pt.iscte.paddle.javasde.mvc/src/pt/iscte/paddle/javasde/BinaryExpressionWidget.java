@@ -1,6 +1,9 @@
 package pt.iscte.paddle.javasde;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -14,45 +17,53 @@ public class BinaryExpressionWidget extends EditorWidget {
 	private Token op;
 	private boolean brackets;
 	
-	private RowData data = new RowData(0,0);
+	private RowData data = new RowData();
 
 	public BinaryExpressionWidget(EditorWidget parent, String operator) {
 		super(parent);
+		brackets = false;
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
+		data.exclude = !brackets;
+		
 		Token lBracket = new Token(this, "(");
-		lBracket.setVisible(false);
-		data.exclude = true;
+		lBracket.setLayoutData(data);
+	
 		left = new ExpressionWidget(this);
-//		left.setLayoutData(data);
-		op = new Token(this, operator, Constants.BINARY_OPERATORS_SUPPLIER);
+		op = new Token(this, operator, Constants.ARITHMETIC_OPERATORS, Constants.RELATIONAL_OPERATORS, Constants.LOGICAL_OPERATORS);
 		right = new ExpressionWidget(this);
+		
 		Token rBracket = new Token(this, ")");
-//		right.setLayoutData(data);
-		rBracket.setVisible(false);
+		rBracket.setLayoutData(data);
 		
 		Menu menu = op.getMenu();
 		new MenuItem(menu, SWT.SEPARATOR);
 		
 		MenuItem brack = new MenuItem(menu, SWT.NONE);
 		brack.setText("( ... )");
+		brack.setAccelerator('(');
 		brack.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
+				data.exclude = brackets;
 				brackets = !brackets;
-//				lBracket.setVisible(brackets);
-//				rBracket.setVisible(brackets);
-				data.exclude = !brackets;
+				lBracket.setVisible(brackets);
+				rBracket.setVisible(brackets);
 				BinaryExpressionWidget.this.requestLayout();
 			}
 		});
 		
 		MenuItem simple = new MenuItem(menu, SWT.NONE);
-		simple.setText("simple expression");
+		simple.setText("delete");
+		simple.setAccelerator(SWT.BS);
 		simple.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				ExpressionWidget parent = (ExpressionWidget) getParent();
-				parent.expression = new SimpleExpression(parent, left.toString());
-				dispose();
-				parent.expression.requestLayout();
+				deleteOperator();
+			}
+		});
+		
+		op.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == SWT.BS)
+					deleteOperator();
 			}
 		});
 	}
@@ -80,6 +91,17 @@ public class BinaryExpressionWidget extends EditorWidget {
 		buffer.append(" " + op + " ");
 		right.toCode(buffer);
 		if(brackets) buffer.append(")");
+	}
+
+	private void deleteOperator() {
+		ExpressionWidget parent = (ExpressionWidget) getParent();
+		if(left.expression instanceof SimpleExpressionWidget)
+			parent.expression = new SimpleExpressionWidget(parent, left.expression.toString(), false); // TODO propagate
+		else if(left.expression instanceof BinaryExpressionWidget)
+			parent.expression = new BinaryExpressionWidget(parent, ((BinaryExpressionWidget) left.expression).op.toString());
+		dispose();
+		parent.expression.requestLayout();
+		parent.expression.setFocus();
 	}
 
 

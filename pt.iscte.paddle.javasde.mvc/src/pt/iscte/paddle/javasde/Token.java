@@ -1,15 +1,24 @@
 package pt.iscte.paddle.javasde;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -20,17 +29,20 @@ import org.eclipse.swt.widgets.Text;
 
 public class Token {
 	private final Control control;
-//	private Token sibling;
-
+	private Map<Character, String> map;
+	
+	private static final List<String>[] EMPTY_ARRAY  = new List[0];
+	
 	public Token(EditorWidget parent, String token) {
-		this(parent, token, Constants.EMPTY_TOKEN_SUPPLIER);
+		this(parent, token, EMPTY_ARRAY);
 	}
 
-	public Token(EditorWidget parent, String token, Supplier<List<String>> alternatives) {
-		List<String> list = alternatives.get();
-		control = list.isEmpty() ? new Label(parent, SWT.NONE) : new Text(parent, SWT.NONE);
-		if(control instanceof Label)
+	public Token(EditorWidget parent, String token, List<String> ... alternatives) {
+		control = alternatives.length == 0 ? new Label(parent, SWT.NONE) : new Text(parent, SWT.NONE);
+		if(control instanceof Label) {
 			((Label) control).setText(token);
+			
+		}
 		else {
 			((Text) control).setText(token);
 			((Text) control).setEditable(false);
@@ -41,22 +53,57 @@ public class Token {
 			control.setForeground(Constants.COLOR_KW);
 		}
 		else
-			control.setFont(Constants.FONT);
+			control.setFont(token.equals(".") ? Constants.FONT_DOT : Constants.FONT);
 
+		map = new HashMap<>();
+		
 		Menu menu = new Menu(control);
-		for(String t : alternatives.get()) {
-			MenuItem item = new MenuItem(menu, SWT.NONE);
-			item.setText(t);
-			item.addSelectionListener(new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					((Text) control).setText(item.getText());
-					control.requestLayout();
+		String prev = null;
+		for(List<String> set : alternatives) {
+			for(String t : set) {
+				MenuItem item = new MenuItem(menu, SWT.NONE);
+				item.setText(t);
+				if(prev != null && prev.charAt(0) != t.charAt(0)) {
+					item.setAccelerator(t.charAt(0));
+					map.put(t.charAt(0), t);
 				}
-			});
+				item.addSelectionListener(new SelectionAdapter() {
+					public void widgetSelected(SelectionEvent e) {
+						((Text) control).setText(item.getText());
+						control.requestLayout();
+					}
+				});
+				
+				prev = t;
+			}
+			new MenuItem(menu, SWT.SEPARATOR);
 		}
 
+		control.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == Constants.MENU_KEY && menu != null) {
+					menu.setLocation(control.toDisplay(0, 20));
+					menu.setVisible(true);
+				}
+				else if(map.containsKey(e.character)) {
+					((Text) control).setText(map.get(e.character));
+					control.requestLayout();
+					((Text) control).selectAll();
+				}
+				
+			}
+		});
+
+		control.addFocusListener(FOCUS_LISTENER);
 		control.setMenu(menu);
 	}
+
+	private static final FocusAdapter FOCUS_LISTENER = new FocusAdapter() {
+		public void focusGained(FocusEvent e) {
+			if(e.widget instanceof Text)
+				((Text) e.widget).selectAll();
+		}
+	};
 
 	//	@Override
 	//	public void toCode(StringBuffer buffer) {
@@ -83,9 +130,17 @@ public class Token {
 	public void setVisible(boolean visible) {
 		control.setVisible(visible);
 	}
-	
+
 	boolean isKeyword(String keyword) {
 		return control instanceof Label && ((Label) control).getText().equals(keyword);
+	}
+
+	public void setLayoutData(RowData data) {
+		control.setLayoutData(data);
+	}
+
+	public void addKeyListener(KeyListener keyListener) {
+		control.addKeyListener(keyListener);
 	}
 
 
