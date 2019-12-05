@@ -5,6 +5,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -27,7 +28,7 @@ public class CallWidget extends EditorWidget {
 		if(statement)
 			new Token(this, ";");
 		
-		ExpressionWidget exp = new ExpressionWidget(args);
+//		ExpressionWidget exp = new ExpressionWidget(args);
 		
 		Menu menu = new Menu(addLabel);
 		MenuItem delete = new MenuItem(menu, SWT.NONE);
@@ -43,13 +44,13 @@ public class CallWidget extends EditorWidget {
 //				requestLayout();
 			}
 		});
+		// TODO setData
 		
 		new MenuItem(menu, SWT.SEPARATOR);
 		MenuItem argItem = new MenuItem(menu, SWT.PUSH);
 		argItem.setText("argument");
 		argItem.setAccelerator('a');
-		argItem.addSelectionListener(new SelectionAdapter() {
-			@Override
+		SelectionListener l = new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				if(args.getChildren().length != 0)
 					new Token(args, ",");
@@ -57,7 +58,9 @@ public class CallWidget extends EditorWidget {
 				exp.setFocus();
 				exp.requestLayout();
 			}
-		});
+		};
+		argItem.addSelectionListener(l);
+		argItem.setData(l);
 		addLabel.setMenu(menu);
 		addLabel.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {

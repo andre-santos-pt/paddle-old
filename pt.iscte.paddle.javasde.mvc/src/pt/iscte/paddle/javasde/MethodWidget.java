@@ -5,11 +5,13 @@ import static java.lang.System.lineSeparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+
 
 import pt.iscte.paddle.model.IProcedure;
 
@@ -65,19 +67,22 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 			delete.setText("delete");
 			delete.setAccelerator(Constants.DEL_KEY);
 			delete.setEnabled(false);
-			delete.addSelectionListener(new SelectionAdapter() {
+			SelectionListener deleteListener = new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					Control[] children = params.getChildren();
 					children[children.length-2].dispose();
 					delete.setEnabled(children.length > 2);
 					requestLayout();
 				}
-			});
+			};
+			delete.addSelectionListener(deleteListener);
+			delete.setData(deleteListener);
+			
 			new MenuItem(menu, SWT.SEPARATOR);
 			MenuItem addParam = new MenuItem(menu, SWT.NONE);
 			addParam.setText("parameter");
 			addParam.setAccelerator('p');
-			addParam.addSelectionListener(new SelectionAdapter() {
+			SelectionListener paramListener = new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					delete.setEnabled(true);
 					boolean comma = ParamList.this.getChildren()[0] != addLabel;
@@ -86,8 +91,9 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 					param.requestLayout();
 					param.setFocus();
 				}
-			});
-			
+			};
+			addParam.addSelectionListener(paramListener);
+			addParam.setData(paramListener);
 			addLabel.setMenu(menu);
 		}
 

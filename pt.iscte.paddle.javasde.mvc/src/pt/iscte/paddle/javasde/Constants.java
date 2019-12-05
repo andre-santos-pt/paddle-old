@@ -51,13 +51,14 @@ public interface Constants {
 	Font FONT_PH = new Font(null, FONT_FACE, FONT_SIZE, SWT.NONE);
 	Color FONT_COLOR = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
 	
-	List<String> PRIMITIVE_TYPES = Arrays.asList("int", "double", "boolean", "char");
+
+	List<String> PRIMITIVE_TYPES = Arrays.asList("boolean", "byte", "short", "int", "char", "long", "float", "double");
 	Supplier<List<String>> PRIMITIVE_TYPES_SUPPLIER = () -> PRIMITIVE_TYPES;
-	List<String> PRIMITIVE_TYPES_VOID = Arrays.asList("int", "double", "boolean", "char", "void");
+	List<String> PRIMITIVE_TYPES_VOID = Arrays.asList("void", "boolean", "byte", "short", "int", "char", "long", "float", "double");
 	Supplier<List<String>> PRIMITIVE_TYPES_VOID_SUPPLIER = () -> PRIMITIVE_TYPES_VOID;
 	List<String> UNARY_OPERATORS = Arrays.asList("!", "-");  //"(int)", "(double)");
 //	Supplier<List<String>> UNARY_OPERATORS_SUPPLIER = () -> UNARY_OPERATORS;
-	RowLayout ROW_LAYOUT_H_ZERO = create(SWT.HORIZONTAL, 2);
+	RowLayout ROW_LAYOUT_H_ZERO = create(SWT.HORIZONTAL, 0);
 	RowLayout ROW_LAYOUT_H_DOT = create(SWT.HORIZONTAL, 0);
 	RowLayout ROW_LAYOUT_V_ZERO = create(SWT.VERTICAL, 2);
 	GridData ALIGN_TOP = new GridData(SWT.LEFT, SWT.TOP, false, false);
@@ -75,7 +76,7 @@ public interface Constants {
 	
 	
 	static boolean isKeyword(String token) {
-		return token.matches("class|static|final|return|new|void|if|else|while|for|break|continue|int|double|boolean|char|true|false|null");
+		return token.matches("class|static|final|return|new|void|if|else|while|for|break|continue|byte|short|int|long|float|double|boolean|char|true|false|null");
 	}
 	
 	static void setFont(Text control, boolean init) {

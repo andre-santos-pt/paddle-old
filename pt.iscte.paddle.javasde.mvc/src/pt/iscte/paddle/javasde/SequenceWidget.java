@@ -10,9 +10,11 @@ import java.util.function.Predicate;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.TextTransfer;
@@ -23,6 +25,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -32,6 +35,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISelectionListener;
 
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IBlockElement;
@@ -68,7 +72,7 @@ public class SequenceWidget extends EditorWidget {
 			MenuItem item = new MenuItem(parent, SWT.NONE);
 			item.setText(text);
 			item.setAccelerator(accelerator);
-			item.setData(enabled);
+			item.setData(this);
 			item.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					int i = findModelIndex(Display.getDefault().getFocusControl());
@@ -132,6 +136,7 @@ public class SequenceWidget extends EditorWidget {
 			}
 		};
 		rootAddLabel.addFocusListener(updateMenuListener);
+		rootAddLabel.addKeyListener(keyListener);
 	}
 
 
@@ -142,10 +147,13 @@ public class SequenceWidget extends EditorWidget {
 
 		int i = findModelIndex(control);
 		for (MenuItem item : menu.getItems()) {
-			Function<Integer, Boolean> enabled = (Function<Integer, Boolean>) item.getData();
-			if(enabled != null) {
-				boolean isElse = widget instanceof ControlWidget && ((ControlWidget) widget).is("else");
-				item.setEnabled(!isElse && enabled.apply(i));
+			Object data = item.getData();
+			if(data instanceof MenuCommand) {
+				MenuCommand cmd = (MenuCommand) item.getData();
+				if(cmd != null && cmd.enabled != null) {
+					boolean isElse = widget instanceof ControlWidget && ((ControlWidget) widget).is("else");
+					item.setEnabled(!isElse && cmd.enabled.apply(i));
+				}
 			}
 		}
 	}
@@ -154,13 +162,14 @@ public class SequenceWidget extends EditorWidget {
 		return rootAddLabel;
 	}
 
-	void addChildCommand(String text, char accelerator, Consumer<Integer> action) {
-		addChildCommand(text, accelerator, action, i -> true);
+	MenuCommand addChildCommand(String text, char accelerator, Consumer<Integer> action) {
+		return addChildCommand(text, accelerator, action, i -> true);
 	}
 
-	void addChildCommand(String text, char accelerator, Consumer<Integer> action, Function<Integer, Boolean> enabled) {
+	MenuCommand addChildCommand(String text, char accelerator, Consumer<Integer> action, Function<Integer, Boolean> enabled) {
 		MenuCommand cmd = new MenuCommand(text, accelerator, action, enabled);
-		cmd.createItem(menu);
+		cmd.createItem(menu); 
+		return cmd;
 	}
 
 
@@ -169,7 +178,7 @@ public class SequenceWidget extends EditorWidget {
 			IVariable var = block.addVariableAt(INT, i);
 			var.setId("id");
 		});
-		addChildCommand("variable assignment", 'a', i -> block.addAssignmentAt(null, null, i));
+		assignmentCommand = addChildCommand("variable assignment", 'a', i -> block.addAssignmentAt(null, null, i));
 		addChildCommand("if statement", 'i', i -> block.addSelectionAt(BOOLEAN.literal(true), i));
 		addChildCommand("else statement", 'e', i -> {
 			IBlockElement e = block.getChildren().get(i - 1);
@@ -201,7 +210,6 @@ public class SequenceWidget extends EditorWidget {
 
 		addChildCommand("break", 'b', i -> block.addBreakAt(i), i -> block.isInLoop());
 		addChildCommand("continue", 'c', i -> block.addContinueAt(i), i -> block.isInLoop());
-
 	}
 
 	void addBlockListener(IBlock block) {
@@ -213,12 +221,16 @@ public class SequenceWidget extends EditorWidget {
 					String id = v.getId() != null ? v.getId() : "variable";
 					String exp = "expression";
 					addElement(new DeclarationWidget(SequenceWidget.this, type, id, exp), index);
-				} else if (element instanceof IVariableAssignment && element.not(Constants.FOR_FLAG)) {
+				} 
+
+				else if (element instanceof IVariableAssignment && element.not(Constants.FOR_FLAG)) {
 					IVariableAssignment a = (IVariableAssignment) element;
 					String id = "variable";
 					String exp = "expression";
 					addElement(new AssignmentWidget(SequenceWidget.this, id, exp, true), index);
-				} else if (element instanceof ISelection) {
+				} 
+
+				else if (element instanceof ISelection) {
 					ISelection s = (ISelection) element;
 					addElement(new ControlWidget(SequenceWidget.this, "if", "true", s.getBlock()), index);
 					if (s.hasAlternativeBlock())
@@ -276,8 +288,8 @@ public class SequenceWidget extends EditorWidget {
 		addLabel.requestLayout();
 		addLabel.setData(w);
 		addLabel.addFocusListener(updateMenuListener);
-		addLabel.addKeyListener(keyListener);
-		
+		//		addLabel.addKeyListener(keyListener);
+		addDragNDrop(addLabel);
 		w.requestLayout();
 		w.setFocus();
 	}
@@ -285,25 +297,31 @@ public class SequenceWidget extends EditorWidget {
 	private void addDeleteItem(Menu menu) {
 		deleteItem = new MenuItem(menu, SWT.NONE);
 		deleteItem.setText("delete");
-		deleteItem.setAccelerator(SWT.BS);
-		deleteItem.addSelectionListener(new SelectionAdapter() {
+		deleteItem.setAccelerator(Constants.DEL_KEY);
+		SelectionListener l = new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				Control control = Display.getDefault().getFocusControl();
-				Composite parent = control.getParent();
-				Control[] children = parent.getChildren();
-				for (int i = 0; i < children.length; i += 2) {
-					if (children[i] == control && i + 1 < children.length) {
-						children[i].setMenu(null); // not dispose
-						children[i].dispose();
-						children[i+1].dispose();
-						parent.requestLayout();
-						if (children.length > i + 1)
-							parent.getChildren()[i].setFocus();
-						return;
-					}
-				}
+				deleteItem();
 			}
-		});
+		};
+		deleteItem.addSelectionListener(l);
+		deleteItem.setData(l);
+	}
+
+	private void deleteItem() {
+		Control control = Display.getDefault().getFocusControl();
+		Composite parent = control.getParent();
+		Control[] children = parent.getChildren();
+		for (int i = 0; i < children.length; i += 2) {
+			if (children[i] == control && i + 1 < children.length) {
+				children[i].setMenu(null); // not dispose
+				children[i].dispose();
+				children[i+1].dispose();
+				parent.requestLayout();
+				if (children.length > i + 1)
+					parent.getChildren()[i].setFocus();
+				return;
+			}
+		}
 	}
 
 	void delete(Predicate<EditorWidget> pred) {
@@ -332,13 +350,34 @@ public class SequenceWidget extends EditorWidget {
 
 	private KeyAdapter keyListener = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
-			EditorWidget w = (EditorWidget) e.widget.getData();
-			System.out.println(w);
+			if(e.keyCode == Constants.DEL_KEY)
+				deleteItem();
+
+			//			else if(assignmentCommand != null && e.keyCode >= 'a' && e.keyCode <= 'z') {
+			//				int i = findModelIndex(Display.getDefault().getFocusControl());
+			//				assignmentCommand.action.accept(i);
+			//				updateMenu();
+			//			}
+
+			// fast keys
+			//			else if(e.keyCode != Constants.MENU_KEY) {
+			//				for (MenuItem item : menu.getItems()) {
+			//					MenuCommand cmd = (MenuCommand) item.getData();
+			//					if(cmd != null && cmd.accelerator == e.character) {
+			//						int i = findModelIndex(Display.getDefault().getFocusControl());
+			//						cmd.action.accept(i);
+			//						updateMenu();
+			//						return;
+			//					}
+			//				}
+			//			}
 		}
 	};
 
 
-	public void toCode(StringBuffer buffer, int level) {
+
+
+	private MenuCommand assignmentCommand;	public void toCode(StringBuffer buffer, int level) {
 		for (Control control : getChildren())
 			if (control instanceof EditorWidget)
 				((EditorWidget) control).toCode(buffer, level);
@@ -348,65 +387,67 @@ public class SequenceWidget extends EditorWidget {
 	private void addDragNDrop(Control label) {
 		DragSource source = new DragSource(label, DND.DROP_NONE);
 		source.setTransfer(TextTransfer.getInstance());
-		source.addDragListener(new DragSourceListener() {
+		source.addDragListener(new DragSourceAdapter() {
 
 			@Override
 			public void dragStart(DragSourceEvent event) {
-				System.out.println("start - " + event);
+				System.out.println("start - " + label + " " + findModelIndex(label));
 			}
 
 			@Override
 			public void dragSetData(DragSourceEvent event) {
-				System.out.println("set");
-				event.data = "test";
+				event.data = Integer.toString(findModelIndex(label));
 			}
 
-			@Override
-			public void dragFinished(DragSourceEvent event) {
-				System.out.println("end - " + event);
-			}
+			//			@Override
+			//			public void dragFinished(DragSourceEvent event) {
+			//				System.out.println("end - " + event.widget);
+			//			}
 		});
 
 		DropTarget target = new DropTarget(label, DND.DROP_NONE);
 		target.setTransfer(TextTransfer.getInstance());
-		target.addDropListener(new DropTargetListener() {
-
-			@Override
-			public void dropAccept(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-
-			}
+		target.addDropListener(new DropTargetAdapter() {
 
 			@Override
 			public void drop(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-
+				int fromIndex = Integer.parseInt((String) event.data);
+				int toIndex = findModelIndex(label);
+				System.out.println("move " + fromIndex + " -> " + toIndex);
 			}
 
-			@Override
-			public void dragOver(DropTargetEvent event) {
-				// TODO Auto-generated method stub
+			//			@Override
+			//			public void dropAccept(DropTargetEvent event) {
+			//				
+			//			}
 
-			}
-
-			@Override
-			public void dragOperationChanged(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void dragLeave(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void dragEnter(DropTargetEvent event) {
-				// TODO Auto-generated method stub
-
-			}
+			//			@Override
+			//			public void dragOver(DropTargetEvent event) {
+			//				// TODO Auto-generated method stub
+			//
+			//			}
+			//
+			//			@Override
+			//			public void dragOperationChanged(DropTargetEvent event) {
+			//				// TODO Auto-generated method stub
+			//
+			//			}
+			//
+			//			@Override
+			//			public void dragLeave(DropTargetEvent event) {
+			//				// TODO Auto-generated method stub
+			//
+			//			}
+			//
+			//			@Override
+			//			public void dragEnter(DropTargetEvent event) {
+			//				// TODO Auto-generated method stub
+			//
+			//			}
 		});
 	}
+
+
+
 
 }

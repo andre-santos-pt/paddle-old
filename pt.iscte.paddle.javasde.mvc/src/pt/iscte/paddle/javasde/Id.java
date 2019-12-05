@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -27,18 +29,22 @@ public class Id extends EditorWidget {
 	private SelectionListener[] typeListeners;
 	private SelectionListener[] arrayListeners;
 
-	private List<String> provider;
+	private Supplier<List<String>> idProvider;
 
 	private Runnable editAction = () -> {};
 	
 	Id(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
 		super(parent);
+		this.idProvider = idProvider;
+		setLayout(Constants.ROW_LAYOUT_H_DOT);
 		initialId = id;
 		text = new Text(this, SWT.NONE);
 		text.setText(id);
-		provider = idProvider.get();
+		List<String> provider = idProvider.get();
 		Constants.setFont(text, true);
-		text.addVerifyListener(e -> e.doit = menuMode || provider.isEmpty() && (isValidCharacter(e.character) || e.character == SWT.BS || e.character == SWT.DEL));
+		text.addVerifyListener(e -> e.doit = menuMode || 
+				!(e.keyCode == 'z' && (( e.stateMask & SWT.MODIFIER_MASK ) == SWT.CTRL || ( e.stateMask & SWT.MODIFIER_MASK ) == SWT.COMMAND)) &&
+				provider.isEmpty() && (isValidCharacter(e.character) || e.character == SWT.BS || e.character == SWT.DEL));
 		text.addFocusListener(new FocusListener() {
 			public void focusLost(FocusEvent e) {
 				if(text.getText().isBlank()) {
@@ -66,6 +72,15 @@ public class Id extends EditorWidget {
 		}
 		else
 			text.setMenu(new Menu(text)); // prevent system menu
+		
+		text.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+			// TODO Auto-generated method stub
+			super.keyPressed(e);
+			}
+		});
+
 	}
 	
 	public void setEditAction(Runnable editAction) {
@@ -128,31 +143,43 @@ public class Id extends EditorWidget {
 
 	private void addKeyListeners() {
 		text.addKeyListener(KeyListener.keyPressedAdapter(e -> {
+			List<String> list = idProvider.get();
+			
 			if(e.keyCode == Constants.MENU_KEY && popupMenu != null) {
 				popup(popupMenu, text);
 			}
 			else if(e.keyCode == SWT.ARROW_DOWN) {
-				int index = provider.indexOf(text.getText());
+				int index = list.indexOf(text.getText());
 				if(index != -1) {
-					index = (index+1)%provider.size();
+					index = (index+1)%list.size();
 					typeListeners[index].widgetSelected(null);
 				}
-				else if(provider.size() > 0)
+				else if(list.size() > 0)
 					typeListeners[0].widgetSelected(null);
 			}
 			else if(e.keyCode == SWT.ARROW_UP) {
-				int index = provider.indexOf(text.getText());
+				int index = list.indexOf(text.getText());
 				if(index != -1) {
 					index--;
 					if(index == -1)
-						index = provider.size()-1;
+						index = list.size()-1;
 					typeListeners[index].widgetSelected(null);
 				}
-				else if(provider.size() > 0)
+				else if(list.size() > 0)
 					typeListeners[0].widgetSelected(null);
 			}
 			else if(arrayPart != null && e.character >= '0' && e.character <= '0' + Constants.ARRAY_DIMS) {
 				arrayListeners[e.character - '0'].widgetSelected(null);
+			}
+			else {
+				for(String i : list) {
+					if(i.charAt(0) == e.character && !text.getText().equals(i)) {
+						menuMode = true;
+						text.setText(i); 
+						menuMode = false;
+						break;
+					}
+				}
 			}
 		}));
 	}

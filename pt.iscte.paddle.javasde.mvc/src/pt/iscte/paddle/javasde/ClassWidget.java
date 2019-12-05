@@ -11,11 +11,17 @@ import java.util.function.Supplier;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TypedListener;
 
 import pt.iscte.paddle.model.IConstant;
 import pt.iscte.paddle.model.ILiteral;
@@ -75,6 +81,17 @@ public class ClassWidget extends EditorWidget {
 				body.delete(e -> e instanceof MethodWidget && ((MethodWidget) e).procedure == procedure);
 			}
 		});
+
+		Display.getDefault().addFilter(SWT.KeyDown, new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+				if((event.stateMask & SWT.MODIFIER_MASK) == SWT.CTRL && event.keyCode == 'z') { 
+					System.out.println("UNDO");
+					module.undo();
+				}
+			}
+		});
 	}
 
 	public UiMode getMode() {
@@ -124,25 +141,52 @@ public class ClassWidget extends EditorWidget {
 			public void keyPressed(KeyEvent e) {
 				Menu menu = label.getMenu();
 				if(e.keyCode == Constants.MENU_KEY && menu != null) {
-					menu.setLocation(label.toDisplay(0, 20));
-					menu.setVisible(true);
+					int c = 0;
+					MenuItem item = null;
+					for (MenuItem menuItem : menu.getItems()) {
+						if(menuItem.isEnabled() && menuItem.getStyle() != SWT.SEPARATOR && menuItem.getData() instanceof SelectionListener) {
+							item = menuItem;
+							c++;
+						}
+					}
+					if(c == 1) {
+						((SelectionListener) item.getData()).widgetSelected(null);
+					}
+					else {
+						menu.setLocation(label.toDisplay(0, 20));
+						menu.setVisible(true);
+					}
+				}
+				else if(e.keyCode == Constants.DEL_KEY && menu != null) {
+					for (MenuItem menuItem : menu.getItems()) {
+						if(menuItem.isEnabled() && menuItem.getAccelerator() == Constants.DEL_KEY) {
+							((SelectionListener) menuItem.getData()).widgetSelected(null);
+							break;
+						}
+					}
 				}
 				else if(e.keyCode == SWT.ARROW_UP) {
-					Composite p = label.getParent();
-					Control[] children = p.getChildren();
-//					if(children[0] == label) {
-//						Control[] pchildren = p.getParent().getChildren();
-//						if(pchildren.length > 0)
-//							pchildren[pchildren.length-2].setFocus();
-//					}
-//					else {
-						for (int i = 2; i < children.length; i++) {
-							if(children[i] == label) {
-								children[i-2].setFocus();
-								return;
-							}
+					Composite seq = label.getParent();
+					Control[] children = seq.getChildren();
+					//					if(children[0] == label) {
+					//						Control[] pchildren = seq.getParent().getChildren();
+					//						for(Control c : pchildren)
+					//							if(c instanceof SequenceWidget) {
+					//								Control[] cchildren = ((SequenceWidget)c).getChildren();
+					//								if(cchildren.length > 0)
+					//									cchildren[cchildren.length-2].setFocus();
+					//								return;
+					//							}
+					//						
+					//					}
+					//					else {
+					for (int i = 2; i < children.length; i++) {
+						if(children[i] == label) {
+							children[i-2].setFocus();
+							return;
 						}
-//					}
+					}
+					//					}
 				}
 				else if(e.keyCode == SWT.ARROW_DOWN) {
 					Composite p = label.getParent();

@@ -35,7 +35,16 @@ public class EditorWidget extends Composite {
 			e = (EditorWidget)e.getParent();
 		root = (EditorWidget) e;
 	}
-
+	
+	// fragile
+	MethodWidget getParentMethod() {
+		EditorWidget e = this;
+		while(!(e instanceof MethodWidget))
+			e = (EditorWidget)e.getParent();
+		
+		return (MethodWidget) e;
+	}
+	
 	Text createAddLabel(Composite parent) {
 		return root.createAddLabel(parent);
 	}
