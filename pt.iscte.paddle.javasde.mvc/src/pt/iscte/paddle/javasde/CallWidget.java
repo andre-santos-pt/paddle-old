@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+// TODO incomplete
 public class CallWidget extends EditorWidget {
 	private EditorWidget id;
 	private Control addLabel;
@@ -27,8 +28,6 @@ public class CallWidget extends EditorWidget {
 		new Token(this, ")");
 		if(statement)
 			new Token(this, ";");
-		
-//		ExpressionWidget exp = new ExpressionWidget(args);
 		
 		Menu menu = new Menu(addLabel);
 		MenuItem delete = new MenuItem(menu, SWT.NONE);
@@ -61,6 +60,7 @@ public class CallWidget extends EditorWidget {
 		};
 		argItem.addSelectionListener(l);
 		argItem.setData(l);
+		
 		addLabel.setMenu(menu);
 		addLabel.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {

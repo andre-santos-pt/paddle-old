@@ -22,6 +22,12 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.service.OperationCanceledError;
+import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.CheckMode;
+import org.eclipse.xtext.validation.IResourceValidator;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -88,7 +94,19 @@ public class Translator {
 		resource = rs.getResource(URI.createURI("file:///" + locationURI), true);
 	}
 
+	private boolean validate() throws OperationCanceledError {
+		IResourceValidator validator = ((XtextResource)resource).getResourceServiceProvider().getResourceValidator();
+		List<Issue> issues = validator.validate(resource, CheckMode.ALL, CancelIndicator.NullImpl);
+		for (Issue issue : issues) {
+		  System.err.println(issue.getMessage());
+		}
+		return issues.isEmpty();
+	}
+
 	public IModule createProgram() {
+		if(!validate())
+			throw new RuntimeException("syntax errors");
+		
 		Module module = (Module) resource.getContents().get(0);
 		ICompositeNode node = NodeModelUtils.getNode(module);
 
@@ -247,6 +265,7 @@ public class Translator {
 			fo.getInitStatements().forEach(st -> mapStatement(st, fBlock));
 			fo.getBlock().getStatements().forEach(st -> mapStatement(st, loop.getBlock()));
 			fo.getProgressStatements().forEach(st -> mapStatement(st, loop.getBlock()));
+			instr = loop;
 		}
 		else if(s instanceof DoWhile) {
 			// TODO do while

@@ -144,7 +144,8 @@ public class ClassWidget extends EditorWidget {
 					int c = 0;
 					MenuItem item = null;
 					for (MenuItem menuItem : menu.getItems()) {
-						if(menuItem.isEnabled() && menuItem.getStyle() != SWT.SEPARATOR && menuItem.getData() instanceof SelectionListener) {
+						if(menuItem.isEnabled() && menuItem.getStyle() != SWT.SEPARATOR && menuItem.getAccelerator() != Constants.DEL_KEY &&
+								(menuItem.getData() instanceof SelectionListener || menuItem.getData() instanceof SequenceWidget.MenuCommand))  {
 							item = menuItem;
 							c++;
 						}

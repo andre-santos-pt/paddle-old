@@ -52,7 +52,7 @@ import pt.iscte.paddle.model.IVariableAssignment;
 
 public class SequenceWidget extends EditorWidget {
 
-	private class MenuCommand {
+	class MenuCommand {
 		final String text;
 		final char accelerator;
 		final Consumer<Integer> action;
