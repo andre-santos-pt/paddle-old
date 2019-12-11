@@ -6,4 +6,5 @@ public interface IBranchNode extends INode {
 	INode getAlternative(); // true
 	IExpression getElement();
 	void setBranch(INode node);
+	boolean hasBranch();
 }

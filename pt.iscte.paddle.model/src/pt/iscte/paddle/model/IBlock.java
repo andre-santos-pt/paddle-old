@@ -95,8 +95,12 @@ IListenable<IBlock.IListener> {
 				if(visitor.visit(sel)) {
 					sel.getGuard().accept(visitor);
 					sel.getBlock().accept(visitor);
-					if(sel.hasAlternativeBlock())
+					visitor.endVisitBranch(sel);
+					if(sel.hasAlternativeBlock()) {
+						visitor.visitAlternative(sel);
 						sel.getAlternativeBlock().accept(visitor);
+						visitor.endVisitAlternative(sel);
+					}
 				}
 				visitor.endVisit(sel);
 			}
@@ -132,6 +136,10 @@ IListenable<IBlock.IListener> {
 		default boolean visit(ISelection selection) 				{ return true; }
 		default void endVisit(ISelection selection) 				{ }
 
+		default boolean visitAlternative(ISelection selection) 		{ return true; }
+		default void endVisitBranch(ISelection selection)			{ }
+		default void endVisitAlternative(ISelection selection)		{ }
+		
 		default boolean visit(ILoop loop) 							{ return true; }
 		default void endVisit(ILoop loop) 							{ }
 

@@ -30,6 +30,12 @@ public class BranchNode extends Node implements IBranchNode {
 		return expression;
 	}
 	
+	
+	@Override
+	public boolean hasBranch() {
+		return alternative != null;
+	}
+	
 	@Override
 	public String toString() {
 		INode next = getNext();
