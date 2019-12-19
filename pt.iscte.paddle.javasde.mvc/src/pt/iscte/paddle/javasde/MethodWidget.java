@@ -3,6 +3,8 @@ package pt.iscte.paddle.javasde;
 import static java.lang.System.lineSeparator;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -56,11 +58,12 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 	}
 
 	private class ParamList extends EditorWidget {
+		private Control addLabel;
+
 		public ParamList(Composite parent) {
 			super(parent, MethodWidget.this.mode);
 			setLayout(Constants.ROW_LAYOUT_H_ZERO);
-			Control addLabel = createAddLabel(this);
-//			addLabel.addFocusListener(Constants.ADD_HIDE);
+			addLabel = createAddLabel(this, Constants.SINGLE_SPACE, false);
 			
 			Menu menu = new Menu(addLabel);
 			MenuItem delete = new MenuItem(menu, SWT.NONE);
@@ -85,11 +88,7 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 			SelectionListener paramListener = new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					delete.setEnabled(true);
-					boolean comma = ParamList.this.getChildren()[0] != addLabel;
-					Param param = new Param(comma);
-					param.moveAbove(addLabel);
-					param.requestLayout();
-					param.setFocus();
+					addParam(addLabel, true);
 				}
 			};
 			addParam.addSelectionListener(paramListener);
@@ -110,6 +109,13 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 				type.addArrayPart();
 				type.setToolTip("Parameter type");
 				var = createId(this, "parameter");
+				var.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent e) {
+						if(e.character == ',' && var.isAtEnd())
+							addParam(Param.this, false);
+					}
+				});
 				var.setToolTip("Parameter name");
 			}
 			
@@ -119,18 +125,19 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 				return true;
 			}
 		}
+
+		private void addParam(Control control, boolean above) {
+			boolean comma = ParamList.this.getChildren()[0] != addLabel;
+			Param param = new Param(comma);
+			if(above)
+				param.moveAbove(control);
+			else
+				param.moveBelow(control);
+			param.requestLayout();
+			param.setFocus();
+		}
 	}
 
-//	@Override
-//	public SequenceWidget getBody() {
-//		return body;
-//	}
-//	
-//	@Override
-//	public Control getTail() {
-//		return closeBody;
-//	}
-	
 	
 	public void toCode(StringBuffer buffer) {
 		buffer.append("\tpublic static ").append(retType).append(" ").append(id.toString())

@@ -7,6 +7,7 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
@@ -31,6 +32,7 @@ public class SimpleExpressionWidget extends Canvas {
 		text.addVerifyListener(e -> e.doit = validCharacter(e.character) || e.character == '.' && text.getText().indexOf('.') == -1 || e.character == SWT.BS);
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
+				text.setForeground(Constants.FONT_COLOR);
 				try {
 					Integer.parseInt(text.getText());
 					literalType = Integer.class;
@@ -49,17 +51,13 @@ public class SimpleExpressionWidget extends Canvas {
 						else if(Id.isValid(text.getText()))
 							literalType = null;
 						else {
-							text.setBackground(Constants.COLOR_ERROR);
+							text.setForeground(Constants.COLOR_ERROR);
 							text.setToolTipText("invalid literal");
 							text.requestLayout();
 							literalType = null;
-							return;
 						}
 					}
 				}
-
-				text.setForeground(Constants.FONT_COLOR);
-				text.setFont(Constants.FONT);
 				text.requestLayout();
 			}
 		});
@@ -146,6 +144,11 @@ public class SimpleExpressionWidget extends Canvas {
 	@Override
 	public void addFocusListener(FocusListener listener) {
 		text.addFocusListener(listener);
+	}
+	
+	@Override
+	public void addKeyListener(KeyListener listener) {
+		text.addKeyListener(listener);
 	}
 
 	public String getText() {

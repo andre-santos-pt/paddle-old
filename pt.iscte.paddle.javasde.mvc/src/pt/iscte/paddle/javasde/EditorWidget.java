@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -45,13 +46,10 @@ public class EditorWidget extends Composite {
 		return (MethodWidget) e;
 	}
 	
-	Text createAddLabel(Composite parent) {
-		return root.createAddLabel(parent);
+	
+	Text createAddLabel(Composite parent, int spaces, boolean editable) {
+		return root.createAddLabel(parent, spaces, editable);
 	}
-
-//	Text createAddLabel(Composite parent, String token) {
-//		return root.createAddLabel(parent, token);
-//	}
 
 	Id createId(EditorWidget parent, String id) {
 		return root.createId(parent, id);
@@ -70,6 +68,9 @@ public class EditorWidget extends Composite {
 		menu.setLocation(control.toDisplay(0, 40));
 	}
 
+	void addTokenKeyHandler(KeyListener listener) {
+		
+	}
 	
 	void setSibling(Control sibling) {
 		sibling.addFocusListener(new FocusListener() {

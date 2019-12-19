@@ -23,7 +23,7 @@ public class CallWidget extends EditorWidget {
 		this.id = createId(this, id);
 		new Token(this, "(");
 		args = new EditorWidget(this);
-		addLabel = createAddLabel(this);
+		addLabel = createAddLabel(this, Constants.SINGLE_SPACE, false);
 		addLabel.addFocusListener(Constants.ADD_HIDE);
 		new Token(this, ")");
 		if(statement)

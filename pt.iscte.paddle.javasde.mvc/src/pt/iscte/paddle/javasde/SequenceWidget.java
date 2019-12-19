@@ -2,7 +2,9 @@ package pt.iscte.paddle.javasde;
 
 import static pt.iscte.paddle.model.IType.BOOLEAN;
 import static pt.iscte.paddle.model.IType.INT;
+import static pt.iscte.paddle.javasde.Keyword.*;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -55,10 +57,10 @@ public class SequenceWidget extends EditorWidget {
 	class MenuCommand {
 		final String text;
 		final char accelerator;
-		final Consumer<Integer> action;
+		final BiConsumer<Integer, String> action;
 		final Function<Integer, Boolean> enabled;
 
-		MenuCommand(String text, char accelerator, Consumer<Integer> action, Function<Integer, Boolean> enabled) {
+		MenuCommand(String text, char accelerator, BiConsumer<Integer, String> action, Function<Integer, Boolean> enabled) {
 			this.text = text;
 			this.accelerator = accelerator;
 			this.action = action;
@@ -75,12 +77,15 @@ public class SequenceWidget extends EditorWidget {
 			item.setData(this);
 			item.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					int i = findModelIndex(Display.getDefault().getFocusControl());
-					action.accept(i);
-					updateMenu();
+					run(null);
 				}
 			});
 			return item;
+		}
+		void run(String param) {
+			int i = findModelIndex(Display.getDefault().getFocusControl());
+			action.accept(i, param);
+			updateMenu();
 		}
 	}
 
@@ -89,20 +94,22 @@ public class SequenceWidget extends EditorWidget {
 	}
 
 
+	// TODO REVIEW
 	private static int findModelIndex(Control location) {
 		int index = -1;
 		int elses = 0;
 		int i = 0;
 		for (Control c : location.getParent().getChildren()) {
-			if(c instanceof ControlWidget && ((ControlWidget) c).is("else"))
+			if(c instanceof ControlWidget && ((ControlWidget) c).is(Keyword.ELSE))
 				elses++;
 			if (c == location) {
 				index = i;
 				break;
 			}
-			i++;
+			if(!(c instanceof Text))
+				i++;
 		}	
-		return (index / 2) - elses;
+		return index - elses;
 	}
 
 	private Text rootAddLabel;
@@ -113,15 +120,19 @@ public class SequenceWidget extends EditorWidget {
 
 	private MenuItem deleteItem;
 
+	private int spaces;
+	
 	public SequenceWidget(EditorWidget parent, int margin) {
 		super(parent, parent.mode);
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(1, false);
 		layout.marginLeft = margin;
 		layout.verticalSpacing = 4;
 		layout.horizontalSpacing = 2;
 		setLayout(layout);
 
-		rootAddLabel = createAddLabel(this);
+		spaces = parent instanceof ClassWidget ? Constants.SINGLE_SPACE : 16;
+		
+		rootAddLabel = createAddLabel(this, spaces, !(parent instanceof ClassWidget));
 		rootAddLabel.setLayoutData(data);
 		rootAddLabel.addFocusListener(Constants.ADD_HIDE);
 
@@ -136,7 +147,7 @@ public class SequenceWidget extends EditorWidget {
 			}
 		};
 		rootAddLabel.addFocusListener(updateMenuListener);
-		rootAddLabel.addKeyListener(keyListener);
+//		rootAddLabel.addKeyListener(keyListener);
 	}
 
 
@@ -151,7 +162,7 @@ public class SequenceWidget extends EditorWidget {
 			if(data instanceof MenuCommand) {
 				MenuCommand cmd = (MenuCommand) item.getData();
 				if(cmd != null && cmd.enabled != null) {
-					boolean isElse = widget instanceof ControlWidget && ((ControlWidget) widget).is("else");
+					boolean isElse = widget instanceof ControlWidget && ((ControlWidget) widget).is(Keyword.ELSE);
 					item.setEnabled(!isElse && cmd.enabled.apply(i));
 				}
 			}
@@ -162,25 +173,38 @@ public class SequenceWidget extends EditorWidget {
 		return rootAddLabel;
 	}
 
-	MenuCommand addChildCommand(String text, char accelerator, Consumer<Integer> action) {
+	MenuCommand addChildCommand(String text, char accelerator, BiConsumer<Integer, String> action) {
 		return addChildCommand(text, accelerator, action, i -> true);
 	}
+	
+	MenuCommand addChildCommand(Keyword keyword, BiConsumer<Integer, String> action) {
+		return addChildCommand(keyword, action, i -> true);
+	}
 
-	MenuCommand addChildCommand(String text, char accelerator, Consumer<Integer> action, Function<Integer, Boolean> enabled) {
+	MenuCommand addChildCommand(String text, char accelerator, BiConsumer<Integer, String> action, Function<Integer, Boolean> enabled) {
 		MenuCommand cmd = new MenuCommand(text, accelerator, action, enabled);
 		cmd.createItem(menu); 
 		return cmd;
 	}
 
+	MenuCommand addChildCommand(Keyword keyword, BiConsumer<Integer, String> action, Function<Integer, Boolean> enabled) {
+		MenuCommand cmd = new MenuCommand(keyword.toString(), keyword.getAccelerator(), action, enabled);
+		cmd.createItem(menu); 
+		return cmd;
+	}
+	
 
 	void addStatementCommands(IBlock block) {
-		addChildCommand("variable declaration", 'v', i -> { 
+		addChildCommand("variable", 'v', (i, p) -> { 
 			IVariable var = block.addVariableAt(INT, i);
 			var.setId("id");
 		});
-		assignmentCommand = addChildCommand("variable assignment", 'a', i -> block.addAssignmentAt(null, null, i));
-		addChildCommand("if statement", 'i', i -> block.addSelectionAt(BOOLEAN.literal(true), i));
-		addChildCommand("else statement", 'e', i -> {
+		
+		assignmentCommand = addChildCommand("variable = ...", 'a', (i, p) -> block.addAssignmentAt(null, null, i));
+		
+		addChildCommand(IF, (i, p) -> block.addSelectionAt(BOOLEAN.literal(true), i));
+		
+		addChildCommand(ELSE, (i, p) -> {
 			IBlockElement e = block.getChildren().get(i - 1);
 			if (e instanceof ISelection && !((ISelection) e).hasAlternativeBlock()) {
 				((ISelection) e).createAlternativeBlock();
@@ -193,14 +217,15 @@ public class SequenceWidget extends EditorWidget {
 			return false;
 		});
 
-		addChildCommand("procedure call", 'p', i -> block.addCallAt(null, i));
-		addChildCommand("return statement", 'r', i -> block.addReturnAt(null, i));
+		addChildCommand("call", 'p', (i, p) -> block.addCallAt(null, i));
+		
+		addChildCommand("return", 'r', (i, p) -> block.addReturnAt(null, i));
 
 		new MenuItem(menu, SWT.SEPARATOR);
 
-		addChildCommand("while loop", 'w', i -> block.addLoopAt(BOOLEAN.literal(true), i));
+		addChildCommand(WHILE, (i, p) -> block.addLoopAt(BOOLEAN.literal(true), i));
 
-		addChildCommand("for loop", 'f', i -> {
+		addChildCommand(FOR, (i, p) -> {
 			IBlock forBlock = block.addBlockAt(i, Constants.FOR_FLAG);
 			IVariable progVar = forBlock.addVariable(INT, Constants.FOR_FLAG);
 			ILoop loop = forBlock.addLoop(BOOLEAN.literal(true), Constants.FOR_FLAG);
@@ -208,8 +233,8 @@ public class SequenceWidget extends EditorWidget {
 					Constants.FOR_FLAG);
 		});
 
-		addChildCommand("break", 'b', i -> block.addBreakAt(i), i -> block.isInLoop());
-		addChildCommand("continue", 'c', i -> block.addContinueAt(i), i -> block.isInLoop());
+		addChildCommand(BREAK, (i, p) -> block.addBreakAt(i), i -> block.isInLoop());
+		addChildCommand(CONTINUE, (i, p) -> block.addContinueAt(i), i -> block.isInLoop());
 	}
 
 	void addBlockListener(IBlock block) {
@@ -225,36 +250,38 @@ public class SequenceWidget extends EditorWidget {
 
 				else if (element instanceof IVariableAssignment && element.not(Constants.FOR_FLAG)) {
 					IVariableAssignment a = (IVariableAssignment) element;
-					String id = "variable";
+					String id = a.getId();
+					if(id == null)
+						id = "variable";
 					String exp = "expression";
 					addElement(new AssignmentWidget(SequenceWidget.this, id, exp, true), index);
 				} 
 
 				else if (element instanceof ISelection) {
 					ISelection s = (ISelection) element;
-					addElement(new ControlWidget(SequenceWidget.this, "if", "true", s.getBlock()), index);
+					addElement(new ControlWidget(SequenceWidget.this, IF, "expression", s.getBlock()), index);
 					if (s.hasAlternativeBlock())
-						addElement(new ControlWidget(SequenceWidget.this, "else", null, s.getAlternativeBlock()), index+1);
+						addElement(new ControlWidget(SequenceWidget.this, ELSE, null, s.getAlternativeBlock()), index+1);
 					s.addPropertyListener((k,n,o) -> {
-						if(k.equals("ELSE"))
-							addElement(new ControlWidget(SequenceWidget.this, "else", null, s.getAlternativeBlock()), index+1);
+						if(k.equals(Constants.ELSE_FLAG))
+							addElement(new ControlWidget(SequenceWidget.this, ELSE, null, s.getAlternativeBlock()), index+1);
 					});
 				} 
 
 				else if (element instanceof ILoop && element.not(Constants.FOR_FLAG)) {
 					ILoop l = (ILoop) element;
-					addElement(new ControlWidget(SequenceWidget.this, "while", "true", l.getBlock()), index);
+					addElement(new ControlWidget(SequenceWidget.this, WHILE, "expression", l.getBlock()), index);
 				} 
 
 				else if (element instanceof IBlock && element.is(Constants.FOR_FLAG)) {
-					addElement(new ForWidget(SequenceWidget.this, "int", "i", "expression", "true", (IBlock) element), index);
+					addElement(new ForWidget(SequenceWidget.this, "int", "i", "expression", "expression", (IBlock) element), index);
 				} 
 
 				else if (element instanceof IBreak) {
-					addElement(new InstructionWidget(SequenceWidget.this, "break"), index);
+					addElement(new InstructionWidget(SequenceWidget.this, BREAK), index);
 				} 
 				else if (element instanceof IContinue) {
-					addElement(new InstructionWidget(SequenceWidget.this, "continue"), index);
+					addElement(new InstructionWidget(SequenceWidget.this, CONTINUE), index);
 				} 
 
 				else if (element instanceof IProcedureCall) {
@@ -265,9 +292,9 @@ public class SequenceWidget extends EditorWidget {
 				else if (element instanceof IReturn) {
 					IReturn ret = (IReturn) element;
 					if (ret.isVoid())
-						addElement(new InstructionWidget(SequenceWidget.this, "return", " "), index);
+						addElement(new InstructionWidget(SequenceWidget.this, RETURN, " "), index);
 					else
-						addElement(new InstructionWidget(SequenceWidget.this, ret.getExpression().toString()), index);
+						addElement(new InstructionWidget(SequenceWidget.this, RETURN, ret.getExpression().toString()), index);
 				} else
 					System.err.println("unhandled: " + element);
 			}
@@ -275,21 +302,13 @@ public class SequenceWidget extends EditorWidget {
 	}
 
 	void addElement(EditorWidget w) {
-		addElement(w, (getChildren().length - 1) / 2);
+		addElement(w, getChildren().length - 1);
 	}
 
 	void addElement(EditorWidget w, int index) {
-		Control location = getChildren()[index * 2];
+		Control location = getChildren()[index];
 		w.moveAbove(location);
-		Control addLabel = createAddLabel(this);
-		addLabel.setLayoutData(Constants.ALIGN_TOP);
-		addLabel.setMenu(menu);
-		addLabel.moveAbove(w);
-		addLabel.requestLayout();
-		addLabel.setData(w);
-		addLabel.addFocusListener(updateMenuListener);
-		//		addLabel.addKeyListener(keyListener);
-		addDragNDrop(addLabel);
+		w.addTokenKeyHandler(keyListener);
 		w.requestLayout();
 		w.setFocus();
 	}
@@ -300,29 +319,29 @@ public class SequenceWidget extends EditorWidget {
 		deleteItem.setAccelerator(Constants.DEL_KEY);
 		SelectionListener l = new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				deleteItem();
+				//deleteItem();
 			}
 		};
 		deleteItem.addSelectionListener(l);
 		deleteItem.setData(l);
 	}
 
-	private void deleteItem() {
-		Control control = Display.getDefault().getFocusControl();
-		Composite parent = control.getParent();
-		Control[] children = parent.getChildren();
-		for (int i = 0; i < children.length; i += 2) {
-			if (children[i] == control && i + 1 < children.length) {
-				children[i].setMenu(null); // not dispose
-				children[i].dispose();
-				children[i+1].dispose();
-				parent.requestLayout();
-				if (children.length > i + 1)
-					parent.getChildren()[i].setFocus();
-				return;
-			}
-		}
-	}
+//	private void deleteItem() {
+//		Control control = Display.getDefault().getFocusControl();
+//		Composite parent = control.getParent();
+//		Control[] children = parent.getChildren();
+//		for (int i = 0; i < children.length; i += 2) {
+//			if (children[i] == control && i + 1 < children.length) {
+//				children[i].setMenu(null); // not dispose
+//				children[i].dispose();
+//				children[i+1].dispose();
+//				parent.requestLayout();
+//				if (children.length > i + 1)
+//					parent.getChildren()[i].setFocus();
+//				return;
+//			}
+//		}
+//	}
 
 	void delete(Predicate<EditorWidget> pred) {
 		Control[] children = getChildren();
@@ -348,10 +367,31 @@ public class SequenceWidget extends EditorWidget {
 		}
 	}
 
+	private Control getOwnerWidget(Control control) {
+		Control c = control;
+		while(!(c.getParent() instanceof SequenceWidget))
+			c = c.getParent();
+		
+		return c;
+	}
 	private KeyAdapter keyListener = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
-			if(e.keyCode == Constants.DEL_KEY)
-				deleteItem();
+			if(e.keyCode == Constants.DEL_KEY) {
+				Control w = getOwnerWidget((Control) e.widget);
+				w.dispose();
+				requestLayout();
+			}
+			else if(e.keyCode == SWT.CR) {
+				Control focusControl = getOwnerWidget((Control) e.widget);
+				Text dummy =  createAddLabel(SequenceWidget.this, Keyword.LONGEST, true);
+				dummy.setMenu(menu);
+				dummy.addKeyListener(keyListener);
+				dummy.moveAbove(focusControl);
+				dummy.requestLayout();
+				dummy.setFocus();
+			}
+			
+				
 
 			//			else if(assignmentCommand != null && e.keyCode >= 'a' && e.keyCode <= 'z') {
 			//				int i = findModelIndex(Display.getDefault().getFocusControl());
@@ -377,7 +417,9 @@ public class SequenceWidget extends EditorWidget {
 
 
 
-	private MenuCommand assignmentCommand;	public void toCode(StringBuffer buffer, int level) {
+	private MenuCommand assignmentCommand;	
+	
+	public void toCode(StringBuffer buffer, int level) {
 		for (Control control : getChildren())
 			if (control instanceof EditorWidget)
 				((EditorWidget) control).toCode(buffer, level);

@@ -1,5 +1,6 @@
 package pt.iscte.paddle.javasde;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -32,6 +34,10 @@ public class Token {
 	private Map<Character, String> map;
 	
 	private static final List<String>[] EMPTY_ARRAY  = new List[0];
+	
+	public Token(EditorWidget parent, Keyword token) {
+		this(parent, token.toString(), new List[] { Arrays.asList(token.toString()) });
+	}
 	
 	public Token(EditorWidget parent, String token) {
 		this(parent, token, EMPTY_ARRAY);
@@ -142,6 +148,15 @@ public class Token {
 	public void addKeyListener(KeyListener keyListener) {
 		control.addKeyListener(keyListener);
 	}
+
+//	public void addClickToFocus() {
+//		control.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseDown(MouseEvent e) {
+//				control.setFocus();
+//			}
+//		});
+//	}
 
 
 }

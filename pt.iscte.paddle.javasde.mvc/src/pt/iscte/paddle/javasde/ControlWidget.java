@@ -1,5 +1,7 @@
 package pt.iscte.paddle.javasde;
 
+import org.eclipse.swt.events.KeyListener;
+
 import pt.iscte.paddle.model.IBlock;
 
 public class ControlWidget extends EditorWidget implements StatementContainer {
@@ -8,7 +10,7 @@ public class ControlWidget extends EditorWidget implements StatementContainer {
 	private ExpressionWidget expression;
 	private Token keyword;
 	
-	ControlWidget(SequenceWidget parent, String keyword, String expression, IBlock block) {
+	ControlWidget(SequenceWidget parent, Keyword keyword, String expression, IBlock block) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_V_ZERO);
 		EditorWidget header = new EditorWidget(this);
@@ -47,7 +49,13 @@ public class ControlWidget extends EditorWidget implements StatementContainer {
 		super.accept(visitor);
 	}
 	
-	boolean is(String keyword) {
-		return this.keyword.isKeyword(keyword);
+	boolean is(Keyword keyword) {
+		return this.keyword.isKeyword(keyword.toString());
+	}
+	
+	@Override
+	void addTokenKeyHandler(KeyListener listener) {
+		keyword.addKeyListener(listener);
+//		keyword.addClickToFocus();
 	}
 }

@@ -53,7 +53,7 @@ public class BinaryExpressionWidget extends EditorWidget {
 		
 		MenuItem simple = new MenuItem(menu, SWT.NONE);
 		simple.setText("delete");
-		simple.setAccelerator(SWT.BS);
+		simple.setAccelerator(Constants.DEL_KEY);
 		simple.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				deleteOperator();
@@ -62,7 +62,15 @@ public class BinaryExpressionWidget extends EditorWidget {
 		
 		op.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
-				if(e.keyCode == SWT.BS)
+				if(e.keyCode == Constants.DEL_KEY)
+					deleteOperator();
+			}
+		});
+		
+		right.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == Constants.DEL_KEY)
 					deleteOperator();
 			}
 		});
@@ -103,6 +111,6 @@ public class BinaryExpressionWidget extends EditorWidget {
 		parent.expression.requestLayout();
 		parent.expression.setFocus();
 	}
-
+	
 
 }

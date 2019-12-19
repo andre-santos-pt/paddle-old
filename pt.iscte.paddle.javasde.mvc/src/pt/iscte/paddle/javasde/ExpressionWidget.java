@@ -1,5 +1,6 @@
 package pt.iscte.paddle.javasde;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -104,6 +105,11 @@ public class ExpressionWidget extends EditorWidget {
 	@Override
 	public boolean setFocus() {
 		return expression.setFocus();
+	}
+	
+	@Override
+	public void addKeyListener(KeyListener listener) {
+		expression.addKeyListener(listener);
 	}
 	
 //	@Override

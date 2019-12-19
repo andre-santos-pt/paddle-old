@@ -1,14 +1,16 @@
 package pt.iscte.paddle.javasde;
 
+import org.eclipse.swt.events.KeyListener;
+
 public class InstructionWidget extends EditorWidget {
 	private ExpressionWidget expressionWidget;
 	private Token keyword;
 	
-	InstructionWidget(EditorWidget parent, String keyword) {
+	InstructionWidget(EditorWidget parent, Keyword keyword) {
 		this(parent, keyword, null);
 	}
 	
-	InstructionWidget(EditorWidget parent, String keyword, String expression) {
+	InstructionWidget(EditorWidget parent, Keyword keyword, String expression) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		this.keyword = new Token(this, keyword);
@@ -26,5 +28,10 @@ public class InstructionWidget extends EditorWidget {
 	
 	boolean is(String keyword) {
 		return this.keyword.isKeyword(keyword);
+	}
+	
+	@Override
+	void addTokenKeyHandler(KeyListener listener) {
+		keyword.addKeyListener(listener);
 	}
 }

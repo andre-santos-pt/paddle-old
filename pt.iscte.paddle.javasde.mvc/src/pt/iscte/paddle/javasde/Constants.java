@@ -25,8 +25,8 @@ public interface Constants {
 //		final String description;		
 //	}
 	
-	int TAB = 20;
-	String FONT_FACE = "Monospace";
+	int TAB = 30;
+	String FONT_FACE = "Courier";
 	Color COLOR_KW = Display.getDefault().getSystemColor(SWT.COLOR_DARK_MAGENTA);
 	Color COLOR_PH = Display.getDefault().getSystemColor(SWT.COLOR_GRAY);
 	Color COLOR_BACK = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
@@ -41,7 +41,7 @@ public interface Constants {
 	List<String> LOGICAL_OPERATORS = Arrays. asList("&&", "||", "^");
 //	Supplier<List<String>> BINARY_OPERATORS_SUPPLIER = () -> BINARY_OPERATORS;
 	Supplier<List<String>> EMPTY_TOKEN_SUPPLIER = () -> Collections.emptyList();
-	int FONT_SIZE = 24;
+	int FONT_SIZE = 20;
 	int MENU_KEY = SWT.SPACE;
 	int DEL_KEY = SWT.BS;
 	Font FONT_TINY = new Font(null, FONT_FACE, 10, SWT.NONE);
@@ -58,11 +58,14 @@ public interface Constants {
 	Supplier<List<String>> PRIMITIVE_TYPES_VOID_SUPPLIER = () -> PRIMITIVE_TYPES_VOID;
 	List<String> UNARY_OPERATORS = Arrays.asList("!", "-");  //"(int)", "(double)");
 //	Supplier<List<String>> UNARY_OPERATORS_SUPPLIER = () -> UNARY_OPERATORS;
-	RowLayout ROW_LAYOUT_H_ZERO = create(SWT.HORIZONTAL, 0);
+	RowLayout ROW_LAYOUT_H_ZERO = create(SWT.HORIZONTAL, 3);
 	RowLayout ROW_LAYOUT_H_DOT = create(SWT.HORIZONTAL, 0);
 	RowLayout ROW_LAYOUT_V_ZERO = create(SWT.VERTICAL, 2);
 	GridData ALIGN_TOP = new GridData(SWT.LEFT, SWT.TOP, false, false);
-	String FOR_FLAG = "FOR";
+	String FOR_FLAG = Keyword.FOR.name();
+	String ELSE_FLAG = Keyword.ELSE.name();
+	
+	int SINGLE_SPACE = 1;
 	
 	static RowLayout create(int style, int spacing) {
 		RowLayout layout = new RowLayout(style);
@@ -113,9 +116,12 @@ public interface Constants {
 		public void focusGained(FocusEvent e) {
 			Control c = (Control) e.widget;
 			c.setLayoutData(c.getParent().getLayout() instanceof GridLayout ? GridDatas.SHOW_GRID : GridDatas.SHOW_ROW);
-
 			c.requestLayout();
 		}
 	};
+
+	static boolean isLetter(char c) {
+		return c >= 'a' && c <= 'z';
+	}
 
 }

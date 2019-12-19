@@ -12,7 +12,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -42,9 +43,11 @@ public class Id extends EditorWidget {
 		text.setText(id);
 		List<String> provider = idProvider.get();
 		Constants.setFont(text, true);
+		
 		text.addVerifyListener(e -> e.doit = menuMode || 
 				!(e.keyCode == 'z' && (( e.stateMask & SWT.MODIFIER_MASK ) == SWT.CTRL || ( e.stateMask & SWT.MODIFIER_MASK ) == SWT.COMMAND)) &&
-				provider.isEmpty() && (isValidCharacter(e.character) || e.character == SWT.BS || e.character == SWT.DEL));
+				provider.isEmpty() && (isValidCharacter(e.character) || e.character == SWT.BS || e.character == SWT.DEL || e.character == SWT.ARROW_RIGHT || e.character == SWT.CR));
+		
 		text.addFocusListener(new FocusListener() {
 			public void focusLost(FocusEvent e) {
 				if(text.getText().isBlank()) {
@@ -76,8 +79,15 @@ public class Id extends EditorWidget {
 		text.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-			// TODO Auto-generated method stub
-			super.keyPressed(e);
+				if(e.keyCode == SWT.CR) {
+					System.out.println(text.getCaretPosition());
+					Event event = new Event();
+					event.keyCode=SWT.TAB;
+					event.display=Display.getDefault();
+					event.type=SWT.KeyDown;
+					Display.getDefault().post(event);
+					
+				}
 			}
 		});
 
@@ -219,8 +229,17 @@ public class Id extends EditorWidget {
 		text.setText(id);
 	}
 	
+	public boolean isAtEnd() {
+		return text.getCaretPosition() == text.getText().length();
+	}
+	
 	@Override
 	public void setForeground(Color color) {
 		text.setForeground(color);
+	}
+	
+	@Override
+	public void addKeyListener(KeyListener listener) {
+		text.addKeyListener(listener);
 	}
 }
