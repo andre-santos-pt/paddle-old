@@ -1,17 +1,17 @@
 package pt.iscte.paddle.javasde;
 
+import java.util.function.Function;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Text;
 
-public class BinaryExpressionWidget extends EditorWidget {
+public class BinaryExpressionWidget extends EditorWidget implements Expression {
 	private ExpressionWidget left;
 	private ExpressionWidget right;
 	private Token op;
@@ -20,6 +20,20 @@ public class BinaryExpressionWidget extends EditorWidget {
 	private RowData data = new RowData();
 
 	public BinaryExpressionWidget(EditorWidget parent, String operator) {
+		this(parent, 
+				e -> new SimpleExpressionWidget(e, "", false),
+				e -> new SimpleExpressionWidget(e, "", false),
+				operator);
+	}
+	
+	public BinaryExpressionWidget(EditorWidget parent, Function<EditorWidget, Expression> left, String operator) {
+		this(parent, 
+				left,
+				e -> new SimpleExpressionWidget(e, "", false),
+				operator);
+	}
+	
+	public BinaryExpressionWidget(EditorWidget parent, Function<EditorWidget, Expression> left, Function<EditorWidget, Expression> right, String operator) {
 		super(parent);
 		brackets = false;
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
@@ -28,9 +42,9 @@ public class BinaryExpressionWidget extends EditorWidget {
 		FixedToken lBracket = new FixedToken(this, "(");
 		lBracket.setLayoutData(data);
 	
-		left = new ExpressionWidget(this, "left");
-		op = new Token(this, operator, Constants.ARITHMETIC_OPERATORS, Constants.RELATIONAL_OPERATORS, Constants.LOGICAL_OPERATORS);
-		right = new ExpressionWidget(this, "right");
+		this.left = new ExpressionWidget(this, left);
+		this.op = new Token(this, operator, Constants.ARITHMETIC_OPERATORS, Constants.RELATIONAL_OPERATORS, Constants.LOGICAL_OPERATORS);
+		this.right = new ExpressionWidget(this, right);
 		
 		FixedToken rBracket = new FixedToken(this, ")");
 		rBracket.setLayoutData(data);
@@ -60,16 +74,17 @@ public class BinaryExpressionWidget extends EditorWidget {
 			}
 		});
 		
-		op.addKeyListener(new KeyAdapter() {
+		// problema com tabs
+//		op.addKeyListener(new KeyAdapter() {
+//			public void keyPressed(KeyEvent e) {
+//				if(e.keyCode == Constants.DEL_KEY)
+//					deleteOperator();
+//			}
+//		});
+		
+		this.right.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if(e.keyCode == Constants.DEL_KEY)
-					deleteOperator();
-			}
-		});
-		
-		right.addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				if(e.keyCode == Constants.DEL_KEY) // && right.isAtBeginning())
 					deleteOperator();
 			}
 		});
@@ -84,7 +99,7 @@ public class BinaryExpressionWidget extends EditorWidget {
 	void setLeft(String expression) {
 		left.set(expression);
 	}
-	
+
 	public void focusRight() {
 		left.setForeground(Constants.FONT_COLOR);
 		right.setFocus();
@@ -111,6 +126,10 @@ public class BinaryExpressionWidget extends EditorWidget {
 		parent.expression.setFocus();
 	}
 
+	@Override
+	public Expression copyTo(EditorWidget parent) {
+		return new BinaryExpressionWidget(parent, p -> ((Expression) left.expression), op.getText());
+	}
 
 
 }

@@ -2,7 +2,7 @@ package pt.iscte.paddle.javasde;
 
 import org.eclipse.swt.widgets.Text;
 
-public enum Keyword {
+public enum Keyword implements CharSequence {
 
 	CLASS,
 	STATIC,
@@ -66,5 +66,23 @@ public enum Keyword {
 		
 	public boolean match(Text label) {
 		return match(label.getText());
+	}
+
+
+	@Override
+	public int length() {
+		return name().length();
+	}
+
+
+	@Override
+	public char charAt(int index) {
+		return name().charAt(index);
+	}
+
+
+	@Override
+	public CharSequence subSequence(int start, int end) {
+		return name().substring(start, end);
 	}
 }

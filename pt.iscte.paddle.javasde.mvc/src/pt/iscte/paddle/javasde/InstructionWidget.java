@@ -1,8 +1,6 @@
 package pt.iscte.paddle.javasde;
 
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 
 public class InstructionWidget extends EditorWidget {
 	private final Token keyword;

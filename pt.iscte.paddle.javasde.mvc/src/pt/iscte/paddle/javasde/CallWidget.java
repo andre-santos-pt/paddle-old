@@ -19,10 +19,10 @@ public class CallWidget extends EditorWidget {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		
-		this.id = createId(this, id); // TODO validation keyword / empty
+		this.id = new Id(this, id, false); // TODO validation keyword / empty
 		new Token(this, "(");
 		args = new EditorWidget(this);
-		addLabel = addInsert(this, false);
+		addLabel = new InsertWidget(this, false);
 		addLabel.addFocusListener(Constants.ADD_HIDE);
 		new Token(this, ")");
 		if(statement)

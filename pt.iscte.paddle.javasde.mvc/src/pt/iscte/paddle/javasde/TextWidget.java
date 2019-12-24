@@ -9,13 +9,13 @@ public interface TextWidget {
 
 	Text getWidget();
 	
-	default void addFocusListener(FocusListener listener) {
-		getWidget().addFocusListener(listener);
-	}
-	
-	default void addKeyListener(KeyListener listener) {
-		getWidget().addKeyListener(listener);
-	}
+//	default void addFocusListener(FocusListener listener) {
+//		getWidget().addFocusListener(listener);
+//	}
+//	
+//	default void addKeyListener(KeyListener listener) {
+//		getWidget().addKeyListener(listener);
+//	}
 
 //	default void setFocus() {
 //		getWidget().setFocus();
@@ -47,6 +47,14 @@ public interface TextWidget {
 	
 	default void setAtRight() {
 		getWidget().setSelection(getWidget().getText().length());
+	}
+	
+	static TextWidget create(Text text) {
+		return new TextWidget() {
+			public Text getWidget() {
+				return text;
+			}
+		};
 	}
 	
 }

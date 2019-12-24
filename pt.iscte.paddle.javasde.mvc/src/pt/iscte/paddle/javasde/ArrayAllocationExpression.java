@@ -6,7 +6,7 @@ public class ArrayAllocationExpression extends EditorWidget {
 	public ArrayAllocationExpression(EditorWidget parent) {
 		super(parent, parent.mode);
 		new Token(this, Keyword.NEW);
-		id = createId(this, "Type", Constants.PRIMITIVE_TYPES_SUPPLIER);
+		id = new Id(this, "Type", true, Constants.PRIMITIVE_TYPES_SUPPLIER);
 		new FixedToken(this, "[");
 		new ExpressionWidget(this, "expression");
 		new FixedToken(this, "]");

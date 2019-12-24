@@ -3,13 +3,11 @@ package pt.iscte.paddle.javasde;
 import static pt.iscte.paddle.javasde.Keyword.BREAK;
 import static pt.iscte.paddle.javasde.Keyword.CONTINUE;
 import static pt.iscte.paddle.javasde.Keyword.ELSE;
-import static pt.iscte.paddle.javasde.Keyword.FOR;
 import static pt.iscte.paddle.javasde.Keyword.IF;
 import static pt.iscte.paddle.javasde.Keyword.RETURN;
 import static pt.iscte.paddle.javasde.Keyword.WHILE;
-import static pt.iscte.paddle.model.IType.BOOLEAN;
-import static pt.iscte.paddle.model.IType.INT;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -30,11 +28,9 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -44,12 +40,11 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
+import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlock;
-import pt.iscte.paddle.model.IBlockElement;
 import pt.iscte.paddle.model.IBreak;
 import pt.iscte.paddle.model.IContinue;
 import pt.iscte.paddle.model.ILoop;
-import pt.iscte.paddle.model.IOperator;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IReturn;
@@ -100,7 +95,7 @@ public class SequenceWidget extends EditorWidget {
 		return control instanceof Label && ((Label) control).getText().equals(keyword);
 	}
 
-	private static int findModelIndex(Control location) {
+	static int findModelIndex(Control location) {
 		int index = -1;
 		int elses = 0;
 		int i = 0;
@@ -128,13 +123,12 @@ public class SequenceWidget extends EditorWidget {
 
 	private final InsertWidget insertWidget;
 
-	private GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+//	private GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 	private Menu menu;
 	private FocusListener updateMenuListener;
 
 	private MenuItem deleteItem;
 
-	private int spaces;
 
 	public SequenceWidget(EditorWidget parent, int margin) {
 		super(parent, parent.mode);
@@ -145,12 +139,11 @@ public class SequenceWidget extends EditorWidget {
 
 		setLayout(layout);
 
-		spaces = parent instanceof ClassWidget ? Constants.SINGLE_SPACE : 10;
 		boolean root = parent instanceof ClassWidget;
 
-		insertWidget = addInsert(this, !root);
+		insertWidget = new InsertWidget(this, !root);
 		//		insertWidget.setLayoutData(data);
-		insertWidget.addFocusListener(Constants.ADD_HIDE);
+//		insertWidget.addFocusListener(Constants.ADD_HIDE);
 
 		menu = new Menu(this);
 		addDeleteItem(menu);
@@ -171,6 +164,14 @@ public class SequenceWidget extends EditorWidget {
 		});
 	}
 
+	void addAction(InsertWidget.Action a) {
+		insertWidget.addAction(a);
+	}
+	
+	public void addActions(List<? extends InsertWidget.Action> actions) {
+		for(InsertWidget.Action a : actions)
+			insertWidget.addAction(a);
+	}
 
 	private void updateMenu() {
 		Control control = Display.getDefault().getFocusControl();
@@ -194,73 +195,74 @@ public class SequenceWidget extends EditorWidget {
 	MenuCommand addChildCommand(String text, char accelerator, BiConsumer<Integer, String> action) {
 		return addChildCommand(text, accelerator, action, i -> true);
 	}
-
-	MenuCommand addChildCommand(Keyword keyword, BiConsumer<Integer, String> action) {
-		return addChildCommand(keyword, action, i -> true);
-	}
-
+//
+//	MenuCommand addChildCommand(Keyword keyword, BiConsumer<Integer, String> action) {
+//		return addChildCommand(keyword, action, i -> true);
+//	}
+//
 	MenuCommand addChildCommand(String text, char accelerator, BiConsumer<Integer, String> action, Function<Integer, Boolean> enabled) {
 		MenuCommand cmd = new MenuCommand(text, accelerator, action, enabled);
 		cmd.createItem(menu); 
 		return cmd;
 	}
+//
+//	MenuCommand addChildCommand(Keyword keyword, BiConsumer<Integer, String> action, Function<Integer, Boolean> enabled) {
+//		MenuCommand cmd = new MenuCommand(keyword.toString(), keyword.getAccelerator(), action, enabled);
+//		cmd.createItem(menu); 
+//		return cmd;
+//	}
 
-	MenuCommand addChildCommand(Keyword keyword, BiConsumer<Integer, String> action, Function<Integer, Boolean> enabled) {
-		MenuCommand cmd = new MenuCommand(keyword.toString(), keyword.getAccelerator(), action, enabled);
-		cmd.createItem(menu); 
-		return cmd;
-	}
 
-
-	void addStatementCommands(IBlock block) {
-		addChildCommand("type variable", 'v', (i, p) -> {
-			boolean array = p != null && p.endsWith("[");
-			if(array)
-				p = p.substring(0, p.length()-1);
-			IType t = IType.match(p);
-			if(array)
-				t = t.array();
-
-			IVariable var = block.addVariableAt(t, i);
-			var.setId("id");
-		});
-
-		assignmentCommand = addChildCommand("variable = ...", 'a', (i, p) -> block.addAssignmentAt(p, null, i));
-
-		addChildCommand(IF, (i, p) -> block.addSelectionAt(BOOLEAN.literal(true), i));
-
-		addChildCommand(ELSE, (i, p) -> {
-			IBlockElement e = block.getChildren().get(i - 1);
-			if (e instanceof ISelection && !((ISelection) e).hasAlternativeBlock()) {
-				((ISelection) e).createAlternativeBlock();
-			}
-		},i -> {
-			if(i > 0) {
-				IBlockElement e = block.getChildren().get(i - 1);
-				return e instanceof ISelection && !((ISelection) e).hasAlternativeBlock();
-			}
-			return false;
-		});
-
-		addChildCommand("call(...)", 'p', (i, p) -> block.addCallAt(null, i));
-
-		addChildCommand("return", 'r', (i, p) -> block.addReturnAt(null, i));
-
-		new MenuItem(menu, SWT.SEPARATOR);
-
-		addChildCommand(WHILE, (i, p) -> block.addLoopAt(BOOLEAN.literal(true), i));
-
-		addChildCommand(FOR, (i, p) -> {
-			IBlock forBlock = block.addBlockAt(i, Constants.FOR_FLAG);
-			IVariable progVar = forBlock.addVariable(INT, Constants.FOR_FLAG);
-			ILoop loop = forBlock.addLoop(BOOLEAN.literal(true), Constants.FOR_FLAG);
-			IVariableAssignment inc = loop.addAssignment(progVar, IOperator.ADD.on(progVar, INT.literal(1)),
-					Constants.FOR_FLAG);
-		});
-
-		addChildCommand(BREAK, (i, p) -> block.addBreakAt(i), i -> block.isInLoop());
-		addChildCommand(CONTINUE, (i, p) -> block.addContinueAt(i), i -> block.isInLoop());
-	}
+	
+//	void addStatementCommands(IBlock block) {
+//		addChildCommand("type variable", 'v', (i, p) -> {
+//			boolean array = p != null && p.endsWith("[");
+//			if(array)
+//				p = p.substring(0, p.length()-1);
+//			IType t = IType.match(p);
+//			if(array)
+//				t = t.array();
+//
+//			IVariable var = block.addVariableAt(t, i);
+//			var.setId("id");
+//		});
+//
+//		addChildCommand("variable = ...", 'a', (i, p) -> block.addAssignmentAt(p, null, i));
+//
+//		addChildCommand(IF, (i, p) -> block.addSelectionAt(BOOLEAN.literal(true), i));
+//
+//		addChildCommand(ELSE, (i, p) -> {
+//			IBlockElement e = block.getChildren().get(i - 1);
+//			if (e instanceof ISelection && !((ISelection) e).hasAlternativeBlock()) {
+//				((ISelection) e).createAlternativeBlock();
+//			}
+//		},i -> {
+//			if(i > 0) {
+//				IBlockElement e = block.getChildren().get(i - 1);
+//				return e instanceof ISelection && !((ISelection) e).hasAlternativeBlock();
+//			}
+//			return false;
+//		});
+//
+//		addChildCommand("call(...)", 'p', (i, p) -> block.addCallAt(null, i));
+//
+//		addChildCommand("return", 'r', (i, p) -> block.addReturnAt(null, i));
+//
+//		new MenuItem(menu, SWT.SEPARATOR);
+//
+//		addChildCommand(WHILE, (i, p) -> block.addLoopAt(BOOLEAN.literal(true), i));
+//
+//		addChildCommand(FOR, (i, p) -> {
+//			IBlock forBlock = block.addBlockAt(i, Constants.FOR_FLAG);
+//			IVariable progVar = forBlock.addVariable(INT, Constants.FOR_FLAG);
+//			ILoop loop = forBlock.addLoop(BOOLEAN.literal(true), Constants.FOR_FLAG);
+//			IVariableAssignment inc = loop.addAssignment(progVar, IOperator.ADD.on(progVar, INT.literal(1)),
+//					Constants.FOR_FLAG);
+//		});
+//
+//		addChildCommand(BREAK, (i, p) -> block.addBreakAt(i), i -> block.isInLoop());
+//		addChildCommand(CONTINUE, (i, p) -> block.addContinueAt(i), i -> block.isInLoop());
+//	}
 
 	void addBlockListener(IBlock block) {
 		block.addListener(new IBlock.IListener() {
@@ -275,7 +277,7 @@ public class SequenceWidget extends EditorWidget {
 					String exp = "expression";
 					DeclarationWidget declarationWidget = new DeclarationWidget(SequenceWidget.this, type, id, exp);
 					addElement(declarationWidget, index);
-					if(v.getId() != null)
+					if(v.getId() == null)
 						declarationWidget.focusId();
 					else
 						declarationWidget.setFocus();
@@ -288,10 +290,21 @@ public class SequenceWidget extends EditorWidget {
 					String exp = "expression";
 					AssignmentWidget assignmentWidget = new AssignmentWidget(SequenceWidget.this, idd, exp, true, false);
 					addElement(assignmentWidget, index);
-					if(id != null)
-						assignmentWidget.focusExpression();
+					assignmentWidget.focusExpression();
 				} 
 
+				
+				else if (element instanceof IArrayElementAssignment) {
+					IArrayElementAssignment a = (IArrayElementAssignment) element;
+					String id = a.getTarget().getId();
+					String idd = id == null ? "variable" : id;
+					String exp = "expression";
+					AssignmentWidget assignmentWidget = new AssignmentWidget(SequenceWidget.this, idd, exp, true, true);
+					addElement(assignmentWidget, index);
+					assignmentWidget.setFocus();
+					focusNext(); // TODO?
+				} 
+				
 				else if (element instanceof ISelection) {
 					ISelection s = (ISelection) element;
 					ControlWidget w = new ControlWidget(SequenceWidget.this, IF, "expression", s.getBlock());
@@ -316,7 +329,9 @@ public class SequenceWidget extends EditorWidget {
 				} 
 
 				else if (element instanceof IBlock && element.is(Constants.FOR_FLAG)) {
-					addElement(new ForWidget(SequenceWidget.this, IType.INT, "i", "expression", "expression", (IBlock) element), index);
+					ForWidget w = new ForWidget(SequenceWidget.this, IType.INT, "i", "expression", "expression", (IBlock) element);
+					addElement(w, index);
+					w.focusDeclaration();
 				} 
 
 				else if (element instanceof IBreak) {
@@ -424,7 +439,7 @@ public class SequenceWidget extends EditorWidget {
 			}
 			else if(e.keyCode == SWT.CR) {
 				Control focusControl = getOwnerWidget((Control) e.widget);
-				InsertWidget w =  addInsert(SequenceWidget.this, true);
+				InsertWidget w =  new InsertWidget(SequenceWidget.this, true);
 				w.setMenu(menu);
 				w.addKeyListener(keyListener);
 				w.text.moveAbove(focusControl);
@@ -452,6 +467,12 @@ public class SequenceWidget extends EditorWidget {
 		}
 	}
 
+	void focusNext() {
+		Control focusControl = Display.getDefault().getFocusControl();
+		if(focusControl != null)
+			focusNext(focusControl);
+	}
+	
 	void focusNext(Control statement) {
 		if(statement instanceof ControlWidget) {
 			((ControlWidget) statement).getSequence().focusFirst();
@@ -489,8 +510,8 @@ public class SequenceWidget extends EditorWidget {
 	}
 
 
-	private MenuCommand assignmentCommand;	
 
+	
 	public void toCode(StringBuffer buffer, int level) {
 		for (Control control : getChildren())
 			if (control instanceof EditorWidget)
@@ -560,6 +581,7 @@ public class SequenceWidget extends EditorWidget {
 			//			}
 		});
 	}
+
 
 
 

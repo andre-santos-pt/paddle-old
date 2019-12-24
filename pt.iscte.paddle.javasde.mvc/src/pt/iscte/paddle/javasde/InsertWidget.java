@@ -1,12 +1,14 @@
 package pt.iscte.paddle.javasde;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
@@ -27,6 +29,7 @@ public class InsertWidget implements TextWidget {
 
 	private Text createAddLabel(EditorWidget parent, boolean editable) {
 		Text text = new Text(parent, SWT.SINGLE);
+		text.setText(" ");
 		text.setForeground(Constants.FONT_COLOR);
 		text.setEditable(true);
 		text.setFont(Constants.FONT);
@@ -43,6 +46,10 @@ public class InsertWidget implements TextWidget {
 		text.addModifyListener(Constants.MODIFY_PACK);
 		text.addFocusListener(new FocusAdapter() {
 			@Override
+			public void focusGained(FocusEvent e) {
+				text.selectAll();
+			}
+			@Override
 			public void focusLost(FocusEvent e) {
 				boolean comment = text.getText().startsWith("//");
 				if(!comment) {
@@ -53,47 +60,19 @@ public class InsertWidget implements TextWidget {
 			}
 		});
 
+		
 		text.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
+				int index = SequenceWidget.findModelIndex(text);
+				for(Action a : actions)
+					if(a.isEnabled(e.character, text.getText(), index,  text.getCaretPosition(), text.getSelectionCount())) {
+						a.run(e.character, text.getText(), index, text.getCaretPosition(), text.getSelectionCount());
+						return;
+					}
+			
 				Menu menu = text.getMenu();
 				if(menu != null) {
-					if(e.character == '=' && text.getText().length() > 0)
-						runAction(menu, 'a', e.widget, text.getText());
-
-					else if((e.character == '(' || e.character == SWT.SPACE) && Keyword.IF.match(text))
-						runAction(menu, Keyword.IF.getAccelerator(), e.widget, null);
-
-					else if((e.character == '{' || e.character == SWT.SPACE) && Keyword.ELSE.match(text))
-						runAction(menu, Keyword.ELSE.getAccelerator(), e.widget, null);
-
-					else if((e.character == '(' || e.character == SWT.SPACE) && text.getText().equals("while"))
-						runAction(menu, 'w', e.widget, null);
-
-					else if((e.character == '(' || e.character == SWT.SPACE) && Keyword.FOR.match(text))
-						runAction(menu, 'f', e.widget, null);
-
-					else if(e.character == '(' && !Keyword.is(text.getText()) && text.getText().length() > 0 && text.getCaretPosition() == text.getText().length())
-						runAction(menu, 'p', e.widget, text.getText());
-
-					else if(e.character == SWT.SPACE && text.getText().equals("return"))
-						runAction(menu, 'r', e.widget, null);
-
-					else if(e.character == SWT.SPACE && isType(text.getText()))
-						runAction(menu, 'v', e.widget, text.getText());
-
-					else if(e.character == '[' && isType(text.getText()))
-						runAction(menu, 'v', e.widget, text.getText() + "[");
-
-					else if(e.character == '[' && text.getText().length() > 0)
-						runAction(menu, 'a', e.widget, text.getText());
-
-					else if((e.character == ';' || e.character == SWT.SPACE) && Keyword.BREAK.match(text))
-						runAction(menu, Keyword.BREAK.getAccelerator(), e.widget, null);
-
-					else if((e.character == ';' || e.character == SWT.SPACE) && Keyword.CONTINUE.match(text))
-						runAction(menu, Keyword.CONTINUE.getAccelerator(), e.widget, null);
-
-					else if (e.keyCode == Constants.MENU_KEY && !text.getText().startsWith("//"))
+					if (e.keyCode == Constants.MENU_KEY && !text.getText().startsWith("//"))
 						showMenu(text, menu);
 
 					else if (e.keyCode == Constants.DEL_KEY && text.getText().isEmpty())
@@ -107,10 +86,6 @@ public class InsertWidget implements TextWidget {
 				}
 			}
 
-			// TODO other types
-			private boolean isType(String text) {
-				return Constants.PRIMITIVE_TYPES.contains(text);
-			}
 
 			private void runAction(Menu menu, char accelarator, Widget widget, String param) {
 				for (MenuItem menuItem : menu.getItems()) {
@@ -130,12 +105,30 @@ public class InsertWidget implements TextWidget {
 				}
 			}
 		});
-
-		text.addKeyListener(Constants.LISTENER_ARROW_KEYS);
-		text.setData(this);
+		Constants.addArrowKeys(text, TextWidget.create(text));
+//		text.addFocusListener(Constants.ADD_HIDE);
 		return text;
 	}
 
+	static abstract class Action {
+		final CharSequence text;
+		final char accelerator;
+		Action(CharSequence text, char accelerator) {
+			this.text = text;
+			this.accelerator = accelerator;
+		}
+		boolean isEnabled(char c, String text, int index, int caret, int selection) {
+			return true;
+		}
+		abstract void run(char c, String text, int index, int caret, int selection);
+	}
+	
+	private List<Action> actions = new ArrayList<>();
+	
+	void addAction(Action a) {
+		assert a != null;
+		actions.add(a);
+	}
 
 	private void showMenu(Text label, Menu menu) {
 		int c = 0;
@@ -193,5 +186,17 @@ public class InsertWidget implements TextWidget {
 	@Override
 	public Text getWidget() {
 		return text;
+	}
+
+	public void requestLayout() {
+		text.requestLayout();
+	}
+
+	public void addFocusListener(FocusListener listener) {
+		text.addFocusListener(listener);
+	}
+
+	public void addKeyListener(KeyAdapter listener) {
+		text.addKeyListener(listener);
 	}
 }

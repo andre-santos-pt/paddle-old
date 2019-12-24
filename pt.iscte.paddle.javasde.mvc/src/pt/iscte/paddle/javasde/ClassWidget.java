@@ -2,12 +2,7 @@ package pt.iscte.paddle.javasde;
 
 import static java.lang.System.lineSeparator;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Supplier;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -32,13 +27,13 @@ public class ClassWidget extends EditorWidget {
 		this.module = module;
 		GridLayout layout = new GridLayout(1, true);
 		layout.verticalSpacing = 10;
-		setLayout(new FillLayout());
+		setLayout(layout);
 		
 		if (!mode.staticClass) {
 			EditorWidget header = new EditorWidget(this, mode);
 			header.setLayout(Constants.ROW_LAYOUT_H_ZERO);
 			new Token(header, Keyword.CLASS);
-			id = createId(header, module.getId());
+			id = new Id(header, module.getId(), false);
 			new FixedToken(header, "{");
 		}
 
@@ -84,33 +79,6 @@ public class ClassWidget extends EditorWidget {
 				}
 			}
 		});
-	}
-
-//	private List<Control> addLabels = new ArrayList<>();
-//	private List<Id> idWidgets = new ArrayList<>();
-
-	private static final Supplier<List<String>> EMPTY_SUPPLIER = () -> Collections.emptyList();
-
-	Id createId(EditorWidget parent, String id) {
-		return createId(parent, id, EMPTY_SUPPLIER);
-	}
-
-	Id createId(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
-		Id w = new Id(parent, id, false, idProvider);
-//		idWidgets.add(w);
-		return w;
-	}
-
-	Id createType(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
-		Id w = new Id(parent, id, true, idProvider);
-//		idWidgets.add(w);
-		return w;
-	}
-	
-	InsertWidget addInsert(EditorWidget parent, boolean editable) {
-		InsertWidget w = new InsertWidget(parent, editable);
-//		addLabels.add(label);
-		return w;
 	}
 
 	public void toCode(StringBuffer buffer) {

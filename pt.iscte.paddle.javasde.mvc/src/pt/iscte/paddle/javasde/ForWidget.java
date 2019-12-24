@@ -10,12 +10,14 @@ public class ForWidget extends EditorWidget implements StatementContainer {
 	private DeclarationWidget dec;
 //	private AssignmentWidget statement;
 	private ExpressionWidget statement;
+	private Token forToken;
+	
 	ForWidget(SequenceWidget parent, IType type, String id, String expression, String guard, IBlock block) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_V_ZERO);
 		EditorWidget header = new EditorWidget(this);
 		header.setLayout(Constants.ROW_LAYOUT_H_ZERO);
-		new Token(header, Keyword.FOR);
+		forToken = new Token(header, Keyword.FOR);
 		new FixedToken(header, "(");
 		dec = new DeclarationWidget(header, type, id, expression);
 		this.guard = new ExpressionWidget(header, guard);
@@ -24,15 +26,18 @@ public class ForWidget extends EditorWidget implements StatementContainer {
 		new FixedToken(header, ")");
 		new FixedToken(header, "{");
 		blockSeq = new SequenceWidget(this, Constants.TAB);
-		blockSeq.addStatementCommands(block);
+		blockSeq.addActions(BlockAction.all(block));
 		blockSeq.addBlockListener(block);
 		new FixedToken(this, "}");
 	}
 	
 	@Override
 	public boolean setFocus() {
+		return forToken.setFocus();
+	}
+	
+	public void focusDeclaration() {
 		dec.setFocus();
-		return true;
 	}
 
 	@Override
@@ -43,4 +48,6 @@ public class ForWidget extends EditorWidget implements StatementContainer {
 		blockSeq.toCode(buffer);
 		buffer.append("}").append(System.lineSeparator());
 	}
+
+	
 }

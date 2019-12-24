@@ -25,7 +25,8 @@ public class ControlWidget extends EditorWidget implements StatementContainer {
 			this.expression = null;
 		new FixedToken(header, "{");
 		blockSeq = new SequenceWidget(this, Constants.TAB);
-		blockSeq.addStatementCommands(block);
+//		blockSeq.addStatementCommands(block);
+		blockSeq.addActions(BlockAction.all(block));
 		blockSeq.addBlockListener(block);
 		new FixedToken(this, "}");
 	}

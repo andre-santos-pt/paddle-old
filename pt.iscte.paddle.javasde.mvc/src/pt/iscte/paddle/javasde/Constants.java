@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyAdapter;
@@ -19,7 +20,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
@@ -34,7 +34,7 @@ public interface Constants {
 	int TAB = 40;
 	String FONT_FACE = "Monaco";
 	Color COLOR_KW = Display.getDefault().getSystemColor(SWT.COLOR_DARK_MAGENTA);
-	Color COLOR_PH = Display.getDefault().getSystemColor(SWT.COLOR_GRAY);
+	Color COLOR_PH = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
 	Color COLOR_BACK = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
 	Color COLOR_ERROR = new Color(Display.getDefault(), 255, 200, 200);
 	Color COLOR_BACKGROUND = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
@@ -69,6 +69,7 @@ public interface Constants {
 	List<String> UNARY_OPERATORS = Arrays.asList("!", "-", "+");  //"(int)", "(double)");
 	//	Supplier<List<String>> UNARY_OPERATORS_SUPPLIER = () -> UNARY_OPERATORS;
 	RowLayout ROW_LAYOUT_H_ZERO = create(SWT.HORIZONTAL, 0);
+	RowLayout ROW_LAYOUT_H = create(SWT.HORIZONTAL, 3);
 	RowLayout ROW_LAYOUT_H_DOT = create(SWT.HORIZONTAL, 0);
 	RowLayout ROW_LAYOUT_V_ZERO = create(SWT.VERTICAL, 2);
 	GridData ALIGN_TOP = new GridData(SWT.LEFT, SWT.TOP, false, false);
@@ -140,12 +141,9 @@ public interface Constants {
 			if(focusControl != null && focusControl.getData() instanceof TextWidget) {
 				TextWidget w = (TextWidget) focusControl.getData();
 				Text text = w.getWidget();
-				
+
 				if(e.keyCode == SWT.ARROW_RIGHT && (!text.getEditable() || text.getText().length() == text.getCaretPosition() && text.getSelectionCount() == 0)) {
 					if(text.traverse(SWT.TRAVERSE_TAB_NEXT)) {
-						System.out.println(Display.getDefault().getFocusControl().getData());
-						System.out.println(Display.getDefault().getFocusControl().getClass());
-//						((TextWidget) .getData()).setAtLeft();
 						w.setAtLeft();
 					}
 					e.doit = false;
@@ -171,11 +169,21 @@ public interface Constants {
 		control.addKeyListener(LISTENER_ARROW_KEYS);
 		control.setData(widget);
 	}
-	
+
 	ModifyListener MODIFY_PACK = new ModifyListener() {
 		public void modifyText(ModifyEvent e) {
 			((Control) e.widget).pack();
 			((Control) e.widget).requestLayout();
+		}
+	};
+
+	static void addFocusSelectAll(Text e) {
+		e.addFocusListener(FOCUS_SELECTALL);
+	}
+	
+	FocusListener FOCUS_SELECTALL = new FocusAdapter() {
+		public void focusGained(FocusEvent e) {
+			((Text) e.widget).selectAll();
 		}
 	};
 
@@ -191,5 +199,11 @@ public interface Constants {
 		SequenceWidget seq = (SequenceWidget) statement.getParent();
 		seq.focusNext(statement);
 	}
-	
+
+	static String matchBinaryOperator(char character) {
+		for(String o : BINARY_OPERATORS)
+			if(o.charAt(0) == character)
+				return o;
+		return null;
+	}
 }

@@ -1,9 +1,6 @@
 package pt.iscte.paddle.javasde;
 import static java.lang.System.lineSeparator;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -46,21 +43,21 @@ public class EditorWidget extends Composite {
 	}
 	
 	
-	InsertWidget addInsert(EditorWidget parent, boolean editable) {
-		return root.addInsert(parent, editable);
-	}
-
-	Id createId(EditorWidget parent, String id) {
-		return root.createId(parent, id);
-	}
-
-	Id createId(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
-		return root.createId(parent, id, idProvider);
-	}
-	
-	Id createType(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
-		return root.createType(parent, id, idProvider);
-	}
+//	InsertWidget addInsert(EditorWidget parent, boolean editable) {
+//		return root.addInsert(parent, editable);
+//	}
+//
+//	Id createId(EditorWidget parent, String id) {
+//		return root.createId(parent, id);
+//	}
+//
+//	Id createId(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
+//		return root.createId(parent, id, idProvider);
+//	}
+//	
+//	Id createType(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
+//		return root.createType(parent, id, idProvider);
+//	}
 
 	public UiMode getMode() {
 		return mode;

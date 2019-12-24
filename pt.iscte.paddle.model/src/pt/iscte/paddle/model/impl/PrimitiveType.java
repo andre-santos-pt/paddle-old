@@ -98,7 +98,7 @@ public enum PrimitiveType implements IValueType {
 		}
 
 		public Object create(String literal) {
-			return new Boolean(literal); //.equals("true") ? Boolean.TRUE : Boolean.FALSE;
+			return Boolean.valueOf(literal); //.equals("true") ? Boolean.TRUE : Boolean.FALSE;
 		}
 
 		@Override

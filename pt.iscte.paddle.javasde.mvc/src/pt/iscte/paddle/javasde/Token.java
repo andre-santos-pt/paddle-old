@@ -1,5 +1,4 @@
 package pt.iscte.paddle.javasde;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,19 +9,16 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
 public class Token implements TextWidget {
-	private final Text label;
+	private final Text text;
 	private Map<Character, String> map;
 	
 	private static final List<String>[] EMPTY_ARRAY  = new List[0];
@@ -36,20 +32,20 @@ public class Token implements TextWidget {
 	}
 
 	public Token(EditorWidget parent, String token, List<String> ... alternatives) {
-		label = new Text(parent, SWT.NONE);
-		label.setText(token);
-		label.setEditable(false);
+		text = new Text(parent, SWT.NONE);
+		text.setText(token);
+		text.setEditable(false);
 
 		if(Keyword.is(token)) {
-			label.setFont(Constants.FONT_KW);
-			label.setForeground(Constants.COLOR_KW);
+			text.setFont(Constants.FONT_KW);
+			text.setForeground(Constants.COLOR_KW);
 		}
 		else
-			label.setFont(token.equals(".") ? Constants.FONT_DOT : Constants.FONT);
+			text.setFont(token.equals(".") ? Constants.FONT_DOT : Constants.FONT);
 
 		map = new HashMap<>();
 		
-		Menu menu = new Menu(label);
+		Menu menu = new Menu(text);
 		String prev = null;
 		for(List<String> set : alternatives) {
 			for(String t : set) {
@@ -61,8 +57,8 @@ public class Token implements TextWidget {
 				}
 				item.addSelectionListener(new SelectionAdapter() {
 					public void widgetSelected(SelectionEvent e) {
-						((Text) label).setText(item.getText());
-						label.requestLayout();
+						((Text) text).setText(item.getText());
+						text.requestLayout();
 					}
 				});
 				
@@ -71,24 +67,24 @@ public class Token implements TextWidget {
 			new MenuItem(menu, SWT.SEPARATOR);
 		}
 
-		label.addKeyListener(new KeyAdapter() {
+		text.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if(e.keyCode == Constants.MENU_KEY && menu != null) {
-					menu.setLocation(label.toDisplay(0, 20));
+					menu.setLocation(text.toDisplay(0, 20));
 					menu.setVisible(true);
 				}
 				else if(map.containsKey(e.character)) {
-					label.setText(map.get(e.character));
-					label.requestLayout();
-					label.selectAll();
+					text.setText(map.get(e.character));
+					text.requestLayout();
+					text.selectAll();
 				}
 				
 			}
 		});
 		
-		Constants.addArrowKeys(label, this);
-		label.addFocusListener(FOCUS_LISTENER);
-		label.setMenu(menu);
+		text.setMenu(menu);
+		Constants.addArrowKeys(text, this);
+		Constants.addFocusSelectAll(text);
 	}
 
 	private static final FocusAdapter FOCUS_LISTENER = new FocusAdapter() {
@@ -100,15 +96,15 @@ public class Token implements TextWidget {
 	
 	@Override
 	public Text getWidget() {
-		return label;
+		return text;
 	}
 
 	public Menu getMenu() {
-		return label.getMenu();
+		return text.getMenu();
 	}
 
 	public void setMenu(Menu menu) {
-		label.setMenu(menu);
+		text.setMenu(menu);
 	}
 
 	public void moveBelow(Control control) {
@@ -117,7 +113,7 @@ public class Token implements TextWidget {
 	}
 
 	public void setVisible(boolean visible) {
-		label.setVisible(visible);
+		text.setVisible(visible);
 	}
 
 	@Override
@@ -130,17 +126,20 @@ public class Token implements TextWidget {
 	}
 
 	public void setLayoutData(RowData data) {
-		label.setLayoutData(data);
+		text.setLayoutData(data);
 	}
 
 
 	public void dispose() {
-		label.dispose();
+		text.dispose();
 	}
 
 	public boolean setFocus() {
-		return label.setFocus();
+		return text.setFocus();
 	}
-
+	
+	public void addKeyListener(KeyListener listener) {
+		text.addKeyListener(listener);
+	}
 
 }

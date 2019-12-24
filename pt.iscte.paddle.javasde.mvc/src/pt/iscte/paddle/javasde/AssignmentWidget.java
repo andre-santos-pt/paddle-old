@@ -10,16 +10,15 @@ import org.eclipse.swt.widgets.Control;
 public class AssignmentWidget extends EditorWidget {
 
 	private final ExpressionWidget id;
-	private  ExpressionWidget expression;
-
+	private final ExpressionWidget expression;
 
 	AssignmentWidget(EditorWidget parent, String id, String expression, boolean statement, boolean array) {
 		super(parent);
-//		this.id = createId(this, id);
-		this.id = new ExpressionWidget(this, id); // TODO variants
+		setLayout(Constants.ROW_LAYOUT_H);
+		Function<EditorWidget, Expression> f = 
+				e -> array ? new ArrayElementExpression(this, id, "expression") : new SimpleExpressionWidget(e, id, false);
+		this.id = new ExpressionWidget(this, f);
 		new FixedToken(this, "=");
-		Function<EditorWidget, Control> f = 
-				e -> array ? new ArrayElementExpression(this, id) : new SimpleExpressionWidget(e, id, false);
 		this.expression = new ExpressionWidget(this, "expression");
 		if(statement)
 			new FixedToken(this, ";");

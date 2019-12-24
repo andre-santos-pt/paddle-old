@@ -6,12 +6,12 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 
-public class SimpleExpressionWidget extends Canvas implements TextWidget {
+public class SimpleExpressionWidget extends Canvas implements TextWidget, Expression {
 
 	private Text text;
 	private Class<?> literalType;
@@ -71,6 +71,12 @@ public class SimpleExpressionWidget extends Canvas implements TextWidget {
 		
 		Constants.addArrowKeys(text, this);
 		
+		addTransformationKeyListener(assign);
+		text.addModifyListener(Constants.MODIFY_PACK);
+		text.setMenu(new Menu(text));
+	}
+
+	private void addTransformationKeyListener(boolean assign) {
 		text.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				String match = null;
@@ -85,8 +91,19 @@ public class SimpleExpressionWidget extends Canvas implements TextWidget {
 					b.focusRight();
 					w = b;
 				}
+				else if(!assign && e.character == SWT.SPACE && text.getText().equals("new")) {
+					ArrayAllocationExpression a = new ArrayAllocationExpression((EditorWidget) getParent());
+					a.setFocus();
+					w = a;
+				}
+				else if(!assign && e.character == '(' && Id.isValid(text.getText())) {
+					CallWidget c = new CallWidget((EditorWidget) getParent(), text.getText(), false);
+					c.focusArgument();
+					w = c;
+				}
 				else if(e.character == '[') {
-					ArrayElementExpression a = new ArrayElementExpression((EditorWidget) getParent(), text.getText());
+					ArrayElementExpression a = new ArrayElementExpression((EditorWidget) getParent(), text.getText(), "expression");
+					a.addExpressionInserts();
 					a.focusExpression();
 					w = a;
 				}
@@ -95,16 +112,6 @@ public class SimpleExpressionWidget extends Canvas implements TextWidget {
 					f.focusExpression();
 					w = f;
 				}
-				else if(!assign && e.character == '(' && Id.isValid(text.getText())) {
-					CallWidget c = new CallWidget((EditorWidget) getParent(), text.getText(), false);
-					c.focusArgument();
-					w = c;
-				}
-				else if(e.character == SWT.SPACE && text.getText().equals("new")) {
-					ArrayAllocationExpression a = new ArrayAllocationExpression((EditorWidget) getParent());
-					a.setFocus();
-					w = a;
-				}
 				
 				if(w != null) {
 					dispose();
@@ -112,8 +119,6 @@ public class SimpleExpressionWidget extends Canvas implements TextWidget {
 				}
 			}
 		});
-		text.addModifyListener(Constants.MODIFY_PACK);
-		text.setMenu(new Menu(text));
 	}
 
 	@Override
@@ -150,6 +155,21 @@ public class SimpleExpressionWidget extends Canvas implements TextWidget {
 	public Text getWidget() {
 		return text;
 	}
+	
+	@Override
+	public Expression copyTo(EditorWidget parent) {
+		return new SimpleExpressionWidget(parent, text.getText(), assign);
+	}
+	
+	@Override
+	public void addKeyListener(KeyListener listener) {
+		text.addKeyListener(listener);
+	}
+	
+//	@Override
+//	public void dispose() {
+//		super.dispose();
+//	}
 	
 //	@Override
 //	public boolean setFocus() {

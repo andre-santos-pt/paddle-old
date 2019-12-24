@@ -21,13 +21,13 @@ public class ConstantWidget extends EditorWidget {
 			new FixedToken(this, Keyword.STATIC);
 		
 		new FixedToken(this, Keyword.FINAL);
-		this.type = createId(this, constant.getType().getId(), Constants.PRIMITIVE_TYPES_SUPPLIER);
+		this.type = new Id(this, constant.getType().getId(), true, Constants.PRIMITIVE_TYPES_SUPPLIER);
 		
 		String id = constant.getId();
 		if(id == null)
 			id = "CONSTANT";
 		
-		this.id = createId(this, id);
+		this.id = new Id(this, id, false);
 		this.id.setEditAction(() -> constant.setId(this.id.getText()));
 		
 		new FixedToken(this, "=");
