@@ -11,7 +11,8 @@ import pt.iscte.paddle.model.IBreak;
 
 class Break extends Statement implements IBreak {
 		public Break(IBlock parent, int index) {
-			super(parent, true, index);
+			super(parent);
+			addToParent(index);
 		}
 		
 		@Override

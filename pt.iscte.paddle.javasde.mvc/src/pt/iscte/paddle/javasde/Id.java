@@ -1,4 +1,5 @@
 package pt.iscte.paddle.javasde;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -12,41 +13,38 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
 
-public class Id extends EditorWidget {
+public class Id extends EditorWidget implements TextWidget {
 
 	private final String initialId;
 	private boolean menuMode = false;
 	private final Text text;
-	private Label arrayPart;
 	private Menu popupMenu;
 
 	private SelectionListener[] typeListeners;
-	private SelectionListener[] arrayListeners;
 
 	private Supplier<List<String>> idProvider;
 
 	private Runnable editAction = () -> {};
 	
-	Id(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
+	Id(EditorWidget parent, String id, boolean type, Supplier<List<String>> idProvider) {
 		super(parent);
 		this.idProvider = idProvider;
-		setLayout(Constants.ROW_LAYOUT_H_DOT);
+		setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		initialId = id;
 		text = new Text(this, SWT.NONE);
 		text.setText(id);
 		List<String> provider = idProvider.get();
 		Constants.setFont(text, true);
 		
-		text.addVerifyListener(e -> e.doit = menuMode || 
-				!(e.keyCode == 'z' && (( e.stateMask & SWT.MODIFIER_MASK ) == SWT.CTRL || ( e.stateMask & SWT.MODIFIER_MASK ) == SWT.COMMAND)) &&
-				provider.isEmpty() && (isValidCharacter(e.character) || e.character == SWT.BS || e.character == SWT.DEL || e.character == SWT.ARROW_RIGHT || e.character == SWT.CR));
+		text.addVerifyListener(e -> e.doit = menuMode ||
+				!(e.keyCode == 'z' && (( e.stateMask & SWT.MODIFIER_MASK ) == SWT.CTRL || ( e.stateMask & SWT.MODIFIER_MASK ) == SWT.COMMAND)) && // TODO UNDO to function
+				provider.isEmpty() && (isValidCharacter(e.character) || e.character == SWT.BS || e.character == SWT.DEL || e.character == SWT.CR || 
+				type && !Keyword.VOID.match(id) && e.character == '['));
 		
 		text.addFocusListener(new FocusListener() {
 			public void focusLost(FocusEvent e) {
@@ -76,27 +74,57 @@ public class Id extends EditorWidget {
 		else
 			text.setMenu(new Menu(text)); // prevent system menu
 		
-		text.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.keyCode == SWT.CR) {
-					System.out.println(text.getCaretPosition());
-					Event event = new Event();
-					event.keyCode=SWT.TAB;
-					event.display=Display.getDefault();
-					event.type=SWT.KeyDown;
-					Display.getDefault().post(event);
-					
-				}
-			}
-		});
-
+		Constants.addArrowKeys(text, this);
+		
+		text.addKeyListener(addDimListener);
 	}
+	
+	@Override
+	public Text getWidget() {
+		return text;
+	}
+	
+	private KeyListener addDimListener = new KeyAdapter() {
+		public void keyPressed(KeyEvent e) {
+			if(e.character == '[')
+				addDimension();
+		}
+	};
 	
 	public void setEditAction(Runnable editAction) {
 		this.editAction = editAction == null ? () -> {} : editAction;
 	}
 
+	public void addDimension() {
+		Token t = new Token(this, "[]");
+		t.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.keyCode == Constants.DEL_KEY)
+					removeDimension((Control) e.widget);
+				else if(e.character == '[')
+					addDimension();
+			}
+		});
+		t.setFocus();
+		requestLayout();
+	}
+	
+	private void removeDimension(Control control) {
+		Control[] children = getChildren();
+		for(int i = 1; i < children.length; i++)
+			if(children[i] == control) {
+				children[i].dispose();
+				children[i-1].setFocus();
+			}
+		requestLayout();
+	}
+	
+	public void focusLastDimension() {
+		Control[] children = getChildren();
+		children[children.length-1].setFocus();
+	}
+	
 	private void addMenu(List<String> provider) {
 		popupMenu = new Menu(text);
 		MenuItem[] items = new MenuItem[provider.size()];
@@ -122,64 +150,11 @@ public class Id extends EditorWidget {
 		setMenu(popupMenu);
 	}
 
-	void addArrayPart() {
-		arrayPart = new Label(this, SWT.NONE);
-		arrayPart.setText("");
-		arrayPart.setFont(Constants.FONT);
-		new MenuItem(popupMenu, SWT.SEPARATOR);
-		MenuItem[] items = new MenuItem[Constants.ARRAY_DIMS+1];
-		arrayListeners = new SelectionListener[Constants.ARRAY_DIMS+1];
-		for(int i = 0; i < items.length; i++) {
-			MenuItem m = new MenuItem(popupMenu, SWT.CHECK);
-			items[i] = m;
-			m.setText(i == 0 ? "single variable" : i + "-dimensional array");
-			m.setSelection(i == 0);
-			m.setData(i);
-			arrayListeners[i] = new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					for(MenuItem it : items)
-						it.setSelection(it == m);
-
-					String dims = "";
-					for(int j = (Integer) m.getData(); j > 0; j--)
-						dims += "[ ]";
-					arrayPart.setText(dims.isEmpty() ? " " : dims);
-					arrayPart.requestLayout();
-				}
-			};
-			m.addSelectionListener(arrayListeners[i]);
-		}
-	}
-
 	private void addKeyListeners() {
 		text.addKeyListener(KeyListener.keyPressedAdapter(e -> {
 			List<String> list = idProvider.get();
-			
 			if(e.keyCode == Constants.MENU_KEY && popupMenu != null) {
 				popup(popupMenu, text);
-			}
-			else if(e.keyCode == SWT.ARROW_DOWN) {
-				int index = list.indexOf(text.getText());
-				if(index != -1) {
-					index = (index+1)%list.size();
-					typeListeners[index].widgetSelected(null);
-				}
-				else if(list.size() > 0)
-					typeListeners[0].widgetSelected(null);
-			}
-			else if(e.keyCode == SWT.ARROW_UP) {
-				int index = list.indexOf(text.getText());
-				if(index != -1) {
-					index--;
-					if(index == -1)
-						index = list.size()-1;
-					typeListeners[index].widgetSelected(null);
-				}
-				else if(list.size() > 0)
-					typeListeners[0].widgetSelected(null);
-			}
-			else if(arrayPart != null && e.character >= '0' && e.character <= '0' + Constants.ARRAY_DIMS) {
-				arrayListeners[e.character - '0'].widgetSelected(null);
 			}
 			else {
 				for(String i : list) {
@@ -191,6 +166,7 @@ public class Id extends EditorWidget {
 					}
 				}
 			}
+			setAtRight();
 		}));
 	}
 
@@ -209,7 +185,7 @@ public class Id extends EditorWidget {
 	}
 
 	public static boolean isValid(String s) {
-		return s.matches("[a-zA-Z_]+");
+		return s.matches("[a-zA-Z_]+") && !Keyword.is(s);
 	}
 
 	public void setMenu(Menu menu) {
@@ -221,25 +197,8 @@ public class Id extends EditorWidget {
 		return text.getText();
 	}
 
-	public String getText() {
-		return text.getText();
-	}
-
 	public void set(String id) {
 		text.setText(id);
 	}
 	
-	public boolean isAtEnd() {
-		return text.getCaretPosition() == text.getText().length();
-	}
-	
-	@Override
-	public void setForeground(Color color) {
-		text.setForeground(color);
-	}
-	
-	@Override
-	public void addKeyListener(KeyListener listener) {
-		text.addKeyListener(listener);
-	}
 }

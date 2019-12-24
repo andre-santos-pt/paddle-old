@@ -18,9 +18,9 @@ public class ConstantWidget extends EditorWidget {
 		super(parent);
 		this.constant = constant;
 		if(!getMode().staticClass)
-			new Token(this, "static");
+			new FixedToken(this, Keyword.STATIC);
 		
-		new Token(this, "final");
+		new FixedToken(this, Keyword.FINAL);
 		this.type = createId(this, constant.getType().getId(), Constants.PRIMITIVE_TYPES_SUPPLIER);
 		
 		String id = constant.getId();
@@ -30,9 +30,9 @@ public class ConstantWidget extends EditorWidget {
 		this.id = createId(this, id);
 		this.id.setEditAction(() -> constant.setId(this.id.getText()));
 		
-		new Token(this, "=");
+		new FixedToken(this, "=");
 		this.expression = new SimpleExpressionWidget(this, constant.getValue().getStringValue(), false);
-		new Token(this, ";");
+		new FixedToken(this, ";");
 		
 		
 		expression.addFocusListener(new FocusAdapter() {

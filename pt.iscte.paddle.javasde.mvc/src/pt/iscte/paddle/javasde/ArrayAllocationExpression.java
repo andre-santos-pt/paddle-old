@@ -5,11 +5,11 @@ public class ArrayAllocationExpression extends EditorWidget {
 
 	public ArrayAllocationExpression(EditorWidget parent) {
 		super(parent, parent.mode);
-		new Token(this, "new");
-		id = new Id(this, "type", Constants.PRIMITIVE_TYPES_SUPPLIER);
-		new Token(this, "[");
-		new ExpressionWidget(this);
-		new Token(this, "]");
+		new Token(this, Keyword.NEW);
+		id = createId(this, "Type", Constants.PRIMITIVE_TYPES_SUPPLIER);
+		new FixedToken(this, "[");
+		new ExpressionWidget(this, "expression");
+		new FixedToken(this, "]");
 		
 	}
 	

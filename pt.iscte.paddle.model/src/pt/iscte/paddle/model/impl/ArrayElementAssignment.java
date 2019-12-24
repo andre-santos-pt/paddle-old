@@ -22,10 +22,11 @@ class ArrayElementAssignment extends Statement implements IArrayElementAssignmen
 	private final IExpression expression;
 	
 	public ArrayElementAssignment(IBlock parent, IExpression target, IExpression expression, int index, List<IExpression> indexes) {
-		super(parent, true, index);
+		super(parent);
 		this.target = target;
 		this.indexes = ImmutableList.copyOf(indexes);
 		this.expression = expression;
+		addToParent(index);
 	}
 
 	@Override

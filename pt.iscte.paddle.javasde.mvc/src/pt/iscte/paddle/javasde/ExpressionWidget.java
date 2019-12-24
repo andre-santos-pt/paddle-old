@@ -1,35 +1,44 @@
 package pt.iscte.paddle.javasde;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Text;
 
-public class ExpressionWidget extends EditorWidget {
+public class ExpressionWidget extends EditorWidget  {
 	boolean test = false;
-	Composite expression;
-	String initLiteral = "0";
-
-	public ExpressionWidget(EditorWidget parent) {
-		this(parent, "expression");
-	}
+	Control expression;
 
 	public ExpressionWidget(EditorWidget parent, String literal) {
+		this(parent, w -> new SimpleExpressionWidget(w, literal, false));
+	}
+
+	public ExpressionWidget(EditorWidget parent, Function<EditorWidget, Control> sup) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
-		initLiteral = literal;
-		expression = new SimpleExpressionWidget(this, literal, false);
+		expression = sup.apply(this);// new SimpleExpressionWidget(this, literal, false);
+//		Constants.addArrowKeys(expression, (TextWidget) expression); 
 		addMenu(expression);
 	}
 
 	public void set(String expression) {
 		this.expression.dispose();
 		this.expression = new SimpleExpressionWidget(this, expression, false);
+//		Constants.addArrowKeys(this.expression, (TextWidget) this.expression); 
 		this.expression.requestLayout();
+	}
+	
+	@Override
+	public void setData(Object data) {
+		expression.setData(data);
 	}
 	
 	private void addMenu(Control widget) {
@@ -97,25 +106,23 @@ public class ExpressionWidget extends EditorWidget {
 		widget.setMenu(menu);
 	}
 
-	@Override
-	public void setForeground(Color color) {
-		expression.setForeground(color);
-	}
+//	@Override
+//	public boolean setFocus() {
+//		return expression.setFocus();
+//	}
 	
-	@Override
-	public boolean setFocus() {
-		return expression.setFocus();
-	}
+//	@Override
+//	public Text getWidget() {
+//		return ((TextWidget) expression).getWidget();
+//	}
 	
 	@Override
 	public void addKeyListener(KeyListener listener) {
 		expression.addKeyListener(listener);
 	}
 	
-//	@Override
-//	public void toCode(StringBuffer buffer) {
-//		expression.toCode(buffer);
-//	}
-
-	
+	@Override
+	public void addFocusListener(FocusListener listener) {
+		expression.addFocusListener(listener);
+	}	
 }

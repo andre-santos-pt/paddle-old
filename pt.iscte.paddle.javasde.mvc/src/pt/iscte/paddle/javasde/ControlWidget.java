@@ -6,9 +6,9 @@ import pt.iscte.paddle.model.IBlock;
 
 public class ControlWidget extends EditorWidget implements StatementContainer {
 	
+	private final Token keyword;
+	private final ExpressionWidget expression;
 	private final SequenceWidget blockSeq;
-	private ExpressionWidget expression;
-	private Token keyword;
 	
 	ControlWidget(SequenceWidget parent, Keyword keyword, String expression, IBlock block) {
 		super(parent);
@@ -17,22 +17,30 @@ public class ControlWidget extends EditorWidget implements StatementContainer {
 		header.setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		this.keyword = new Token(header, keyword);
 		if(expression != null) {
-			new Token(header, "(");
+			new FixedToken(header, "(");
 			this.expression = new ExpressionWidget(header, expression);
-			new Token(header, ")");
+			new FixedToken(header, ")");
 		}
-		new Token(header, "{");
+		else 
+			this.expression = null;
+		new FixedToken(header, "{");
 		blockSeq = new SequenceWidget(this, Constants.TAB);
 		blockSeq.addStatementCommands(block);
 		blockSeq.addBlockListener(block);
-		new Token(this, "}");
+		new FixedToken(this, "}");
 	}
 	
 	@Override
 	public boolean setFocus() {
+		keyword.setFocus();
+		return true;
+	}
+	
+	void focusIn() {
 		if(expression != null)
 			expression.setFocus();
-		return expression != null;
+		else
+			blockSeq.setFocus();
 	}
 
 	@Override
@@ -50,12 +58,15 @@ public class ControlWidget extends EditorWidget implements StatementContainer {
 	}
 	
 	boolean is(Keyword keyword) {
-		return this.keyword.isKeyword(keyword.toString());
+ 		return this.keyword.isKeyword(keyword.toString());
 	}
 	
 	@Override
 	void addTokenKeyHandler(KeyListener listener) {
 		keyword.addKeyListener(listener);
-//		keyword.addClickToFocus();
+	}
+
+	public SequenceWidget getSequence() {
+		return blockSeq;
 	}
 }

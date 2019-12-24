@@ -1,42 +1,48 @@
 package pt.iscte.paddle.javasde;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
+import pt.iscte.paddle.interpreter.IArray;
+import pt.iscte.paddle.model.IArrayType;
+import pt.iscte.paddle.model.IType;
 
 public class DeclarationWidget extends EditorWidget {
-	
-	private Id type;
-	private EditorWidget id;
-	private ExpressionWidget expression;
+	private final Id type;
+	private final Id id;
+	private final ExpressionWidget expression;
 
 	DeclarationWidget(EditorWidget parent) {
-		this(parent, "type", "variable", "expression");
+		this(parent, IType.UNBOUND, "variable", "expression");
 	}
 	
-	DeclarationWidget(EditorWidget parent, String type, String id, String expression) {
+	DeclarationWidget(EditorWidget parent, IType type, String id, String expression) {
 		super(parent);
-		this.type = createId(this, type, Constants.PRIMITIVE_TYPES_SUPPLIER);
-		this.type.addArrayPart();
+		String typeId = type.getId();
+		int dims = 0;
+		if(type instanceof IArrayType) {
+			typeId = ((IArrayType) type).getComponentType().getId();
+			dims = ((IArrayType) type).getDimensions();
+		}
+		this.type = createType(this, typeId, Constants.PRIMITIVE_TYPES_SUPPLIER);
+		while(dims-- > 0)
+			this.type.addDimension();
 		this.id = createId(this, id);
-		Token token = new Token(this, "=");
+		new FixedToken(this, "=");
 		this.expression = new ExpressionWidget(this, expression);
-		new Token(this, ";");
-		Menu menu = token.getMenu();
-		MenuItem item = new MenuItem(menu, SWT.NONE);
-		item.setText("to assignment"); // TODO convert to assignment
-		token.setMenu(menu);
-	}
-
-	@Override
-	public void toCode(StringBuffer buffer) {
-		buffer.append(type).append(" ").append(id).append(" = ");
-		expression.toCode(buffer);
-		buffer.append(";");
+		new FixedToken(this, ";");
 	}
 	
 	@Override
 	public boolean setFocus() {
 		return type.setFocus();
+	}
+	
+	public void focusId() {
+		id.setFocus();
+	}
+	
+	@Override
+	public void toCode(StringBuffer buffer) {
+		buffer.append(type).append(" ").append(id).append(" = ");
+		expression.toCode(buffer);
+		buffer.append(";");
 	}
 }

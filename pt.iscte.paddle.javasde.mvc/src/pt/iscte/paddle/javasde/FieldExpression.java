@@ -10,8 +10,8 @@ public class FieldExpression extends EditorWidget {
 		super(parent, parent.mode);
 		setLayout(Constants.ROW_LAYOUT_H_DOT);
 		id = createId(this, varId);
-		new Token(this, ".");
-		expression = new ExpressionWidget(this);		
+		new FixedToken(this, ".");
+		expression = new ExpressionWidget(this, "field");		
 	}
 
 	@Override

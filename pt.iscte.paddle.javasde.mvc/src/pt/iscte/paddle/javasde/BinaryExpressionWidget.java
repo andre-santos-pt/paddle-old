@@ -3,13 +3,13 @@ package pt.iscte.paddle.javasde;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Text;
 
 public class BinaryExpressionWidget extends EditorWidget {
 	private ExpressionWidget left;
@@ -25,14 +25,14 @@ public class BinaryExpressionWidget extends EditorWidget {
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		data.exclude = !brackets;
 		
-		Token lBracket = new Token(this, "(");
+		FixedToken lBracket = new FixedToken(this, "(");
 		lBracket.setLayoutData(data);
 	
-		left = new ExpressionWidget(this);
+		left = new ExpressionWidget(this, "left");
 		op = new Token(this, operator, Constants.ARITHMETIC_OPERATORS, Constants.RELATIONAL_OPERATORS, Constants.LOGICAL_OPERATORS);
-		right = new ExpressionWidget(this);
+		right = new ExpressionWidget(this, "right");
 		
-		Token rBracket = new Token(this, ")");
+		FixedToken rBracket = new FixedToken(this, ")");
 		rBracket.setLayoutData(data);
 		
 		Menu menu = op.getMenu();
@@ -68,9 +68,8 @@ public class BinaryExpressionWidget extends EditorWidget {
 		});
 		
 		right.addKeyListener(new KeyAdapter() {
-			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.keyCode == Constants.DEL_KEY)
+				if(e.keyCode == Constants.DEL_KEY) // && right.isAtBeginning())
 					deleteOperator();
 			}
 		});
@@ -111,6 +110,7 @@ public class BinaryExpressionWidget extends EditorWidget {
 		parent.expression.requestLayout();
 		parent.expression.setFocus();
 	}
-	
+
+
 
 }

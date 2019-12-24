@@ -8,12 +8,12 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-
 
 import pt.iscte.paddle.model.IProcedure;
 
@@ -35,37 +35,41 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 		header.setLayout(Constants.ROW_LAYOUT_H_ZERO);
 
 		if (!mode.staticClass)
-			new Token(header, "static");
+			new Token(header, Keyword.STATIC);
 
-		retType = createId(header, procedure.getReturnType().toString(), Constants.PRIMITIVE_TYPES_VOID_SUPPLIER);
-		retType.addArrayPart();
+		retType = createType(header, procedure.getReturnType().toString(), Constants.PRIMITIVE_TYPES_VOID_SUPPLIER);
 		retType.setToolTip("Return type");
 		
 		String name = procedure.getId();
 		if(name == null)
 			name = "procedure";
 		id = createId(header, name);
-		new Token(header, "(");
+		new FixedToken(header, "(");
 		params = new ParamList(header);
-		new Token(header, ")");
-		Token openBody = new Token(header, "{");
+		new FixedToken(header, ")");
+		new FixedToken(header, "{");
 		body = new SequenceWidget(this, Constants.TAB);
 		body.addStatementCommands(procedure.getBody());
 		body.addBlockListener(procedure.getBody());
-		Token closeBody = new Token(this, "}");
+		new FixedToken(this, "}");
 		
 		new Label(this, SWT.NONE); // line
 	}
 
 	private class ParamList extends EditorWidget {
-		private Control addLabel;
+		private InsertWidget insertWidget;
 
 		public ParamList(Composite parent) {
 			super(parent, MethodWidget.this.mode);
 			setLayout(Constants.ROW_LAYOUT_H_ZERO);
-			addLabel = createAddLabel(this, Constants.SINGLE_SPACE, false);
+			insertWidget = createInsert();
+		}
+
+		private InsertWidget createInsert() {
+			InsertWidget w = addInsert(this, false);
+			w.setLayoutData(new RowData(10, SWT.DEFAULT));
+			Menu menu = w.createMenu();
 			
-			Menu menu = new Menu(addLabel);
 			MenuItem delete = new MenuItem(menu, SWT.NONE);
 			delete.setText("delete");
 			delete.setAccelerator(Constants.DEL_KEY);
@@ -88,37 +92,56 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 			SelectionListener paramListener = new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
 					delete.setEnabled(true);
-					addParam(addLabel, true);
+					addParam(w.text, Keyword.INT.toString(), true);
 				}
 			};
 			addParam.addSelectionListener(paramListener);
 			addParam.setData(paramListener);
-			addLabel.setMenu(menu);
+			return w;
 		}
 
 		private class Param extends EditorWidget {
-			private Id type;
-			private Id var;
+			private final Id type;
+			private final Id var;
+			private FixedToken comma;
 
-			public Param(boolean comma) {
+			public Param(String type, boolean comma) {
 				super(ParamList.this, ParamList.this.mode);
-				setLayout(Constants.ROW_LAYOUT_H_ZERO);
+				setLayout(Constants.ROW_LAYOUT_H_DOT);
 				if(comma)
-					new Token(this, ",");
-				type = createId(this, "int", Constants.PRIMITIVE_TYPES_SUPPLIER);
-				type.addArrayPart();
-				type.setToolTip("Parameter type");
+					this.comma = new FixedToken(this, ",");
+				this.type = createType(this, type, Constants.PRIMITIVE_TYPES_SUPPLIER);
+//				this.type.addArrayPart();
+				this.type.setToolTip("Parameter type");
 				var = createId(this, "parameter");
 				var.addKeyListener(new KeyAdapter() {
-					@Override
 					public void keyPressed(KeyEvent e) {
-						if(e.character == ',' && var.isAtEnd())
-							addParam(Param.this, false);
+						if(e.character == ',')
+							addParam(Param.this, Keyword.INT.toString(), false);
+						else if(e.keyCode == Constants.DEL_KEY && var.isAtBeginning()) {
+							dispose();
+							Control[] children = ParamList.this.getChildren();
+							if(children.length == 0) {
+								insertWidget = createInsert();
+								insertWidget.setFocus();
+							}
+							else {
+								if(children.length == 1 && ((Param) children[0]).comma != null)
+									((Param) children[0]).comma.dispose();
+								
+								((Param) children[children.length-1]).focusVariable();
+							}
+							ParamList.this.requestLayout();
+						}
 					}
 				});
 				var.setToolTip("Parameter name");
 			}
 			
+			void focusVariable() {
+				var.setFocus();
+			}
+
 			@Override
 			public boolean setFocus() {
 				type.setFocus();
@@ -126,13 +149,13 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 			}
 		}
 
-		private void addParam(Control control, boolean above) {
-			boolean comma = ParamList.this.getChildren()[0] != addLabel;
-			Param param = new Param(comma);
-			if(above)
-				param.moveAbove(control);
-			else
-				param.moveBelow(control);
+		private void addParam(Control control, String type, boolean above) {
+			if(insertWidget != null) {
+				insertWidget.dispose();
+				insertWidget = null;
+			}
+			boolean comma = ParamList.this.getChildren().length != 0;
+			Param param = new Param(type, comma);
 			param.requestLayout();
 			param.setFocus();
 		}
@@ -154,8 +177,12 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 
 	@Override
 	public boolean setFocus() {
-		retType.setFocus();
+		id.setFocus();
 		return true;
+	}
+	
+	void focusReturnType() {
+		retType.setFocus();
 	}
 	
 	public void accept(Visitor visitor) {

@@ -1,7 +1,5 @@
 package pt.iscte.paddle.javasde;
 
-import org.eclipse.swt.widgets.Control;
-
 interface StatementContainer {
 
 //	SequenceWidget getBody();

@@ -55,4 +55,78 @@ public interface IVariable extends ISimpleExpression, IStatement {
 	default String getDeclaration() {
 		return getType() + " " + getId();
 	}
+	
+	class UnboundVariable implements IVariable {
+		
+		final String id;
+		
+		public UnboundVariable(String id) {
+			this.id = id;
+		}
+		
+		@Override
+		public String getId() {
+			return id;
+		}
+
+		@Override
+		public void setProperty(Object key, Object value) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public Object getProperty(Object key) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public IConditionalExpression conditional(IExpression trueCase, IExpression falseCase) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public IArrayLength length(List<IExpression> indexes) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public IType getType() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public IProgramElement getParent() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public IRecordFieldExpression field(IVariable field) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public IArrayElement element(List<IExpression> indexes) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public IVariableDereference dereference() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public IVariableAddress address() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+	};
 }

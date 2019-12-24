@@ -47,7 +47,12 @@ public interface IType extends IProgramElement  {
 
 	ImmutableCollection<IValueType> VALUE_TYPES = ImmutableList.of(INT, DOUBLE, BOOLEAN);
 
-
+	static IType match(String type) {
+		for(IValueType t : VALUE_TYPES)
+			if(t.getId().equals(type))
+				return t;
+		return null;
+	}
 	
 	public static Set<IType> getAllTypes() {
 		return Collections.unmodifiableSet(Instances.mapArrayTypes.keySet());
@@ -128,6 +133,11 @@ public interface IType extends IProgramElement  {
 		@Override
 		public String toString() {
 			return "unknown";
+		}
+
+		@Override
+		public String getId() {
+			return "Type";
 		}
 
 		@Override

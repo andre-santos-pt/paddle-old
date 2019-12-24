@@ -17,8 +17,9 @@ class Return extends Statement implements IReturn {
 	}
 	
 	public Return(Block parent, IExpression expression, int index) {
-		super(parent, true, index);
+		super(parent);
 		this.expression = expression;
+		addToParent(index);
 	}
 
 	@Override

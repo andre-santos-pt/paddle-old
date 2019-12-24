@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Text;
 
 public class EditorWidget extends Composite {
 
@@ -47,8 +46,8 @@ public class EditorWidget extends Composite {
 	}
 	
 	
-	Text createAddLabel(Composite parent, int spaces, boolean editable) {
-		return root.createAddLabel(parent, spaces, editable);
+	InsertWidget addInsert(EditorWidget parent, boolean editable) {
+		return root.addInsert(parent, editable);
 	}
 
 	Id createId(EditorWidget parent, String id) {
@@ -58,8 +57,11 @@ public class EditorWidget extends Composite {
 	Id createId(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
 		return root.createId(parent, id, idProvider);
 	}
-
 	
+	Id createType(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
+		return root.createType(parent, id, idProvider);
+	}
+
 	public UiMode getMode() {
 		return mode;
 	}

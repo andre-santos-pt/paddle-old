@@ -3,12 +3,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -36,9 +34,10 @@ public class JavaSDEditor {
 
 		Composite area = new Composite(scroll, SWT.NONE);
 
-		GridLayout gridLayout = new GridLayout(1, false);
-		area.setLayout(gridLayout);
-		area.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+//		GridLayout gridLayout = new GridLayout(1, false);
+//		area.setLayout(gridLayout);
+		area.setLayout(new FillLayout());
+//		scroll.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_CYAN));
 
 		scroll.setContent(area);
 		scroll.setMinSize(100, 100);
@@ -57,43 +56,6 @@ public class JavaSDEditor {
 		module.setId("TestClass");
 
 		ClassWidget c = instantiationExample(module, area, mode);
-		
-//		Button modelCode = new Button(area, SWT.PUSH);
-//		modelCode.setText("model code");
-//		modelCode.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				System.out.println(module);
-//			}
-//		});
-//		
-//		Button hide = new Button(area, SWT.PUSH);
-//		hide.setText("hide/show +");
-//		hide.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				c.hideAddLabels();
-//			}
-//		});
-//		
-//		Button undo = new Button(area, SWT.PUSH);
-//		undo.setText("undo");
-//		undo.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				module.undo();
-//			}
-//		});
-//		
-//		
-//		Button redo = new Button(area, SWT.PUSH);
-//		redo.setText("redo");
-//		redo.addSelectionListener(new SelectionAdapter() {
-//			@Override
-//			public void widgetSelected(SelectionEvent e) {
-//				module.redo();
-//			}
-//		});
 		
 		shell.setSize(600, 800);
 		shell.open();

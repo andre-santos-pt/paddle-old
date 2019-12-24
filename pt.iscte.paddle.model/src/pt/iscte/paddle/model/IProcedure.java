@@ -30,6 +30,13 @@ public interface IProcedure extends IProcedureDeclaration {
 		return r.foundRecursiveCall;
 	}
 	
+	default IVariable getVariable(String id) {
+		for(IVariable v : getVariables())
+			if(id.equals(v.getId()))
+				return v;
+		return null;
+	}
+	
 //	default boolean isFunction() {
 //		if(getReturnType().isVoid())
 //			return false;

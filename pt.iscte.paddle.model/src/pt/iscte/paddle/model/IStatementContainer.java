@@ -51,6 +51,14 @@ public interface IStatementContainer {
 		return getBlock().addAssignmentAt(var, exp, index, flags);
 	}
 
+	default IVariableAssignment addAssignmentAt(String var, IExpression exp, int index, String ... flags) {
+		IProcedure proc = getBlock().getOwnerProcedure();
+		IVariable variable = proc.getVariable(var);
+		if(variable == null)
+			variable = new IVariable.UnboundVariable(var);
+		
+		return getBlock().addAssignmentAt(variable, exp, index, flags);
+	}
 	
 	
 	default IVariableAssignment addIncrement(IVariable var) {

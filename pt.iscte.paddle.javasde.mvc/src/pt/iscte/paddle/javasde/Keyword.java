@@ -4,7 +4,23 @@ import org.eclipse.swt.widgets.Text;
 
 public enum Keyword {
 
-	INT, //...
+	CLASS,
+	STATIC,
+	FINAL,
+	
+	BOOLEAN,
+	BYTE,
+	SHORT,
+	INT,
+	LONG,
+	FLOAT,
+	DOUBLE,
+	CHAR,
+	VOID,
+	
+	TRUE,
+	FALSE,
+	NULL,
 	
 	IF,
 	ELSE,
@@ -15,10 +31,7 @@ public enum Keyword {
 	BREAK,
 	CONTINUE,
 	
-	STATIC,
-	FINAL,
-	NEW,
-	NULL;
+	NEW;
 
 	private static String regex = String.join("|", keywords());
 	
@@ -47,7 +60,11 @@ public enum Keyword {
 	}
 
 
+	public boolean match(String text) {
+		return name().toLowerCase().equals(text);
+	}
+		
 	public boolean match(Text label) {
-		return label.getText().equals(name().toLowerCase());
+		return match(label.getText());
 	}
 }

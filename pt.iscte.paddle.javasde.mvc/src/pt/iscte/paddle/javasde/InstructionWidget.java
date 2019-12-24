@@ -1,10 +1,12 @@
 package pt.iscte.paddle.javasde;
 
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 
 public class InstructionWidget extends EditorWidget {
-	private ExpressionWidget expressionWidget;
-	private Token keyword;
+	private final Token keyword;
+	private final ExpressionWidget expressionWidget;
 	
 	InstructionWidget(EditorWidget parent, Keyword keyword) {
 		this(parent, keyword, null);
@@ -16,14 +18,19 @@ public class InstructionWidget extends EditorWidget {
 		this.keyword = new Token(this, keyword);
 		if(expression != null)
 			expressionWidget = new ExpressionWidget(this, expression);
-		new Token(this, ";");
+		else
+			expressionWidget = null;
+		new FixedToken(this, ";");
 	}
 	
 	@Override
 	public boolean setFocus() {
+		return keyword.setFocus();
+	}
+	
+	void focusExpression() {
 		if(expressionWidget != null)
 			expressionWidget.setFocus();
-		return expressionWidget != null;
 	}
 	
 	boolean is(String keyword) {
