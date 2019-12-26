@@ -13,7 +13,7 @@ public class ArrayElementExpression extends EditorWidget implements Expression {
 	}
 	
 	public ArrayElementExpression(EditorWidget parent, String varId, Function<EditorWidget, Expression> f) {
-		super(parent, parent.mode);
+		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		id = new Id(this, varId, false);
 		new FixedToken(this, "[");
@@ -25,11 +25,11 @@ public class ArrayElementExpression extends EditorWidget implements Expression {
 	void addExpressionInserts() {
 		insert.addAction(new InsertWidget.Action("binary expression", '0') {
 			
-			boolean isEnabled(char c, String text, int index, int caret, int selection) {
+			public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 				return Constants.matchBinaryOperator(c) != null;
 			}
 
-			void run(char c, String text, int index, int caret, int selection) {
+			public void run(char c, String text, int index, int caret, int selection) {
 				String op = Constants.matchBinaryOperator(c);
 				EditorWidget parent = (EditorWidget) ArrayElementExpression.this.getParent();
 				BinaryExpressionWidget b = new BinaryExpressionWidget(parent, 
@@ -44,11 +44,11 @@ public class ArrayElementExpression extends EditorWidget implements Expression {
 	void addFieldInserts() {
 		insert.addAction(new InsertWidget.Action("field access", '0') {
 			
-			boolean isEnabled(char c, String text, int index, int caret, int selection) {
+			public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 				return c == '.';
 			}
 
-			void run(char c, String text, int index, int caret, int selection) {
+			public void run(char c, String text, int index, int caret, int selection) {
 //				EditorWidget parent = (EditorWidget) ArrayElementExpression.this.getParent();
 //				FieldExpression w = new FieldExpression(parent, varId)
 //				String op = Constants.matchBinaryOperator(c);

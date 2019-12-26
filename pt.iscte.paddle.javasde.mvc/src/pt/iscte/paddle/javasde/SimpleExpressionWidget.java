@@ -40,6 +40,7 @@ public class SimpleExpressionWidget extends Canvas implements TextWidget, Expres
 			public void focusLost(FocusEvent e) {
 				Constants.setFont(text, false);
 				text.setBackground(Constants.COLOR_BACKGROUND);
+				text.setForeground(Constants.FONT_COLOR);
 				text.setToolTipText("");
 				try {
 					Integer.parseInt(text.getText());
@@ -65,6 +66,8 @@ public class SimpleExpressionWidget extends Canvas implements TextWidget, Expres
 						}
 					}
 				}
+				if(literalType != null)
+					text.setForeground(Constants.COLOR_LITERAL);
 				text.requestLayout();
 			}
 		});

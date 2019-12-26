@@ -13,6 +13,7 @@ import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.cfg.IBranchNode;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
+import pt.iscte.paddle.model.cfg.INode;
 import pt.iscte.paddle.model.cfg.IStatementNode;
 
 public class DemoControlFlowGraph {
@@ -31,6 +32,9 @@ public class DemoControlFlowGraph {
 		IVariableAssignment mAss_ = ifstat.addAssignment(m, array.element(i));
 		IVariableAssignment iInc = loop.addIncrement(i);
 		IReturn ret = body.addReturn(m);
+		
+		// dead code
+		IReturn ret_dead = body.addReturn(i);
 		
 		max.setId("max");
 		array.setId("array");
@@ -66,8 +70,32 @@ public class DemoControlFlowGraph {
 
 		s_ret.setNext(cfg.getExitNode());
 		
-		cfg.getNodes().forEach(n -> System.out.println(n));
+		// dead code
+		IStatementNode s_ret_dead = cfg.newStatement(ret_dead);
+		s_ret_dead.setNext(cfg.getExitNode());
+		
+//		cfg.getNodes().forEach(n -> System.out.println(n));
 	   
+		for(INode n : cfg.reachability())
+			System.out.println(n.isEntry() || n.isExit() ? n : n.getElement());
+		
+		System.out.println("dead: " + cfg.deadNodes());
 	
+		
+		
+		
+		
+		IControlFlowGraph cfg2 = IControlFlowGraph.create(max);
+		
+		IStatementNode s_mAss2 = cfg.newStatement(mAss);
+		cfg2.getEntryNode().setNext(s_mAss2);
+
+		IStatementNode s_iAss2 = cfg.newStatement(iAss);
+		s_mAss2.setNext(s_iAss2);
+
+		IBranchNode b_loop2 = cfg.newBranch(loop.getGuard());
+		s_iAss2.setNext(b_loop);
+		
+		System.out.println(cfg.isEquivalentTo(cfg2));
 	}
 }

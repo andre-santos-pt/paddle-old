@@ -26,15 +26,15 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 	private ParamList params;
 
 	MethodWidget(SequenceWidget parent, IProcedure procedure) {
-		super(parent, parent.getMode());
+		super(parent);
 		this.procedure = procedure;
 
 		setLayout(Constants.ROW_LAYOUT_V_ZERO);
 
-		EditorWidget header = new EditorWidget(this, mode);
+		EditorWidget header = new EditorWidget(this);
 		header.setLayout(Constants.ROW_LAYOUT_H);
 
-		if (!mode.staticClass)
+		if (!UiMode.isStatic())
 			new Token(header, Keyword.STATIC);
 
 		retType = new Id(header, procedure.getReturnType().toString(), true, Constants.PRIMITIVE_TYPES_VOID_SUPPLIER);
@@ -61,74 +61,60 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 		private InsertWidget insertWidget;
 
 		public ParamList(Composite parent) {
-			super(parent, MethodWidget.this.mode);
+			super(parent);
 			setLayout(Constants.ROW_LAYOUT_H_ZERO);
-//			insertWidget = new InsertWidget(this, true);
-//			insertWidget.addAction(new InsertWidget.Action("parameter",'0') {
-//				@Override
-//				boolean isEnabled(char c, String text, int index, int caret, int selection) {
-//					return BlockAction.isType(text) && c == ' ';
-//				}
-//				
-//				@Override
-//				void run(char c, String text, int index, int caret, int selection) {
-//					addParam(insertWidget.text, text, false);
-//				}
-//			});
 			createInsert2();
 		}
 		
 		private void createInsert2() {
 			insertWidget = new InsertWidget(this, true);
 			insertWidget.addAction(new InsertWidget.Action("parameter",'0') {
-				@Override
-				boolean isEnabled(char c, String text, int index, int caret, int selection) {
+				public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 					return BlockAction.isType(text) && c == ' ';
 				}
 				
-				@Override
-				void run(char c, String text, int index, int caret, int selection) {
+				public void run(char c, String text, int index, int caret, int selection) {
 					addParam(insertWidget.text, text, false, false);
 				}
 			});
 			insertWidget.addFocusListener(Constants.FOCUS_SELECTALL);
 		}
 
-		private InsertWidget createInsert() {
-			InsertWidget w = new InsertWidget(this, true);
-			w.setLayoutData(new RowData(10, SWT.DEFAULT));
-			
-			Menu menu = w.createMenu();
-
-			MenuItem delete = new MenuItem(menu, SWT.NONE);
-			delete.setText("delete");
-			delete.setAccelerator(Constants.DEL_KEY);
-			delete.setEnabled(false);
-			SelectionListener deleteListener = new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					Control[] children = params.getChildren();
-					children[children.length-2].dispose();
-					delete.setEnabled(children.length > 2);
-					requestLayout();
-				}
-			};
-			delete.addSelectionListener(deleteListener);
-			delete.setData(deleteListener);
-
-			new MenuItem(menu, SWT.SEPARATOR);
-			MenuItem addParam = new MenuItem(menu, SWT.NONE);
-			addParam.setText("parameter");
-			addParam.setAccelerator('p');
-			SelectionListener paramListener = new SelectionAdapter() {
-				public void widgetSelected(SelectionEvent e) {
-					delete.setEnabled(true);
-					addParam(w.text, Keyword.INT.toString(), true, false);
-				}
-			};
-			addParam.addSelectionListener(paramListener);
-			addParam.setData(paramListener);
-			return w;
-		}
+//		private InsertWidget createInsert() {
+//			InsertWidget w = new InsertWidget(this, true);
+//			w.setLayoutData(new RowData(10, SWT.DEFAULT));
+//			
+//			Menu menu = w.createMenu();
+//
+//			MenuItem delete = new MenuItem(menu, SWT.NONE);
+//			delete.setText("delete");
+//			delete.setAccelerator(Constants.DEL_KEY);
+//			delete.setEnabled(false);
+//			SelectionListener deleteListener = new SelectionAdapter() {
+//				public void widgetSelected(SelectionEvent e) {
+//					Control[] children = params.getChildren();
+//					children[children.length-2].dispose();
+//					delete.setEnabled(children.length > 2);
+//					requestLayout();
+//				}
+//			};
+//			delete.addSelectionListener(deleteListener);
+//			delete.setData(deleteListener);
+//
+//			new MenuItem(menu, SWT.SEPARATOR);
+//			MenuItem addParam = new MenuItem(menu, SWT.NONE);
+//			addParam.setText("parameter");
+//			addParam.setAccelerator('p');
+//			SelectionListener paramListener = new SelectionAdapter() {
+//				public void widgetSelected(SelectionEvent e) {
+//					delete.setEnabled(true);
+//					addParam(w.text, Keyword.INT.toString(), true, false);
+//				}
+//			};
+//			addParam.addSelectionListener(paramListener);
+//			addParam.setData(paramListener);
+//			return w;
+//		}
 
 		private class Param extends EditorWidget {
 			private final Id type;
@@ -136,7 +122,7 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 			private FixedToken comma;
 
 			public Param(String type, boolean comma) {
-				super(ParamList.this, ParamList.this.mode);
+				super(ParamList.this);
 				setLayout(Constants.ROW_LAYOUT_H_DOT);
 				if(comma)
 					this.comma = new FixedToken(this, ",");
@@ -151,9 +137,6 @@ public class MethodWidget extends EditorWidget implements StatementContainer {
 							dispose();
 							Control[] children = ParamList.this.getChildren();
 							if(children.length == 0) {
-//								insertWidget = new InsertWidget(ParamList.this, true);
-//								insertWidget.requestLayout();
-//								insertWidget.setFocus();
 								createInsert2();
 							}
 							else {

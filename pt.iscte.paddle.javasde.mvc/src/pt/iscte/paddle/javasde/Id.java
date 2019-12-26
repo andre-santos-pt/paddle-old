@@ -25,7 +25,8 @@ public class Id extends EditorWidget implements TextWidget {
 	private boolean menuMode = false;
 	private final Text text;
 	private Menu popupMenu;
-
+	private boolean type;
+	
 	private SelectionListener[] typeListeners;
 
 	private Supplier<List<String>> idProvider;
@@ -39,6 +40,7 @@ public class Id extends EditorWidget implements TextWidget {
 	Id(EditorWidget parent, String id, boolean type, Supplier<List<String>> idProvider) {
 		super(parent);
 		this.idProvider = idProvider;
+		this.type = type;
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		initialId = id;
 		text = new Text(this, SWT.NONE);
@@ -47,50 +49,46 @@ public class Id extends EditorWidget implements TextWidget {
 		Constants.setFont(text, true);
 
 		text.addVerifyListener(e -> e.doit = menuMode ||
-				!(e.keyCode == 'z' && (( e.stateMask & SWT.MODIFIER_MASK ) == SWT.CTRL || ( e.stateMask & SWT.MODIFIER_MASK ) == SWT.COMMAND)) && // TODO UNDO to function
-				provider.isEmpty() && (isValidCharacter(e.character) || e.character == SWT.BS || e.character == SWT.DEL || e.character == SWT.CR || 
-				type && !Keyword.VOID.match(id) && e.character == '['));
+				//!(e.keyCode == 'z' && (( e.stateMask & SWT.MODIFIER_MASK ) == SWT.CTRL || ( e.stateMask & SWT.MODIFIER_MASK ) == SWT.COMMAND)) && // TODO UNDO to function
+				isValidCharacter(e.character) || e.character == Constants.DEL_KEY || e.character == SWT.CR);
+//				type && !Keyword.VOID.match(id) && e.character == '[');
 
 		text.addFocusListener(new FocusListener() {
-			public void focusLost(FocusEvent e) {
-				if(text.getText().isBlank()) {
-					menuMode = true;
-					text.setText(initialId);
-					menuMode = false;
-					text.requestLayout();
-				}
-				Constants.setFont(text, false); 
-				editAction.run();
-			}
 			public void focusGained(FocusEvent e) {
+				text.setBackground(Constants.COLOR_BACKGROUND);
 				text.selectAll();
 			}
+			
+			public void focusLost(FocusEvent e) {
+				if(text.getText().isBlank() || !type && Keyword.is(text.getText())) {
+//					menuMode = true;
+//					text.setText(initialId);
+//					menuMode = false;
+//					text.requestLayout();
+					text.setBackground(Constants.COLOR_ERROR);
+				}
+				else
+					text.setBackground(Constants.COLOR_BACKGROUND);
+				
+				if(Keyword.VOID.match(text))
+					removeAllDimensions();
+				
+				Constants.setFont(text, false); 
+				editAction.run();
+			}			
 		});
 
-		text.addModifyListener(e -> { 
-			Constants.setFont(text, false);
-			text.requestLayout();
-		});
+		text.addModifyListener(Constants.MODIFY_PACK);
+		text.addKeyListener(addDimListener);
 
 		if(!provider.isEmpty()) {
 			addMenu(provider);
-			addKeyListeners();
+//			addKeyListeners();
 		}
 		else
 			text.setMenu(new Menu(text)); // prevent system menu
 
-//		text.addTraverseListener(new TraverseListener() {
-//			public void keyTraversed(TraverseEvent e) {
-//				if(e.detail == SWT.TRAVERSE_TAB_NEXT || e.detail == SWT.TRAVERSE_TAB_PREVIOUS)
-//					e.doit = true;
-//			}
-//		});
-		
 		Constants.addArrowKeys(text, this);
-
-		text.addKeyListener(addDimListener);
-
-		
 	}
 
 	@Override
@@ -100,7 +98,7 @@ public class Id extends EditorWidget implements TextWidget {
 
 	private KeyListener addDimListener = new KeyAdapter() {
 		public void keyPressed(KeyEvent e) {
-			if(e.character == '[')
+			if(e.character == '[' && type && !Keyword.VOID.match(text))
 				addDimension();
 		}
 	};
@@ -124,6 +122,15 @@ public class Id extends EditorWidget implements TextWidget {
 		requestLayout();
 	}
 
+	private void removeAllDimensions() {
+		Control[] children = getChildren();
+		for(int i = 1; i < children.length; i++)
+			children[i].dispose();
+		
+		requestLayout();
+		children[0].setFocus();
+	}
+	
 	private void removeDimension(Control control) {
 		Control[] children = getChildren();
 		for(int i = 1; i < children.length; i++)
@@ -176,6 +183,7 @@ public class Id extends EditorWidget implements TextWidget {
 						menuMode = true;
 						text.setText(i); 
 						menuMode = false;
+						e.doit = false;
 						break;
 					}
 				}

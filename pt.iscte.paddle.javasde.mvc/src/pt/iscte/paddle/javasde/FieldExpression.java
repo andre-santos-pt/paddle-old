@@ -7,7 +7,7 @@ public class FieldExpression extends EditorWidget {
 	private ExpressionWidget expression;
 
 	public FieldExpression(EditorWidget parent, String varId) {
-		super(parent, parent.mode);
+		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H_DOT);
 		id = new Id(this, varId, false);
 		new FixedToken(this, ".");

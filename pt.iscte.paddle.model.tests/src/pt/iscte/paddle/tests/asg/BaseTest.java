@@ -37,6 +37,8 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.cfg.IControlFlowGraph;
+import pt.iscte.paddle.model.cfg.INode;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -115,6 +117,11 @@ public abstract class BaseTest {
 			System.err.println(p);
 		}
 		assertTrue("Semantic errors", problems.isEmpty());
+		
+		IControlFlowGraph cfg = cfg();
+		if(cfg != null) {
+			
+		}
 	}
 
 	public IModule getModule() {
@@ -122,6 +129,10 @@ public abstract class BaseTest {
 	}
 	
 	protected IProcedure main() {
+		return null;
+	}
+	
+	protected IControlFlowGraph cfg() {
 		return null;
 	}
 

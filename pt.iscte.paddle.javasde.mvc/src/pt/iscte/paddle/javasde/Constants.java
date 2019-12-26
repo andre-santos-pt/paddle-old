@@ -35,12 +35,13 @@ public interface Constants {
 	String FONT_FACE = "Monaco";
 	Color COLOR_KW = Display.getDefault().getSystemColor(SWT.COLOR_DARK_MAGENTA);
 	Color COLOR_PH = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
-	Color COLOR_BACK = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
 	Color COLOR_ERROR = new Color(Display.getDefault(), 255, 200, 200);
 	Color COLOR_BACKGROUND = Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
-	Color COLOR_ADDLABEL = new Color(Display.getDefault(), 245, 245, 245);
+	Color COLOR_INSERT = new Color(Display.getDefault(), 245, 245, 245);
 	Color COLOR_HIGHLIGHT = new Color(Display.getDefault(), 0, 200, 200);
 	Color COLOR_COMMENT = Display.getDefault().getSystemColor(SWT.COLOR_DARK_GREEN);
+	Color COLOR_LITERAL = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
+
 
 	int ARRAY_DIMS = 3;
 	List<String> BINARY_OPERATORS = Arrays.asList("+", "-", "*", "/ ", "%", "==", "!=", "<", "<=", ">", ">=", "&&", "||", "^");
@@ -89,7 +90,11 @@ public interface Constants {
 	}
 
 	static boolean isLetter(char c) {
-		return c >= 'a' && c <= 'z';
+		return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
+	}
+	
+	static boolean isNumber(char c) {
+		return c >= '0' && c <= '9';
 	}
 
 	//	static boolean isKeyword(String token) {

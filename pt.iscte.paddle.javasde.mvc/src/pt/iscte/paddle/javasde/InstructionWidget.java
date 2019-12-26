@@ -1,16 +1,17 @@
 package pt.iscte.paddle.javasde;
 
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.widgets.Composite;
 
 public class InstructionWidget extends EditorWidget {
 	private final Token keyword;
 	private final ExpressionWidget expressionWidget;
 	
-	InstructionWidget(EditorWidget parent, Keyword keyword) {
+	InstructionWidget(Composite parent, Keyword keyword) {
 		this(parent, keyword, null);
 	}
 	
-	InstructionWidget(EditorWidget parent, Keyword keyword, String expression) {
+	InstructionWidget(Composite parent, Keyword keyword, String expression) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		this.keyword = new Token(this, keyword);

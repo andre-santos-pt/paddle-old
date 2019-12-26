@@ -5,6 +5,9 @@ package pt.iscte.paddle.javasde;
 public class UiMode {
 	// font size
 	// tab space
-	boolean staticClass = false;
-	
+	private static boolean staticClass = false;
+
+	static boolean isStatic() {
+		return staticClass;
+	}
 }

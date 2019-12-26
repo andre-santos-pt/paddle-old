@@ -4,7 +4,7 @@ public class ArrayAllocationExpression extends EditorWidget {
 	private EditorWidget id;
 
 	public ArrayAllocationExpression(EditorWidget parent) {
-		super(parent, parent.mode);
+		super(parent);
 		new Token(this, Keyword.NEW);
 		id = new Id(this, "Type", true, Constants.PRIMITIVE_TYPES_SUPPLIER);
 		new FixedToken(this, "[");

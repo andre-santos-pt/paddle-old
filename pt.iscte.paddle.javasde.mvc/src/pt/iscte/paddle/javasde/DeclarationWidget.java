@@ -1,5 +1,7 @@
 package pt.iscte.paddle.javasde;
 
+import org.eclipse.swt.widgets.Composite;
+
 import pt.iscte.paddle.model.IArrayType;
 import pt.iscte.paddle.model.IType;
 
@@ -8,11 +10,11 @@ public class DeclarationWidget extends EditorWidget {
 	private final Id id;
 	private final ExpressionWidget expression;
 
-	DeclarationWidget(EditorWidget parent) {
+	DeclarationWidget(Composite parent) {
 		this(parent, IType.UNBOUND, "variable", "expression");
 	}
 	
-	DeclarationWidget(EditorWidget parent, IType type, String id, String expression) {
+	DeclarationWidget(Composite parent, IType type, String id, String expression) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H);
 		String typeId = type.getId();

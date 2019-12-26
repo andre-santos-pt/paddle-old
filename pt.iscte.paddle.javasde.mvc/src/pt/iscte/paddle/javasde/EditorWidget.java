@@ -13,24 +13,18 @@ import org.eclipse.swt.widgets.Menu;
 
 public class EditorWidget extends Composite {
 
-	final UiMode mode;
 
-	private EditorWidget root;
+	private ClassWidget root;
 
-	public EditorWidget(EditorWidget parent) {
-		this(parent, parent.mode);
-	}
-
-	public EditorWidget(Composite parent, UiMode mode) {
+	public EditorWidget(Composite parent) {
 		super(parent, SWT.NONE);
-		this.mode = mode;
 		setLayout(Constants.ROW_LAYOUT_H_ZERO);
 		setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 
-		EditorWidget e = this;
+		Composite e = this;
 		while(!(e instanceof ClassWidget))
-			e = (EditorWidget)e.getParent();
-		root = (EditorWidget) e;
+			e = e.getParent();
+		root = (ClassWidget) e;
 	}
 	
 	// fragile
@@ -42,26 +36,6 @@ public class EditorWidget extends Composite {
 		return (MethodWidget) e;
 	}
 	
-	
-//	InsertWidget addInsert(EditorWidget parent, boolean editable) {
-//		return root.addInsert(parent, editable);
-//	}
-//
-//	Id createId(EditorWidget parent, String id) {
-//		return root.createId(parent, id);
-//	}
-//
-//	Id createId(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
-//		return root.createId(parent, id, idProvider);
-//	}
-//	
-//	Id createType(EditorWidget parent, String id, Supplier<List<String>> idProvider) {
-//		return root.createType(parent, id, idProvider);
-//	}
-
-	public UiMode getMode() {
-		return mode;
-	}
 
 	void popup(Menu menu, Control control) {
 		menu.setLocation(control.toDisplay(0, 40));
@@ -84,7 +58,7 @@ public class EditorWidget extends Composite {
 		});
 		addFocusListener(new FocusListener() {
 			public void focusLost(FocusEvent e) {
-				sibling.setBackground(Constants.COLOR_ADDLABEL);
+				sibling.setBackground(Constants.COLOR_INSERT);
 			}
 			public void focusGained(FocusEvent e) {
 				sibling.setBackground(Constants.COLOR_HIGHLIGHT);

@@ -9,6 +9,7 @@ public class StatementNode extends Node implements IStatementNode {
 	private final IStatement statement;
 	
 	StatementNode(IStatement statement) {
+		assert statement != null;
 		this.statement = statement;
 	}
 	

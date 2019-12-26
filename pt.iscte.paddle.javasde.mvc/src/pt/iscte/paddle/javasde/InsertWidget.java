@@ -12,6 +12,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -23,11 +24,11 @@ public class InsertWidget implements TextWidget {
 	final Text text;
 	private boolean edit;
 
-	public InsertWidget(EditorWidget parent, boolean editable) {
+	public InsertWidget(Composite parent, boolean editable) {
 		text = createAddLabel(parent, editable);
 	}
 
-	private Text createAddLabel(EditorWidget parent, boolean editable) {
+	private Text createAddLabel(Composite parent, boolean editable) {
 		Text text = new Text(parent, SWT.SINGLE);
 		text.setText(" ");
 		text.setForeground(Constants.FONT_COLOR);
@@ -37,7 +38,9 @@ public class InsertWidget implements TextWidget {
 			public void verifyText(VerifyEvent e) {
 				e.doit = editable && 
 						(
-								edit || Constants.isLetter(e.character) || e.character == '=' || 
+								edit || Constants.isLetter(e.character) || Constants.isNumber(e.character) || 
+								e.character == '.' && text.getText().matches("[0-9]*") ||
+								e.character == '=' || 
 								e.character == Constants.DEL_KEY || e.character == SWT.CR ||
 								e.character == '/' || (e.character == ' ' && text.getText().startsWith("//"))
 								);
@@ -110,17 +113,17 @@ public class InsertWidget implements TextWidget {
 		return text;
 	}
 
-	static abstract class Action {
+	public static abstract class Action {
 		final CharSequence text;
 		final char accelerator;
-		Action(CharSequence text, char accelerator) {
+		public Action(CharSequence text, char accelerator) {
 			this.text = text;
 			this.accelerator = accelerator;
 		}
-		boolean isEnabled(char c, String text, int index, int caret, int selection) {
+		public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 			return true;
 		}
-		abstract void run(char c, String text, int index, int caret, int selection);
+		public abstract void run(char c, String text, int index, int caret, int selection);
 	}
 	
 	private List<Action> actions = new ArrayList<>();

@@ -203,6 +203,14 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		executeCommand(proc);
 		return proc.getElement();
 	}
+	
+	@Override
+	public IProcedure getProcedure(String id) {
+		for(IProcedure p : procedures)
+			if(id.equals(p.getId()))
+				return p;
+		return null;
+	}
 
 	@Override
 	public IProcedure resolveProcedure(IProcedureDeclaration procedureDeclaration) {

@@ -11,6 +11,9 @@ import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.cfg.IBranchNode;
+import pt.iscte.paddle.model.cfg.IControlFlowGraph;
+import pt.iscte.paddle.model.cfg.IStatementNode;
 import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestMaxArray extends BaseTest {
@@ -47,4 +50,36 @@ public class TestMaxArray extends BaseTest {
 		equal(4, data.getReturnValue());
 	}
 	
+	@Override
+	protected IControlFlowGraph cfg() {
+		IControlFlowGraph cfg = IControlFlowGraph.create(max);
+		
+		IStatementNode s_mAss = cfg.newStatement(mAss);
+		cfg.getEntryNode().setNext(s_mAss);
+
+		IStatementNode s_iAss = cfg.newStatement(iAss);
+		s_mAss.setNext(s_iAss);
+
+		IBranchNode b_loop = cfg.newBranch(loop.getGuard());
+		s_iAss.setNext(b_loop);
+		
+		IBranchNode b_if = cfg.newBranch(ifstat.getGuard());
+		b_loop.setBranch(b_if);
+		
+		IStatementNode s_mAss_ = cfg.newStatement(mAss_);
+		b_if.setBranch(s_mAss_);
+		
+		IStatementNode s_iInc = cfg.newStatement(iInc);
+		b_if.setNext(s_iInc);
+		s_mAss_.setNext(s_iInc);
+		
+		s_iInc.setNext(b_loop);
+		
+		IStatementNode s_ret = cfg.newStatement(ret);
+		b_loop.setNext(s_ret);
+
+		s_ret.setNext(cfg.getExitNode());
+		
+		return cfg;
+	}
 }

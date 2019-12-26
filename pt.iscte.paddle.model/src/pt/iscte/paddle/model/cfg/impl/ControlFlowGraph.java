@@ -25,7 +25,7 @@ public class ControlFlowGraph implements IControlFlowGraph {
 		exit = new Node();
 		nodes = new LinkedHashSet<>();
 		nodes.add(entry);
-//		nodes.add(exit);
+		nodes.add(exit);
 	}
 
 	@Override

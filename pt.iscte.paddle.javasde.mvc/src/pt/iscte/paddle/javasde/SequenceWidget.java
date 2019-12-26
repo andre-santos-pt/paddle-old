@@ -53,7 +53,7 @@ import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
 
-public class SequenceWidget extends EditorWidget {
+public class SequenceWidget extends Composite {
 
 	class MenuCommand {
 		final String text;
@@ -130,13 +130,13 @@ public class SequenceWidget extends EditorWidget {
 	private MenuItem deleteItem;
 
 
-	public SequenceWidget(EditorWidget parent, int margin) {
-		super(parent, parent.mode);
+	public SequenceWidget(Composite parent, int margin) {
+		super(parent, SWT.NONE);
 		GridLayout layout = new GridLayout(1, true);
 		layout.marginLeft = margin;
 		layout.verticalSpacing = 4;
 		layout.horizontalSpacing = 2;
-
+		setBackground(Constants.COLOR_BACKGROUND);
 		setLayout(layout);
 
 		boolean root = parent instanceof ClassWidget;
@@ -164,7 +164,12 @@ public class SequenceWidget extends EditorWidget {
 		});
 	}
 
-	void addAction(InsertWidget.Action a) {
+	public <T extends Control> T addWidget(Function<Composite, T> f) {
+		T child = f.apply(this);
+		child.moveAbove(insertWidget.text);
+		return child;
+	}
+	public void addAction(InsertWidget.Action a) {
 		insertWidget.addAction(a);
 	}
 	
@@ -279,7 +284,7 @@ public class SequenceWidget extends EditorWidget {
 					addElement(declarationWidget, index);
 					if(v.getId() == null)
 						declarationWidget.focusId();
-					else
+					else 
 						declarationWidget.setFocus();
 				} 
 
@@ -343,7 +348,9 @@ public class SequenceWidget extends EditorWidget {
 
 				else if (element instanceof IProcedureCall) {
 					IProcedureCall call = (IProcedureCall) element;
-					addElement(new CallWidget(SequenceWidget.this, call.getProcedure().getId(), true), index);
+					CallWidget w = new CallWidget(SequenceWidget.this, call.getProcedure().getId(), true);
+					addElement(w, index);
+					w.focusArgument();
 				} 
 
 				else if (element instanceof IReturn) {
@@ -510,7 +517,9 @@ public class SequenceWidget extends EditorWidget {
 	}
 
 
-
+	public void toCode(StringBuffer buffer) {
+		buffer.append("#" + this.getClass().getSimpleName() + "#");
+	}
 	
 	public void toCode(StringBuffer buffer, int level) {
 		for (Control control : getChildren())

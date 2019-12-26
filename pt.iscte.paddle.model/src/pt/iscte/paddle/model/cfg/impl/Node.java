@@ -11,11 +11,6 @@ public class Node implements INode {
 	private INode next;
 	private Set<INode> incomming = new HashSet<>();
 	
-//	public Node(INode from) {
-//		if(from != null)
-//			((Node) from).next = this;
-//	}
-	
 	@Override
 	public INode getNext() {
 		return next;
@@ -41,4 +36,29 @@ public class Node implements INode {
 	public String toString() {
 		return isEntry() ? "ENTRY -> " + next.getElement() : isExit() ? "EXIT" : super.toString();
 	}
+	
+	public boolean isEntry() {
+		return getElement() == null && getIncomming().isEmpty();
+	}
+	
+	public boolean isExit() {
+		return getElement() == null && getNext() == null;
+	}
+	
+	@Override
+	public boolean isEquivalentTo(INode node) {
+		return 
+				getClass().equals(node.getClass()) &&
+				(
+				getElement() == null && node.getElement() == null ||
+				getElement() != null && getElement().equals(node.getElement())
+				)
+				&&
+				(
+				getNext() == null && node.getNext() == null ||
+				getNext() != null && getNext().getElement() == null && node.getNext().getElement() == null ||
+				getNext() != null && getNext().getElement() != null && getNext().getElement().equals(node.getNext().getElement())
+				);
+	}
+	
 }

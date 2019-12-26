@@ -13,11 +13,16 @@ public interface INode {
 	
 	IProgramElement getElement();
 	
-	default boolean isEntry() {
-		return getElement() == null && getIncomming().isEmpty();
-	}
+	boolean isEntry();
+	boolean isExit();
 	
-	default boolean isExit() {
-		return getElement() == null && getNext() == null;
-	}
+	boolean isEquivalentTo(INode node);
+	
+//	default boolean isEntry() {
+//		return getElement() == null && getIncomming().isEmpty();
+//	}
+//	
+//	default boolean isExit() {
+//		return getElement() == null && getNext() == null;
+//	}
 }

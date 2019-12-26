@@ -3,6 +3,7 @@ package pt.iscte.paddle.javasde;
 
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.widgets.Composite;
 
 import pt.iscte.paddle.model.IConstant;
 import pt.iscte.paddle.model.ILiteral;
@@ -14,10 +15,10 @@ public class ConstantWidget extends EditorWidget {
 	private Id id;
 	private SimpleExpressionWidget expression;
 	
-	public ConstantWidget(EditorWidget parent, IConstant constant) {
+	public ConstantWidget(Composite parent, IConstant constant) {
 		super(parent);
 		this.constant = constant;
-		if(!getMode().staticClass)
+		if(!UiMode.isStatic())
 			new FixedToken(this, Keyword.STATIC);
 		
 		new FixedToken(this, Keyword.FINAL);

@@ -12,6 +12,7 @@ import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IBlockElement;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IOperator;
+import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariable;
@@ -121,11 +122,11 @@ abstract class BlockAction extends InsertWidget.Action {
 	
 	static BlockAction whileLoop(IBlock block) {
 		return new BlockAction(Keyword.WHILE, block) {
-			boolean isEnabled(char c, String text, int index, int caret, int selection) {
+			public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 				return Keyword.WHILE.match(text) && (c == '(' || c == SWT.SPACE) && atEnd(text, caret);
 			}
 
-			void run(char c, String text, int index, int caret, int selection) {
+			public void run(char c, String text, int index, int caret, int selection) {
 				block.addLoopAt(BOOLEAN.literal(true), index);
 			}
 		};
@@ -133,11 +134,11 @@ abstract class BlockAction extends InsertWidget.Action {
 	
 	static BlockAction forLoop(IBlock block) {
 		return new BlockAction(Keyword.FOR, block) {
-			boolean isEnabled(char c, String text, int index, int caret, int selection) {
+			public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 				return Keyword.FOR.match(text) && (c == '(' || c == SWT.SPACE) && atEnd(text, caret);
 			}
 
-			void run(char c, String text, int index, int caret, int selection) {
+			public void run(char c, String text, int index, int caret, int selection) {
 				IBlock forBlock = block.addBlockAt(index, Constants.FOR_FLAG);
 				IVariable progVar = forBlock.addVariable(INT, Constants.FOR_FLAG);
 				ILoop loop = forBlock.addLoop(BOOLEAN.literal(true), Constants.FOR_FLAG);
@@ -148,23 +149,26 @@ abstract class BlockAction extends InsertWidget.Action {
 	
 	static BlockAction call(IBlock block) {
 		return new BlockAction("call(...)", 'p', block) {
-			boolean isEnabled(char c, String text, int index, int caret, int selection) {
+			public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 				return !Keyword.is(text) && !text.isEmpty() && atEnd(text, caret) && c == '(';
 			}
 
-			void run(char c, String text, int index, int caret, int selection) {
-				block.addCallAt(null, index);
+			public void run(char c, String text, int index, int caret, int selection) {
+				IProcedure p = block.getOwnerProcedure().getModule().getProcedure(text);
+				if(p == null)
+					p = new IProcedure.UnboundProcedure(text);
+				block.addCallAt(p, index);
 			}
 		};
 	}
 	
 	static BlockAction returnStatement(IBlock block) {
 		return new BlockAction(Keyword.RETURN, block) {
-			boolean isEnabled(char c, String text, int index, int caret, int selection) {
+			public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 				return Keyword.RETURN.match(text) && (c == ';' || c == SWT.SPACE) && atEnd(text, caret);
 			}
 
-			void run(char c, String text, int index, int caret, int selection) {
+			public void run(char c, String text, int index, int caret, int selection) {
 				if(c == ';')
 					block.addReturn();
 				else
@@ -176,11 +180,11 @@ abstract class BlockAction extends InsertWidget.Action {
 	
 	static BlockAction breakStatement(IBlock block) {
 		return new BlockAction(Keyword.BREAK, block) {
-			boolean isEnabled(char c, String text, int index, int caret, int selection) {
+			public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 				return block.isInLoop() && Keyword.BREAK.match(text) && (c == ';' || c == SWT.SPACE) && atEnd(text, caret);
 			}
 
-			void run(char c, String text, int index, int caret, int selection) {
+			public void run(char c, String text, int index, int caret, int selection) {
 				block.addBreakAt(index);
 			}
 		};
@@ -188,23 +192,13 @@ abstract class BlockAction extends InsertWidget.Action {
 	
 	static BlockAction continueStatement(IBlock block) {
 		return new BlockAction(Keyword.CONTINUE, block) {
-			boolean isEnabled(char c, String text, int index, int caret, int selection) {
+			public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 				return block.isInLoop() && Keyword.CONTINUE.match(text) && (c == ';' || c == SWT.SPACE) && atEnd(text, caret);
 			}
 
-			void run(char c, String text, int index, int caret, int selection) {
+			public void run(char c, String text, int index, int caret, int selection) {
 				block.addBreakAt(index);
 			}
 		};
 	}
-	
-// TODO array type
-//	else if(e.character == '[' && isType(text.getText()))
-//		runAction(menu, 'v', e.widget, text.getText() + "[");
-
-	
-//	else if(e.character == '[' && text.getText().length() > 0)
-//		runAction(menu, 'a', e.widget, text.getText());
-
-	
 }

@@ -5,6 +5,7 @@ import java.util.function.Function;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 public class AssignmentWidget extends EditorWidget {
@@ -12,7 +13,7 @@ public class AssignmentWidget extends EditorWidget {
 	private final ExpressionWidget id;
 	private final ExpressionWidget expression;
 
-	AssignmentWidget(EditorWidget parent, String id, String expression, boolean statement, boolean array) {
+	AssignmentWidget(Composite parent, String id, String expression, boolean statement, boolean array) {
 		super(parent);
 		setLayout(Constants.ROW_LAYOUT_H);
 		Function<EditorWidget, Expression> f = 
@@ -23,7 +24,7 @@ public class AssignmentWidget extends EditorWidget {
 		if(statement)
 			new FixedToken(this, ";");
 		
-//		this.id.addKeyListener(delListener);
+		this.id.addKeyListener(delListener);
 //		this.expression.addKeyListener(delListener);
 		
 	}

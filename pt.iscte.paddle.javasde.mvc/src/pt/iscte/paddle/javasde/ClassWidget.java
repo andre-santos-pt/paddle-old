@@ -23,28 +23,28 @@ public class ClassWidget extends EditorWidget {
 	private SequenceWidget body;
 
 	public ClassWidget(Composite parent, IModule module, UiMode mode) {
-		super(parent, mode);
+		super(parent);
 		this.module = module;
 		GridLayout layout = new GridLayout(1, true);
 		layout.verticalSpacing = 10;
 		setLayout(layout);
 		
-		if (!mode.staticClass) {
-			EditorWidget header = new EditorWidget(this, mode);
+		if (!UiMode.isStatic()) {
+			EditorWidget header = new EditorWidget(this);
 			header.setLayout(Constants.ROW_LAYOUT_H_ZERO);
 			new Token(header, Keyword.CLASS);
 			id = new Id(header, module.getId(), false);
 			new FixedToken(header, "{");
 		}
 
-		body = new SequenceWidget(this, mode.staticClass ? 0 : Constants.TAB);
+		body = new SequenceWidget(this, UiMode.isStatic() ? 0 : Constants.TAB);
 		body.addChildCommand("constant", 'c', (i, p) -> module.addConstant(IType.INT, ILiteral.matchValue("1")));
 		body.addChildCommand("procedure", 'p', (i, p) -> module.addProcedure(IType.VOID));
 
 		module.getConstants().forEach(c -> body.addElement(new ConstantWidget(body, c)));
 		module.getProcedures().forEach(p -> body.addElement(new MethodWidget(body, p)));
 
-		if (!mode.staticClass)
+		if (!UiMode.isStatic())
 			new FixedToken(this, "}");
 
 		module.addListener(new IModule.IListener() {
@@ -70,6 +70,10 @@ public class ClassWidget extends EditorWidget {
 		addUndoFilter();
 	}
 
+	public boolean setFocus() {
+		return id.setFocus();
+	}
+	
 	private void addUndoFilter() {
 		Display.getDefault().addFilter(SWT.KeyDown, new Listener() {
 			public void handleEvent(Event event) {

@@ -48,6 +48,7 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	void loadBuildInProcedures(Class<?> staticClass);
 
 
+	IProcedure getProcedure(String id);
 	
 	IProcedure resolveProcedure(String id, IType ... paramTypes);
 	

@@ -53,5 +53,16 @@ public class BranchNode extends Node implements IBranchNode {
 
 		return s;
 	}
+	
+	@Override
+	public boolean isEquivalentTo(INode node) {
+		IBranchNode n = (IBranchNode) node; // checked by super
+		return super.isEquivalentTo(node) &&
+				(
+				getAlternative() == null && n.getAlternative() == null ||
+				getAlternative() != null && getAlternative().getElement() == null && n.getAlternative().getElement() == null ||
+				getAlternative() != null && getAlternative().getElement() != null && getAlternative().getElement().equals(n.getAlternative().getElement())
+				);
+	}
 
 }

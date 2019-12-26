@@ -12,6 +12,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import pt.iscte.paddle.javasde.ClassWidget;
+import pt.iscte.paddle.javasde.InsertWidget;
+import pt.iscte.paddle.javasde.Keyword;
+import pt.iscte.paddle.javasde.SequenceWidget;
 import pt.iscte.paddle.javasde.UiMode;
 import pt.iscte.paddle.model.IModule;
 
@@ -52,10 +55,21 @@ public class JavaSDEditor {
 
 		UiMode mode = new UiMode();
 		
-		IModule module = IModule.create();
-		module.setId("TestClass");
+		
 
-		ClassWidget c = instantiationExample(module, area, mode);
+		SequenceWidget seq = new SequenceWidget(area, 0);
+		seq.addAction(new InsertWidget.Action("class", 'c') {
+			public boolean isEnabled(char c, String text, int index, int caret, int selection) {
+				return c == SWT.SPACE && Keyword.CLASS.match(text);
+			}
+			
+			public void run(char c, String text, int index, int caret, int selection) {
+				IModule module = IModule.create();
+				module.setId("TestClass");
+				ClassWidget w = seq.addWidget(p -> new ClassWidget(p, module, mode));		
+				w.setFocus();
+			}
+		});
 		
 		shell.setSize(600, 800);
 		shell.open();
@@ -70,7 +84,7 @@ public class JavaSDEditor {
 		display.dispose();
 	}
 
-	private static ClassWidget instantiationExample(IModule module, Composite area, UiMode mode) {
+//	private static ClassWidget instantiationExample(IModule module, Composite area, UiMode mode) {
 //		IConstant pi = module.addConstant(DOUBLE, DOUBLE.literal(3.14));
 //		pi.setId("PI");
 //		
@@ -92,11 +106,11 @@ public class JavaSDEditor {
 //		m.setId("m");
 //		i.setId("i");
 		
-		ClassWidget c = new ClassWidget(area, module, mode);
+		
 		
 //		l.createCall("proc");
 //		WhileWidget l2 = l.createLoop("false");
 //		ReturnWidget createReturn = l2.createReturn("true");
-		return c;
-	}
+//		return c;
+//	}
 }
