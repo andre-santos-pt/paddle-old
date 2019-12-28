@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static pt.iscte.paddle.model.IType.INT;
 
-import java.io.File;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,12 +21,12 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import pt.iscte.paddle.codequality.cfg.CFGBuilder;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.interpreter.IMachine;
 import pt.iscte.paddle.interpreter.IProgramState;
 import pt.iscte.paddle.interpreter.IValue;
-import pt.iscte.paddle.interpreter.IProgramState.IListener;
 import pt.iscte.paddle.javali.translator.Model2Java;
 import pt.iscte.paddle.model.IConstant;
 import pt.iscte.paddle.model.ILiteral;
@@ -38,7 +37,6 @@ import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
-import pt.iscte.paddle.model.cfg.INode;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -120,7 +118,10 @@ public abstract class BaseTest {
 		
 		IControlFlowGraph cfg = cfg();
 		if(cfg != null) {
-			
+			CFGBuilder cfgBuilder = new CFGBuilder(main);
+			cfgBuilder.display();
+			IControlFlowGraph cfg2 = cfgBuilder.getCFG();
+			assertTrue("CFG does not match", cfg.isEquivalentTo(cfg2));
 		}
 	}
 

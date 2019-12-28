@@ -22,7 +22,7 @@ public class Node implements INode {
 	}
 	
 	public void setNext(INode next) {
-		assert this.next == null;
+//		assert this.next == null;
 		this.next = next;
 		((Node) next).incomming.add(this);
 	}

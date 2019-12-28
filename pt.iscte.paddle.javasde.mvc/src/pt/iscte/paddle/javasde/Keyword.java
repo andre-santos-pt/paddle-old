@@ -1,12 +1,20 @@
 package pt.iscte.paddle.javasde;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.swt.widgets.Text;
 
 public enum Keyword implements CharSequence {
 
 	CLASS,
+	
 	STATIC,
 	FINAL,
+	PUBLIC,
+	PRIVATE,
+	PROTECTED,
+	ABSTRACT,
 	
 	BOOLEAN,
 	BYTE,
@@ -16,6 +24,7 @@ public enum Keyword implements CharSequence {
 	FLOAT,
 	DOUBLE,
 	CHAR,
+	
 	VOID,
 	
 	TRUE,
@@ -33,8 +42,9 @@ public enum Keyword implements CharSequence {
 	
 	NEW;
 
-	private static String regex = String.join("|", keywords());
+	private static final String regex = String.join("|", keywords());
 	
+	private static final Keyword[] modifiers = {STATIC, FINAL, PUBLIC, PRIVATE, PROTECTED, ABSTRACT};
 	static final int LONGEST = CONTINUE.name().length();
 			
 	private static String[] keywords() {
@@ -45,6 +55,9 @@ public enum Keyword implements CharSequence {
 		return v;
 	}
 
+	static List<Keyword> modifiers() {
+		return Arrays.asList(modifiers);
+	}
 	
 	static boolean is(String str) {
 		return str.matches(regex);

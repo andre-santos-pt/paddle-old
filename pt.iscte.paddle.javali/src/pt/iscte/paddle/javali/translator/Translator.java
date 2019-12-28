@@ -323,9 +323,15 @@ public class Translator {
 		else if(e instanceof VarExpression) {
 			// include constant
 			VarExpression var = (VarExpression) e;
-			String id = var.getParts().get(0).getId();
-			exp = varTable.get(id);
-
+			String id = var.getParts().get(0).getId(); // TODO field access
+			IVariable v = varTable.get(id);
+			EList<Expression> arrayIndexes = var.getArrayIndexes();
+			
+			if(arrayIndexes.isEmpty())
+				exp = v;
+			else
+				exp = v.element(mapExpressions(arrayIndexes));
+			
 			boolean single = var.getParts().size() == 1;
 			//			if(single)
 

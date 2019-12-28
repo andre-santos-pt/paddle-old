@@ -22,7 +22,7 @@ public class ClassWidget extends EditorWidget {
 	private Id id;
 	private SequenceWidget body;
 
-	public ClassWidget(Composite parent, IModule module, UiMode mode) {
+	public ClassWidget(Composite parent, IModule module, UiMode mode, Keyword ... modifiers) {
 		super(parent);
 		this.module = module;
 		GridLayout layout = new GridLayout(1, true);
@@ -32,6 +32,9 @@ public class ClassWidget extends EditorWidget {
 		if (!UiMode.isStatic()) {
 			EditorWidget header = new EditorWidget(this);
 			header.setLayout(Constants.ROW_LAYOUT_H_ZERO);
+			for(Keyword mod : modifiers)
+				new Token(header, mod);
+				
 			new Token(header, Keyword.CLASS);
 			id = new Id(header, module.getId(), false);
 			new FixedToken(header, "{");

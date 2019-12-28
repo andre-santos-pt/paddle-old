@@ -58,6 +58,7 @@ public class JavaSDEditor {
 		
 
 		SequenceWidget seq = new SequenceWidget(area, 0);
+		seq.acceptKeyword(Keyword.PUBLIC);
 		seq.addAction(new InsertWidget.Action("class", 'c') {
 			public boolean isEnabled(char c, String text, int index, int caret, int selection) {
 				return c == SWT.SPACE && Keyword.CLASS.match(text);
@@ -65,11 +66,12 @@ public class JavaSDEditor {
 			
 			public void run(char c, String text, int index, int caret, int selection) {
 				IModule module = IModule.create();
-				module.setId("TestClass");
-				ClassWidget w = seq.addWidget(p -> new ClassWidget(p, module, mode));		
+				module.setId("Name");
+				ClassWidget w = seq.addWidget(p -> new ClassWidget(p, module, mode, (Keyword[]) seq.getInsertModifiers().toArray()));		
 				w.setFocus();
 			}
 		});
+		
 		
 		shell.setSize(600, 800);
 		shell.open();

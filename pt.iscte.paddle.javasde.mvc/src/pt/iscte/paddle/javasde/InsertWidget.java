@@ -1,7 +1,9 @@
 package pt.iscte.paddle.javasde;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -24,8 +26,14 @@ public class InsertWidget implements TextWidget {
 	final Text text;
 	private boolean edit;
 
+	private Set<Keyword> acceptModifiers;
+	
+	private List<Keyword> modifiers;
+	
 	public InsertWidget(Composite parent, boolean editable) {
 		text = createAddLabel(parent, editable);
+		acceptModifiers = new HashSet<>();
+		modifiers = new ArrayList<>();
 	}
 
 	private Text createAddLabel(Composite parent, boolean editable) {
@@ -66,6 +74,21 @@ public class InsertWidget implements TextWidget {
 		
 		text.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
+				String last = text.getText();
+				if(last.indexOf(' ') != 1)
+					last = last.substring(last.lastIndexOf(' ') + 1, last.length());
+				System.out.println(last);
+				for(Keyword k : acceptModifiers)
+					if(k.toString().equals(last)) {
+						modifiers.add(k);
+						edit = true;
+						text.setText(text.getText() + " ");
+						text.setSelection(text.getText().length());
+						edit = false;
+						System.out.println("* " + k);
+						return;
+					}
+						
 				int index = SequenceWidget.findModelIndex(text);
 				for(Action a : actions)
 					if(a.isEnabled(e.character, text.getText(), index,  text.getCaretPosition(), text.getSelectionCount())) {
@@ -131,6 +154,14 @@ public class InsertWidget implements TextWidget {
 	void addAction(Action a) {
 		assert a != null;
 		actions.add(a);
+	}
+	
+	void acceptModifier(Keyword mod) {
+		acceptModifiers.add(mod);
+	}
+	
+	public List<Keyword> getModifiers() {
+		return modifiers;
 	}
 
 	private void showMenu(Text label, Menu menu) {
@@ -202,4 +233,6 @@ public class InsertWidget implements TextWidget {
 	public void addKeyListener(KeyAdapter listener) {
 		text.addKeyListener(listener);
 	}
+
+	
 }

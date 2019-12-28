@@ -527,6 +527,14 @@ public class SequenceWidget extends Composite {
 				((EditorWidget) control).toCode(buffer, level);
 	}
 
+	public void acceptKeyword(Keyword k) {
+		insertWidget.acceptModifier(k);
+	}
+	
+	public List<Keyword> getInsertModifiers() {
+		return insertWidget.getModifiers();
+	}
+	
 	// TODO drag n drop to move statements
 	private void addDragNDrop(Control label) {
 		DragSource source = new DragSource(label, DND.DROP_NONE);
@@ -590,6 +598,9 @@ public class SequenceWidget extends Composite {
 			//			}
 		});
 	}
+
+	
+
 
 
 

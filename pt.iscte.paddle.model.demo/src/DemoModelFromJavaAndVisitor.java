@@ -19,7 +19,7 @@ public class DemoModelFromJavaAndVisitor {
 	public static void main(String[] args) throws ExecutionError {
 
 		// instantiate model from file
-		Translator translator = new Translator(new File("naturals.javali").getAbsolutePath());
+		Translator translator = new Translator(new File("max.javali").getAbsolutePath());
 		IModule module = translator.createProgram();
 		IProcedure nats = module.getProcedures().iterator().next(); // first procedure
 
