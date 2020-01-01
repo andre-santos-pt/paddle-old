@@ -1,12 +1,9 @@
-import java.io.File;
-
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.interpreter.IMachine;
 import pt.iscte.paddle.interpreter.IProgramState;
 import pt.iscte.paddle.interpreter.IProgramState.IListener;
 import pt.iscte.paddle.interpreter.IValue;
-import pt.iscte.paddle.javali.translator.Translator;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProgramElement;
@@ -17,9 +14,8 @@ public class DemoListener {
 	public static void main(String[] args) throws ExecutionError {
 
 		// instantiate model from file
-		Translator translator = new Translator(new File("naturals.javali").getAbsolutePath());
-		IModule module = translator.createProgram();
-		IProcedure nats = module.getProcedures().iterator().next(); // first
+		IModule module = IModule.create();
+		IProcedure nats = Examples.createNaturalsFunction(module);
 
 		System.out.println(module);
 
