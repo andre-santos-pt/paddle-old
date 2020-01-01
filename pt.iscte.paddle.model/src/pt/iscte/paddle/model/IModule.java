@@ -39,9 +39,20 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	Collection<IProcedure> getProcedures();
 	
 
-	IConstant addConstant(IType type, ILiteral value);
+	default IConstant addConstant(IType type, ILiteral value, String ... flags) {
+		return addConstant(null, type, value, flags);
+	}
+	
+	IConstant addConstant(String id, IType type, ILiteral value, String ... flags);
+	
+	
 	IRecordType addRecordType();
-	IProcedure addProcedure(IType returnType);
+	
+	default IProcedure addProcedure(IType returnType, String ... flags) {
+		return addProcedure(null, returnType, flags);
+	}
+	
+	IProcedure addProcedure(String id, IType returnType, String ... flags);
 
 	void addProcedure(IProcedure procedure);
 	

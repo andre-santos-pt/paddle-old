@@ -112,19 +112,27 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	}
 
 	private class AddConstant implements IAddCommand<IConstant> {
+		final String id;
 		final IType type;
 		final ILiteral literal;
 		IConstant constant;
-
-		AddConstant(IType type, ILiteral literal) {
+		final String[] flags;
+		
+		AddConstant(String id, IType type, ILiteral literal, String ... flags) {
+			this.id = id;
 			this.type = type;
 			this.literal = literal;
+			this.flags = flags;
 		}
 
 		@Override
 		public void execute() {
-			if(constant == null)
+			if(constant == null) {
 				constant = new ConstantDeclaration(Module.this, type, literal);
+				constant.setId(id);
+				for(String f : flags)
+					constant.setFlag(f);
+			}
 			constants.add(constant);
 			getListeners().forEachRemaining(l -> l.constantAdded(constant));
 		}
@@ -148,10 +156,10 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 
 	
 	@Override
-	public IConstant addConstant(IType type, ILiteral value) {
+	public IConstant addConstant(String id, IType type, ILiteral value, String ... flags) {
 		assert type != null;
 		assert value != null;
-		AddConstant add = new AddConstant(type, value);
+		AddConstant add = new AddConstant(id, type, value, flags);
 		executeCommand(add);
 		return add.getElement();
 	}
@@ -164,17 +172,24 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	}
 
 	private class AddProcedure implements IAddCommand<IProcedure> {
+		final String id;
 		final IType returnType;
 		IProcedure procedure;
-
-		AddProcedure(IType returnType) {
+		final String[] flags;
+		AddProcedure(String id, IType returnType, String ... flags) {
+			this.id = id;
 			this.returnType = returnType;
+			this.flags = flags;
 		}
 
 		@Override
 		public void execute() {
-			if(procedure == null)
+			if(procedure == null) {
 				procedure = new Procedure(Module.this, returnType);
+				procedure.setId(id);
+				for(String f : flags)
+					procedure.setFlag(f);
+			}
 			procedures.add(procedure);
 			getListeners().forEachRemaining(l -> l.procedureAdded(procedure));
 		}
@@ -198,8 +213,8 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 
 
 	@Override
-	public IProcedure addProcedure(IType returnType) {
-		AddProcedure proc = new AddProcedure(returnType);
+	public IProcedure addProcedure(String id, IType returnType, String ... flags) {
+		AddProcedure proc = new AddProcedure(id, returnType, flags);
 		executeCommand(proc);
 		return proc.getElement();
 	}

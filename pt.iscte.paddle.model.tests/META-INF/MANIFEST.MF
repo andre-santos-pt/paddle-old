@@ -7,6 +7,5 @@ Automatic-Module-Name: pt.iscte.paddle.asg.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.junit;bundle-version="4.12.0",
  pt.iscte.paddle.model;bundle-version="0.1.0",
- pt.iscte.paddle.javali;bundle-version="1.0.0",
  pt.iscte.paddle.codequality;bundle-version="1.0.0"
 Export-Package: pt.iscte.paddle.tests.asg
