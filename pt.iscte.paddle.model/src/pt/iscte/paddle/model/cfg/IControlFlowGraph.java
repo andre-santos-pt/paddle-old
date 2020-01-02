@@ -16,7 +16,7 @@ import pt.iscte.paddle.model.cfg.impl.ControlFlowGraph;
 
 public interface IControlFlowGraph {
 	IProcedure getProcedure();
-	Set<INode> getNodes();
+	List<INode> getNodes();
 	INode getEntryNode();
 	INode getExitNode();
 	IStatementNode newStatement(IStatement statement);

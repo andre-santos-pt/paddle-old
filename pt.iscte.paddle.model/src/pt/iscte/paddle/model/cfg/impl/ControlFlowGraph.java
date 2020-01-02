@@ -1,7 +1,8 @@
 package pt.iscte.paddle.model.cfg.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import pt.iscte.paddle.model.IExpression;
@@ -17,13 +18,13 @@ public class ControlFlowGraph implements IControlFlowGraph {
 	private final IProcedure procedure;
 	private final INode entry;
 	private final INode exit;
-	private final Set<INode> nodes;
+	private final List<INode> nodes;
 	
 	public ControlFlowGraph(IProcedure procedure) {
 		this.procedure = procedure;
 		entry = new Node();
 		exit = new Node();
-		nodes = new LinkedHashSet<>();
+		nodes = new ArrayList<>();
 		nodes.add(entry);
 		nodes.add(exit);
 	}
@@ -34,8 +35,8 @@ public class ControlFlowGraph implements IControlFlowGraph {
 	}
 	
 	@Override
-	public Set<INode> getNodes() {
-		return Collections.unmodifiableSet(nodes);
+	public List<INode> getNodes() {
+		return Collections.unmodifiableList(nodes);
 	}
 
 	@Override
@@ -50,13 +51,13 @@ public class ControlFlowGraph implements IControlFlowGraph {
 
 	public IStatementNode newStatement(IStatement statement) {
 		IStatementNode n = new StatementNode(statement);
-		nodes.add(n);
+		nodes.add(nodes.size()-1, n);
 		return n;
 	}
 	
 	public IBranchNode newBranch(IExpression expression) {
 		IBranchNode n = new BranchNode(expression);
-		nodes.add(n);
+		nodes.add(nodes.size()-1, n);
 		return n;
 	}
 }
