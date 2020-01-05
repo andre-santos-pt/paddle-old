@@ -189,5 +189,9 @@ public interface IStatementContainer {
 	default IProcedureCall addCallAt(IProcedure procedure, int index, IExpression ... args) {
 		return addCallAt(procedure, index, Arrays.asList(args));
 	}
+	
+	default IBlockElement removeElement(int index) {
+		return getBlock().removeElement(index);
+	}
 
 }

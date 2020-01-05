@@ -47,7 +47,7 @@ public interface IType extends IProgramElement  {
 
 	ImmutableCollection<IValueType> VALUE_TYPES = ImmutableList.of(INT, DOUBLE, BOOLEAN);
 
-	static IType match(String type) {
+	static IType match(String type) {		
 		for(IValueType t : VALUE_TYPES)
 			if(t.getId().equals(type))
 				return t;

@@ -16,9 +16,9 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	interface IListener {
 //		default void commandExecuted(ICommand<?> command) { }
 		default void constantAdded(IConstant constant) { }
-		default void constantDeleted(IConstant constant) { }
+		default void constantRemoved(IConstant constant) { }
 		default void procedureAdded(IProcedure procedure) { }
-		default void procedureDeleted(IProcedure procedure) { }
+		default void procedureRemoved(IProcedure procedure) { }
 	}
 	
 	static IModule create() {
@@ -34,9 +34,9 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 		return ImmutableList.of();
 	}
 	
-	Collection<IConstant> getConstants();
-	Collection<IRecordType> getRecordTypes();
-	Collection<IProcedure> getProcedures();
+	List<IConstant> getConstants();
+	List<IRecordType> getRecordTypes();
+	List<IProcedure> getProcedures();
 	
 
 	default IConstant addConstant(IType type, ILiteral value, String ... flags) {
@@ -55,6 +55,8 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	IProcedure addProcedure(String id, IType returnType, String ... flags);
 
 	void addProcedure(IProcedure procedure);
+	
+	void removeProcedure(IProcedure procedure);
 	
 	void loadBuildInProcedures(Class<?> staticClass);
 

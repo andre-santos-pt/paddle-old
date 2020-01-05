@@ -29,6 +29,10 @@ public interface IProgramElement {
 		setProperty(key, Boolean.TRUE);
 	}
 	
+	default void unsetFlag(String key) {
+		
+	}
+	
 	default void setProperty(Object key) {
 		setProperty(key.getClass().getName(), key);
 	}

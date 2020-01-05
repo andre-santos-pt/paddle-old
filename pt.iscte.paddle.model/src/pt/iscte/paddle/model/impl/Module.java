@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.google.common.collect.Iterables;
 
+import pt.iscte.paddle.model.IBlockElement;
 import pt.iscte.paddle.model.IConstant;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IModel2CodeTranslator;
@@ -21,6 +22,7 @@ import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.commands.IAddCommand;
 import pt.iscte.paddle.model.commands.ICommand;
+import pt.iscte.paddle.model.commands.IDeleteCommand;
 import pt.iscte.paddle.model.validation.AsgSemanticChecks;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
 import pt.iscte.paddle.model.validation.SemanticChecker;
@@ -97,17 +99,17 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	}
 
 	@Override
-	public Collection<IConstant> getConstants() {
+	public List<IConstant> getConstants() {
 		return Collections.unmodifiableList(constants);
 	}
 
 	@Override
-	public Collection<IRecordType> getRecordTypes() {
+	public List<IRecordType> getRecordTypes() {
 		return Collections.unmodifiableList(records);
 	}
 
 	@Override
-	public Collection<IProcedure> getProcedures() {
+	public List<IProcedure> getProcedures() {
 		return Collections.unmodifiableList(procedures);
 	}
 
@@ -140,7 +142,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		@Override
 		public void undo() {
 			constants.remove(constant);
-			getListeners().forEachRemaining(l -> l.constantDeleted(constant));
+			getListeners().forEachRemaining(l -> l.constantRemoved(constant));
 		}
 
 		@Override
@@ -175,13 +177,19 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		final String id;
 		final IType returnType;
 		IProcedure procedure;
-		final String[] flags;
+		String[] flags;
 		AddProcedure(String id, IType returnType, String ... flags) {
 			this.id = id;
 			this.returnType = returnType;
 			this.flags = flags;
 		}
 
+		AddProcedure(IProcedure procedure) {
+			this.procedure = procedure;
+			this.returnType = procedure.getReturnType();
+			this.id = procedure.getId();
+		}
+		
 		@Override
 		public void execute() {
 			if(procedure == null) {
@@ -197,7 +205,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		@Override
 		public void undo() {
 			procedures.remove(procedure);
-			getListeners().forEachRemaining(l -> l.procedureDeleted(procedure));
+			getListeners().forEachRemaining(l -> l.procedureRemoved(procedure));
 		}
 
 		@Override
@@ -302,5 +310,39 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	// for tests only
 	public void addProcedure(IProcedure p) {
 		procedures.add(p);
+	}
+	
+	
+	
+	@Override
+	public void removeProcedure(IProcedure procedure) {
+		assert procedures.contains(procedure);
+		executeCommand(new RemoveProcedure(procedure));
+	}
+	
+	private class RemoveProcedure implements IDeleteCommand<IProcedure> {
+		final IProcedure procedure;
+		
+		public RemoveProcedure(IProcedure procedure) {
+			this.procedure = procedure;
+		}
+		
+		@Override
+		public void execute() {
+//			int index = procedures.indexOf(procedure);
+			procedures.remove(procedure);
+			getListeners().forEachRemaining(l -> l.procedureRemoved(procedure));
+		}
+
+		@Override
+		public void undo() {
+			new AddProcedure(procedure).execute();
+		}
+
+		@Override
+		public IProcedure getElement() {
+			return procedure;
+		}
+		
 	}
 }

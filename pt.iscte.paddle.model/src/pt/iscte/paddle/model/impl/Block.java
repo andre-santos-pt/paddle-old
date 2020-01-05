@@ -23,6 +23,7 @@ import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.commands.IAddCommand;
+import pt.iscte.paddle.model.commands.IDeleteCommand;
 
 class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock {
 	private final IProgramElement parent;
@@ -84,7 +85,6 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 
 		@Override
 		public void undo() {
-//			int i = children.indexOf(element);
 			children.remove(index);
 			getListeners().forEachRemaining(l -> l.elementRemoved(element, index));
 		}
@@ -107,11 +107,51 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 //		getListeners().forEachRemaining(l -> l.elementAdded(e, children.size()-1));
 	}
 
-	void remove(Statement e) {
-		int i = children.indexOf(e);
-		if(children.remove(e)) {
-			getListeners().forEachRemaining(l -> l.elementRemoved(e, i));
+	private class RemoveChild implements IDeleteCommand<IBlockElement> {
+		final IBlockElement element;
+		final int index;
+		
+		RemoveChild(IBlockElement element) {
+			this.element = element;
+			this.index = children.indexOf(element);
+			assert this.index != -1 : "element not in block";
 		}
+		
+		@Override
+		public void execute() {
+			assert index >= 0 && index <= Block.this.getChildren().size() : index + ": block contains " + Block.this.getChildren().size() + " children";
+			
+			children.remove(element);
+			getListeners().forEachRemaining(l -> l.elementRemoved(element, index));
+		}
+
+		@Override
+		public void undo() {
+			new AddChild(element, index).execute();
+		}
+
+		@Override
+		public IBlockElement getElement() {
+			return element;
+		}
+
+//		@Override
+//		public IProgramElement getParent() {
+//			return Block.this;
+//		}
+	}
+	
+	void remove(IBlockElement e) {
+		assert e != null;
+		((Module) getProcedure().getModule()).executeCommand(new RemoveChild(e));
+	}
+	
+	@Override
+	public IBlockElement removeElement(int index) {
+		assert index >= 0 && index <= Block.this.getChildren().size() : index + ": block contains " + Block.this.getChildren().size() + " children";
+		IBlockElement e = children.get(index);
+		remove(e);
+		return e;
 	}
 	
 	@Override

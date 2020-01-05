@@ -28,7 +28,11 @@ public class ProgramElement implements IProgramElement {
 		if(properties.isEmpty())
 			properties = new HashMap<>(5);
 		
+//		if(value == null && properties.containsKey(key))
+//			properties.remove(key);
+		
 		Object old = properties.put(key, value);
+		
 		listeners.forEach(l -> l.propertyChanged(key, value, old));
 	}
 	
