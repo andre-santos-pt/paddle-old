@@ -21,6 +21,7 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.tests.BaseTest;
 
 
 // TODO more arithmetic cases

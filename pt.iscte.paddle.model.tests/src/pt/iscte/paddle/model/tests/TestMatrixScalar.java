@@ -13,7 +13,6 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestMatrixScalar extends BaseTest {
 	IProcedure scale = module.addProcedure(VOID);

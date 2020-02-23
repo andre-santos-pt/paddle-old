@@ -18,6 +18,7 @@ import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IUnaryExpression;
 import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.tests.BaseTest;
 
 public class TestRandom extends BaseTest {
 

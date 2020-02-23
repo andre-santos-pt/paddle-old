@@ -13,7 +13,7 @@ import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IUnaryExpression;
 import pt.iscte.paddle.model.IUnaryOperator;
 
-class UnaryExpression extends Expression implements IUnaryExpression {
+public class UnaryExpression extends Expression implements IUnaryExpression {
 	private final IUnaryOperator operator;
 	private final ImmutableList<IExpression> operand;
 	

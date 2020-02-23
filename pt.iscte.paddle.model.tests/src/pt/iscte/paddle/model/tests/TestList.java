@@ -16,7 +16,6 @@ import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 
 public class TestList extends BaseTest {
@@ -31,6 +30,7 @@ public class TestList extends BaseTest {
 
 	IProcedure init = module.addProcedure(VOID);
 	IVariable list = init.addParameter(IntList.reference());
+
 	IBlock initBody = init.getBody();
 	IRecordFieldAssignment hAss = initBody.addRecordFieldAssignment(list.field(head), ILiteral.NULL);
 	IRecordFieldAssignment tAss = initBody.addRecordFieldAssignment(list.field(tail), ILiteral.NULL);

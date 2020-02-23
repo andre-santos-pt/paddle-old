@@ -6,7 +6,6 @@ import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IVariable;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestMin extends BaseTest {
 	IProcedure min = getModule().addProcedure(INT);

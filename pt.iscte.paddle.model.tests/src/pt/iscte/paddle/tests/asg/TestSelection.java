@@ -12,6 +12,7 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.tests.BaseTest;
 
 // TODO if if
 public class TestSelection extends BaseTest {

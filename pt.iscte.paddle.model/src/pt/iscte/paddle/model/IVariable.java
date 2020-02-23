@@ -17,14 +17,6 @@ public interface IVariable extends ISimpleExpression, IStatement {
 		return getParent() instanceof IBlock;
 	}
 
-//	default IProcedure getProcedure() {
-//		IProgramElement e = getParent();
-//		while(e != null && !(e instanceof IProcedure))
-//			e = ((IBlock) e).getParent();
-//		
-//		return e == null ? null : (IProcedure) e;
-//	}
-	
 	@Override
 	default List<IExpression> getExpressionParts() {
 		return ImmutableList.of();
@@ -34,9 +26,10 @@ public interface IVariable extends ISimpleExpression, IStatement {
 
 	IVariableDereference dereference();
 
-//	default IVariable resolve() {
-//		return this;
-//	}
+	default int procedureIndex() {
+		return getOwnerProcedure().getVariables().indexOf(this);
+	}
+
 
 	IArrayLength length(List<IExpression> indexes);
 	default IArrayLength length(IExpression ... indexes) {
@@ -50,8 +43,6 @@ public interface IVariable extends ISimpleExpression, IStatement {
 
 	IRecordFieldExpression field(IVariable field);
 	
-//	IRecordFieldVariable fieldVariable(IVariable field);
-	
 	default String getDeclaration() {
 		return getType() + " " + getId();
 	}
@@ -59,9 +50,15 @@ public interface IVariable extends ISimpleExpression, IStatement {
 	class UnboundVariable implements IVariable {
 		
 		final String id;
+		final IType type;
 		
 		public UnboundVariable(String id) {
+			this(null, id);
+		}
+		
+		public UnboundVariable(IType t, String id) {
 			this.id = id;
+			this.type = t;
 		}
 		
 		@Override
@@ -95,8 +92,7 @@ public interface IVariable extends ISimpleExpression, IStatement {
 		
 		@Override
 		public IType getType() {
-			// TODO Auto-generated method stub
-			return null;
+			return type == null ? IType.UNBOUND : type;
 		}
 		
 		@Override

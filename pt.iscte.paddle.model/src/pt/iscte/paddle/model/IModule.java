@@ -25,6 +25,12 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 		return new Module(true);
 	}
 	
+	static IModule create(String id) {
+		Module m = new Module(true);
+		m.setId(id);
+		return m;
+	}
+	
 	void undo();
 	
 	void redo();

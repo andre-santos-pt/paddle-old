@@ -1,4 +1,4 @@
-package pt.iscte.paddle.tests.asg;
+package pt.iscte.paddle.model.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -21,7 +21,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import pt.iscte.paddle.codequality.cfg.CFGBuilder;
+import pt.iscte.paddle.codequality.cfg.Builder;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.interpreter.IMachine;
@@ -117,7 +117,7 @@ public abstract class BaseTest {
 		
 		IControlFlowGraph cfg = cfg();
 		if(cfg != null) {
-			CFGBuilder cfgBuilder = new CFGBuilder(main);
+			Builder cfgBuilder = new Builder(main);
 			cfgBuilder.display();
 			IControlFlowGraph cfg2 = cfgBuilder.getCFG();
 			assertTrue("CFG does not match", cfg.isEquivalentTo(cfg2));

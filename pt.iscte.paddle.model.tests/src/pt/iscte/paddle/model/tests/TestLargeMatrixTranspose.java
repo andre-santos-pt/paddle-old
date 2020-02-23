@@ -15,7 +15,8 @@ import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
 
-public class TestMatrixTranspose extends BaseTest {
+// TODO large matrix
+public class TestLargeMatrixTranspose extends BaseTest {
 	IProcedure transpose = module.addProcedure(INT.array2D().reference());
 	IVariable matrix = transpose.addParameter(INT.array2D().reference()); 
 	IBlock body = transpose.getBody();

@@ -15,6 +15,7 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.tests.BaseTest;
 
 public class TestCustomPowerOperator extends BaseTest {
 

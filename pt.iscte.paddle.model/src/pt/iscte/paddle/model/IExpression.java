@@ -42,6 +42,7 @@ public interface IExpression extends IProgramElement {
 	
 	IConditionalExpression conditional(IExpression trueCase, IExpression falseCase);
 	
+	// boolean refersTo(IVariable v); // TODO 
 	
 	default void accept(IVisitor visitor) {
 		visitPart(visitor, this);

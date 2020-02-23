@@ -13,6 +13,7 @@ import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.tests.BaseTest;
 
 public class TestRecursion extends BaseTest {	
 	IProcedure fact = module.addProcedure(INT);

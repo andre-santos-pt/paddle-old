@@ -8,7 +8,6 @@ import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IVariable;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestAverage extends BaseTest {
 	private IProcedure sum = importProcedure(TestSum.class, "summation");

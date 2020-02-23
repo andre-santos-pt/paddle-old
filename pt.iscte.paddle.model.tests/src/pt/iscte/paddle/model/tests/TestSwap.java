@@ -10,7 +10,6 @@ import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IVariable;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestSwap extends BaseTest {
 

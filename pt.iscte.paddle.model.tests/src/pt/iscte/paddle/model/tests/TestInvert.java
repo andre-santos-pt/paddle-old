@@ -15,7 +15,6 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestInvert extends BaseTest {
 	private IProcedure swap = importProcedure(TestSwap.class, "swap");

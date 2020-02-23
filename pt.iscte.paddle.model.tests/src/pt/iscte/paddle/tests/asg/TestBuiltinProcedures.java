@@ -9,6 +9,7 @@ import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.tests.BaseTest;
 
 // TODO read system.in
 public class TestBuiltinProcedures extends BaseTest {

@@ -15,7 +15,6 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestIdMatrix extends BaseTest {
 	IProcedure idMatrix = module.addProcedure(INT.array2D());

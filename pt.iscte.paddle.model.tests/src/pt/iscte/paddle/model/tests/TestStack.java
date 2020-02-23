@@ -13,7 +13,6 @@ import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 
 public class TestStack extends BaseTest {

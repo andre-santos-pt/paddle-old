@@ -4,7 +4,7 @@ import static pt.iscte.paddle.model.IOperator.GREATER;
 import static pt.iscte.paddle.model.IOperator.SMALLER;
 import static pt.iscte.paddle.model.IType.INT;
 
-import pt.iscte.paddle.codequality.cfg.CFGBuilder;
+import pt.iscte.paddle.codequality.cfg.Builder;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IModule;
@@ -57,7 +57,7 @@ public class TestCFGEquiv {
 		s_ret.setNext(cfg.getExitNode());
 		
 		// CFG gen
-		CFGBuilder cfgBuilder = new CFGBuilder(max);
+		Builder cfgBuilder = new Builder(max);
 		IControlFlowGraph cfgGen = cfgBuilder.getCFG();
 		
 		System.out.println("equiv: " + cfg.isEquivalentTo(cfgGen));

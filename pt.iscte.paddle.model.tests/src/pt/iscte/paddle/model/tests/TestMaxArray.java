@@ -14,7 +14,6 @@ import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.cfg.IBranchNode;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.cfg.IStatementNode;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestMaxArray extends BaseTest {
 

@@ -1,6 +1,5 @@
 package pt.iscte.paddle.model.impl;
 
-import java.util.Collections;
 import java.util.List;
 
 import pt.iscte.paddle.interpreter.ExecutionError;

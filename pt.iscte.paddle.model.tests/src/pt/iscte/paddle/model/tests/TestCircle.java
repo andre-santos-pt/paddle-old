@@ -9,7 +9,6 @@ import pt.iscte.paddle.model.IConstant;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IVariable;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestCircle extends BaseTest {
 

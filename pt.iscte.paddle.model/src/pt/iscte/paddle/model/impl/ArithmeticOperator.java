@@ -16,7 +16,7 @@ public enum ArithmeticOperator implements IBinaryOperator {
 	SUB("-", (left, right) -> left.subtract(right)),
 	MUL("*", (left, right) -> left.multiply(right)),
 	DIV("/", (left, right) -> left.divide(right)),
-	IDIV("//", (left, right) -> left.divideToIntegralValue(right)),
+	IDIV("/", (left, right) -> left.divideToIntegralValue(right)),
 	MOD("%", (left, right ) -> left.remainder(right));
 	
 	private final BiFunction<BigDecimal, BigDecimal, BigDecimal> f;

@@ -7,7 +7,6 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariable;
-import pt.iscte.paddle.tests.asg.BaseTest;
 
 public class TestMax extends BaseTest {
 	IProcedure max = getModule().addProcedure(INT);

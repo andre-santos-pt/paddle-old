@@ -17,6 +17,7 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IUnaryExpression;
 import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.tests.BaseTest;
 import pt.iscte.paddle.tests.asg.BooleanFuncions.IsEven;
 import pt.iscte.paddle.tests.asg.BooleanFuncions.IsOdd;
 import pt.iscte.paddle.tests.asg.BooleanFuncions.IsOddNotEven;

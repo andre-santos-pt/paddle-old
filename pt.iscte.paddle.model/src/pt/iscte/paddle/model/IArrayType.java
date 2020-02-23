@@ -7,7 +7,9 @@ public interface IArrayType extends IType {
 	int getDimensions();
 	IType getComponentType();
 	IType getComponentTypeAt(int dim);
-	
+	default IType getRootComponentType() {
+		return getComponentTypeAt(getDimensions());
+	}
 	IArrayAllocation stackAllocation(List<IExpression> dimensions);
 	
 	default IArrayAllocation stackAllocation(IExpression ... dimensions) {

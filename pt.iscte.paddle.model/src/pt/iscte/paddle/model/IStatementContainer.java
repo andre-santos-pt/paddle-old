@@ -66,8 +66,9 @@ public interface IStatementContainer {
 	}
 	
 	default IVariableAssignment addIncrementAt(IVariable var, int index) {
-		assert var.getType() == IType.INT;
-		return addAssignmentAt(var, IOperator.ADD.on(var, IType.INT.literal(1)), index);
+//		assert var.getType() == IType.INT;
+		IVariableAssignment a = addAssignmentAt(var, IOperator.ADD.on(var, IType.INT.literal(1)), index, "INC");
+		return a;
 	}
 	
 	default IVariableAssignment addDecrement(IVariable var) {
