@@ -205,9 +205,15 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 
 	@Override
 	public IVariable addVariableAt(IType type, int index, String ... flags) {		
+		return addVariableWithIdAt(type, null, index, flags);
+	}
+	
+	@Override
+	public IVariable addVariableWithIdAt(IType type, String id, int index, String ... flags) {		
 		Variable var = new Variable(this, type, flags);
 		IProcedure procedure = getProcedure();
 		((Procedure) procedure).addVariableDeclaration(var);
+		var.setId(id);
 		addChild(var, index);
 		return var;
 	}

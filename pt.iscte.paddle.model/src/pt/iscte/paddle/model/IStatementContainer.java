@@ -41,6 +41,13 @@ public interface IStatementContainer {
 		return var;
 	}
 	
+	default IVariable addVariableWithIdAt(IType type, String id, String ... flags) {
+		return addVariableWithIdAt(type, id, getBlock().getSize(), flags);
+	}
+	
+	default IVariable addVariableWithIdAt(IType type, String id, int index, String ... flags) {
+		return getBlock().addVariableWithIdAt(type, id, index, flags);
+	}
 	
 	
 	default IVariableAssignment addAssignment(IVariable var, IExpression exp, String ... flags) {

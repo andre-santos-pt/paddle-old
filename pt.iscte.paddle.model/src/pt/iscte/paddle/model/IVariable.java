@@ -22,6 +22,10 @@ public interface IVariable extends ISimpleExpression, IStatement {
 		return ImmutableList.of();
 	}
 	
+	default boolean isUnbound() {
+		return this instanceof UnboundVariable;
+	}
+	
 	IVariableAddress address();
 
 	IVariableDereference dereference();
