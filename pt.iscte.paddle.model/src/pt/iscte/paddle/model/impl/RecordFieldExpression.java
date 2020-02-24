@@ -43,9 +43,9 @@ class RecordFieldExpression extends Expression implements IRecordFieldExpression
 	@Override
 	public String toString() {
 		if(target.getType() instanceof IReferenceType)
-			return target.getId() + "->" + field.getId();
+			return target.toString() + "->" + field.getId();
 		else
-			return target.getId() + "." + field.getId();
+			return target.toString() + "." + field.getId();
 	}
 	
 	@Override

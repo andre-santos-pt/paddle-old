@@ -44,9 +44,9 @@ class RecordFieldAssignment extends Statement implements IRecordFieldAssignment 
 		IExpression target = getTarget();
 		IVariable field = getField();
 		if(target.getType() instanceof IReferenceType)
-			return target.getId() + "->" + field.getId() + " = " + expression;
+			return target.toString() + " = " + expression;
 		else
-			return target.getId() + "." + field.getId() + " = " + expression;
+			return target.toString() + " = " + expression;
 	}
 	
 	@Override
