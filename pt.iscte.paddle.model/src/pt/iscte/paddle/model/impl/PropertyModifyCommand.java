@@ -1,6 +1,5 @@
 package pt.iscte.paddle.model.impl;
 
-import pt.iscte.paddle.model.IConstant;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.commands.IModifyCommand;
 

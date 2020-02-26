@@ -2,7 +2,6 @@ package pt.iscte.paddle.model.validation;
 
 import java.util.List;
 
-import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IArrayLength;
 import pt.iscte.paddle.model.IArrayType;

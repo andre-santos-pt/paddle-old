@@ -6,11 +6,11 @@ import java.util.Collections;
 import java.util.List;
 
 import pt.iscte.paddle.interpreter.ExecutionError;
+import pt.iscte.paddle.interpreter.ExecutionError.Type;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IProgramState;
 import pt.iscte.paddle.interpreter.IStackFrame;
 import pt.iscte.paddle.interpreter.IValue;
-import pt.iscte.paddle.interpreter.ExecutionError.Type;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProgramElement;
 

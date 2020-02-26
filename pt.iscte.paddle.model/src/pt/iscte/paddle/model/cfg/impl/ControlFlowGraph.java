@@ -3,7 +3,6 @@ package pt.iscte.paddle.model.cfg.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProcedure;

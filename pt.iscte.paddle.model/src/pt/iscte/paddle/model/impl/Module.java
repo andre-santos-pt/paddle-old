@@ -3,13 +3,11 @@ package pt.iscte.paddle.model.impl;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.Iterables;
 
-import pt.iscte.paddle.model.IBlockElement;
 import pt.iscte.paddle.model.IConstant;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IModel2CodeTranslator;

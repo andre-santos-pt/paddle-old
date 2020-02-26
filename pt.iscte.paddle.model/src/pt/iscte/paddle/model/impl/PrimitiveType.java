@@ -7,7 +7,6 @@ import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IReferenceType;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IValueType;
-import pt.iscte.paddle.model.IProgramElement.IPropertyListener;
 
 public enum PrimitiveType implements IValueType {
 	INT {

@@ -7,9 +7,9 @@ import java.util.Map;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.interpreter.IValue;
+import pt.iscte.paddle.model.IOperator.OperationType;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IVariable;
-import pt.iscte.paddle.model.IOperator.OperationType;
 
 public class ExecutionData implements IExecutionData  {
 	private Map<IProcedure, Integer> assignmentCount = new HashMap<IProcedure, Integer>();

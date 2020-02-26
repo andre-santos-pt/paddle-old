@@ -5,4 +5,4 @@ Bundle-SymbolicName: pt.iscte.paddle.model.demo
 Bundle-Version: 1.0.0.qualifier
 Export-Package: .
 Require-Bundle: pt.iscte.paddle.model;bundle-version="0.1.0",
- pt.iscte.paddle.model.semantics;bundle-version="1.0.0"
+ pt.iscte.paddle.model.roles;bundle-version="0.1.0"

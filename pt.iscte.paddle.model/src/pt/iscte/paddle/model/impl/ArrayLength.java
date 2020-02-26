@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.interpreter.ArrayIndexError;
 import pt.iscte.paddle.interpreter.ExecutionError;
-import pt.iscte.paddle.interpreter.ExecutionError.Type;
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IReference;

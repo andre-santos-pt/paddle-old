@@ -29,7 +29,6 @@ import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAddress;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDereference;
-import pt.iscte.paddle.model.IBlock.IVisitor;
 
 public class SemanticChecker {
 	private ISemanticChecker checker;

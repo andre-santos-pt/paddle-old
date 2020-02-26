@@ -2,9 +2,9 @@ package pt.iscte.paddle.interpreter;
 
 import java.util.Map;
 
+import pt.iscte.paddle.model.IOperator.OperationType;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IVariable;
-import pt.iscte.paddle.model.IOperator.OperationType;
 
 public interface IExecutionData {
 //	Map<IProcedure, Integer> getNumberOfProcedureCalls();

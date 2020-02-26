@@ -10,7 +10,6 @@ import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IRecord;
 import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.NullPointerError;
-import pt.iscte.paddle.interpreter.ExecutionError.Type;
 
 public interface IRecordFieldExpression extends ISimpleExpression {
 
