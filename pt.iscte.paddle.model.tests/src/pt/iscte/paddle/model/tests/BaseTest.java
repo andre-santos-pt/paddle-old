@@ -64,6 +64,11 @@ public abstract class BaseTest {
 
 	@Before
 	public void setup() {
+		setupProcedures();
+		compile();
+	}
+
+	public void setupProcedures() {
 		main = main();
 		if(main != null)
 			main.setId("main");
@@ -74,7 +79,6 @@ public abstract class BaseTest {
 					Object o = f.get(this);
 					if(isIdElement(o)) {
 						((IProgramElement) o).setId(f.getName().replaceAll("_*", ""));
-
 						if (o instanceof IProcedure) {
 							if (main == null || f.getName().equals("main"))
 								main = (IProcedure) o;
@@ -87,7 +91,6 @@ public abstract class BaseTest {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		compile();
 	}
 
 	private boolean isIdElement(Object element) {
@@ -204,7 +207,6 @@ public abstract class BaseTest {
 			IProcedure proc = (IProcedure) f.get(testCase);
 			proc.setId(fieldName);
 			module.addProcedure(proc);
-			System.out.println(proc.translate(translator));
 			return proc;
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();

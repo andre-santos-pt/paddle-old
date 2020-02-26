@@ -41,8 +41,6 @@ public class TestSwap extends BaseTest {
 		body.addCall(swap, a, INT.literal(iParam), INT.literal(jParam));
 		return test;
 	}
-	
-	
 
 	@Case
 	public void test(IExecutionData data) {
