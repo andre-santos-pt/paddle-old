@@ -7,22 +7,22 @@ import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAddress;
+import pt.iscte.paddle.model.IVariableExpression;
 
 public class VariableAddress extends Expression implements IVariableAddress {
 
-	private final IVariable variable;
+	private final IVariableExpression variable;
 	private final IType type;
 	
-	public VariableAddress(IVariable variable) {
+	public VariableAddress(IVariableExpression variable) {
 		assert variable != null;
 		this.variable = variable;
 		type = new ReferenceType(variable.getType());
 	}
 	
 	@Override
-	public IVariable getVariable() {
+	public IVariableExpression getTarget() {
 		return variable;
 	}
 	
@@ -38,7 +38,7 @@ public class VariableAddress extends Expression implements IVariableAddress {
 
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
-		IReference reference = stack.getTopFrame().getVariableStore(variable);
+		IReference reference = stack.getTopFrame().getVariableStore(variable.getVariable());
 		return reference;
 	}
 }

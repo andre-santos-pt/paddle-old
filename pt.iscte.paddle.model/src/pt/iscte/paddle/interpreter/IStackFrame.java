@@ -8,16 +8,16 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IStatement;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public interface IStackFrame {
 	ICallStack getCallStack();
 	
 	IProcedure getProcedure();
 	
-	Map<IVariable, IValue> getVariables();
+	Map<IVariableDeclaration, IValue> getVariables();
 	
-	IReference getVariableStore(IVariable variable);
+	IReference getVariableStore(IVariableDeclaration variable);
 //	void setVariable(String identifier, IValue value);
 	
 
@@ -27,7 +27,7 @@ public interface IStackFrame {
 	
 	default int getMemory() {
 		int bytes = 0;
-		for (IVariable var : getProcedure().getVariables()) {
+		for (IVariableDeclaration var : getProcedure().getVariables()) {
 			bytes += var.getType().getMemoryBytes();
 		}
 		return bytes;
@@ -58,9 +58,9 @@ public interface IStackFrame {
 	void addListener(IListener listener);
 
 	interface IListener {
-		default void variableAdded(IVariable variable, IType type) { }
+		default void variableAdded(IVariableDeclaration variable, IType type) { }
 		
-		default void variableModified(IVariable variable, IType type, IValue newValue) { }
+		default void variableModified(IVariableDeclaration variable, IType type, IValue newValue) { }
 		
 		default void statementExecutionStart(IStatement statement) { }
 

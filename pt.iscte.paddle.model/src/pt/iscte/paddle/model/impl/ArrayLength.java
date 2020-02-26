@@ -8,21 +8,20 @@ import pt.iscte.paddle.interpreter.ArrayIndexError;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
-import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.interpreter.NullPointerError;
 import pt.iscte.paddle.model.IArrayLength;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
 
 class ArrayLength extends Expression implements IArrayLength {
-	private final IVariable variable;
+	private final IExpression target;
+	private final ImmutableList<IExpression> parts;
 	private final ImmutableList<IExpression> indexes;
 
-	// TODO target as expression
-	public ArrayLength(IVariable variable, List<IExpression> indexes) {
-		this.variable = variable;
+	public ArrayLength(IExpression target, List<IExpression> indexes) {
+		this.target = target;
+		this.parts = ImmutableList.<IExpression>builder().add(target).addAll(indexes).build();
 		this.indexes = ImmutableList.copyOf(indexes);
 	}
 
@@ -32,8 +31,8 @@ class ArrayLength extends Expression implements IArrayLength {
 	}
 
 	@Override
-	public IVariable getVariable() {
-		return variable;
+	public IExpression getTarget() {
+		return target;
 	}
 
 	@Override
@@ -43,7 +42,7 @@ class ArrayLength extends Expression implements IArrayLength {
 
 	@Override
 	public String toString() {
-		String text = getVariable().toString();
+		String text = getTarget().toString();
 		for(IExpression e : indexes)
 			text += "[" + e + "]";
 		return text + ".length";
@@ -52,7 +51,7 @@ class ArrayLength extends Expression implements IArrayLength {
 
 	@Override
 	public List<IExpression> getParts() {
-		return indexes;
+		return parts;
 	}
 
 	@Override
@@ -62,24 +61,25 @@ class ArrayLength extends Expression implements IArrayLength {
 
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
-		assert values.size() == getIndexes().size();
-		IReference ref = null;
+		assert values.size() == getIndexes().size() + 1;
+//		IReference ref = null;
 		
-		if(variable instanceof VariableDereference)
-			ref = (IReference) ((VariableDereference) variable).evalutate(values, stack);
-		else
-			ref = stack.getTopFrame().getVariableStore(getVariable());
+//		if(target instanceof VariableDereference)
+//			ref = (IReference) ((VariableDereference) target).evalutate(values, stack);
+//		else
+//			ref = stack.getTopFrame().getVariableStore(getTarget());
 		
-		IArray array = (IArray) ref.getTarget();
+//		IArray array = (IArray) ref.getTarget();
+		IArray array = (IArray) values.get(0);
 		
 		if(array.isNull())
-			throw new NullPointerError(variable);
+			throw new NullPointerError(target);
 		
 		IValue v = array;
 		for(int i = 0; i < values.size(); i++) {
 			int index = ((Number) values.get(i).getValue()).intValue();
 			if(index < 0 || index >= ((IArray) v).getLength())
-				throw new ArrayIndexError(this, index, variable, indexes.get(i), i);
+				throw new ArrayIndexError(this, index, target, indexes.get(i), i);
 			v = ((IArray) v).getElement(index);
 		}
 		return stack.getTopFrame().getValue(((IArray) v).getLength());

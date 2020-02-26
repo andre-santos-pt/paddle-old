@@ -14,7 +14,7 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.tests.BaseTest;
 
 public class TestCustomPowerOperator extends BaseTest {
@@ -64,8 +64,8 @@ public class TestCustomPowerOperator extends BaseTest {
 	};
 
 	IProcedure pow = module.addProcedure(DOUBLE);
-	IVariable base = pow.addParameter(DOUBLE);
-	IVariable exp = pow.addParameter(DOUBLE);
+	IVariableDeclaration base = pow.addParameter(DOUBLE);
+	IVariableDeclaration exp = pow.addParameter(DOUBLE);
 	IBlock body = pow.getBody();
 	IReturn return1 = body.addReturn(POWER.on(base, exp));
 

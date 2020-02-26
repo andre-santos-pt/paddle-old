@@ -16,7 +16,7 @@ import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IUnaryExpression;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.tests.BaseTest;
 import pt.iscte.paddle.tests.asg.BooleanFuncions.IsEven;
 import pt.iscte.paddle.tests.asg.BooleanFuncions.IsOdd;
@@ -40,7 +40,7 @@ public class BooleanFuncions {
 	
 	public static class IsEven extends BooleanFunctions {
 		IProcedure isEven = module.addProcedure(BOOLEAN);
-		IVariable n = isEven.addParameter(INT);
+		IVariableDeclaration n = isEven.addParameter(INT);
 		IBinaryExpression e = EQUAL.on(MOD.on(n, INT.literal(2)), INT.literal(0));
 		IBlock body = isEven.getBody();
 		IReturn ret = body.addReturn(e);
@@ -59,7 +59,7 @@ public class BooleanFuncions {
 
 	public static class IsOdd extends BooleanFunctions {
 		IProcedure isOdd = module.addProcedure(BOOLEAN);
-		IVariable n = isOdd.addParameter(INT);
+		IVariableDeclaration n = isOdd.addParameter(INT);
 		IBinaryExpression e = DIFFERENT.on(MOD.on(n, INT.literal(2)), INT.literal(0));
 		IBlock body = isOdd.getBody();
 		IReturn ret = body.addReturn(e);
@@ -78,7 +78,7 @@ public class BooleanFuncions {
 	public static class IsOddNotEven extends IsOdd {
 		IProcedure isOddNotEven = module.addProcedure(BOOLEAN);
 		IProcedure isEven = new IsEven().isEven;
-		IVariable n = isOddNotEven.addParameter(INT);
+		IVariableDeclaration n = isOddNotEven.addParameter(INT);
 		IUnaryExpression e = NOT.on(new IsEven().isEven.call(n));
 		IBlock body = isOddNotEven.getBody();
 		IReturn ret = body.addReturn(e);

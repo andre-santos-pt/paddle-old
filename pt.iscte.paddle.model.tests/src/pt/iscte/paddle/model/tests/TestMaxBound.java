@@ -10,18 +10,18 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestMaxBound extends BaseTest {
 	IProcedure max = module.addProcedure(INT);
-	IVariable array = max.addParameter(INT.array().reference());
-	IVariable bound = max.addParameter(INT);
+	IVariableDeclaration array = max.addParameter(INT.array().reference());
+	IVariableDeclaration bound = max.addParameter(INT);
 	IBlock body = max.getBody();
 
-	IVariable m = body.addVariable(INT);
+	IVariableDeclaration m = body.addVariable(INT);
 	IVariableAssignment mAss = body.addAssignment(m, array.element(INT.literal(0)));
-	IVariable i = body.addVariable(INT);
+	IVariableDeclaration i = body.addVariable(INT);
 	IVariableAssignment iAss = body.addAssignment(i, INT.literal(1));
 
 	ILoop loop = body.addLoop(SMALLER.on(i, bound));

@@ -6,7 +6,7 @@ import java.util.List;
 public interface IRecordFieldAssignment extends IStatement {
 
 	IRecordFieldExpression getTarget();
-	IVariable getField();
+	IVariableDeclaration getField();
 	IExpression getExpression();
 
 	@Override

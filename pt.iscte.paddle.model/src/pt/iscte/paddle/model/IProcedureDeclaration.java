@@ -7,16 +7,20 @@ import java.util.List;
 
 public interface IProcedureDeclaration extends IProgramElement {
 
-	List<IVariable> getParameters();	
+	List<IVariableDeclaration> getParameters();	
 
 	IType getReturnType();
 
-	IVariable addParameter(IType type);
+	IVariableDeclaration addParameter(IType type);
 
 	IProcedureCall call(List<IExpression> args);
 
 	default IProcedureCall call(IExpression ... args) {
 		return call(Arrays.asList(args));
+	}
+	
+	default IProcedureCall call(IExpressionView ... views) {
+		return call(IExpressionView.toList(views));
 	}
 
 	default String shortSignature() {
@@ -25,7 +29,7 @@ public interface IProcedureDeclaration extends IProgramElement {
 
 	default String longSignature() {
 		String args = "";
-		for (IVariable p : getParameters()) {
+		for (IVariableDeclaration p : getParameters()) {
 			if(!args.isEmpty())
 				args += ", ";
 			args += p.getType();
@@ -37,7 +41,7 @@ public interface IProcedureDeclaration extends IProgramElement {
 		if(!id.equals(getId()))
 			return false;
 
-		List<IVariable> parameters = getParameters();
+		List<IVariableDeclaration> parameters = getParameters();
 		if(parameters.size() != paramTypes.length)
 			return false;
 
@@ -55,8 +59,8 @@ public interface IProcedureDeclaration extends IProgramElement {
 		if(!getId().equals(procedure.getId()) || getParameters().size() != procedure.getParameters().size())
 			return false;
 
-		Iterator<IVariable> procParamsIt = procedure.getParameters().iterator();
-		for(IVariable p : getParameters())
+		Iterator<IVariableDeclaration> procParamsIt = procedure.getParameters().iterator();
+		for(IVariableDeclaration p : getParameters())
 			if(!p.getType().equals(procParamsIt.next().getType()))
 				return false;
 
@@ -90,7 +94,7 @@ public interface IProcedureDeclaration extends IProgramElement {
 		}
 
 		@Override
-		public List<IVariable> getParameters() {
+		public List<IVariableDeclaration> getParameters() {
 			return Collections.emptyList();
 		}
 
@@ -100,7 +104,7 @@ public interface IProcedureDeclaration extends IProgramElement {
 		}
 
 		@Override
-		public IVariable addParameter(IType type) {
+		public IVariableDeclaration addParameter(IType type) {
 			throw new UnsupportedOperationException();
 		}
 	};

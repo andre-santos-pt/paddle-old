@@ -8,4 +8,7 @@ public interface IUnaryOperator extends IOperator {
 	IValue apply(IValue value);
 	
 	IUnaryExpression on(IExpression exp);
+	default IUnaryExpression on(IExpressionView view) {
+		return on(view.expression());
+	}
 }

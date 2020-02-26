@@ -12,11 +12,11 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestFactorial extends BaseTest {	
 	IProcedure factorial = module.addProcedure(INT);
-	IVariable n = factorial.addParameter(INT);
+	IVariableDeclaration n = factorial.addParameter(INT);
 	IBinaryExpression guard = EQUAL.on(n, INT.literal(0));
 	ISelection sel = factorial.getBody().addSelectionWithAlternative(guard);
 	IReturn return1 = sel.addReturn(INT.literal(1));

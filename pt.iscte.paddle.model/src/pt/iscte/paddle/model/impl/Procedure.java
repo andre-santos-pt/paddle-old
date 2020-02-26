@@ -10,12 +10,12 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 class Procedure extends ProgramElement implements IProcedure {
 	private final Module parent;
-	private final List<IVariable> variables;
-	private final List<IVariable> variablesView;
+	private final List<IVariableDeclaration> variables;
+	private final List<IVariableDeclaration> variablesView;
 	private final ParamsView paramsView;
 	private final LocalVariablesView localVarsView;
 	private final IType returnType;
@@ -39,23 +39,23 @@ class Procedure extends ProgramElement implements IProcedure {
 	}
 	
 	@Override
-	public List<IVariable> getVariables() {
+	public List<IVariableDeclaration> getVariables() {
 		return variablesView;
 	}
 
 	@Override
-	public List<IVariable> getParameters() {
+	public List<IVariableDeclaration> getParameters() {
 		return paramsView;
 	}
 
 	@Override
-	public List<IVariable> getLocalVariables() {
+	public List<IVariableDeclaration> getLocalVariables() {
 		return localVarsView;
 	}
 
 	@Override
-	public IVariable addParameter(IType type) {
-		IVariable param = new Variable(body, type);
+	public IVariableDeclaration addParameter(IType type) {
+		IVariableDeclaration param = new Variable(body, type);
 		variables.add(parameters, param);
 		parameters++;
 		return param;
@@ -85,7 +85,7 @@ class Procedure extends ProgramElement implements IProcedure {
 	@Override
 	public String toString() {
 		String params = "";
-		for(IVariable p : paramsView) {
+		for(IVariableDeclaration p : paramsView) {
 			if(!params.isEmpty())
 				params += ", ";
 			params += p.getType().getId() + " " + p.getId();
@@ -94,9 +94,9 @@ class Procedure extends ProgramElement implements IProcedure {
 		return returnType + " " + getId() + "(" + params + ") " + body.toString();
 	}
 
-	private class ParamsView extends AbstractList<IVariable> {
+	private class ParamsView extends AbstractList<IVariableDeclaration> {
 		@Override
-		public IVariable get(int index) {
+		public IVariableDeclaration get(int index) {
 			return variables.get(index);
 		}
 
@@ -106,9 +106,9 @@ class Procedure extends ProgramElement implements IProcedure {
 		}
 	}
 
-	private class LocalVariablesView extends AbstractList<IVariable> {
+	private class LocalVariablesView extends AbstractList<IVariableDeclaration> {
 		@Override
-		public IVariable get(int index) {
+		public IVariableDeclaration get(int index) {
 			return variables.get(parameters + index);
 		}
 
@@ -119,7 +119,7 @@ class Procedure extends ProgramElement implements IProcedure {
 	}
 
 
-	void addVariableDeclaration(IVariable var) {
+	void addVariableDeclaration(IVariableDeclaration var) {
 		variables.add(var);
 	}
 

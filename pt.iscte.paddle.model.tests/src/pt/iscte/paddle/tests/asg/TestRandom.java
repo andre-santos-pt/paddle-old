@@ -17,7 +17,7 @@ import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IUnaryExpression;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.tests.BaseTest;
 
 public class TestRandom extends BaseTest {
@@ -34,11 +34,11 @@ public class TestRandom extends BaseTest {
 	}
 
 	IProcedure randomInt = module.addProcedure(INT);
-	IVariable min = randomInt.addParameter(INT);
-	IVariable max = randomInt.addParameter(INT);
+	IVariableDeclaration min = randomInt.addParameter(INT);
+	IVariableDeclaration max = randomInt.addParameter(INT);
 	IProcedure random = module.resolveProcedure("random");
 	IProcedureCall randomCall = random.call();
-	IVariable r = randomInt.getBody().addVariable(DOUBLE, randomCall);
+	IVariableDeclaration r = randomInt.getBody().addVariable(DOUBLE, randomCall);
 	IBinaryExpression m = MUL.on(r, ADD.on(SUB.on(max, min), INT.literal(1)));
 	IUnaryExpression t = TRUNCATE.on(m);
 	IBinaryExpression e = ADD.on(min, t);

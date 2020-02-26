@@ -33,7 +33,7 @@ import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
 
@@ -94,7 +94,7 @@ public abstract class BaseTest {
 	}
 
 	private boolean isIdElement(Object element) {
-		return element instanceof IProcedure || element instanceof IVariable || element instanceof IConstant || element instanceof IRecordType;
+		return element instanceof IProcedure || element instanceof IVariableDeclaration || element instanceof IConstant || element instanceof IRecordType;
 	}
 
 	private void compile() {

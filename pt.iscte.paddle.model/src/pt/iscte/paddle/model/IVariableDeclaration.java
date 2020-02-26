@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-public interface IVariable extends ISimpleExpression, IStatement {
+public interface IVariableDeclaration extends IStatement, IExpressionView {
 	IProgramElement getParent();
 	IType getType();
 
@@ -25,33 +25,44 @@ public interface IVariable extends ISimpleExpression, IStatement {
 	default boolean isUnbound() {
 		return this instanceof UnboundVariable;
 	}
-	
-	IVariableAddress address();
-
-	IVariableDereference dereference();
 
 	default int procedureIndex() {
 		return getOwnerProcedure().getVariables().indexOf(this);
 	}
+	
+	default String getDeclaration() {
+		return getType() + " " + getId();
+	}
+	
+	IVariableExpression expression();
+	
+	IVariableAddress address();
+
+	IVariableDereference dereference();
 
 
 	IArrayLength length(List<IExpression> indexes);
 	default IArrayLength length(IExpression ... indexes) {
 		return length(Arrays.asList(indexes));
 	}
-
+	default IArrayLength length(IExpressionView ... views) {
+		return length(IExpressionView.toList(views));
+	}
+	
 	IArrayElement element(List<IExpression> indexes);
 	default IArrayElement element(IExpression ... indexes) {
 		return element(Arrays.asList(indexes));
 	}
-
-	IRecordFieldExpression field(IVariable field);
-	
-	default String getDeclaration() {
-		return getType() + " " + getId();
+	default IArrayElement element(IExpressionView ... views) {
+		return element(IExpressionView.toList(views));
 	}
 	
-	class UnboundVariable implements IVariable {
+	
+	IRecordFieldExpression field(IVariableDeclaration field);
+	
+	
+	
+	class UnboundVariable implements IVariableDeclaration {
 		
 		final String id;
 		final IType type;
@@ -78,19 +89,11 @@ public interface IVariable extends ISimpleExpression, IStatement {
 		
 		@Override
 		public Object getProperty(Object key) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-		@Override
-		public IConditionalExpression conditional(IExpression trueCase, IExpression falseCase) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		
 		@Override
 		public IArrayLength length(List<IExpression> indexes) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		
@@ -101,22 +104,21 @@ public interface IVariable extends ISimpleExpression, IStatement {
 		
 		@Override
 		public IProgramElement getParent() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		
 		@Override
-		public IRecordFieldExpression field(IVariable field) {
+		public IRecordFieldExpression field(IVariableDeclaration field) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+
 		@Override
 		public IArrayElement element(List<IExpression> indexes) {
 			// TODO Auto-generated method stub
 			return null;
 		}
-		
+	
 		@Override
 		public IVariableDereference dereference() {
 			// TODO Auto-generated method stub
@@ -125,6 +127,12 @@ public interface IVariable extends ISimpleExpression, IStatement {
 		
 		@Override
 		public IVariableAddress address() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public IVariableExpression expression() {
 			// TODO Auto-generated method stub
 			return null;
 		}

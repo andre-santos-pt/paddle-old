@@ -22,13 +22,13 @@ import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IStatement;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 class StackFrame implements IStackFrame {
 
 	private final CallStack callStack;
 	private final IProcedure procedure;
-	private final Map<IVariable, IReference> variables;
+	private final Map<IVariableDeclaration, IReference> variables;
 	private IValue returnValue;
 	private ProcedureExecutor executor;
 	private Memory memory;
@@ -49,14 +49,14 @@ class StackFrame implements IStackFrame {
 		memory = new Memory();
 		
 		int i = 0;
-		for(IVariable param : procedure.getParameters()) {
+		for(IVariableDeclaration param : procedure.getParameters()) {
 			IValue copy = arguments.get(i).copy();
 			IReference ref = param.getType().isReference() ? (IReference) copy : new Reference(copy);
 			variables.put(param, ref);
 			i++;
 		}
 
-		for (IVariable var : procedure.getLocalVariables()) {
+		for (IVariableDeclaration var : procedure.getLocalVariables()) {
 			IValue defValue = Value.create(var.getType(), var.getType().getDefaultValue());
 			Reference ref = new Reference(defValue);
 			variables.put(var, ref);
@@ -71,14 +71,14 @@ class StackFrame implements IStackFrame {
 	}
 
 	@Override
-	public Map<IVariable, IValue> getVariables() {
+	public Map<IVariableDeclaration, IValue> getVariables() {
 		return variables.entrySet().stream().collect(Collectors.toMap(
 				e -> e.getKey(),
 				e -> e.getValue().getTarget()));
 	}
 
 	@Override 
-	public IReference getVariableStore(IVariable variable) {
+	public IReference getVariableStore(IVariableDeclaration variable) {
 		assert variables.containsKey(variable) : variable.toString();
 		return variables.get(variable);
 	}
@@ -95,7 +95,7 @@ class StackFrame implements IStackFrame {
 	@Override
 	public int getMemory() {
 		int bytes = 0;
-		for (IVariable var : procedure.getVariables())
+		for (IVariableDeclaration var : procedure.getVariables())
 			bytes += var.getType().getMemoryBytes();
 		return bytes;
 	}
@@ -184,7 +184,7 @@ class StackFrame implements IStackFrame {
 	@Override
 	public String toString() {
 		String text = procedure.getId() + "(...)"; // TODO pretty print
-		for(Entry<IVariable, IReference> e : variables.entrySet())
+		for(Entry<IVariableDeclaration, IReference> e : variables.entrySet())
 			text += " " + e.getKey() + "=" + e.getValue();
 		return text;
 	}

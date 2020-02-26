@@ -10,15 +10,23 @@ public interface IArrayType extends IType {
 	default IType getRootComponentType() {
 		return getComponentTypeAt(getDimensions());
 	}
+	
+	
 	IArrayAllocation stackAllocation(List<IExpression> dimensions);
 	
 	default IArrayAllocation stackAllocation(IExpression ... dimensions) {
 		return stackAllocation(Arrays.asList(dimensions));
+	}
+	default IArrayAllocation stackAllocation(IExpressionView ... views) {
+		return stackAllocation(IExpressionView.toList(views));
 	}
 	
 	IArrayAllocation heapAllocation(List<IExpression> dimensions);
 	
 	default IArrayAllocation heapAllocation(IExpression ... dimensions) {
 		return heapAllocation(Arrays.asList(dimensions));
+	}
+	default IArrayAllocation heapAllocation(IExpressionView ... views) {
+		return heapAllocation(IExpressionView.toList(views));
 	}
 }

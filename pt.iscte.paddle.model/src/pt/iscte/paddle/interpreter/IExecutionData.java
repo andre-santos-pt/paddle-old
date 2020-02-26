@@ -4,7 +4,7 @@ import java.util.Map;
 
 import pt.iscte.paddle.model.IOperator.OperationType;
 import pt.iscte.paddle.model.IProcedure;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public interface IExecutionData {
 //	Map<IProcedure, Integer> getNumberOfProcedureCalls();
@@ -18,7 +18,7 @@ public interface IExecutionData {
 	
 	int getCallStackDepth();
 	IValue getReturnValue();
-	IValue getVariableValue(IVariable id);
+	IValue getVariableValue(IVariableDeclaration id);
 //	int getTotalMemory();
 	
 	default void printResult() {

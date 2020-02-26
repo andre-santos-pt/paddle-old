@@ -11,14 +11,14 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IReferenceType;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 class RecordFieldExpression extends Expression implements IRecordFieldExpression {
 
 	private final IExpression target;
-	private final IVariable field;
+	private final IVariableDeclaration field;
 	
-	public RecordFieldExpression(IExpression target, IVariable field) {
+	public RecordFieldExpression(IExpression target, IVariableDeclaration field) {
 		assert target != null;
 		assert field != null;
 		this.target = target;
@@ -31,7 +31,7 @@ class RecordFieldExpression extends Expression implements IRecordFieldExpression
 	}
 
 	@Override
-	public IVariable getField() {
+	public IVariableDeclaration getField() {
 		return field;
 	}
 
@@ -49,7 +49,7 @@ class RecordFieldExpression extends Expression implements IRecordFieldExpression
 	}
 	
 	@Override
-	public IRecordFieldExpression field(IVariable field) {
+	public IRecordFieldExpression field(IVariableDeclaration field) {
 		return new RecordFieldExpression(this, field);
 	}
 
@@ -60,7 +60,7 @@ class RecordFieldExpression extends Expression implements IRecordFieldExpression
 	
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
-		assert target instanceof IVariable;
+		assert target instanceof IVariableDeclaration;
 		IRecord r = resolveTarget(stack); 
 		IValue field = r.getField(this.field).getTarget();
 		return field;

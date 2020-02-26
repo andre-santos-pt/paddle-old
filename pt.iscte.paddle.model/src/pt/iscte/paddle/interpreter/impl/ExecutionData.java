@@ -9,7 +9,7 @@ import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IOperator.OperationType;
 import pt.iscte.paddle.model.IProcedure;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class ExecutionData implements IExecutionData  {
 	private Map<IProcedure, Integer> assignmentCount = new HashMap<IProcedure, Integer>();
@@ -27,7 +27,7 @@ public class ExecutionData implements IExecutionData  {
 	
 	private IValue returnValue = IValue.NULL;
 	
-	private Map<IVariable, IValue> state;
+	private Map<IVariableDeclaration, IValue> state;
 	
 	@Override
 	public Map<IProcedure, Integer> getAssignmentData() {
@@ -128,11 +128,11 @@ public class ExecutionData implements IExecutionData  {
 	}
 
 	@Override
-	public IValue getVariableValue(IVariable variable) {
+	public IValue getVariableValue(IVariableDeclaration variable) {
 		return state.get(variable);
 	}
 	
-	public void setVariableState(Map<IVariable, IValue> variables) {
+	public void setVariableState(Map<IVariableDeclaration, IValue> variables) {
 		state = variables;
 	}
 }

@@ -11,15 +11,15 @@ import pt.iscte.paddle.model.IOperator;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.tests.BaseTest;
 
 // TODO if if
 public class TestSelection extends BaseTest {
 	
 	IProcedure max = module.addProcedure(INT);
-	IVariable a = max.addParameter(INT);
-	IVariable b = max.addParameter(INT);
+	IVariableDeclaration a = max.addParameter(INT);
+	IVariableDeclaration b = max.addParameter(INT);
 	IBinaryExpression guard = GREATER.on(a, b);
 	ISelection ifElse = max.getBody().addSelectionWithAlternative(guard);
 	IReturn ret = ifElse.addReturn(a);

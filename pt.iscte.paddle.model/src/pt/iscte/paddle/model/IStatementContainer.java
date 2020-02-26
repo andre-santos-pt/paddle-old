@@ -23,68 +23,68 @@ public interface IStatementContainer {
 	
 	
 
-	default IVariable addVariable(IType type, String ... flags) {
+	default IVariableDeclaration addVariable(IType type, String ... flags) {
 		return addVariableAt(type, getBlock().getSize(), flags);
 	}
 	
-	default IVariable addVariableAt(IType type, int index, String ... flags) {
+	default IVariableDeclaration addVariableAt(IType type, int index, String ... flags) {
 		return getBlock().addVariableAt(type, index, flags);
 	}
 
-	default IVariable addVariable(IType type, IExpression initialization, String ... flags) {
-		return addVariableAt(type, initialization, getBlock().getSize(), flags);
+	default IVariableDeclaration addVariable(IType type, IExpressionView initialization, String ... flags) {
+		return addVariableAt(type, initialization.expression(), getBlock().getSize(), flags);
 	}
 	
-	default IVariable addVariableAt(IType type, IExpression initialization, int index, String ... flags) {
-		IVariable var = addVariableAt(type, index, flags);
-		addAssignmentAt(var, initialization, index + 1);
+	default IVariableDeclaration addVariableAt(IType type, IExpressionView initialization, int index, String ... flags) {
+		IVariableDeclaration var = addVariableAt(type, index, flags);
+		addAssignmentAt(var, initialization.expression(), index + 1);
 		return var;
 	}
 	
-	default IVariable addVariableWithIdAt(IType type, String id, String ... flags) {
+	default IVariableDeclaration addVariableWithIdAt(IType type, String id, String ... flags) {
 		return addVariableWithIdAt(type, id, getBlock().getSize(), flags);
 	}
 	
-	default IVariable addVariableWithIdAt(IType type, String id, int index, String ... flags) {
+	default IVariableDeclaration addVariableWithIdAt(IType type, String id, int index, String ... flags) {
 		return getBlock().addVariableWithIdAt(type, id, index, flags);
 	}
 	
 	
-	default IVariableAssignment addAssignment(IVariable var, IExpression exp, String ... flags) {
-		return addAssignmentAt(var, exp, getBlock().getSize(), flags);
+	default IVariableAssignment addAssignment(IVariableDeclaration var, IExpressionView exp, String ... flags) {
+		return addAssignmentAt(var, exp.expression(), getBlock().getSize(), flags);
 	}
 
-	default IVariableAssignment addAssignmentAt(IVariable var, IExpression exp, int index, String ... flags) {
+	default IVariableAssignment addAssignmentAt(IVariableDeclaration var, IExpression exp, int index, String ... flags) {
 		return getBlock().addAssignmentAt(var, exp, index, flags);
 	}
 
 	default IVariableAssignment addAssignmentAt(String var, IExpression exp, int index, String ... flags) {
 		IProcedure proc = getBlock().getOwnerProcedure();
-		IVariable variable = proc.getVariable(var);
+		IVariableDeclaration variable = proc.getVariable(var);
 		if(variable == null)
-			variable = new IVariable.UnboundVariable(var);
+			variable = new IVariableDeclaration.UnboundVariable(var);
 		
 		return getBlock().addAssignmentAt(variable, exp, index, flags);
 	}
 	
 	
-	default IVariableAssignment addIncrement(IVariable var) {
+	default IVariableAssignment addIncrement(IVariableDeclaration var) {
 		return addIncrementAt(var, getBlock().getSize());
 	}
 	
-	default IVariableAssignment addIncrementAt(IVariable var, int index) {
+	default IVariableAssignment addIncrementAt(IVariableDeclaration var, int index) {
 //		assert var.getType() == IType.INT;
-		IVariableAssignment a = addAssignmentAt(var, IOperator.ADD.on(var, IType.INT.literal(1)), index, "INC");
+		IVariableAssignment a = addAssignmentAt(var, IOperator.ADD.on(var.expression(), IType.INT.literal(1)), index, "INC");
 		return a;
 	}
 	
-	default IVariableAssignment addDecrement(IVariable var) {
+	default IVariableAssignment addDecrement(IVariableDeclaration var) {
 		return addDecrementAt(var, getBlock().getSize());
 	}
 
-	default IVariableAssignment addDecrementAt(IVariable var, int index) {
+	default IVariableAssignment addDecrementAt(IVariableDeclaration var, int index) {
 		assert var.getType() == IType.INT;
-		return addAssignmentAt(var, IOperator.SUB.on(var, IType.INT.literal(1)), index);
+		return addAssignmentAt(var, IOperator.SUB.on(var.expression(), IType.INT.literal(1)), index);
 	}
 	
 	
@@ -97,6 +97,15 @@ public interface IStatementContainer {
 		return getBlock().addArrayElementAssignmentAt(target, exp, index, indexes);
 	}
 	
+	default IArrayElementAssignment addArrayElementAssignment(IVariableDeclaration target, IExpression exp, IExpression ... indexes) {
+		return addArrayElementAssignmentAt(target.expression(), exp, getBlock().getSize(), indexes);
+	}
+	
+	default IArrayElementAssignment addArrayElementAssignment(IExpressionView target, IExpressionView exp, IExpressionView ... views) {
+		return addArrayElementAssignmentAt(target.expression(), exp.expression(), getBlock().getSize(), IExpressionView.toList(views));
+	}
+	
+	
 	default IArrayElementAssignment addArrayElementAssignment(IExpression target, IExpression exp, IExpression ... indexes) {
 		return addArrayElementAssignmentAt(target, exp, getBlock().getSize(), indexes);
 	}
@@ -107,8 +116,8 @@ public interface IStatementContainer {
 
 	
 	
-	default IRecordFieldAssignment addRecordFieldAssignment(IRecordFieldExpression target, IExpression exp) {
-		return addRecordFieldAssignmentAt(target, exp, getBlock().getSize());
+	default IRecordFieldAssignment addRecordFieldAssignment(IRecordFieldExpression target, IExpressionView exp) {
+		return addRecordFieldAssignmentAt(target, exp.expression(), getBlock().getSize());
 	}
 	
 	default IRecordFieldAssignment addRecordFieldAssignmentAt(IRecordFieldExpression target, IExpression exp, int index) {
@@ -154,6 +163,10 @@ public interface IStatementContainer {
 		return getBlock().addReturnAt(index);
 	}
 	
+	default IReturn addReturn(IVariableDeclaration variable) {
+		return addReturn(variable.expression());
+	}
+	
 	default IReturn addReturn(IExpression expression) {
 		return addReturnAt(expression, getBlock().getSize());
 	}
@@ -192,6 +205,10 @@ public interface IStatementContainer {
 	
 	default IProcedureCall addCall(IProcedure procedure, IExpression ... args) {
 		return addCallAt(procedure, getBlock().getSize(), args);
+	}
+	
+	default IProcedureCall addCall(IProcedure procedure, IExpressionView ... views) {
+		return addCallAt(procedure, getBlock().getSize(), IExpressionView.toList(views));
 	}
 	
 	default IProcedureCall addCallAt(IProcedure procedure, int index, IExpression ... args) {

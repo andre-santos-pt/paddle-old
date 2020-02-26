@@ -7,9 +7,9 @@ import java.util.List;
  */
 public interface IRecordType extends IType {
 	
-	List<IVariable> getFields();
+	List<IVariableDeclaration> getFields();
 	
-	IVariable addField(IType type);
+	IVariableDeclaration addField(IType type);
 
 	@Override
 	default Object getDefaultValue() {

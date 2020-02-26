@@ -13,23 +13,23 @@ import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestInvert extends BaseTest {
 	private IProcedure swap = importProcedure(TestSwap.class, "swap");
 	
 	IProcedure invert = module.addProcedure(VOID);
-	IVariable array = invert.addParameter(INT.array().reference());
+	IVariableDeclaration array = invert.addParameter(INT.array().reference());
 	
 	IBlock body = invert.getBody();
-	IVariable i = body.addVariable(INT, INT.literal(0));
+	IVariableDeclaration i = body.addVariable(INT, INT.literal(0));
 	ILoop loop = body.addLoop(SMALLER.on(i, IDIV.on(array.length(), INT.literal(2))));
 	IProcedureCall swapCall = loop.addCall(swap, array, i, SUB.on(SUB.on(array.length(), INT.literal(1)), i));
 	IVariableAssignment iInc = loop.addIncrement(i);
 	
-	private IVariable aEven;
-	private IVariable aOdd;
+	private IVariableDeclaration aEven;
+	private IVariableDeclaration aOdd;
 
 	private int[] integers = {-2, 0, 1, 4, 5, 8, 10, 11, 20, 23};
 	private ILiteral[] literals = literalIntArray(integers);

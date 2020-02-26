@@ -8,23 +8,23 @@ import pt.iscte.paddle.model.IRecordAllocation;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IReferenceType;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 class RecordType extends ProgramElement implements IRecordType {
-	private final List<IVariable> variables;
+	private final List<IVariableDeclaration> variables;
 	
 	RecordType() {
 		this.variables = new ArrayList<>(5);
 	}
 	
 	@Override
-	public List<IVariable> getFields() {
+	public List<IVariableDeclaration> getFields() {
 		return Collections.unmodifiableList(variables);
 	}
 	
 	@Override
-	public IVariable addField(IType type) {
-		IVariable var = new Variable(this, type);
+	public IVariableDeclaration addField(IType type) {
+		IVariableDeclaration var = new Variable(this, type);
 		variables.add(var);
 		return var;
 	}
@@ -37,7 +37,7 @@ class RecordType extends ProgramElement implements IRecordType {
 	@Override
 	public int getMemoryBytes() {
 		int bytes = 0;
-		for(IVariable v : variables)
+		for(IVariableDeclaration v : variables)
 			bytes += v.getType().getMemoryBytes();
 		return bytes;
 	}

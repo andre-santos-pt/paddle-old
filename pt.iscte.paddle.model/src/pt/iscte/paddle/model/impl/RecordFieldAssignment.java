@@ -11,7 +11,7 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IRecordFieldAssignment;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IReferenceType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 class RecordFieldAssignment extends Statement implements IRecordFieldAssignment {
 	private final IRecordFieldExpression target;
@@ -30,7 +30,7 @@ class RecordFieldAssignment extends Statement implements IRecordFieldAssignment 
 	}
 	
 	@Override
-	public IVariable getField() {
+	public IVariableDeclaration getField() {
 		return target.getField();
 	}	
 
@@ -42,7 +42,7 @@ class RecordFieldAssignment extends Statement implements IRecordFieldAssignment 
 	@Override
 	public String toString() {
 		IExpression target = getTarget();
-		IVariable field = getField();
+		IVariableDeclaration field = getField();
 		if(target.getType() instanceof IReferenceType)
 			return target.toString() + " = " + expression;
 		else

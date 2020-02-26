@@ -60,8 +60,8 @@ IListenable<IBlock.IListener> {
 				if(visitor.visit(ret) && !ret.getReturnValueType().isVoid())
 					ret.getExpression().accept(visitor);
 			}
-			else if(s instanceof IVariable) {
-				IVariable var = (IVariable) s;
+			else if(s instanceof IVariableDeclaration) {
+				IVariableDeclaration var = (IVariableDeclaration) s;
 				visitor.visit(var);
 			}
 			else if(s instanceof IArrayElementAssignment) {
@@ -151,7 +151,7 @@ IListenable<IBlock.IListener> {
 		default void 	visit(IContinue continueStatement) 			{ }
 
 		// TODO missing because it is not statement, only appears on expressions
-		default void	visit(IVariable variable)					{ }
+		default void	visit(IVariableDeclaration variable)					{ }
 	}
 
 

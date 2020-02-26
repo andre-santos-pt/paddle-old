@@ -3,8 +3,8 @@ package pt.iscte.paddle.tests.asg;
 import java.util.Scanner;
 
 import pt.iscte.paddle.interpreter.ExecutionError;
-import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.interpreter.ExecutionError.Type;
+import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;

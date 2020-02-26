@@ -14,22 +14,22 @@ import pt.iscte.paddle.model.IRecordFieldAssignment;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 
 public class TestList extends BaseTest {
 
 	IRecordType Node = module.addRecordType();
-	IVariable element = Node.addField(INT);
-	IVariable next = Node.addField(Node.reference());
+	IVariableDeclaration element = Node.addField(INT);
+	IVariableDeclaration next = Node.addField(Node.reference());
 
 	IRecordType IntList = module.addRecordType();
-	IVariable head = IntList.addField(Node.reference());
-	IVariable tail = IntList.addField(Node.reference());
+	IVariableDeclaration head = IntList.addField(Node.reference());
+	IVariableDeclaration tail = IntList.addField(Node.reference());
 
 	IProcedure init = module.addProcedure(VOID);
-	IVariable list = init.addParameter(IntList.reference());
+	IVariableDeclaration list = init.addParameter(IntList.reference());
 
 	IBlock initBody = init.getBody();
 	IRecordFieldAssignment hAss = initBody.addRecordFieldAssignment(list.field(head), ILiteral.NULL);
@@ -37,10 +37,10 @@ public class TestList extends BaseTest {
 
 
 	IProcedure add = module.addProcedure(VOID);
-	IVariable list_ = add.addParameter(IntList.reference());
-	IVariable e = add.addParameter(INT);
+	IVariableDeclaration list_ = add.addParameter(IntList.reference());
+	IVariableDeclaration e = add.addParameter(INT);
 	IBlock addBody = add.getBody();
-	IVariable n = addBody.addVariable(Node.reference(), Node.heapAllocation());
+	IVariableDeclaration n = addBody.addVariable(Node.reference(), Node.heapAllocation());
 	IRecordFieldAssignment nAss = addBody.addRecordFieldAssignment(n.field(element), e);
 	ISelection checkEmpty = addBody.addSelectionWithAlternative(EQUAL.on(list_.field(head), ILiteral.NULL));
 	IRecordFieldAssignment hAss_ = checkEmpty.getBlock().addRecordFieldAssignment(list_.field(head), n);
@@ -52,10 +52,10 @@ public class TestList extends BaseTest {
 
 
 	IProcedure exists = module.addProcedure(BOOLEAN);
-	IVariable list__ = exists.addParameter(IntList.reference());
-	IVariable e_ = exists.addParameter(INT);
+	IVariableDeclaration list__ = exists.addParameter(IntList.reference());
+	IVariableDeclaration e_ = exists.addParameter(INT);
 	IBlock existsBody = exists.getBody();
-	IVariable n_ = existsBody.addVariable(Node.reference(), list__.field(head));
+	IVariableDeclaration n_ = existsBody.addVariable(Node.reference(), list__.field(head));
 	ILoop findLoop = existsBody.addLoop(DIFFERENT.on(n_, ILiteral.NULL));
 	ISelection iffind = findLoop.addSelection(EQUAL.on(n_.field(element), e_));
 	IReturn retTrue = iffind.getBlock().addReturn(BOOLEAN.literal(true));
@@ -63,13 +63,13 @@ public class TestList extends BaseTest {
 	IReturn retFalse = existsBody.addReturn(BOOLEAN.literal(false));
 	
 	
-	private IVariable existsTrue;
-	private IVariable existsFalse;
+	private IVariableDeclaration existsTrue;
+	private IVariableDeclaration existsFalse;
 	
 	protected IProcedure main() {
 		IProcedure test = module.addProcedure(INT);
 		IBlock body = test.getBody();
-		IVariable list = body.addVariable(IntList.reference());
+		IVariableDeclaration list = body.addVariable(IntList.reference());
 		
 		body.addAssignment(list, IntList.heapAllocation());
 		body.addCall(init, list);

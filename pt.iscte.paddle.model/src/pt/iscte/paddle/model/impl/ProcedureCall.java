@@ -19,7 +19,7 @@ import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IProcedureDeclaration;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IExecutable {
 	private final IBlock parent;
@@ -136,7 +136,7 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 		}
 		
 		@Override
-		public List<IVariable> getParameters() {
+		public List<IVariableDeclaration> getParameters() {
 			return Collections.emptyList();
 		}
 		
@@ -146,7 +146,7 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 		}
 		
 		@Override
-		public IVariable addParameter(IType type) {
+		public IVariableDeclaration addParameter(IType type) {
 			return null;
 		}
 	};

@@ -10,8 +10,8 @@ import pt.iscte.paddle.model.IBlock.IVisitor;
  */
 public interface IProcedure extends IProcedureDeclaration {
 	IModule getModule();
-	List<IVariable> getLocalVariables();
-	List<IVariable> getVariables();
+	List<IVariableDeclaration> getLocalVariables();
+	List<IVariableDeclaration> getVariables();
 	IType getReturnType();
 	
 	IBlock getBody();
@@ -31,8 +31,8 @@ public interface IProcedure extends IProcedureDeclaration {
 		return r.foundRecursiveCall;
 	}
 	
-	default IVariable getVariable(String id) {
-		for(IVariable v : getVariables())
+	default IVariableDeclaration getVariable(String id) {
+		for(IVariableDeclaration v : getVariables())
 			if(id.equals(v.getId()))
 				return v;
 		return null;
@@ -69,12 +69,12 @@ public interface IProcedure extends IProcedureDeclaration {
 		}
 
 		@Override
-		public List<IVariable> getParameters() {
+		public List<IVariableDeclaration> getParameters() {
 			return null;
 		}
 
 		@Override
-		public IVariable addParameter(IType type) {
+		public IVariableDeclaration addParameter(IType type) {
 			return null;
 		}
 
@@ -98,12 +98,12 @@ public interface IProcedure extends IProcedureDeclaration {
 		}
 
 		@Override
-		public List<IVariable> getLocalVariables() {
+		public List<IVariableDeclaration> getLocalVariables() {
 			return Collections.emptyList();
 		}
 
 		@Override
-		public List<IVariable> getVariables() {
+		public List<IVariableDeclaration> getVariables() {
 			return Collections.emptyList();
 		}
 

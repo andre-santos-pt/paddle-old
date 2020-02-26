@@ -25,10 +25,11 @@ import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IUnaryExpression;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAddress;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableDereference;
+import pt.iscte.paddle.model.IVariableExpression;
 
 public class SemanticChecker {
 	private ISemanticChecker checker;
@@ -107,7 +108,7 @@ public class SemanticChecker {
 		}
 
 		@Override
-		public void visit(IVariable variable) {
+		public void visit(IVariableDeclaration variable) {
 			rules.forEach(r -> r.visit(variable));
 		}
 
@@ -200,6 +201,11 @@ public class SemanticChecker {
 		
 		@Override
 		public void visit(IVariableDereference exp) {
+			rules.forEach(r -> r.visit(exp));
+		}
+		
+		@Override
+		public void visit(IVariableExpression exp) {
 			rules.forEach(r -> r.visit(exp));
 		}
 		

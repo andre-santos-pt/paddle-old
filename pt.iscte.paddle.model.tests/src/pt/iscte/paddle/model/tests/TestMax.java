@@ -6,12 +6,12 @@ import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestMax extends BaseTest {
 	IProcedure max = getModule().addProcedure(INT);
-	IVariable a = max.addParameter(INT);
-	IVariable b = max.addParameter(INT);
+	IVariableDeclaration a = max.addParameter(INT);
+	IVariableDeclaration b = max.addParameter(INT);
 	ISelection ifstat = max.getBody().addSelectionWithAlternative(GREATER.on(a, b));
 	IReturn ra = ifstat.addReturn(a);
 	IReturn rb = ifstat.getAlternativeBlock().addReturn(b);

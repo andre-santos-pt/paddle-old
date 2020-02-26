@@ -15,7 +15,7 @@ public interface IModel2CodeTranslator {
 	String statements(IBlock b);
 	
 	String statement(IBlockElement e);
-	String declaration(IVariable v);
+	String declaration(IVariableDeclaration v);
 	String assignment(IVariableAssignment a);
 	
 	String expression(IExpression e);
@@ -53,7 +53,7 @@ public interface IModel2CodeTranslator {
 		@Override
 		public String declaration(IRecordType t) {
 			String text = STATIC + "class " + t.getId() + " {\n";
-			for (IVariable member : t.getFields()) {
+			for (IVariableDeclaration member : t.getFields()) {
 				text += "\t" + member.getDeclaration() + ";\n";
 			}
 			text += "}\n";
@@ -64,7 +64,7 @@ public interface IModel2CodeTranslator {
 		public String header(IProcedure p) {
 			String text = STATIC + type(p.getReturnType()) + " " + p.getId() + "(";
 			String args = "";
-			for (IVariable param : p.getParameters()) {
+			for (IVariableDeclaration param : p.getParameters()) {
 				if(!args.isEmpty())
 					args += ", ";
 				args += type(param.getType())  + " " + param.getId();
@@ -102,8 +102,8 @@ public interface IModel2CodeTranslator {
 		
 		@Override
 		public String statement(IBlockElement e) {
-			if(e instanceof IVariable) {
-				IVariable v = (IVariable) e;
+			if(e instanceof IVariableDeclaration) {
+				IVariableDeclaration v = (IVariableDeclaration) e;
 				return type(v.getType()) + " " + v.getId() + ";\n";
 			}
 			else if(e instanceof IArrayElementAssignment) {
@@ -160,7 +160,7 @@ public interface IModel2CodeTranslator {
 		}
 		
 		@Override
-		public String declaration(IVariable v) {
+		public String declaration(IVariableDeclaration v) {
 			return v.getType().getId() + " " + v.getId() + ";\n";
 		}
 		
@@ -172,9 +172,9 @@ public interface IModel2CodeTranslator {
 		@Override
 		public String expression(IExpression e) {
 			if(e instanceof IVariableAddress)
-				return ((IVariableAddress) e).getVariable().getId();
+				return ((IVariableAddress) e).getTarget().getId();
 			else if(e instanceof IVariableDereference)
-				return ((IVariableDereference) e).getVariable().getId();
+				return ((IVariableDereference) e).getTarget().getId();
 			else if(e instanceof IRecordAllocation)
 				return "new " + ((IRecordAllocation) e).getRecordType().getId() + "()";
 			else if(e instanceof IArrayElement) {

@@ -67,8 +67,8 @@ class ArrayElementAssignment extends Statement implements IArrayElementAssignmen
 			IRecord r = rexp.resolveTarget(stack);
 			ref = (IReference) r.getField(rexp.getField());
 		}
-		else if(target instanceof Variable)
-			ref = stack.getTopFrame().getVariableStore((Variable) target);
+		else if(target instanceof VariableExpression)
+			ref = stack.getTopFrame().getVariableStore(((VariableExpression) target).getVariable());
 		else
 			assert false;
 		

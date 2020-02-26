@@ -13,16 +13,16 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestIdMatrix extends BaseTest {
 	IProcedure idMatrix = module.addProcedure(INT.array2D());
-	IVariable n = idMatrix.addParameter(INT);		
+	IVariableDeclaration n = idMatrix.addParameter(INT);		
 	IBlock body = idMatrix.getBody();
-	IVariable id = body.addVariable(INT.array2D());
+	IVariableDeclaration id = body.addVariable(INT.array2D());
 	IVariableAssignment assignment = body.addAssignment(id, INT.array2D().stackAllocation(n, n));
-	IVariable i = body.addVariable(INT);
+	IVariableDeclaration i = body.addVariable(INT);
 	IVariableAssignment iInit = body.addAssignment(i, INT.literal(0));
 	IExpression e = DIFFERENT.on(i, n);
 	ILoop loop = body.addLoop(e);

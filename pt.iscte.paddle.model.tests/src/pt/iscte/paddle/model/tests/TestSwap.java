@@ -9,21 +9,21 @@ import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IProcedure;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestSwap extends BaseTest {
 
 	IProcedure swap = module.addProcedure(VOID);
-	IVariable array = swap.addParameter(INT.array().reference());
-	IVariable i = swap.addParameter(INT);
-	IVariable j = swap.addParameter(INT);
+	IVariableDeclaration array = swap.addParameter(INT.array().reference());
+	IVariableDeclaration i = swap.addParameter(INT);
+	IVariableDeclaration j = swap.addParameter(INT);
 	
 	IBlock body = swap.getBody();
-	IVariable t = body.addVariable(INT, array.dereference().element(i));
+	IVariableDeclaration t = body.addVariable(INT, array.dereference().element(i));
 	IArrayElementAssignment ass = body.addArrayElementAssignment(array.dereference(), array.dereference().element(j), i);
 	IArrayElementAssignment ass0 = body.addArrayElementAssignment(array.dereference(), t, j);
 	
-	private IVariable a;
+	private IVariableDeclaration a;
 	
 	private int[] integers = {-2, 0, 1, 4, 5, 8, 10, 11, 20, 23};
 	private ILiteral[] literals = literalIntArray(integers);

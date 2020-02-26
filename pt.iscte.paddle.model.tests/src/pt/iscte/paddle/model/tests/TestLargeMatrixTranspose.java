@@ -12,25 +12,25 @@ import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 // TODO large matrix
 public class TestLargeMatrixTranspose extends BaseTest {
 	IProcedure transpose = module.addProcedure(INT.array2D().reference());
-	IVariable matrix = transpose.addParameter(INT.array2D().reference()); 
+	IVariableDeclaration matrix = transpose.addParameter(INT.array2D().reference()); 
 	IBlock body = transpose.getBody();
-	IVariable t = body.addVariable(INT.array2D().reference(), INT.array2D().heapAllocation(matrix.length(INT.literal(0)), matrix.length()));
-	IVariable i = body.addVariable(INT, INT.literal(0));
+	IVariableDeclaration t = body.addVariable(INT.array2D().reference(), INT.array2D().heapAllocation(matrix.length(INT.literal(0)), matrix.length()));
+	IVariableDeclaration i = body.addVariable(INT, INT.literal(0));
 	ILoop outLoop = body.addLoop(DIFFERENT.on(i, t.length()));
-	IVariable j = outLoop.addVariable(INT, INT.literal(0));
+	IVariableDeclaration j = outLoop.addVariable(INT, INT.literal(0));
 	ILoop inLoop = outLoop.addLoop(DIFFERENT.on(j, t.length(i)));
 	IArrayElementAssignment ass = inLoop.addArrayElementAssignment(t, matrix.element(j, i), i, j);
 	IVariableAssignment jInc = inLoop.addIncrement(j);
 	IVariableAssignment iInc = outLoop.addIncrement(i);
 	IReturn ret = body.addReturn(t);
 	
-	private IVariable m;
+	private IVariableDeclaration m;
 
 	
 	public IProcedure main() {

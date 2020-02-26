@@ -9,8 +9,8 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.cfg.IBranchNode;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.cfg.IStatementNode;
@@ -18,11 +18,11 @@ import pt.iscte.paddle.model.cfg.IStatementNode;
 public class TestMaxArrayCFG extends BaseTest {
 
 	IProcedure max = module.addProcedure(INT);
-	IVariable array = max.addParameter(INT.array().reference());  // FIXME type toString is null
+	IVariableDeclaration array = max.addParameter(INT.array().reference());  // FIXME type toString is null
 	IBlock body = max.getBody();
-	IVariable m = body.addVariable(INT);
+	IVariableDeclaration m = body.addVariable(INT);
 	IVariableAssignment mAss = body.addAssignment(m, array.element(INT.literal(0)));
-	IVariable i = body.addVariable(INT);
+	IVariableDeclaration i = body.addVariable(INT);
 	IVariableAssignment iAss = body.addAssignment(i, INT.literal(1));
 	ILoop loop = body.addLoop(SMALLER.on(i, array.length()));
 	ISelection ifstat = loop.addSelection(GREATER.on(array.element(i), m));

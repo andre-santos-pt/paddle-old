@@ -12,18 +12,18 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestArrayFind extends BaseTest {
 
 	IProcedure exists = module.addProcedure(BOOLEAN);
-	IVariable array = exists.addParameter(INT.array().reference());
-	IVariable e = exists.addParameter(INT);
+	IVariableDeclaration array = exists.addParameter(INT.array().reference());
+	IVariableDeclaration e = exists.addParameter(INT);
 	IBlock body = exists.getBody();
-	IVariable found = body.addVariable(BOOLEAN);
+	IVariableDeclaration found = body.addVariable(BOOLEAN);
 	IVariableAssignment foundAss = body.addAssignment(found, BOOLEAN.literal(false));
-	IVariable i = body.addVariable(INT);
+	IVariableDeclaration i = body.addVariable(INT);
 	IVariableAssignment iAss = body.addAssignment(i, INT.literal(0));
 	ILoop loop = body.addLoop(AND.on(NOT.on(found), SMALLER.on(i, array.length())));
 	ISelection ifstat = loop.addSelection(EQUAL.on(array.element(i), e));
@@ -34,9 +34,9 @@ public class TestArrayFind extends BaseTest {
 	
 	protected IProcedure main() {
 		IProcedure test = module.addProcedure(BOOLEAN);
-		IVariable e = test.addParameter(INT);
+		IVariableDeclaration e = test.addParameter(INT);
 		IBlock body = test.getBody();
-		IVariable a = body.addVariable(INT.array().reference(), INT.array().heapAllocation(INT.literal(10)));
+		IVariableDeclaration a = body.addVariable(INT.array().reference(), INT.array().heapAllocation(INT.literal(10)));
 		body.addArrayElementAssignment(a, INT.literal(3), INT.literal(0));
 		body.addArrayElementAssignment(a, INT.literal(1), INT.literal(1));
 		body.addArrayElementAssignment(a, INT.literal(4), INT.literal(3));

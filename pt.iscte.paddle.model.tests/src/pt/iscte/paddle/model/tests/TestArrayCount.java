@@ -12,18 +12,18 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestArrayCount extends BaseTest {
 
 	IProcedure count = module.addProcedure(INT);
-	IVariable array = count.addParameter(INT.array().reference());
-	IVariable e = count.addParameter(INT);
+	IVariableDeclaration array = count.addParameter(INT.array().reference());
+	IVariableDeclaration e = count.addParameter(INT);
 	IBlock body = count.getBody();
-	IVariable c = body.addVariable(INT);
+	IVariableDeclaration c = body.addVariable(INT);
 	IVariableAssignment cAss = body.addAssignment(c, INT.literal(0));
-	IVariable i = body.addVariable(INT);
+	IVariableDeclaration i = body.addVariable(INT);
 	IVariableAssignment iAss = body.addAssignment(i, INT.literal(0));
 	ILoop loop = body.addLoop(SMALLER.on(i, array.length()));
 	ISelection ifstat = loop.addSelection(EQUAL.on(array.element(i), e));
@@ -31,7 +31,7 @@ public class TestArrayCount extends BaseTest {
 	IVariableAssignment iInc = loop.addIncrement(i);
 	IReturn ret = body.addReturn(c);
 
-	private IVariable a;
+	private IVariableDeclaration a;
 
 	private int element = 3;
 	private int[] integers = {-2, element, 1, 4, 5, element, 10, 11, 20, element};

@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 
 public interface IVariableAssignment extends IStatement {
 	// OCL: variable must be owned by the same procedure
-	IVariable getTarget();
+	IVariableDeclaration getTarget();
 	IExpression getExpression();
 	IBlock getParent();
 	

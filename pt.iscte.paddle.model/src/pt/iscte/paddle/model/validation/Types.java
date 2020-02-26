@@ -18,8 +18,8 @@ import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IUnaryExpression;
 import pt.iscte.paddle.model.IUnaryOperator;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableDereference;
 
 public class Types extends Rule {
@@ -67,7 +67,7 @@ public class Types extends Rule {
 
 	@Override
 	public boolean visit(IProcedureCall exp) {
-		List<IVariable> parameters = exp.getProcedure().getParameters();
+		List<IVariableDeclaration> parameters = exp.getProcedure().getParameters();
 		List<IExpression> arguments = exp.getArguments();
 		if(parameters.size() != arguments.size()) {
 			addProblem(ISemanticProblem.create("wrong number of arguments, given that " + exp.getProcedure().longSignature() + " has " + parameters.size() + " parameters.", exp.getProcedure(), exp));
@@ -109,7 +109,7 @@ public class Types extends Rule {
 		return true;
 	}
 
-	private void checkAssignmentTypes(IVariable var, IExpression exp) {
+	private void checkAssignmentTypes(IVariableDeclaration var, IExpression exp) {
 		if(!var.getType().isCompatible(exp.getType()) && !exp.isNull())
 			addProblem("incompatible assignment: " + exp.getType() + " cannot be assigned to " + var.getType(),
 					var, exp);	
@@ -117,7 +117,7 @@ public class Types extends Rule {
 
 	@Override
 	public void visit(IVariableDereference exp) {
-		if(!exp.getVariable().getType().isReference())
+		if(!exp.getTarget().getType().isReference())
 			addProblem("not a reference type", exp);
 	}
 

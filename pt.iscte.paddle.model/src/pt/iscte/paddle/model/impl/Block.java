@@ -20,8 +20,8 @@ import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatement;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.commands.IAddCommand;
 import pt.iscte.paddle.model.commands.IDeleteCommand;
 
@@ -171,8 +171,8 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 			tabs += "\t";
 		String text = "{\n";
 		for(IBlockElement s : children) {
-			if(s instanceof IVariable) {
-				IVariable v = (IVariable) s;
+			if(s instanceof IVariableDeclaration) {
+				IVariableDeclaration v = (IVariableDeclaration) s;
 				text += tabs + v.getType() + " " + v.getId() + ";\n";
 			}
 			else if(s instanceof IStatement) {
@@ -204,12 +204,12 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	}
 
 	@Override
-	public IVariable addVariableAt(IType type, int index, String ... flags) {		
+	public IVariableDeclaration addVariableAt(IType type, int index, String ... flags) {		
 		return addVariableWithIdAt(type, null, index, flags);
 	}
 	
 	@Override
-	public IVariable addVariableWithIdAt(IType type, String id, int index, String ... flags) {		
+	public IVariableDeclaration addVariableWithIdAt(IType type, String id, int index, String ... flags) {		
 		Variable var = new Variable(this, type, flags);
 		IProcedure procedure = getProcedure();
 		((Procedure) procedure).addVariableDeclaration(var);
@@ -219,7 +219,7 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	}
 	
 	@Override
-	public IVariableAssignment addAssignmentAt(IVariable variable, IExpression expression, int index, String ... flags) {
+	public IVariableAssignment addAssignmentAt(IVariableDeclaration variable, IExpression expression, int index, String ... flags) {
 		// TODO OCL: variable must be owned by the same procedure of expression
 		return new VariableAssignment(this, variable, expression, index, flags);
 	}

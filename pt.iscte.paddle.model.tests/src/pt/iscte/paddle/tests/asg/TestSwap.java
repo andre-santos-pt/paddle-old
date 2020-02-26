@@ -8,25 +8,25 @@ import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.tests.BaseTest;
 
 public class TestSwap extends BaseTest {
 
 	IProcedure swap = module.addProcedure(VOID);
-	IVariable v = swap.addParameter(INT.array().reference());
-	IVariable i = swap.addParameter(INT);
-	IVariable j = swap.addParameter(INT);
+	IVariableDeclaration v = swap.addParameter(INT.array().reference());
+	IVariableDeclaration i = swap.addParameter(INT);
+	IVariableDeclaration j = swap.addParameter(INT);
 	
 	IBlock body = swap.getBody();
-	IVariable t = body.addVariable(INT, v.dereference().element(i));
+	IVariableDeclaration t = body.addVariable(INT, v.dereference().element(i));
 	IArrayElementAssignment ass = body.addArrayElementAssignment(v.dereference(), v.dereference().element(j), i);
 	IArrayElementAssignment ass0 = body.addArrayElementAssignment(v.dereference(), t, j);
 	
 	IProcedure main = module.addProcedure(VOID);
 	IBlock mBody = main.getBody();
-	IVariable array = mBody.addVariable(INT.array());
+	IVariableDeclaration array = mBody.addVariable(INT.array());
 	IVariableAssignment ass1 = mBody.addAssignment(array, INT.array().stackAllocation(INT.literal(3)));
 
 	IArrayElementAssignment ass2 = mBody.addArrayElementAssignment(array, INT.literal(5), INT.literal(0));

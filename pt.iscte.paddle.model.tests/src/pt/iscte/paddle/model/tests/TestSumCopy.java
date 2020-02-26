@@ -11,16 +11,16 @@ import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestSumCopy extends BaseTest {
 
 	IProcedure summation = module.addProcedure(DOUBLE);
-	IVariable array = summation.addParameter(DOUBLE.array());
+	IVariableDeclaration array = summation.addParameter(DOUBLE.array());
 	IBlock sumBody = summation.getBody();
-	IVariable sum = sumBody.addVariable(DOUBLE, DOUBLE.literal(0.0));
-	IVariable i = sumBody.addVariable(INT, INT.literal(0));
+	IVariableDeclaration sum = sumBody.addVariable(DOUBLE, DOUBLE.literal(0.0));
+	IVariableDeclaration i = sumBody.addVariable(INT, INT.literal(0));
 	ILoop loop = sumBody.addLoop(DIFFERENT.on(i, array.dereference().length()));
 	IVariableAssignment ass1 = loop.addAssignment(sum, ADD.on(sum, array.dereference().element(i)));
 	IArrayElementAssignment ass0 = loop.addArrayElementAssignment(array, DOUBLE.literal(0.0), i);
@@ -28,7 +28,7 @@ public class TestSumCopy extends BaseTest {
 	IReturn ret = sumBody.addReturn(sum);
 	
 	
-	private IVariable a;
+	private IVariableDeclaration a;
 
 	protected IProcedure main() {
 		IProcedure test = module.addProcedure(DOUBLE);
@@ -39,7 +39,7 @@ public class TestSumCopy extends BaseTest {
 		body.addArrayElementAssignment(a, DOUBLE.literal(0.1), INT.literal(3));
 		body.addArrayElementAssignment(a, DOUBLE.literal(10.0), INT.literal(4));
 		
-		IVariable sum = body.addVariable(DOUBLE, summation.call(a));
+		IVariableDeclaration sum = body.addVariable(DOUBLE, summation.call(a));
 		body.addReturn(sum);
 		return test;
 	}

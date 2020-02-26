@@ -10,18 +10,22 @@ import pt.iscte.paddle.model.IOperator.OperationType;
  * Immutable
  *
  */
-public interface IExpression extends IProgramElement {
+public interface IExpression extends IProgramElement, IExpressionView {
 	IType getType();
 
 	// TODO concretize expression
 	//String concretize();
 	//	ISourceElement getParent();
 
-
+	@Override
+	default IExpression expression() {
+		return this;
+	}
+	
 	default boolean isDecomposable() {
 		return this instanceof ICompositeExpression;
 	}
-	
+
 	int getNumberOfParts();
 
 	default List<IExpression> getParts() {
@@ -35,15 +39,19 @@ public interface IExpression extends IProgramElement {
 	default String translate(IModel2CodeTranslator t) {
 		return t.expression(this);
 	}
-	
+
 	default boolean isNull() {
 		return this == ILiteral.NULL;
 	}
-	
+
 	IConditionalExpression conditional(IExpression trueCase, IExpression falseCase);
+
+	default IConditionalExpression conditional(IExpressionView trueCase, IExpressionView falseCase) {
+		return conditional(trueCase.expression(), falseCase.expression());
+	}
 	
 	// boolean refersTo(IVariable v); // TODO 
-	
+
 	default void accept(IVisitor visitor) {
 		visitPart(visitor, this);
 	}
@@ -64,7 +72,7 @@ public interface IExpression extends IProgramElement {
 			if(visitor.visit(el))
 				part.getParts().forEach(p -> visitPart(visitor, p));
 		}
-		
+
 		else if(part instanceof IUnaryExpression) {
 			IUnaryExpression un = (IUnaryExpression) part; 
 			if(visitor.visit(un))
@@ -75,7 +83,7 @@ public interface IExpression extends IProgramElement {
 			if(visitor.visit(bi))
 				part.getParts().forEach(p -> visitPart(visitor, p));
 		}
-		
+
 		else if(part instanceof IProcedureCall) {
 			IProcedureCall call = (IProcedureCall) part; 
 			if(visitor.visit(call))
@@ -87,12 +95,12 @@ public interface IExpression extends IProgramElement {
 			if(visitor.visit(con))
 				part.getParts().forEach(p -> visitPart(visitor, p));
 		}
-		
+
 		else if(part instanceof IConstant) {
 			IConstant con = (IConstant) part; 
 			visitor.visit(con);
 		}
-		
+
 		else if(part instanceof ILiteral) {
 			ILiteral lit = (ILiteral) part; 
 			visitor.visit(lit);
@@ -106,15 +114,15 @@ public interface IExpression extends IProgramElement {
 			IRecordFieldExpression sm = (IRecordFieldExpression) part; 
 			visitor.visit(sm);
 		}
-		
+
 		// before IVariable because it is subtype
 		else if(part instanceof IVariableDereference) {
 			IVariableDereference varadd = (IVariableDereference) part; 
 			visitor.visit(varadd);
 		}
-		
-		else if(part instanceof IVariable) {
-			IVariable var = (IVariable) part; 
+
+		else if(part instanceof IVariableExpression) {
+			IVariableExpression var = (IVariableExpression) part; 
 			visitor.visit(var);
 		}
 
@@ -131,23 +139,22 @@ public interface IExpression extends IProgramElement {
 		default boolean visit(IArrayAllocation exp) 		{ return true; }
 		default boolean visit(IArrayLength exp) 	{ return true; }
 		default boolean visit(IArrayElement exp) 	{ return true; }
-		
+
 		default boolean visit(IUnaryExpression exp) 		{ return true; }
 		default boolean visit(IBinaryExpression exp) 		{ return true; }
-		
+
 		default boolean visit(IProcedureCall exp) 			{ return true; }
 
 		default boolean visit(IConditionalExpression exp) 	{ return true; }
-		
-//		default void 	visit(IConstantExpression exp) 		{ }
+
+		//		default void 	visit(IConstantExpression exp) 		{ }
 		default void 	visit(IConstant exp) 				{ }
 		default void 	visit(ILiteral exp) 				{ }
-		
+
 		default void 	visit(IRecordAllocation exp) 		{ }
 		default void 	visit(IRecordFieldExpression exp) 	{ }
-	
-//		default void 	visit(IVariableExpression exp) 		{ }
-		default void 	visit(IVariable exp)		 		{ }
+
+		default void 	visit(IVariableExpression exp) 		{ }
 		default void	visit(IVariableAddress exp) 		{ }
 		default void	visit(IVariableDereference exp) 	{ }
 	}

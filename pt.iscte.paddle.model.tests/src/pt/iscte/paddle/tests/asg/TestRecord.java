@@ -9,25 +9,25 @@ import pt.iscte.paddle.model.IRecordFieldAssignment;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.tests.BaseTest;
 
 
 public class TestRecord extends BaseTest {
 
 	IRecordType Point = module.addRecordType();
-	IVariable x = Point.addField(IType.INT);
-	IVariable y = Point.addField(IType.INT);
+	IVariableDeclaration x = Point.addField(IType.INT);
+	IVariableDeclaration y = Point.addField(IType.INT);
 	
 	IProcedure move = module.addProcedure(IType.VOID);
-	IVariable p = move.addParameter(Point.reference());
+	IVariableDeclaration p = move.addParameter(Point.reference());
 	IBlock moveBody = move.getBody();
 	IRecordFieldAssignment ass = moveBody.addRecordFieldAssignment(p.field(x), IType.INT.literal(7));
 	
 	IProcedure main = module.addProcedure(IType.INT);
 	IBlock mainBody = main.getBody();
-	IVariable point = mainBody.addVariable(Point);
+	IVariableDeclaration point = mainBody.addVariable(Point);
 	IVariableAssignment ass2 = mainBody.addAssignment(point, Point.heapAllocation());
 	IProcedureCall addCall = mainBody.addCall(move, point.address());
 	IReturn addReturn = mainBody.addReturn(point.field(x));

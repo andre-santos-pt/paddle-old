@@ -14,16 +14,16 @@ import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestNaturals extends BaseTest  {
 	IProcedure naturals = module.addProcedure(INT.array());
-	IVariable n = naturals.addParameter(INT);
+	IVariableDeclaration n = naturals.addParameter(INT);
 	IBlock body = naturals.getBody();
-	IVariable array = body.addVariable(INT.array());
+	IVariableDeclaration array = body.addVariable(INT.array());
 	IVariableAssignment ass1 = body.addAssignment(array, INT.array().stackAllocation(n));
-	IVariable i = body.addVariable(INT, INT.literal(0));
+	IVariableDeclaration i = body.addVariable(INT, INT.literal(0));
 	ILoop loop = body.addLoop(SMALLER.on(i, n));
 	IArrayElementAssignment ass2 = loop.addArrayElementAssignment(array, ADD.on(i, INT.literal(1)), i);
 	IVariableAssignment ass3 = loop.addAssignment(i, ADD.on(i, INT.literal(1)));

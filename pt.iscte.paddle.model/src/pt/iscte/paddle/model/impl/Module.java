@@ -17,7 +17,7 @@ import pt.iscte.paddle.model.IProcedureDeclaration;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.commands.IAddCommand;
 import pt.iscte.paddle.model.commands.ICommand;
 import pt.iscte.paddle.model.commands.IDeleteCommand;
@@ -262,7 +262,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 
 		for(IRecordType r : records) {
 			text += "typedef struct\n{\n";
-			for (IVariable member : r.getFields()) {
+			for (IVariableDeclaration member : r.getFields()) {
 				text += "\t" + member.getDeclaration() + ";\n";
 			}
 			text += "} " + r.getId() + ";\n\n";

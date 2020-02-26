@@ -15,21 +15,21 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestBinarySearch extends BaseTest {
 
 	IProcedure binarySearch = module.addProcedure(BOOLEAN);
-	IVariable array = binarySearch.addParameter(INT.array().reference());
-	IVariable e = binarySearch.addParameter(INT);
+	IVariableDeclaration array = binarySearch.addParameter(INT.array().reference());
+	IVariableDeclaration e = binarySearch.addParameter(INT);
 	IBlock body = binarySearch.getBody();
 
-	IVariable l = body.addVariable(INT, INT.literal(0));
-	IVariable r = body.addVariable(INT, SUB.on(array.length(), INT.literal(1)));
+	IVariableDeclaration l = body.addVariable(INT, INT.literal(0));
+	IVariableDeclaration r = body.addVariable(INT, SUB.on(array.length(), INT.literal(1)));
 
 	ILoop loop = body.addLoop(SMALLER_EQ.on(l, r));
-	IVariable m = loop.addVariable(INT, ADD.on(l, IDIV.on(SUB.on(r, l), INT.literal(2)) ));
+	IVariableDeclaration m = loop.addVariable(INT, ADD.on(l, IDIV.on(SUB.on(r, l), INT.literal(2)) ));
 
 	ISelection iffound = loop.addSelection(EQUAL.on(array.element(m), e));
 	IReturn retTrue = iffound.getBlock().addReturn(BOOLEAN.literal(true));
@@ -42,9 +42,9 @@ public class TestBinarySearch extends BaseTest {
 	
 	protected IProcedure main() {
 		IProcedure test = module.addProcedure(BOOLEAN);
-		IVariable e = test.addParameter(INT);
+		IVariableDeclaration e = test.addParameter(INT);
 		IBlock body = test.getBody();
-		IVariable a = body.addVariable(INT.array().reference(), INT.array().heapAllocation(INT.literal(10)));
+		IVariableDeclaration a = body.addVariable(INT.array().reference(), INT.array().heapAllocation(INT.literal(10)));
 		body.addArrayElementAssignment(a, INT.literal(-2), INT.literal(0));
 		body.addArrayElementAssignment(a, INT.literal(0), INT.literal(1));
 		body.addArrayElementAssignment(a, INT.literal(1), INT.literal(2));

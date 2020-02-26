@@ -1,10 +1,15 @@
 package pt.iscte.paddle.model;
 
-public interface IVariableDereference extends IVariable {
+public interface IVariableDereference extends ISimpleExpression {
 
-	IVariable getVariable();
-	
-	default int procedureIndex() {
-		return getOwnerProcedure().getVariables().indexOf(getVariable());
+	IVariableExpression getTarget();
+
+	default IExpression length(IExpressionView ... indexes) {
+		return getTarget().length(indexes);
 	}
+
+	default IExpressionView element(IExpressionView ... views) {
+		return getTarget().element(views);
+	}
+	
 }

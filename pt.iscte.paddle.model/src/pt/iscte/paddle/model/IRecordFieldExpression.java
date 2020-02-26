@@ -14,9 +14,9 @@ import pt.iscte.paddle.interpreter.NullPointerError;
 public interface IRecordFieldExpression extends ISimpleExpression {
 
 	IExpression getTarget();
-	IVariable getField();
+	IVariableDeclaration getField();
 	
-	IRecordFieldExpression field(IVariable field);
+	IRecordFieldExpression field(IVariableDeclaration field);
 	
 	IArrayElement element(List<IExpression> indexes);
 	default IArrayElement element(IExpression ... indexes) {
@@ -25,13 +25,13 @@ public interface IRecordFieldExpression extends ISimpleExpression {
 
 	default IRecord resolveTarget(ICallStack stack) throws ExecutionError {
 		IExpression f = getTarget();
-		Queue<IVariable> queue = new ArrayDeque<>();
+		Queue<IVariableDeclaration> queue = new ArrayDeque<>();
 		
 		while(f instanceof IRecordFieldExpression) {
 			queue.add(((IRecordFieldExpression) f).getField());
 			f = ((IRecordFieldExpression) f).getTarget();
 		}
-		IReference ref = stack.getTopFrame().getVariableStore((IVariable) f);
+		IReference ref = stack.getTopFrame().getVariableStore((IVariableDeclaration) f);
 		if(ref.isNull())
 			throw new NullPointerError(f);
 			

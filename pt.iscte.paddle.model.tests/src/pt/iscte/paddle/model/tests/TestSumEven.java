@@ -12,17 +12,17 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestSumEven extends BaseTest {
 	IProcedure sumEven = module.addProcedure(INT);
-	IVariable from = sumEven.addParameter(INT);
-	IVariable to = sumEven.addParameter(INT);
+	IVariableDeclaration from = sumEven.addParameter(INT);
+	IVariableDeclaration to = sumEven.addParameter(INT);
 	IBlock body = sumEven.getBody();
-	IVariable sum = body.addVariable(INT);
+	IVariableDeclaration sum = body.addVariable(INT);
 	IVariableAssignment sumAss = body.addAssignment(sum, INT.literal(0));
-	IVariable i = body.addVariable(INT);
+	IVariableDeclaration i = body.addVariable(INT);
 	IVariableAssignment iAss = body.addAssignment(i, from);
 	ISelection ifNotEven = body.addSelection(DIFFERENT.on(MOD.on(i, INT.literal(2)), INT.literal(0)));
 	IVariableAssignment iToEven = ifNotEven.getBlock().addIncrement(i);

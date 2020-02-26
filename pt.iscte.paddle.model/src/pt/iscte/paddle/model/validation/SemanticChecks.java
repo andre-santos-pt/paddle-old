@@ -8,12 +8,12 @@ import pt.iscte.paddle.model.IBlock.IVisitor;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 class SemanticChecks {
 	static void checkVariableNames(IProcedure procedure, List<ISemanticProblem> problems) {
-		Map<String, IVariable> ids = new HashMap<>();
-		for(IVariable v : procedure.getVariables())
+		Map<String, IVariableDeclaration> ids = new HashMap<>();
+		for(IVariableDeclaration v : procedure.getVariables())
 			if(ids.containsKey(v.getId()))
 				problems.add(ISemanticProblem.create("duplicate variable names", v, ids.get(v.getId())));
 			else

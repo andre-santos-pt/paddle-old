@@ -22,8 +22,8 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.tests.BaseTest;
 
 @RunWith(Suite.class)
@@ -39,11 +39,11 @@ public class Test2DArrays extends BaseTest {
 
 	public static class IdMatrix extends BaseTest {
 		IProcedure idMatrix = module.addProcedure(INT.array2D());
-		IVariable n = idMatrix.addParameter(INT);		
+		IVariableDeclaration n = idMatrix.addParameter(INT);		
 		IBlock body = idMatrix.getBody();
-		IVariable id = body.addVariable(INT.array2D());
+		IVariableDeclaration id = body.addVariable(INT.array2D());
 		IVariableAssignment assignment = body.addAssignment(id, INT.array2D().stackAllocation(n, n));
-		IVariable i = body.addVariable(INT);
+		IVariableDeclaration i = body.addVariable(INT);
 		IVariableAssignment iInit = body.addAssignment(i, INT.literal(0));
 		IExpression e = DIFFERENT.on(i, n);
 		ILoop loop = body.addLoop(e);
@@ -67,20 +67,20 @@ public class Test2DArrays extends BaseTest {
 
 	public static class NatMatrix extends BaseTest {
 		IProcedure naturalsMatrix = module.addProcedure(INT.array2D());
-		IVariable lines = naturalsMatrix.addParameter(INT);
-		IVariable cols = naturalsMatrix.addParameter(INT);
+		IVariableDeclaration lines = naturalsMatrix.addParameter(INT);
+		IVariableDeclaration cols = naturalsMatrix.addParameter(INT);
 		
 		IBlock body = naturalsMatrix.getBody();
 		
 		IArrayAllocation allocation = INT.array2D().stackAllocation(lines, cols);
-		IVariable m = body.addVariable(INT.array2D(), allocation);
-		IVariable i = body.addVariable(INT, INT.literal(0));
+		IVariableDeclaration m = body.addVariable(INT.array2D(), allocation);
+		IVariableDeclaration i = body.addVariable(INT, INT.literal(0));
 	
-		IVariable n = body.addVariable(INT, INT.literal(1));
+		IVariableDeclaration n = body.addVariable(INT, INT.literal(1));
 		
 		IExpression outerGuard = DIFFERENT.on(i, lines);
 		ILoop outLoop = body.addLoop(outerGuard);
-		IVariable j = outLoop.addVariable(INT);
+		IVariableDeclaration j = outLoop.addVariable(INT);
 		IVariableAssignment ass1 = outLoop.addAssignment(j, INT.literal(0));
 		IExpression innerGuard = DIFFERENT.on(j, cols);
 		ILoop inLoop = outLoop.addLoop(innerGuard);
@@ -109,13 +109,13 @@ public class Test2DArrays extends BaseTest {
 
 	public static class ContainsNinMatrix extends BaseTest {
 		IProcedure contains = module.addProcedure(BOOLEAN);
-		IVariable matrix = (IVariable) contains.addParameter(INT.array2D());
-		IVariable n = contains.addParameter(INT);
+		IVariableDeclaration matrix = (IVariableDeclaration) contains.addParameter(INT.array2D());
+		IVariableDeclaration n = contains.addParameter(INT);
 		IBlock body = contains.getBody();
-		IVariable i = body.addVariable(INT, INT.literal(0));
+		IVariableDeclaration i = body.addVariable(INT, INT.literal(0));
 		IExpression outerGuard = DIFFERENT.on(i, matrix.length());
 		ILoop outerLoop = body.addLoop(outerGuard);
-		IVariable j = outerLoop.addVariable(INT);
+		IVariableDeclaration j = outerLoop.addVariable(INT);
 		IVariableAssignment ass1 = outerLoop.addAssignment(j, INT.literal(0));
 		IExpression innerGuard = DIFFERENT.on(j, matrix.length(i) );
 		ILoop innerLoop = outerLoop.addLoop(innerGuard);
@@ -128,13 +128,13 @@ public class Test2DArrays extends BaseTest {
 		
 		IProcedure main = module.addProcedure(BOOLEAN);
 		IBlock mainBody = main.getBody();
-		IVariable array = mainBody.addVariable(INT.array2D());
+		IVariableDeclaration array = mainBody.addVariable(INT.array2D());
 		IVariableAssignment ass2 = mainBody.addAssignment(array, INT.array2D().stackAllocation(INT.literal(3)));
 		IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(array, INT.array().stackAllocation(INT.literal(0)), INT.literal(0));
 		IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(array, INT.array().stackAllocation(INT.literal(2)), INT.literal(1));
 		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array().stackAllocation(INT.literal(4)), INT.literal(2));
 		IArrayElementAssignment ass6 = mainBody.addArrayElementAssignment(array, INT.literal(5), INT.literal(2), INT.literal(2));
-		IVariable var = mainBody.addVariable(BOOLEAN);
+		IVariableDeclaration var = mainBody.addVariable(BOOLEAN);
 		IVariableAssignment ass7 = mainBody.addAssignment(var, contains.call(array, INT.literal(5)));
 		IReturn ret3 = mainBody.addReturn(var);
 		
