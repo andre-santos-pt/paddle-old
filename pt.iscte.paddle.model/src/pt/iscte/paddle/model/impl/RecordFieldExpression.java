@@ -12,6 +12,7 @@ import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IReferenceType;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariableDeclaration;
+import pt.iscte.paddle.model.IVariableExpression;
 
 class RecordFieldExpression extends Expression implements IRecordFieldExpression {
 
@@ -60,7 +61,7 @@ class RecordFieldExpression extends Expression implements IRecordFieldExpression
 	
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
-		assert target instanceof IVariableDeclaration;
+		assert target instanceof IVariableExpression;
 		IRecord r = resolveTarget(stack); 
 		IValue field = r.getField(this.field).getTarget();
 		return field;

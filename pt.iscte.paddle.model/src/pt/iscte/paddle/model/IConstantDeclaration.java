@@ -1,6 +1,6 @@
 package pt.iscte.paddle.model;
 
-public interface IConstant extends IProgramElement, ISimpleExpression {
+public interface IConstantDeclaration extends IProgramElement, IExpressionView {
 
 	IModule getProgram();
 	
@@ -10,4 +10,5 @@ public interface IConstant extends IProgramElement, ISimpleExpression {
 	
 	void setValue(ILiteral value);
 	
+	IConstantExpression expression();
 }

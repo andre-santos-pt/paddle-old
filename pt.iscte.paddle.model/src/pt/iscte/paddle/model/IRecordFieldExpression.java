@@ -27,11 +27,14 @@ public interface IRecordFieldExpression extends ISimpleExpression {
 		IExpression f = getTarget();
 		Queue<IVariableDeclaration> queue = new ArrayDeque<>();
 		
+		// TODO test
 		while(f instanceof IRecordFieldExpression) {
+			if(f.isNull())
+				throw new NullPointerError(f);
 			queue.add(((IRecordFieldExpression) f).getField());
 			f = ((IRecordFieldExpression) f).getTarget();
 		}
-		IReference ref = stack.getTopFrame().getVariableStore((IVariableDeclaration) f);
+		IReference ref = stack.getTopFrame().getVariableStore(((IVariableExpression) f).getVariable());
 		if(ref.isNull())
 			throw new NullPointerError(f);
 			

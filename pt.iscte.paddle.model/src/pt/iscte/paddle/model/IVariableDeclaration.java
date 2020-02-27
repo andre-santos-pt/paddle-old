@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-public interface IVariableDeclaration extends IStatement, IExpressionView {
+public interface IVariableDeclaration extends IInnocuousStatement, IExpressionView {
 	IProgramElement getParent();
 	IType getType();
 

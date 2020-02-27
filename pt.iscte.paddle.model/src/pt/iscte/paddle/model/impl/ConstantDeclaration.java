@@ -1,18 +1,12 @@
 package pt.iscte.paddle.model.impl;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
-
-import pt.iscte.paddle.interpreter.ICallStack;
-import pt.iscte.paddle.interpreter.IValue;
-import pt.iscte.paddle.model.IConstant;
-import pt.iscte.paddle.model.IExpression;
+import pt.iscte.paddle.model.IConstantDeclaration;
+import pt.iscte.paddle.model.IConstantExpression;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IType;
 
-class ConstantDeclaration extends Expression implements IConstant {
+class ConstantDeclaration extends ProgramElement implements IConstantDeclaration {
 	private final Module program;
 	private final IType type;
 	private ILiteral value;
@@ -43,15 +37,6 @@ class ConstantDeclaration extends Expression implements IConstant {
 		return getId();
 	}
 
-	@Override
-	public List<IExpression> getParts() {
-		return ImmutableList.of();
-	}
-
-	@Override
-	public IValue evalutate(List<IValue> values, ICallStack stack) {
-		return stack.getProgramState().getValue(value.getStringValue());
-	}
 
 	@Override
 	public void setValue(ILiteral value) {
@@ -59,7 +44,12 @@ class ConstantDeclaration extends Expression implements IConstant {
 		this.value = value;
 		setProperty("VALUE", value);
 		
-		program.executeCommand(new PropertyModifyCommand<IConstant>(this, "VALUE", value));
+//		program.executeCommand(new PropertyModifyCommand<IConstant>(this, "VALUE", value));
+	}
+	
+	@Override
+	public IConstantExpression expression() {
+		return new ConstantExpression(this);
 	}
 	
 }

@@ -7,7 +7,7 @@ public interface IModel2CodeTranslator {
 	String header(IModule m);
 	String close(IModule m);
 	
-	String declaration(IConstant c);
+	String declaration(IConstantDeclaration c);
 	String declaration(IRecordType t);
 	String header(IProcedure p);
 	String close(IProcedure p);
@@ -46,7 +46,7 @@ public interface IModel2CodeTranslator {
 		}
 		
 		@Override
-		public String declaration(IConstant c) {
+		public String declaration(IConstantDeclaration c) {
 			return STATIC + "final " + c.getType().getId() + " " + c.getId() + " = " + c.getValue().getStringValue() + ";\n";
 		}
 

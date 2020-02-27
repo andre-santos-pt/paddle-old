@@ -210,7 +210,7 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	
 	@Override
 	public IVariableDeclaration addVariableWithIdAt(IType type, String id, int index, String ... flags) {		
-		Variable var = new Variable(this, type, flags);
+		VariableDeclaration var = new VariableDeclaration(this, type, flags);
 		IProcedure procedure = getProcedure();
 		((Procedure) procedure).addVariableDeclaration(var);
 		var.setId(id);

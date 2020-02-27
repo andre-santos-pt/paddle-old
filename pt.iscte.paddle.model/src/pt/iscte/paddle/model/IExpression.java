@@ -96,11 +96,6 @@ public interface IExpression extends IProgramElement, IExpressionView {
 				part.getParts().forEach(p -> visitPart(visitor, p));
 		}
 
-		else if(part instanceof IConstant) {
-			IConstant con = (IConstant) part; 
-			visitor.visit(con);
-		}
-
 		else if(part instanceof ILiteral) {
 			ILiteral lit = (ILiteral) part; 
 			visitor.visit(lit);
@@ -121,24 +116,29 @@ public interface IExpression extends IProgramElement, IExpressionView {
 			visitor.visit(varadd);
 		}
 
-		else if(part instanceof IVariableExpression) {
-			IVariableExpression var = (IVariableExpression) part; 
-			visitor.visit(var);
-		}
-
 		else if(part instanceof IVariableAddress) {
 			IVariableAddress varadd = (IVariableAddress) part; 
 			visitor.visit(varadd);
 		}
+		
+		else if(part instanceof IVariableExpression) {
+			IVariableExpression var = (IVariableExpression) part; 
+			visitor.visit(var);
+		}
+		
+		else if(part instanceof IConstantExpression) {
+			IConstantExpression con = (IConstantExpression) part; 
+			visitor.visit(con);
+		}
+		
 		else
 			assert false: "missing case " + part.getClass().getName();
 	}
 
-	// TODO include parent in visit(...) ?
 	interface IVisitor {
 		default boolean visit(IArrayAllocation exp) 		{ return true; }
-		default boolean visit(IArrayLength exp) 	{ return true; }
-		default boolean visit(IArrayElement exp) 	{ return true; }
+		default boolean visit(IArrayLength exp) 			{ return true; }
+		default boolean visit(IArrayElement exp) 			{ return true; }
 
 		default boolean visit(IUnaryExpression exp) 		{ return true; }
 		default boolean visit(IBinaryExpression exp) 		{ return true; }
@@ -147,15 +147,16 @@ public interface IExpression extends IProgramElement, IExpressionView {
 
 		default boolean visit(IConditionalExpression exp) 	{ return true; }
 
-		//		default void 	visit(IConstantExpression exp) 		{ }
-		default void 	visit(IConstant exp) 				{ }
 		default void 	visit(ILiteral exp) 				{ }
+
+		default void 	visit(IVariableExpression exp) 		{ }
+		default void 	visit(IConstantExpression exp) 		{ }
+		
+		default void	visit(IVariableAddress exp) 		{ }
+		default void	visit(IVariableDereference exp) 	{ }
 
 		default void 	visit(IRecordAllocation exp) 		{ }
 		default void 	visit(IRecordFieldExpression exp) 	{ }
 
-		default void 	visit(IVariableExpression exp) 		{ }
-		default void	visit(IVariableAddress exp) 		{ }
-		default void	visit(IVariableDereference exp) 	{ }
 	}
 }

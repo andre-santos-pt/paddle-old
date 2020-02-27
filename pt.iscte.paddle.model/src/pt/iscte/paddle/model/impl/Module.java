@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.google.common.collect.Iterables;
 
-import pt.iscte.paddle.model.IConstant;
+import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.IModule;
@@ -26,7 +26,7 @@ import pt.iscte.paddle.model.validation.ISemanticProblem;
 import pt.iscte.paddle.model.validation.SemanticChecker;
 
 public class Module extends ListenableProgramElement<IModule.IListener> implements IModule {
-	private final List<IConstant> constants;
+	private final List<IConstantDeclaration> constants;
 	private final List<IRecordType> records;
 	private final List<IProcedure> procedures;
 
@@ -97,7 +97,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	}
 
 	@Override
-	public List<IConstant> getConstants() {
+	public List<IConstantDeclaration> getConstants() {
 		return Collections.unmodifiableList(constants);
 	}
 
@@ -111,11 +111,11 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		return Collections.unmodifiableList(procedures);
 	}
 
-	private class AddConstant implements IAddCommand<IConstant> {
+	private class AddConstant implements IAddCommand<IConstantDeclaration> {
 		final String id;
 		final IType type;
 		final ILiteral literal;
-		IConstant constant;
+		IConstantDeclaration constant;
 		final String[] flags;
 		
 		AddConstant(String id, IType type, ILiteral literal, String ... flags) {
@@ -149,14 +149,14 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		}
 
 		@Override
-		public IConstant getElement() {
+		public IConstantDeclaration getElement() {
 			return constant;
 		}
 	}
 
 	
 	@Override
-	public IConstant addConstant(String id, IType type, ILiteral value, String ... flags) {
+	public IConstantDeclaration addConstant(String id, IType type, ILiteral value, String ... flags) {
 		assert type != null;
 		assert value != null;
 		AddConstant add = new AddConstant(id, type, value, flags);
@@ -254,7 +254,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	@Override
 	public String toString() {
 		String text = "";
-		for(IConstant c : constants)
+		for(IConstantDeclaration c : constants)
 			text += c.getType() + " " + c.getId() + " = " + c.getValue() + ";\n";
 
 		if(!constants.isEmpty())
@@ -288,7 +288,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	@Override
 	public String translate(IModel2CodeTranslator t) {
 		String text = t.header(this);
-		for(IConstant c : constants)
+		for(IConstantDeclaration c : constants)
 			text += t.declaration(c);
 
 		for(IRecordType r : records)

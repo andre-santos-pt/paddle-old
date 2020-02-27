@@ -8,7 +8,6 @@ import pt.iscte.paddle.interpreter.ArrayIndexError;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.ICallStack;
-import pt.iscte.paddle.interpreter.IRecord;
 import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IArrayElement;
@@ -17,10 +16,12 @@ import pt.iscte.paddle.model.IModel2CodeTranslator;
 
 class ArrayElement extends Expression implements IArrayElement {
 	private final IExpression target;
+	private final ImmutableList<IExpression> parts;
 	private final ImmutableList<IExpression> indexes;
 	
 	public ArrayElement(IExpression target, List<IExpression> indexes) {
 		this.target = target;
+		this.parts = ImmutableList.<IExpression>builder().add(target).addAll(indexes).build();
 		this.indexes = ImmutableList.copyOf(indexes);
 	}
 	
@@ -46,7 +47,7 @@ class ArrayElement extends Expression implements IArrayElement {
 	
 	@Override
 	public String translate(IModel2CodeTranslator t) {
-		String text = getTarget().getId();
+		String text = getTarget().translate(t);
 		for(IExpression e : indexes)
 			text += "[" + e.translate(t) + "]";
 		return text;
@@ -54,37 +55,25 @@ class ArrayElement extends Expression implements IArrayElement {
 	
 	@Override
 	public List<IExpression> getParts() {
-		return indexes;
+		return parts;
 	}
 	
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
-		assert values.size() == getIndexes().size();
+		assert values.size() == getIndexes().size() + 1;
+		IValue vTarget = values.get(0);
+		if(vTarget instanceof IReference)
+			vTarget = ((IReference) vTarget).getTarget();
 		
-		IReference ref = null;
-		if(target instanceof VariableDereference)
-			ref = (IReference) ((VariableDereference) target).evalutate(values, stack);
-		else if(target instanceof RecordFieldExpression) {
-			RecordFieldExpression rexp = (RecordFieldExpression) target;
-			IRecord r = rexp.resolveTarget(stack);
-			ref = (IReference) r.getField(rexp.getField());
-		}
-		else if(target instanceof Variable)
-			ref = stack.getTopFrame().getVariableStore((Variable) target);
-		else
-			assert false;
-		
-		IValue element = ref.getTarget();
-		for(int i = 0; i < values.size(); i++) {
+		for(int i = 1; i < values.size(); i++) {
 			IValue v = values.get(i);
 			int index = ((Number) v.getValue()).intValue();
-			if(index < 0 || index >= ((IArray)element).getLength())
-				throw new ArrayIndexError(this, index, target, indexes.get(i), index);
-//				throw new ExecutionError(ExecutionError.Type.ARRAY_INDEX_BOUNDS, this, "invalid index", index);
+			if(index < 0 || index >= ((IArray) vTarget).getLength())
+				throw new ArrayIndexError(this, index, target, indexes.get(i - 1), i - 1);
 				
-			element = ((IArray) element).getElement(index);
+			vTarget = ((IArray) vTarget).getElement(index);
 		}
-		return element;
+		return vTarget;
 	}
 
 }

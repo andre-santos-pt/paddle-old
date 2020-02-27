@@ -55,7 +55,7 @@ class Procedure extends ProgramElement implements IProcedure {
 
 	@Override
 	public IVariableDeclaration addParameter(IType type) {
-		IVariableDeclaration param = new Variable(body, type);
+		IVariableDeclaration param = new VariableDeclaration(body, type);
 		variables.add(parameters, param);
 		parameters++;
 		return param;

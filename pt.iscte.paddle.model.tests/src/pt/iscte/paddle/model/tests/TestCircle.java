@@ -5,14 +5,13 @@ import static pt.iscte.paddle.model.IType.DOUBLE;
 
 import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.model.IBlock;
-import pt.iscte.paddle.model.IConstant;
+import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestCircle extends BaseTest {
-
-	IConstant PI = module.addConstant(DOUBLE, DOUBLE.literal(3.14159265359));
+	IConstantDeclaration PI = module.addConstant(DOUBLE, DOUBLE.literal(3.14159265359));
 	IProcedure circleArea = module.addProcedure(DOUBLE);
 	IVariableDeclaration r = circleArea.addParameter(DOUBLE);
 	IBlock body = circleArea.getBody();
@@ -22,5 +21,4 @@ public class TestCircle extends BaseTest {
 	public void test(IExecutionData data) {
 		equal(28.274333, data.getReturnValue());
 	}
-	
 }

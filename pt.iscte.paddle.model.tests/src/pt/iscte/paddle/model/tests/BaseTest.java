@@ -26,7 +26,7 @@ import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.interpreter.IMachine;
 import pt.iscte.paddle.interpreter.IProgramState;
 import pt.iscte.paddle.interpreter.IValue;
-import pt.iscte.paddle.model.IConstant;
+import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.IModule;
@@ -94,7 +94,7 @@ public abstract class BaseTest {
 	}
 
 	private boolean isIdElement(Object element) {
-		return element instanceof IProcedure || element instanceof IVariableDeclaration || element instanceof IConstant || element instanceof IRecordType;
+		return element instanceof IProcedure || element instanceof IVariableDeclaration || element instanceof IConstantDeclaration || element instanceof IRecordType;
 	}
 
 	private void compile() {

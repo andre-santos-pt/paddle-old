@@ -17,12 +17,12 @@ import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableDereference;
 import pt.iscte.paddle.model.IVariableExpression;
 
-class Variable extends ProgramElement implements IVariableDeclaration, IExecutable {
+class VariableDeclaration extends ProgramElement implements IVariableDeclaration, IExecutable {
 
 	private final IProgramElement parent;
 	private final IType type;
 
-	public Variable(IProgramElement parent, IType type, String...flags) {
+	public VariableDeclaration(IProgramElement parent, IType type, String...flags) {
 		super(flags);
 		this.parent = parent;
 		this.type = type;
@@ -68,20 +68,14 @@ class Variable extends ProgramElement implements IVariableDeclaration, IExecutab
 		return new ArrayElement(this.expression(), indexes);
 	}
 
-//	@Override
-//	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
-//		IStackFrame topFrame = stack.getTopFrame();
-//		IReference ref = topFrame.getVariableStore(this);
-//		return type.isReference() ? ref : ref.getTarget();
-//	}
-
+	@Override
+	public IVariableExpression expression() {
+		return new VariableExpression(this);
+	}
+	
 	@Override
 	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {
 
 	}
 
-	@Override
-	public IVariableExpression expression() {
-		return new VariableExpression(this);
-	}
 }

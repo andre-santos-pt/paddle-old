@@ -15,8 +15,8 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	
 	interface IListener {
 //		default void commandExecuted(ICommand<?> command) { }
-		default void constantAdded(IConstant constant) { }
-		default void constantRemoved(IConstant constant) { }
+		default void constantAdded(IConstantDeclaration constant) { }
+		default void constantRemoved(IConstantDeclaration constant) { }
 		default void procedureAdded(IProcedure procedure) { }
 		default void procedureRemoved(IProcedure procedure) { }
 	}
@@ -40,16 +40,16 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 		return ImmutableList.of();
 	}
 	
-	List<IConstant> getConstants();
+	List<IConstantDeclaration> getConstants();
 	List<IRecordType> getRecordTypes();
 	List<IProcedure> getProcedures();
 	
 
-	default IConstant addConstant(IType type, ILiteral value, String ... flags) {
+	default IConstantDeclaration addConstant(IType type, ILiteral value, String ... flags) {
 		return addConstant(null, type, value, flags);
 	}
 	
-	IConstant addConstant(String id, IType type, ILiteral value, String ... flags);
+	IConstantDeclaration addConstant(String id, IType type, ILiteral value, String ... flags);
 	
 	
 	IRecordType addRecordType();

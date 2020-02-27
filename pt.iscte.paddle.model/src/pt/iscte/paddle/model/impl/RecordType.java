@@ -24,7 +24,7 @@ class RecordType extends ProgramElement implements IRecordType {
 	
 	@Override
 	public IVariableDeclaration addField(IType type) {
-		IVariableDeclaration var = new Variable(this, type);
+		IVariableDeclaration var = new VariableDeclaration(this, type);
 		variables.add(var);
 		return var;
 	}

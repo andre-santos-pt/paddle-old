@@ -12,7 +12,8 @@ import pt.iscte.paddle.model.IBinaryExpression;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IBreak;
 import pt.iscte.paddle.model.IConditionalExpression;
-import pt.iscte.paddle.model.IConstant;
+import pt.iscte.paddle.model.IConstantDeclaration;
+import pt.iscte.paddle.model.IConstantExpression;
 import pt.iscte.paddle.model.IContinue;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.ILoop;
@@ -30,6 +31,7 @@ import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableDereference;
 import pt.iscte.paddle.model.IVariableExpression;
+import pt.iscte.paddle.model.IBlock.IVisitor;
 
 public class SemanticChecker {
 	private ISemanticChecker checker;
@@ -83,23 +85,6 @@ public class SemanticChecker {
 			rules.forEach(r -> list.addAll(r.getProblems()));
 			return list;
 		}
-
-		@Override
-		public void visit(IConstant constant) {
-			rules.forEach(r -> r.visit(constant));
-		}
-		
-//		@Override
-//		public boolean visit(IRecordType struct) {
-//			rules.forEach(r -> r.visit(struct));
-//			return true;
-//		}
-		
-//		@Override
-//		public boolean visit(IProcedure procedure) {
-//			rules.forEach(r -> r.visit(procedure));
-//			return true;
-//		}
 		
 		@Override
 		public boolean visit(IBlock block) {
@@ -206,6 +191,11 @@ public class SemanticChecker {
 		
 		@Override
 		public void visit(IVariableExpression exp) {
+			rules.forEach(r -> r.visit(exp));
+		}
+		
+		@Override
+		public void visit(IConstantExpression exp) {
 			rules.forEach(r -> r.visit(exp));
 		}
 		
