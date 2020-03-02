@@ -50,6 +50,13 @@ public interface IExpression extends IProgramElement, IExpressionView {
 		return conditional(trueCase.expression(), falseCase.expression());
 	}
 	
+	default IExpression resolveReference() {
+		if(this instanceof IVariableDereference)
+			return ((IVariableDereference) this).getTarget();
+		else
+			return this;
+	}
+	
 	// boolean refersTo(IVariable v); // TODO 
 
 	default void accept(IVisitor visitor) {
