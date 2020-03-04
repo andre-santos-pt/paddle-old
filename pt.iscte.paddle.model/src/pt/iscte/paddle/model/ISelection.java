@@ -8,4 +8,6 @@ public interface ISelection extends IControlStructure {
 	default boolean hasAlternativeBlock() {
 		return getAlternativeBlock() != null;
 	}
+	
+	void deleteAlternativeBlock();
 }

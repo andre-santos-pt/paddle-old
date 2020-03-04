@@ -3,6 +3,7 @@ package pt.iscte.paddle.model.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IReferenceType;
 import pt.iscte.paddle.model.IType;
@@ -51,6 +52,11 @@ public enum PrimitiveType implements IValueType {
 		public ILiteral literal(Object obj) {
 			return new Literal(IType.INT, Integer.toString((Integer) obj));
 		}
+		
+		@Override
+		public IExpression getDefaultExpression() {
+			return IType.INT.literal(0);
+		}
 	}, 
 	DOUBLE {
 		public boolean matchesLiteral(String literal) {
@@ -90,6 +96,11 @@ public enum PrimitiveType implements IValueType {
 		public ILiteral literal(Object obj) {
 			return new Literal(IType.DOUBLE, Double.toString((Double) obj));
 		}
+		
+		@Override
+		public IExpression getDefaultExpression() {
+			return IType.DOUBLE.literal(0.0);
+		}
 	}, 
 	BOOLEAN {
 		public boolean matchesLiteral(String literal) {
@@ -122,6 +133,11 @@ public enum PrimitiveType implements IValueType {
 		@Override
 		public ILiteral literal(Object obj) {
 			return (Boolean) obj ? TRUE : FALSE;
+		}
+		
+		@Override
+		public IExpression getDefaultExpression() {
+			return IType.BOOLEAN.literal(false);
 		}
 	};
 	

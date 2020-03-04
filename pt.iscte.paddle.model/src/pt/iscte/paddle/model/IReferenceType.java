@@ -23,4 +23,9 @@ public interface IReferenceType extends IType {
 		return t;
 	}
 	
+	@Override
+	default IExpression getDefaultExpression() {
+		return ILiteral.NULL;
+	}
+	
 }

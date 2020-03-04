@@ -42,7 +42,7 @@ public abstract class BaseTest {
 
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
-	protected @interface Case {
+	public @interface Case {
 		String[] value() default {};
 	}
 
@@ -176,7 +176,8 @@ public abstract class BaseTest {
 							+ IExecutionData.class.getSimpleName() + " " + method);
 			}
 		}
-		assert foundCase : this.getClass().getSimpleName() + " has no @Case";
+		if(!foundCase)
+			System.err.println(this.getClass().getSimpleName() + " has no @Case");
 	}
 
 	private IExecutionData runCase(Object[] args) {

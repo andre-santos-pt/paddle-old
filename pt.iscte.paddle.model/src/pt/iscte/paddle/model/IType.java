@@ -79,6 +79,7 @@ public interface IType extends IProgramElement  {
 		return array().array();
 	}
 	
+	IExpression getDefaultExpression();
 	
 	IType VOID = new IType() {
 
@@ -121,6 +122,11 @@ public interface IType extends IProgramElement  {
 		public String getId() {
 			return "void";
 		}
+		
+		@Override
+		public IExpression getDefaultExpression() {
+			throw new UnsupportedOperationException();
+		}
 	};
 
 
@@ -161,6 +167,11 @@ public interface IType extends IProgramElement  {
 		@Override
 		public IArrayType array() {
 			throw new UnsupportedOperationException();
+		}
+		
+		@Override
+		public IExpression getDefaultExpression() {
+			return ILiteral.NULL;
 		}
 	};
 }

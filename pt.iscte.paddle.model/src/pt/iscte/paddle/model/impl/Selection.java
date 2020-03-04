@@ -38,4 +38,10 @@ class Selection extends ControlStructure implements ISelection {
 		setFlag("ELSE");
 		return alternativeBlock;
 	}
+	
+	@Override
+	public void deleteAlternativeBlock() {
+		alternativeBlock = null;
+		unsetFlag("ELSE");
+	}
 }

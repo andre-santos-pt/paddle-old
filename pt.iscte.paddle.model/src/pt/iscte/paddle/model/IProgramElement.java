@@ -30,7 +30,7 @@ public interface IProgramElement {
 	}
 	
 	default void unsetFlag(String key) {
-		
+		setProperty(key, Boolean.FALSE);
 	}
 	
 	default void setProperty(Object key) {

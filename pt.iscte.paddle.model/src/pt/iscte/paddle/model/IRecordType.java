@@ -21,4 +21,7 @@ public interface IRecordType extends IType {
 	
 //	TODO IRecordAllocation stackAllocation();
 
+	default IExpression getDefaultExpression() {
+		return ILiteral.NULL;
+	}
 }

@@ -29,4 +29,8 @@ public interface IArrayType extends IType {
 	default IArrayAllocation heapAllocation(IExpressionView ... views) {
 		return heapAllocation(IExpressionView.toList(views));
 	}
+	
+	default IExpression getDefaultExpression() {
+		return ILiteral.NULL;
+	}
 }

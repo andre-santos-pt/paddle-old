@@ -18,7 +18,7 @@ import pt.iscte.paddle.model.cfg.IStatementNode;
 public class TestMaxArray extends BaseTest {
 
 	IProcedure max = module.addProcedure(INT);
-	IVariableDeclaration array = max.addParameter(INT.array().reference());  // FIXME type toString is null
+	IVariableDeclaration array = max.addParameter(INT.array().reference());
 	IBlock body = max.getBody();
 	IVariableDeclaration m = body.addVariable(INT);
 	IVariableAssignment mAss = body.addAssignment(m, array.element(INT.literal(0)));
