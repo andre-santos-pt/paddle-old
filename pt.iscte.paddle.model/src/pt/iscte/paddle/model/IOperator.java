@@ -21,13 +21,18 @@ public interface IOperator extends IProgramElement {
 	IBinaryOperator SMALLER = RelationalOperator.SMALLER;
 	IBinaryOperator SMALLER_EQ = RelationalOperator.SMALLER_EQUAL;
 	
-	IUnaryOperator NOT = UnaryOperator.NOT;
 	
 	IBinaryOperator AND = LogicalOperator.AND;
 	IBinaryOperator OR = LogicalOperator.OR;
 	IBinaryOperator XOR = LogicalOperator.XOR;
 	
+	// TODO CAND??
+	// TODO COR??
+	
+	IUnaryOperator NOT = UnaryOperator.NOT;
+	IUnaryOperator MINUS = UnaryOperator.MINUS;
 	IUnaryOperator TRUNCATE = UnaryOperator.TRUNCATE;
+//	IUnaryOperator PLUS = UnaryOperator.PLUS;
 
 	OperationType getOperationType();
 

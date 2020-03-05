@@ -8,6 +8,11 @@ public interface IReferenceType extends IType {
 //	default public String getId() {
 //		return getTarget().getId() + " *";
 //	}
+	
+	@Override
+	default boolean isSame(IType type) {
+		return 	type instanceof IReferenceType && getTarget().isSame(((IReferenceType) type).getTarget());
+	}
 
 	@Override
 	default boolean isCompatible(IType type) {

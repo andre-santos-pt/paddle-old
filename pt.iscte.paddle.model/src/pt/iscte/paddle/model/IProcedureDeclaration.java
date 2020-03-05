@@ -47,7 +47,7 @@ public interface IProcedureDeclaration extends IProgramElement {
 
 		int i = 0;
 		for(IType t : paramTypes)
-			if(!parameters.get(i++).getType().equals(t))
+			if(!parameters.get(i++).getType().isSame(t))
 				return false;
 
 		return true;

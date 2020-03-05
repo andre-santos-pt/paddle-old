@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.model.impl.VariableExpression;
+
 public interface IVariableDeclaration extends IInnocuousStatement, IExpressionView {
 	IProgramElement getParent();
 	IType getType();
@@ -133,8 +135,7 @@ public interface IVariableDeclaration extends IInnocuousStatement, IExpressionVi
 
 		@Override
 		public IVariableExpression expression() {
-			// TODO Auto-generated method stub
-			return null;
+			return new VariableExpression(this);
 		}
 	};
 }

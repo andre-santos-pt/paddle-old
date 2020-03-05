@@ -11,6 +11,16 @@ public interface IArrayType extends IType {
 		return getComponentTypeAt(getDimensions());
 	}
 	
+	default IExpression getDefaultExpression() {
+		return ILiteral.NULL;
+	}
+	
+	default boolean isSame(IType type) {
+		return type instanceof IArrayType && 
+				getComponentType().isSame(((IArrayType) type).getComponentType()) &&
+				getDimensions() == ((IArrayType) type).getDimensions();
+	}
+	
 	
 	IArrayAllocation stackAllocation(List<IExpression> dimensions);
 	
@@ -30,7 +40,5 @@ public interface IArrayType extends IType {
 		return heapAllocation(IExpressionView.toList(views));
 	}
 	
-	default IExpression getDefaultExpression() {
-		return ILiteral.NULL;
-	}
+
 }

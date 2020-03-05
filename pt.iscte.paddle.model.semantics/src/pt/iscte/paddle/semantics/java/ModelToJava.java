@@ -11,8 +11,8 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IReturn;
-import pt.iscte.paddle.model.IVariable;
 import pt.iscte.paddle.model.IVariableAssignment;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class ModelToJava {
 
@@ -31,11 +31,11 @@ public class ModelToJava {
 	public static void main(String[] args) {
 		IModule module = IModule.create();
 		IProcedure idMatrix = module.addProcedure(INT.array2D());
-		IVariable n = idMatrix.addParameter(INT);		
+		IVariableDeclaration n = idMatrix.addParameter(INT);		
 		IBlock body = idMatrix.getBody();
-		IVariable id = body.addVariable(INT.array2D());
+		IVariableDeclaration id = body.addVariable(INT.array2D());
 		IVariableAssignment assignment = body.addAssignment(id, INT.array2D().heapAllocation(n, n));
-		IVariable iVar = body.addVariable(INT);
+		IVariableDeclaration iVar = body.addVariable(INT);
 		IExpression e = DIFFERENT.on(iVar, n);
 		ILoop loop = body.addLoop(e);
 		IArrayElementAssignment ass2 = loop.addArrayElementAssignment(id, INT.literal(1), iVar, iVar);

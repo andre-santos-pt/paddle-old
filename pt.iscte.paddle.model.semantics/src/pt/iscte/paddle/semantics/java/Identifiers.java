@@ -5,18 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.iscte.paddle.model.IConstant;
+import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IRecordType;
-import pt.iscte.paddle.model.IVariable;
+import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
 import pt.iscte.paddle.model.validation.Rule;
 
 public class Identifiers extends Rule {
 
 	
-	Map<String, IConstant> constantMap = new HashMap<String, IConstant>();
+	Map<String, IConstantDeclaration> constantMap = new HashMap<>();
 	List<IRecordType> records = new ArrayList<IRecordType>(); // TODO name
 	
 	@Override
@@ -43,7 +43,7 @@ public class Identifiers extends Rule {
 				addProblem(ISemanticProblem.create("duplicate procedure signature", p, procedure));
 		});
 		
-		Map<String, IVariable> vars = new HashMap<String, IVariable>();
+		Map<String, IVariableDeclaration> vars = new HashMap<>();
 		procedure.getVariables().forEach(v -> {
 			if(vars.containsKey(v.getId()))
 				addProblem(ISemanticProblem.create("duplicate local variable name", vars.get(v.getId()), v));

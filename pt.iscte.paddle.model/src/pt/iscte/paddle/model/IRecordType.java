@@ -24,4 +24,11 @@ public interface IRecordType extends IType {
 	default IExpression getDefaultExpression() {
 		return ILiteral.NULL;
 	}
+	
+	
+	@Override
+	default boolean isSame(IType type) {
+		return equals(type);
+	}
+	
 }

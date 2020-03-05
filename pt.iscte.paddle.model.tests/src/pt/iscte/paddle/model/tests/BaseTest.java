@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Before;
@@ -38,7 +39,7 @@ import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public abstract class BaseTest {
+public class BaseTest {
 
 	@Target(ElementType.METHOD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -56,10 +57,15 @@ public abstract class BaseTest {
 	private IModel2CodeTranslator translator =  new IModel2CodeTranslator.Java();
 	
 	public BaseTest() {
-		module = IModule.create();
+		this(IModule.create());
+	}
+	
+	public BaseTest(IModule module) {
+		this.module = module;
 		for(Class<?> builtin : getBuiltins())
 			module.loadBuildInProcedures(builtin);		
 		module.setId(getClass().getSimpleName());
+		problems = Collections.emptyList();
 	}
 
 	@Before

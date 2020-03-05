@@ -19,11 +19,24 @@ public interface IType extends IProgramElement  {
 
 	// TODO REVER
 	default boolean isCompatible(IType type) {
-		return this.equals(type);
+		return isSame(type);
 	}
 	
+	boolean isSame(IType type);
+	
+//	{
+//		if(isValueType() && type.isValueType())
+//			return this.equals(type);
+//		else if(isReference() && type.isReference())
+//			return ((IReferenceType) this).getTarget().isSame(((IReferenceType) type).getTarget());
+//	}
+		
 	default boolean isVoid() {
 		return this == VOID;
+	}
+	
+	default boolean isValueType() {
+		return this instanceof IValueType;
 	}
 	
 	default boolean isNumber() {
@@ -84,6 +97,11 @@ public interface IType extends IProgramElement  {
 	IType VOID = new IType() {
 
 		@Override
+		public boolean isSame(IType type) {
+			return type == this;
+		}
+		
+		@Override
 		public void setProperty(Object key, Object value) {
 
 		}
@@ -131,6 +149,12 @@ public interface IType extends IProgramElement  {
 
 
 	IType UNBOUND = new IType() {
+		
+		@Override
+		public boolean isSame(IType type) {
+			return false;
+		}
+		
 		@Override
 		public Object getDefaultValue() {
 			return null;

@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface IRecordFieldAssignment extends IStatement {
 
-	IRecordFieldExpression getTarget();
+	IRecordFieldExpression getTarget(); // TODO to normal expression as in arrays?
 	IVariableDeclaration getField();
 	IExpression getExpression();
 

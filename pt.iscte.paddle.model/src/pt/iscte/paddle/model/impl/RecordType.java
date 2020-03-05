@@ -16,7 +16,7 @@ class RecordType extends ProgramElement implements IRecordType {
 	RecordType() {
 		this.variables = new ArrayList<>(5);
 	}
-	
+
 	@Override
 	public List<IVariableDeclaration> getFields() {
 		return Collections.unmodifiableList(variables);

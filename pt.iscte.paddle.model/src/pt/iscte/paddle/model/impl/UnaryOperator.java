@@ -32,6 +32,31 @@ public enum UnaryOperator implements IUnaryOperator {
 			return type.isBoolean();
 		}
 	},
+	MINUS("-") {
+		@Override
+		protected Object calculate(IValue value) {
+			assert value.getType().isNumber();
+			if(value.getType() == IType.INT)
+				return -(int) value.getValue();
+			else
+				return -(double) value.getValue();
+		}
+		
+		@Override
+		public IType getResultType(IExpression exp) {
+			return exp.getType();
+		}
+		
+		@Override
+		public OperationType getOperationType() {
+			return OperationType.ARITHMETIC;
+		}
+		
+		@Override
+		public boolean isValidFor(IType type) {
+			return type.isNumber();
+		}
+	},
 	TRUNCATE("(int)") {
 		@Override
 		protected Object calculate(IValue value) {
@@ -54,9 +79,31 @@ public enum UnaryOperator implements IUnaryOperator {
 		}
 	},
 	
-	// TODO NEGATION
-	// TODO PLUS
-	;
+	PLUS("+") {
+		@Override
+		protected Object calculate(IValue value) {
+			assert value.getType().isNumber();
+			if(value.getType() == IType.INT)
+				return +(int) value.getValue();
+			else
+				return +(double) value.getValue();
+		}
+		
+		@Override
+		public IType getResultType(IExpression exp) {
+			return exp.getType();
+		}
+		
+		@Override
+		public OperationType getOperationType() {
+			return OperationType.ARITHMETIC;
+		}
+		
+		@Override
+		public boolean isValidFor(IType type) {
+			return type.isNumber();
+		}
+	};
 	
 	private final ProgramElement programElement;
 	

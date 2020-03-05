@@ -8,4 +8,8 @@ public interface IConstantExpression extends ISimpleExpression {
 	default IType getType() {
 		return getConstant().getType();
 	}
+	
+	default String getStringValue() {
+		return getConstant().getValue().getStringValue();
+	}
 }
