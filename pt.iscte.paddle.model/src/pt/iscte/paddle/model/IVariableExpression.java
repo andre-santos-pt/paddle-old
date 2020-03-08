@@ -11,6 +11,21 @@ public interface IVariableExpression extends ISimpleExpression {
 
 	IVariableDereference dereference();
 
+	
+	@Override
+	default boolean includes(IVariableDeclaration variable) {
+		return getVariable() == variable;
+	}
+	
+	@Override
+	default boolean isSame(IExpression e) {
+		return e instanceof IVariableExpression && getVariable().equals(((IVariableExpression) e).getVariable());
+	}
+	
+	@Override
+	default String getId() {
+		return getVariable().getId();
+	}
 	IArrayLength length(List<IExpression> indexes);
 	default IArrayLength length(IExpression ... indexes) {
 		return length(Arrays.asList(indexes));

@@ -19,7 +19,7 @@ class RecordAllocation extends Expression implements IRecordAllocation {
 
 	@Override
 	public IType getType() {
-		return type.reference();
+		return type.reference(); // TODO allocate on heap?
 	}
 	
 	@Override

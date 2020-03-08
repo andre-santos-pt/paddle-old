@@ -18,6 +18,19 @@ public interface IRecordFieldExpression extends ISimpleExpression {
 	
 	IRecordFieldExpression field(IVariableDeclaration field);
 	
+	
+	@Override
+	default boolean includes(IVariableDeclaration variable) {
+		return getTarget().includes(variable);
+	}
+	
+	@Override
+	default boolean isSame(IExpression e) {
+		return e instanceof IRecordFieldExpression &&
+				getTarget().isSame(((IRecordFieldExpression) e).getTarget()) &&
+				getField().equals(((IRecordFieldExpression) e).getField());
+	}
+	
 	IArrayElement element(List<IExpression> indexes);
 	default IArrayElement element(IExpression ... indexes) {
 		return element(Arrays.asList(indexes));

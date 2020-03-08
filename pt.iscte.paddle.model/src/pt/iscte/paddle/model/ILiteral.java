@@ -16,4 +16,14 @@ public interface ILiteral extends ISimpleExpression {
 	static ILiteral createValue(IValueType type, String value) {
 		return new Literal(type, value);
 	}
+	
+	@Override
+	default boolean includes(IVariableDeclaration variable) {
+		return false;
+	}
+
+	@Override
+	default boolean isSame(IExpression e) {
+		return e instanceof ILiteral && getStringValue().equals(((ILiteral) e).getStringValue());
+	}
 }

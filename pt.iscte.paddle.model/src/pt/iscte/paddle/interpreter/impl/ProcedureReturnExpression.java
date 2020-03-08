@@ -11,6 +11,7 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProcedureDeclaration;
 import pt.iscte.paddle.model.ISimpleExpression;
 import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 class ProcedureReturnExpression implements ISimpleExpression, IEvaluable {
 	final IProcedureDeclaration procedure;
@@ -23,6 +24,16 @@ class ProcedureReturnExpression implements ISimpleExpression, IEvaluable {
 		return procedure.getReturnType();
 	}
 
+	@Override
+	public boolean includes(IVariableDeclaration variable) {
+		return false;
+	}
+	
+	@Override
+	public boolean isSame(IExpression e) {
+		return equals(e);
+	}
+	
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
 		return stack.getLastTerminatedFrame().getReturn();

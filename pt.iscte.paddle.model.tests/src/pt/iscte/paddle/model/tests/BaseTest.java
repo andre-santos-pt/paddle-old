@@ -150,12 +150,6 @@ public class BaseTest {
 			return;
 
 		state = IMachine.create(module);
-		state.addListener(new IProgramState.IListener() {
-			@Override
-			public void step(IProgramElement currentInstruction) {
-				System.out.println(currentInstruction);
-			}
-		});
 		boolean foundCase = false;
 		for (Method method : getClass().getMethods()) {
 			if (method.isAnnotationPresent(Case.class)) {

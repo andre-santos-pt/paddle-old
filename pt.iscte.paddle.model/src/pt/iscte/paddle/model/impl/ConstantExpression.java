@@ -6,6 +6,7 @@ import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.IConstantExpression;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class ConstantExpression extends Expression implements IConstantExpression {
 
@@ -24,4 +25,6 @@ public class ConstantExpression extends Expression implements IConstantExpressio
 	public IConstantDeclaration getConstant() {
 		return constant;
 	}
+	
+	
 }

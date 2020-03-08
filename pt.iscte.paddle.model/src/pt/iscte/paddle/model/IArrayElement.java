@@ -16,9 +16,21 @@ public interface IArrayElement extends ICompositeExpression {
 	}
 	
 	@Override
-	default boolean isDecomposable() {
-		return true;
+	default boolean includes(IVariableDeclaration variable) {
+		if(getTarget().includes(variable))
+			return true;
+		
+		for(IExpression e : getIndexes())
+			if(e.includes(variable))
+				return true;
+		
+		return false;
 	}
 	
-	
+	@Override
+	default boolean isSame(IExpression e) {
+		return e instanceof IArrayElement &&
+				getTarget().isSame(((IArrayElement) e).getTarget()) &&
+				IExpression.areSame(getIndexes(), ((IArrayElement)e).getIndexes());
+	}
 }

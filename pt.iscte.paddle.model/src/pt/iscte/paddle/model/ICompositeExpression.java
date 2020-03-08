@@ -8,5 +8,4 @@ public interface ICompositeExpression extends IExpression {
 	}
 
 	List<IExpression> getParts();
-
 }

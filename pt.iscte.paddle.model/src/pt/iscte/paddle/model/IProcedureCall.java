@@ -10,4 +10,20 @@ public interface IProcedureCall extends IStatement, ICompositeExpression {
 	default boolean isOperation() {
 		return false;
 	}
+	
+	@Override
+	default boolean includes(IVariableDeclaration variable) {
+		for(IExpression arg : getArguments())
+			if(arg.includes(variable))
+				return true;
+		
+		return false;
+	}
+	
+	@Override
+	default boolean isSame(IExpression e) {
+		return e instanceof IProcedureCall &&
+				getProcedure().equals(((IProcedureCall) e).getProcedure()) &&
+				IExpression.areSame(getArguments(), ((IProcedureCall) e).getArguments());
+	}
 }

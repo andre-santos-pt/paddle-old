@@ -1,6 +1,5 @@
 package pt.iscte.paddle.model;
 
-// TODO
 public interface IConstantExpression extends ISimpleExpression {
 
 	IConstantDeclaration getConstant();
@@ -12,4 +11,15 @@ public interface IConstantExpression extends ISimpleExpression {
 	default String getStringValue() {
 		return getConstant().getValue().getStringValue();
 	}
+	
+	default boolean includes(IVariableDeclaration variable) {
+		return false;
+	}
+	
+	@Override
+	default boolean isSame(IExpression e) {
+		return e instanceof IConstantExpression &&
+				getConstant().equals(((IConstantExpression) e).getConstant());
+	}
+	
 }

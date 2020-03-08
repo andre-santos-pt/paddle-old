@@ -96,8 +96,7 @@ public interface IModel2CodeTranslator {
 		}
 		
 		public String id(IExpression v) {
-			// TODO
-			return v.getId();
+			return v.getId();		
 		}
 		
 		@Override

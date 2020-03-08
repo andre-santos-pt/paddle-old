@@ -57,10 +57,24 @@ public interface IExpression extends IProgramElement, IExpressionView {
 			return this;
 	}
 	
-	// boolean refersTo(IVariable v); // TODO 
+	boolean includes(IVariableDeclaration variable);
+	
+	boolean isSame(IExpression expression);
 
 	default void accept(IVisitor visitor) {
 		visitPart(visitor, this);
+	}
+	
+	static boolean areSame(List<IExpression> a, List<IExpression> b) {
+		if(a.size() != b.size())
+				return false;
+			
+		int i = 0;
+		for(IExpression e : a)
+			if(!e.isSame(b.get(i++)))
+				return false;
+			
+		return true;
 	}
 
 	static void visitPart(IVisitor visitor, IExpression part) {
