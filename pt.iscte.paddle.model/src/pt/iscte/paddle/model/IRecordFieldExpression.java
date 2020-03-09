@@ -25,7 +25,7 @@ public interface IRecordFieldExpression extends ISimpleExpression {
 	}
 	
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IRecordFieldExpression &&
 				getTarget().isSame(((IRecordFieldExpression) e).getTarget()) &&
 				getField().equals(((IRecordFieldExpression) e).getField());

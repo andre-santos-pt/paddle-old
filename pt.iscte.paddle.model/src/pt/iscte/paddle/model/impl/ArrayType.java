@@ -36,9 +36,9 @@ public class ArrayType extends ProgramElement implements IArrayType {
 		return id;
 	}
 
-	public boolean sameAs(IArrayType type) {
-		return id.equals(type.getId());
-	}
+//	public boolean sameAs(IArrayType type) {
+//		return id.equals(type.getId());
+//	}
 
 	@Override
 	public String toString() {

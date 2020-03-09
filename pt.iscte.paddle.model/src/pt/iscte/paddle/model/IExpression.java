@@ -59,8 +59,6 @@ public interface IExpression extends IProgramElement, IExpressionView {
 	
 	boolean includes(IVariableDeclaration variable);
 	
-	boolean isSame(IExpression expression);
-
 	default void accept(IVisitor visitor) {
 		visitPart(visitor, this);
 	}

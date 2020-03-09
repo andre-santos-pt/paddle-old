@@ -23,7 +23,7 @@ public interface ILiteral extends ISimpleExpression {
 	}
 
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof ILiteral && getStringValue().equals(((ILiteral) e).getStringValue());
 	}
 }

@@ -20,7 +20,7 @@ public interface IBinaryExpression extends ICompositeExpression {
 	}
 	
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IBinaryExpression &&
 				getOperator().equals(((IBinaryExpression) e).getOperator()) &&
 				getLeftOperand().isSame(((IBinaryExpression) e).getLeftOperand()) &&

@@ -30,11 +30,6 @@ class ProcedureReturnExpression implements ISimpleExpression, IEvaluable {
 	}
 	
 	@Override
-	public boolean isSame(IExpression e) {
-		return equals(e);
-	}
-	
-	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
 		return stack.getLastTerminatedFrame().getReturn();
 	}

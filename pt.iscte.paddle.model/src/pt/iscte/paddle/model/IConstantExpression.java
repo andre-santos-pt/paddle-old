@@ -17,7 +17,7 @@ public interface IConstantExpression extends ISimpleExpression {
 	}
 	
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IConstantExpression &&
 				getConstant().equals(((IConstantExpression) e).getConstant());
 	}

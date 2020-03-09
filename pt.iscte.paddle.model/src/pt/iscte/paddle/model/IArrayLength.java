@@ -19,7 +19,7 @@ public interface IArrayLength extends ICompositeExpression {
 	}
 	
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IArrayLength &&
 				getTarget().isSame(((IArrayLength) e).getTarget()) &&
 				IExpression.areSame(getIndexes(), ((IArrayLength) e).getIndexes());

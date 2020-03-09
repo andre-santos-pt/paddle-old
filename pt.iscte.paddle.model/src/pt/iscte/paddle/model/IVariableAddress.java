@@ -11,7 +11,7 @@ public interface IVariableAddress extends ISimpleExpression {
 
 
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IVariableAddress &&
 				getTarget().isSame(((IVariableAddress) e).getTarget());
 	}

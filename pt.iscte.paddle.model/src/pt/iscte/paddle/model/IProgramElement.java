@@ -16,6 +16,9 @@ public interface IProgramElement {
 
 	Object getProperty(Object key);
 	
+	default boolean isSame(IProgramElement e) {
+		return this.equals(e);
+	}
 	
 	default <T> void setProperty(Class<T> key, T value) {
 		setProperty(key.getName(), value);

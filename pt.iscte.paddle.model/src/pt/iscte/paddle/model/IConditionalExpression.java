@@ -18,7 +18,7 @@ public interface IConditionalExpression extends ICompositeExpression {
 	}
 	
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		if(e instanceof IConditionalExpression) {
 			IConditionalExpression ce = (IConditionalExpression) e;
 			return getConditional().isSame(ce.getConditional()) && 

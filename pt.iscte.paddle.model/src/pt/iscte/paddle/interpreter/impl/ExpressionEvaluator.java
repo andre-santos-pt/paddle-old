@@ -77,7 +77,6 @@ public class ExpressionEvaluator implements IExpressionEvaluator {
 	@Override
 	public Step step() throws ExecutionError {
 		assert !isComplete();
-		
 		if(next == parts.size()) {
 			List<IValue> values = new ArrayList<>();
 			partial.forEach(p -> values.add((IValue) p));
@@ -88,7 +87,6 @@ public class ExpressionEvaluator implements IExpressionEvaluator {
 			return new Step(result == null ? null : expression, result);
 		}
 		else {
-			
 			if(partial.get(next) instanceof ISimpleExpression) {
 				ISimpleExpression exp = (ISimpleExpression) partial.get(next);
 				IValue r = callStack.getTopFrame().evaluate(exp, Collections.emptyList());

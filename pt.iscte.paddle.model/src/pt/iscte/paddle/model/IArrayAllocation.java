@@ -16,9 +16,9 @@ public interface IArrayAllocation extends ICompositeExpression {
 	}
 	
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IArrayAllocation &&
-				getType().isSame(e.getType()) &&
+				getType().isSame(((IArrayAllocation) e).getType()) &&
 				IExpression.areSame(getDimensions(), ((IArrayAllocation) e).getDimensions());
 	}
 }

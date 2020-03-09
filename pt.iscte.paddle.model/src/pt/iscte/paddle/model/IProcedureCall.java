@@ -21,7 +21,7 @@ public interface IProcedureCall extends IStatement, ICompositeExpression {
 	}
 	
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IProcedureCall &&
 				getProcedure().equals(((IProcedureCall) e).getProcedure()) &&
 				IExpression.areSame(getArguments(), ((IProcedureCall) e).getArguments());

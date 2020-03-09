@@ -28,7 +28,7 @@ public interface IArrayElement extends ICompositeExpression {
 	}
 	
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IArrayElement &&
 				getTarget().isSame(((IArrayElement) e).getTarget()) &&
 				IExpression.areSame(getIndexes(), ((IArrayElement)e).getIndexes());

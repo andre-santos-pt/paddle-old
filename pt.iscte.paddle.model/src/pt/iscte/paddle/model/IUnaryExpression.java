@@ -13,7 +13,7 @@ public interface IUnaryExpression extends ICompositeExpression {
 	}
 	
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IUnaryExpression &&
 				getOperator().equals(((IUnaryExpression) e).getOperator()) &&
 				getOperand().isSame(((IUnaryExpression) e).getOperand());

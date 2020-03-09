@@ -10,7 +10,7 @@ public interface IRecordAllocation extends ISimpleExpression {
 	}
 	
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IRecordAllocation &&
 				getRecordType().isSame(((IRecordAllocation) e).getRecordType());
 	}

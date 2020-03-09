@@ -11,7 +11,7 @@ public interface IVariableDereference extends ISimpleExpression {
 	 
 	 
 	@Override
-	default boolean isSame(IExpression e) {
+	default boolean isSame(IProgramElement e) {
 		return e instanceof IVariableDereference &&
 				getTarget().isSame(((IVariableDereference) e).getTarget());
 	}
