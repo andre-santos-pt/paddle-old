@@ -4,14 +4,9 @@ public interface IReferenceType extends IType {
 
 	IType getTarget();
 	
-//	@Override
-//	default public String getId() {
-//		return getTarget().getId() + " *";
-//	}
-	
 	@Override
-	default boolean isSame(IType type) {
-		return 	type instanceof IReferenceType && getTarget().isSame(((IReferenceType) type).getTarget());
+	default boolean isSame(IProgramElement e) {
+		return 	e instanceof IReferenceType && getTarget().isSame(((IReferenceType) e).getTarget());
 	}
 
 	@Override

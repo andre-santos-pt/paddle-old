@@ -22,7 +22,7 @@ public interface IType extends IProgramElement  {
 		return isSame(type);
 	}
 	
-	boolean isSame(IType type);
+//	boolean isSame(IType type);
 	
 //	{
 //		if(isValueType() && type.isValueType())
@@ -95,11 +95,6 @@ public interface IType extends IProgramElement  {
 	IExpression getDefaultExpression();
 	
 	IType VOID = new IType() {
-
-		@Override
-		public boolean isSame(IType type) {
-			return type == this;
-		}
 		
 		@Override
 		public void setProperty(Object key, Object value) {
@@ -149,11 +144,6 @@ public interface IType extends IProgramElement  {
 
 
 	IType UNBOUND = new IType() {
-		
-		@Override
-		public boolean isSame(IType type) {
-			return false;
-		}
 		
 		@Override
 		public Object getDefaultValue() {

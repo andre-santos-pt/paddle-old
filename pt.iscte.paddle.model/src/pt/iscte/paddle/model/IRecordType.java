@@ -26,9 +26,4 @@ public interface IRecordType extends IType {
 	}
 	
 	
-	@Override
-	default boolean isSame(IType type) {
-		return equals(type);
-	}
-	
 }

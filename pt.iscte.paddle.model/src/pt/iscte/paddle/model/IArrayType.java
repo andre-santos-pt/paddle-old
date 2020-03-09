@@ -15,10 +15,10 @@ public interface IArrayType extends IType {
 		return ILiteral.NULL;
 	}
 	
-	default boolean isSame(IType type) {
-		return type instanceof IArrayType && 
-				getComponentType().isSame(((IArrayType) type).getComponentType()) &&
-				getDimensions() == ((IArrayType) type).getDimensions();
+	default boolean isSame(IProgramElement e) {
+		return e instanceof IArrayType && 
+				getComponentType().isSame(((IArrayType) e).getComponentType()) &&
+				getDimensions() == ((IArrayType) e).getDimensions();
 	}
 	
 	
