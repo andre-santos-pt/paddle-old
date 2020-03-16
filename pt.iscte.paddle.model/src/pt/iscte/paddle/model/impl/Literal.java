@@ -45,15 +45,5 @@ public class Literal extends Expression implements ILiteral {
 		return stack.getProgramState().getValue(getStringValue());
 	}
 
-	@Override
-	public int hashCode() {
-		return value.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return obj != null && getClass() == obj.getClass() && value.equals(((Literal) obj).value);
-	}
-	
 	public static final ILiteral NULL = new Literal(null, "null");
 }

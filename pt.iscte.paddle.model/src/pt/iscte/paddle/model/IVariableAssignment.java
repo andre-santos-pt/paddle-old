@@ -10,19 +10,27 @@ public interface IVariableAssignment extends IStatement {
 	IExpression getExpression();
 	IBlock getParent();
 	
-	default boolean isIncrement() {
-		if(!(getExpression() instanceof IBinaryExpression))
-			return false;
-		
-		IBinaryExpression exp = (IBinaryExpression) getExpression();
-		return exp.getOperator().equals(IOperator.ADD) &&
-				exp.getLeftOperand().isSame(getTarget().expression()) && exp.getRightOperand().equals(IType.INT.literal(1)) ||
-				exp.getRightOperand().equals(getTarget().expression()) && exp.getLeftOperand().equals(IType.INT.literal(1));
-				
-	}
-	
 	@Override
 	default List<IExpression> getExpressionParts() {
 		return ImmutableList.of(getExpression());
+	}
+	
+	default boolean isIncrement() {
+		return isModifiedByOne(this, IOperator.ADD);
+	}
+	
+	default boolean isDecrement() {
+		return isModifiedByOne(this, IOperator.SUB);
+	}
+	
+	private static boolean isModifiedByOne(IVariableAssignment ass, IBinaryOperator op) {
+		if(!(ass.getExpression() instanceof IBinaryExpression))
+			return false;
+		
+		final ILiteral ONE = IType.INT.literal(1);
+		IBinaryExpression exp = (IBinaryExpression) ass.getExpression();
+		return exp.getOperator().isSame(op) &&
+				exp.getLeftOperand().isSame(ass.getTarget().expression()) && exp.getRightOperand().isSame(ONE) ||
+				exp.getRightOperand().isSame(ass.getTarget().expression()) && exp.getLeftOperand().isSame(ONE);
 	}
 }

@@ -15,6 +15,7 @@ public interface IExpression extends IProgramElement, IExpressionView {
 
 	// TODO concretize expression
 	//String concretize();
+	
 	//	ISourceElement getParent();
 
 	@Override
