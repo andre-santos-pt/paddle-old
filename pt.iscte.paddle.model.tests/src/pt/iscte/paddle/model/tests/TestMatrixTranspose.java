@@ -46,7 +46,7 @@ public class TestMatrixTranspose extends BaseTest {
 		body.addArrayElementAssignment(m, INT.literal(5), INT.literal(1), INT.literal(1));
 		body.addArrayElementAssignment(m, INT.literal(6), INT.literal(1), INT.literal(2));
 		
-		body.addReturn(transpose.call(m.address()));
+		body.addReturn(transpose.expression(m.address()));
 		return main;
 	}
 	

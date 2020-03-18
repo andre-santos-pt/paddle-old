@@ -79,7 +79,7 @@ public class BooleanFuncions {
 		IProcedure isOddNotEven = module.addProcedure(BOOLEAN);
 		IProcedure isEven = new IsEven().isEven;
 		IVariableDeclaration n = isOddNotEven.addParameter(INT);
-		IUnaryExpression e = NOT.on(new IsEven().isEven.call(n));
+		IUnaryExpression e = NOT.on(new IsEven().isEven.expression(n));
 		IBlock body = isOddNotEven.getBody();
 		IReturn ret = body.addReturn(e);
 

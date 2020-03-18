@@ -79,7 +79,7 @@ public interface IProcedure extends IProcedureDeclaration {
 		}
 
 		@Override
-		public IProcedureCall call(List<IExpression> args) {
+		public IProcedureCallExpression expression(List<IExpression> args) {
 			return null;
 		}
 

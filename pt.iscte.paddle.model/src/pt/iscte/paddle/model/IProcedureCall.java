@@ -3,7 +3,7 @@ package pt.iscte.paddle.model;
 import java.util.List;
 
 
-public interface IProcedureCall extends IStatement, ICompositeExpression {
+public interface IProcedureCall extends IStatement {
 	IProcedureDeclaration getProcedure();
 	List<IExpression> getArguments();
 
@@ -11,14 +11,7 @@ public interface IProcedureCall extends IStatement, ICompositeExpression {
 		return false;
 	}
 	
-	@Override
-	default boolean includes(IVariableDeclaration variable) {
-		for(IExpression arg : getArguments())
-			if(arg.includes(variable))
-				return true;
-		
-		return false;
-	}
+	
 	
 	@Override
 	default boolean isSame(IProgramElement e) {
@@ -26,4 +19,15 @@ public interface IProcedureCall extends IStatement, ICompositeExpression {
 				getProcedure().equals(((IProcedureCall) e).getProcedure()) &&
 				IExpression.areSame(getArguments(), ((IProcedureCall) e).getArguments());
 	}
+
+	static String argsToString(IModel2CodeTranslator t, List<IExpression> arguments) {
+		String args = "";
+		for(IExpression e : arguments) {
+			if(!args.isEmpty())
+				args += ", ";
+			args += t.expression(e);
+		}
+		return args;
+	}
+
 }

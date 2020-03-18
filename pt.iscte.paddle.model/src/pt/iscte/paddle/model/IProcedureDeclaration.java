@@ -13,16 +13,29 @@ public interface IProcedureDeclaration extends IProgramElement {
 
 	IVariableDeclaration addParameter(IType type);
 
-	IProcedureCall call(List<IExpression> args);
+	IProcedureCallExpression expression(List<IExpression> args);
 
-	default IProcedureCall call(IExpression ... args) {
-		return call(Arrays.asList(args));
+	default IProcedureCallExpression expression(IExpression ... args) {
+		return expression(Arrays.asList(args));
 	}
 	
-	default IProcedureCall call(IExpressionView ... views) {
-		return call(IExpressionView.toList(views));
+	default IProcedureCallExpression expression(IExpressionView ... views) {
+		return expression(IExpressionView.toList(views));
 	}
 
+//	default IProcedureCallExpression expression(List<IExpression> args) {
+//		return (IProcedureCallExpression) call(args);
+//	}
+//	
+//	default IProcedureCallExpression expression(IExpression ... args) {
+//		return expression(Arrays.asList(args));
+//	}
+//	
+//	default IProcedureCallExpression expression(IExpressionView ... views) {
+//		return expression(IExpressionView.toList(views));
+//	}
+	
+	
 	default String shortSignature() {
 		return getId() + "(...)";
 	}
@@ -71,7 +84,11 @@ public interface IProcedureDeclaration extends IProgramElement {
 		return hasSameSignature(procedure) && getReturnType().equals(procedure.getReturnType());
 	}
 
-	IProcedureDeclaration UNBOUND = new IProcedureDeclaration() {
+	class Unbound implements IProcedureDeclaration {
+		String id;
+		public Unbound(String id) {
+			this.id = id;
+		}
 
 		@Override
 		public void setProperty(Object key, Object value) {
@@ -85,7 +102,7 @@ public interface IProcedureDeclaration extends IProgramElement {
 		
 		@Override
 		public String getId() {
-			return "unresolved";
+			return id;
 		}
 
 		@Override
@@ -99,7 +116,7 @@ public interface IProcedureDeclaration extends IProgramElement {
 		}
 
 		@Override
-		public IProcedureCall call(List<IExpression> args) {
+		public IProcedureCallExpression expression(List<IExpression> args) {
 			throw new UnsupportedOperationException();
 		}
 

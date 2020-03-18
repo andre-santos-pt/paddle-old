@@ -20,6 +20,7 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IProcedureCallExpression;
 import pt.iscte.paddle.model.IRecordAllocation;
 import pt.iscte.paddle.model.IRecordFieldAssignment;
 import pt.iscte.paddle.model.IRecordFieldExpression;
@@ -218,6 +219,12 @@ public class SemanticChecker {
 		@Override
 		public void visit(IContinue continueStatement) {
 			rules.forEach(r -> r.visit(continueStatement));
+		}
+		
+		@Override
+		public boolean visit(IProcedureCallExpression exp) {
+			rules.forEach(r -> r.visit(exp));
+			return true;
 		}
 		
 	}

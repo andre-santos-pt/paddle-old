@@ -9,6 +9,7 @@ import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IProcedureCallExpression;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariableDeclaration;
 
@@ -124,7 +125,7 @@ class Procedure extends ProgramElement implements IProcedure {
 	}
 
 	@Override
-	public IProcedureCall call(List<IExpression> args) {
+	public IProcedureCallExpression expression(List<IExpression> args) {
 		return new ProcedureCall(null, this, -1, args);
 	}
 }

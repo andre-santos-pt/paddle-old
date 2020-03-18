@@ -39,7 +39,7 @@ public class TestSumCopy extends BaseTest {
 		body.addArrayElementAssignment(a, DOUBLE.literal(0.1), INT.literal(3));
 		body.addArrayElementAssignment(a, DOUBLE.literal(10.0), INT.literal(4));
 		
-		IVariableDeclaration sum = body.addVariable(DOUBLE, summation.call(a));
+		IVariableDeclaration sum = body.addVariable(DOUBLE, summation.expression(a));
 		body.addReturn(sum);
 		return test;
 	}

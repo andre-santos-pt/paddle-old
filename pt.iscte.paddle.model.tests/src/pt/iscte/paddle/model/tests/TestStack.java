@@ -60,9 +60,9 @@ public class TestStack extends BaseTest {
 		body.addCall(push, stack, INT.literal(5));
 		body.addCall(push, stack, INT.literal(7));
 		
-		first = body.addVariable(INT, pop.call(stack));
-		second = body.addVariable(INT, pop.call(stack));
-		third = body.addVariable(INT, pop.call(stack));
+		first = body.addVariable(INT, pop.expression(stack));
+		second = body.addVariable(INT, pop.expression(stack));
+		third = body.addVariable(INT, pop.expression(stack));
 		
 		return test;
 	}

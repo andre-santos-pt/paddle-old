@@ -52,7 +52,7 @@ public class TestBuiltinProcedures extends BaseTest {
 	IProcedure test = module.addProcedure(IType.INT);
 	IProcedure max = module.resolveProcedure("max", IType.INT, IType.INT);
 	IBlock body = test.getBody();
-	IReturn ret = body.addReturn(body.addCall(max, IType.INT.literal(4), IType.INT.literal(6)));
+	IReturn ret = body.addReturn(max.expression(IType.INT.literal(4), IType.INT.literal(6)));
 	
 	@Case
 	public void test(IExecutionData data) {

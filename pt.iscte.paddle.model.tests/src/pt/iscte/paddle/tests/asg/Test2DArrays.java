@@ -135,7 +135,7 @@ public class Test2DArrays extends BaseTest {
 		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array().stackAllocation(INT.literal(4)), INT.literal(2));
 		IArrayElementAssignment ass6 = mainBody.addArrayElementAssignment(array, INT.literal(5), INT.literal(2), INT.literal(2));
 		IVariableDeclaration var = mainBody.addVariable(BOOLEAN);
-		IVariableAssignment ass7 = mainBody.addAssignment(var, contains.call(array, INT.literal(5)));
+		IVariableAssignment ass7 = mainBody.addAssignment(var, contains.expression(array, INT.literal(5)));
 		IReturn ret3 = mainBody.addReturn(var);
 		
 		@Case

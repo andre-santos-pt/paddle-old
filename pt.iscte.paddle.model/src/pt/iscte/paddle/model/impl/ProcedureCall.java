@@ -16,12 +16,13 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IProcedureCallExpression;
 import pt.iscte.paddle.model.IProcedureDeclaration;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariableDeclaration;
 
-class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IExecutable {
+class ProcedureCall extends Expression implements IProcedureCall, IProcedureCallExpression, IEvaluable, IExecutable {
 	private final IBlock parent;
 	private final IProcedureDeclaration procedure;
 	private final ImmutableList<IExpression> arguments;
@@ -29,7 +30,7 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 	public ProcedureCall(Block parent, IProcedure procedure, int index, List<IExpression> arguments) {
 //		assert procedure != null;
 		this.parent = parent;
-		this.procedure = procedure == null ? IProcedureDeclaration.UNBOUND : procedure;
+		this.procedure = procedure == null ? new IProcedureDeclaration.Unbound("procedure") : procedure;
 		this.arguments = ImmutableList.copyOf(arguments);
 		if(parent != null)
 			parent.addChild(this, index);
@@ -47,22 +48,14 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 
 	@Override
 	public String toString() {
-		return procedure.getId() + "(...)";
+		return translate(IModel2CodeTranslator.JAVA);
 	}
 	
-	private String argsToString(IModel2CodeTranslator t) {
-		String args = "";
-		for(IExpression e : arguments) {
-			if(!args.isEmpty())
-				args += ", ";
-			args += t.expression(e);
-		}
-		return args;
-	}
+	
 	
 	@Override
 	public String translate(IModel2CodeTranslator t) {
-		return procedure.getId() + "(" + argsToString(t) + ")";
+		return procedure.getId() + "(" + IProcedureCall.argsToString(t, arguments) + ")";
 	}
 	
 	@Override
@@ -141,7 +134,7 @@ class ProcedureCall extends Expression implements IProcedureCall, IEvaluable, IE
 		}
 		
 		@Override
-		public IProcedureCall call(List<IExpression> args) {
+		public IProcedureCallExpression expression(List<IExpression> args) {
 			return null;
 		}
 		

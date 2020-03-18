@@ -14,7 +14,7 @@ public class TestAverage extends BaseTest {
 	
 	IProcedure average = getModule().addProcedure(DOUBLE);
 	IVariableDeclaration array = average.addParameter(DOUBLE.array().reference());
-	IReturn ret_ = average.getBody().addReturn(DIV.on(sum.call(array), array.length()));
+	IReturn ret_ = average.getBody().addReturn(DIV.on(sum.expression(array), array.length()));
 
 	private IVariableDeclaration a;
 	
@@ -28,7 +28,7 @@ public class TestAverage extends BaseTest {
 		body.addArrayElementAssignment(a, DOUBLE.literal(0.1), INT.literal(3));
 		body.addArrayElementAssignment(a, DOUBLE.literal(10.0), INT.literal(4));
 		
-		IVariableDeclaration sum = body.addVariable(DOUBLE, average.call(a));
+		IVariableDeclaration sum = body.addVariable(DOUBLE, average.expression(a));
 		body.addReturn(sum);
 		return test;
 	}

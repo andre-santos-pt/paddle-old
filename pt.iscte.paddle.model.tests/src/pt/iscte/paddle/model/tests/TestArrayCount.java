@@ -45,7 +45,7 @@ public class TestArrayCount extends BaseTest {
 		for(int i = 0; i < literals.length; i++)
 			body.addArrayElementAssignment(a, literals[i], INT.literal(i));
 
-		body.addReturn(count.call(a, INT.literal(element)));
+		body.addReturn(count.expression(a, INT.literal(element)));
 		return test;
 	}
 

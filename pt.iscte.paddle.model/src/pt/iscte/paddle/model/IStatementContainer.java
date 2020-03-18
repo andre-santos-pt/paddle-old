@@ -12,7 +12,6 @@ public interface IStatementContainer {
 		return getBlock().isEmpty();
 	}
 	
-	
 	default IBlock addBlock() {
 		return addBlockAt(getBlock().getSize());
 	}

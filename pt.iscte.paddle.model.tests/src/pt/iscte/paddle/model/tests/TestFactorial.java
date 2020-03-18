@@ -10,6 +10,7 @@ import pt.iscte.paddle.model.IBinaryExpression;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IProcedureCallExpression;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariableDeclaration;
@@ -20,7 +21,7 @@ public class TestFactorial extends BaseTest {
 	IBinaryExpression guard = EQUAL.on(n, INT.literal(0));
 	ISelection sel = factorial.getBody().addSelectionWithAlternative(guard);
 	IReturn return1 = sel.addReturn(INT.literal(1));
-	IProcedureCall recCall = factorial.call(SUB.on(n, INT.literal(1)));
+	IProcedureCallExpression recCall = factorial.expression(SUB.on(n, INT.literal(1)));
 	IBinaryExpression retExp = MUL.on(n, recCall);
 	IBlock elseBlock = sel.getAlternativeBlock();
 	IReturn return2 = elseBlock.addReturn(retExp);

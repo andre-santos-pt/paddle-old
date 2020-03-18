@@ -23,6 +23,7 @@ public interface IModel2CodeTranslator {
 	String operator(IOperator o);
 	
 	
+	IModel2CodeTranslator JAVA = new Java();
 	
 	public class Java implements IModel2CodeTranslator {
 
@@ -153,7 +154,7 @@ public interface IModel2CodeTranslator {
 			else if(e instanceof IContinue)
 				return "continue;\n";
 			else if(e instanceof IProcedureCall)
-				return ((IProcedureCall) e).translate(this) + ";\n";
+				return ((IProcedureCall) e).getId() + "(" + IProcedureCall.argsToString(this, ((IProcedureCall) e).getArguments()) + ");\n";
 			
 			throw new RuntimeException("not supported: " + e);
 		}

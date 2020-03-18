@@ -55,7 +55,7 @@ public class TestBinarySearch extends BaseTest {
 		body.addArrayElementAssignment(a, INT.literal(11), INT.literal(7));
 		body.addArrayElementAssignment(a, INT.literal(20), INT.literal(8));
 		body.addArrayElementAssignment(a, INT.literal(23), INT.literal(9));
-		body.addReturn(binarySearch.call(a, e));
+		body.addReturn(binarySearch.expression(a, e));
 		return test;
 	}
 	

@@ -40,7 +40,7 @@ public class TestMaxArray extends BaseTest {
 		body.addArrayElementAssignment(a, INT.literal(1), INT.literal(1));
 		body.addArrayElementAssignment(a, INT.literal(4), INT.literal(3));
 		body.addArrayElementAssignment(a, INT.literal(-2), INT.literal(4));
-		body.addReturn(max.call(a));
+		body.addReturn(max.expression(a));
 		return test;
 	}
 	

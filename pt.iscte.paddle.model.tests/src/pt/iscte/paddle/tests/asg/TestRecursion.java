@@ -10,6 +10,7 @@ import pt.iscte.paddle.model.IBinaryExpression;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IProcedureCallExpression;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariableDeclaration;
@@ -21,7 +22,7 @@ public class TestRecursion extends BaseTest {
 	IBinaryExpression guard = EQUAL.on(n, INT.literal(0));
 	ISelection sel = fact.getBody().addSelectionWithAlternative(guard);
 	IReturn return1 = sel.addReturn(INT.literal(1));
-	IProcedureCall recCall = fact.call(SUB.on(n, INT.literal(1)));
+	IProcedureCallExpression recCall = fact.expression(SUB.on(n, INT.literal(1)));
 	IBinaryExpression retExp = MUL.on(n, recCall);
 	IBlock elseBlock = sel.getAlternativeBlock();
 	IReturn return2 = elseBlock.addReturn(retExp);

@@ -34,7 +34,7 @@ public class TestSum extends BaseTest {
 	IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(test, INT.literal(5), INT.literal(0));
 	IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(test, INT.literal(7), INT.literal(1));
 	IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(test, INT.literal(9), INT.literal(2));
-	IVariableDeclaration result = mainBody.addVariable(INT, sum.call(test.address()));
+	IVariableDeclaration result = mainBody.addVariable(INT, sum.expression(test.address()));
 	IReturn mainRet = mainBody.addReturn(result);
 	
 	@Case

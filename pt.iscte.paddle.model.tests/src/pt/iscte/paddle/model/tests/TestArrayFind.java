@@ -45,7 +45,7 @@ public class TestArrayFind extends BaseTest {
 		body.addArrayElementAssignment(a, INT.literal(10), INT.literal(6));
 		body.addArrayElementAssignment(a, INT.literal(4), INT.literal(7));
 		body.addArrayElementAssignment(a, INT.literal(-2), INT.literal(8));
-		body.addReturn(exists.call(a, e));
+		body.addReturn(exists.expression(a, e));
 		return test;
 	}
 	
