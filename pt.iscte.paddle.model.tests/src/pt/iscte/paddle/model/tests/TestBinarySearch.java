@@ -9,6 +9,8 @@ import static pt.iscte.paddle.model.IOperator.SUB;
 import static pt.iscte.paddle.model.IType.BOOLEAN;
 import static pt.iscte.paddle.model.IType.INT;
 
+import org.junit.Test;
+
 import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.ILoop;
@@ -17,6 +19,9 @@ import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
+import pt.iscte.paddle.model.cfg.IBranchNode;
+import pt.iscte.paddle.model.cfg.IControlFlowGraph;
+import pt.iscte.paddle.model.cfg.IStatementNode;
 
 public class TestBinarySearch extends BaseTest {
 
@@ -68,6 +73,35 @@ public class TestBinarySearch extends BaseTest {
 	@Case("-4")
 	public void testFalse(IExecutionData data) {
 		isFalse(data.getReturnValue());
+	}
+	
+	@Override
+	protected IControlFlowGraph cfg() {
+		IControlFlowGraph cfg = IControlFlowGraph.create(binarySearch);
+
+		IBranchNode b_loop = cfg.newBranch(loop.getGuard());
+
+		IBranchNode b_ifFound = cfg.newBranch(iffound.getGuard());
+		b_loop.setBranch(b_ifFound);
+
+		IStatementNode s_retTrue = cfg.newStatement(retTrue);
+		b_ifFound.setBranch(s_retTrue);
+		s_retTrue.setNext(cfg.getExitNode());
+
+		IBranchNode b_ifNot = cfg.newBranch(ifnot.getGuard());
+		b_ifFound.setNext(b_ifNot);
+
+		IStatementNode s_lAss = cfg.newStatement(lAss);
+		b_ifNot.setBranch(s_lAss);
+		s_lAss.setNext(b_loop);
+
+		IStatementNode s_rAss = cfg.newStatement(rAss);
+		b_ifNot.setNext(s_rAss);
+		s_rAss.setNext(b_loop);
+
+		IStatementNode s_retFalse = cfg.newStatement(ret);
+		s_retFalse.setNext(cfg.getExitNode());
+		return cfg;
 	}
 	
 }

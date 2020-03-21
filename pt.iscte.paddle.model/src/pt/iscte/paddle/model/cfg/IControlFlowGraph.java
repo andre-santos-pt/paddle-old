@@ -19,6 +19,10 @@ public interface IControlFlowGraph {
 	static IControlFlowGraph create(IProcedure procedure) {
 		return new ControlFlowGraph(procedure);
 	}
+	
+	default void display() {
+		getNodes().forEach(n -> System.out.println(n));
+	}
 
 	default List<INode> reachability() {
 		return reachability(getEntryNode());

@@ -14,6 +14,9 @@ import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
+import pt.iscte.paddle.model.cfg.IBranchNode;
+import pt.iscte.paddle.model.cfg.IControlFlowGraph;
+import pt.iscte.paddle.model.cfg.IStatementNode;
 
 public class TestArrayCount extends BaseTest {
 
@@ -48,7 +51,38 @@ public class TestArrayCount extends BaseTest {
 		body.addReturn(count.expression(a, INT.literal(element)));
 		return test;
 	}
+	
+	@Override
+	protected IControlFlowGraph cfg() {
+		IControlFlowGraph cfg = IControlFlowGraph.create(count);
+		
+		IStatementNode s_cAss = cfg.newStatement(cAss);
+		cfg.getEntryNode().setNext(s_cAss);
 
+		IStatementNode s_iAss = cfg.newStatement(iAss);
+		s_cAss.setNext(s_iAss);
+
+		IBranchNode b_loop = cfg.newBranch(loop.getGuard());
+		s_iAss.setNext(b_loop);
+
+		IBranchNode b_ifstat = cfg.newBranch(ifstat.getGuard());
+		b_loop.setBranch(b_ifstat);
+
+		IStatementNode s_cAss_ = cfg.newStatement(cAss_);
+		b_ifstat.setBranch(s_cAss_);
+
+		IStatementNode s_iInc = cfg.newStatement(iInc);
+		s_cAss_.setNext(s_iInc);
+		b_ifstat.setNext(s_iInc);
+
+		s_iInc.setNext(b_loop);
+
+		IStatementNode s_ret = cfg.newStatement(ret);
+		b_loop.setNext(s_ret);
+
+		s_ret.setNext(cfg.getExitNode());
+		return cfg;
+	}
 
 
 	@Case

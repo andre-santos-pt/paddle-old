@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 
 import pt.iscte.paddle.model.IBlock.IVisitor;
+import pt.iscte.paddle.model.cfg.IControlFlowGraph;
+import pt.iscte.paddle.model.cfg.impl.Visitor;
 
 /**
  * Mutable
@@ -15,6 +17,20 @@ public interface IProcedure extends IProcedureDeclaration {
 	IType getReturnType();
 	
 	IBlock getBody();
+	
+	default IControlFlowGraph getCFG(){
+		IControlFlowGraph cfg = IControlFlowGraph.create(this);
+		IVisitor visitor = new Visitor(cfg);
+		
+		this.accept(visitor);
+		
+		if(this.getReturnType() == IType.VOID)
+			cfg.getNodes().forEach(node -> {
+			if(node.getNext() == null && !node.isExit()) node.setNext(cfg.getExitNode());
+		});
+		
+		return cfg;
+	}
 	
 	default boolean isRecursive() {
 		class RecFind implements IVisitor {

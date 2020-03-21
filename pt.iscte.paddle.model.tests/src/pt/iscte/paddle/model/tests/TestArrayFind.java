@@ -14,6 +14,9 @@ import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
+import pt.iscte.paddle.model.cfg.IBranchNode;
+import pt.iscte.paddle.model.cfg.IControlFlowGraph;
+import pt.iscte.paddle.model.cfg.IStatementNode;
 
 public class TestArrayFind extends BaseTest {
 
@@ -30,8 +33,8 @@ public class TestArrayFind extends BaseTest {
 	IVariableAssignment foundAss_ = ifstat.addAssignment(found, BOOLEAN.literal(true));
 	IVariableAssignment iInc = loop.addIncrement(i);
 	IReturn ret = body.addReturn(found);
-	
-	
+
+
 	protected IProcedure main() {
 		IProcedure test = module.addProcedure(BOOLEAN);
 		IVariableDeclaration e = test.addParameter(INT);
@@ -48,24 +51,56 @@ public class TestArrayFind extends BaseTest {
 		body.addReturn(exists.expression(a, e));
 		return test;
 	}
-	
+
 	@Case("4")
 	public void testTrue(IExecutionData data) {
 		isTrue(data.getReturnValue());
 	}
-	
+
 	@Case("3")
 	public void testTrueFirst(IExecutionData data) {
 		isTrue(data.getReturnValue());
 	}
-	
+
 	@Case("-2")
 	public void testTrueLast(IExecutionData data) {
 		isTrue(data.getReturnValue());
 	}
-	
+
 	@Case("5")
 	public void testFalse(IExecutionData data) {
 		isFalse(data.getReturnValue());
+	}
+
+	@Override
+	protected IControlFlowGraph cfg() {
+		IControlFlowGraph cfg = IControlFlowGraph.create(exists);
+
+		IStatementNode s_foundAss = cfg.newStatement(foundAss);
+		cfg.getEntryNode().setNext(s_foundAss);
+
+		IStatementNode s_iAss = cfg.newStatement(iAss);
+		s_foundAss.setNext(s_iAss);
+
+		IBranchNode b_loop = cfg.newBranch(loop.getGuard());
+		s_iAss.setNext(b_loop);
+
+		IBranchNode b_ifstat = cfg.newBranch(ifstat.getGuard());
+		b_loop.setBranch(b_ifstat);
+
+		IStatementNode s_foundAss_ = cfg.newStatement(foundAss_);
+		b_ifstat.setBranch(s_foundAss_);
+
+		IStatementNode s_iInc = cfg.newStatement(iInc);
+		s_foundAss_.setNext(s_iInc);
+		b_ifstat.setNext(s_iInc);
+
+		s_iInc.setNext(b_loop);
+
+		IStatementNode s_ret = cfg.newStatement(ret);
+		b_loop.setNext(s_ret);
+
+		s_ret.setNext(cfg.getExitNode());
+		return cfg;
 	}
 }
