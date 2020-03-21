@@ -57,11 +57,6 @@ class ArrayLength extends Expression implements IArrayLength {
 	}
 
 	@Override
-	public boolean isDecomposable() {
-		return true;
-	}	
-
-	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
 		assert values.size() == getIndexes().size() + 1;
 		IValue vTarget = values.get(0);

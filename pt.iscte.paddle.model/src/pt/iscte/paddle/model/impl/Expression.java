@@ -33,11 +33,6 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 		}
 		
 		@Override
-		public boolean isDecomposable() {
-			return true;
-		}
-
-		@Override
 		public List<IExpression> getParts() {
 			return parts;
 		}

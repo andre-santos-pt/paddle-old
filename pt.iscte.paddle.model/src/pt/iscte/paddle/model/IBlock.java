@@ -1,5 +1,6 @@
 package pt.iscte.paddle.model;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,6 +43,17 @@ IListenable<IBlock.IListener> {
 		return getChildren().iterator();
 	}
 	
+
+	default Iterator<IBlockElement> deepIterator() {
+		List<IBlockElement> list = new ArrayList<>();
+		accept(new IVisitor() {
+			public void visitAny(IBlockElement element) {
+				list.add(element);
+			}
+		});
+		return list.iterator();
+	}
+	
 	default boolean isInLoop() {
 		IProgramElement p = getParent();
 		while(!(p instanceof IProcedure))
@@ -54,7 +66,9 @@ IListenable<IBlock.IListener> {
 	}
 	
 	default void accept(IVisitor visitor) {
-		for(IProgramElement s : getChildren()) {
+		for(IBlockElement s : getChildren()) {
+			visitor.visitAny(s);
+			
 			if(s instanceof IReturn) {
 				IReturn ret = (IReturn) s;
 				if(visitor.visit(ret) && !ret.getReturnValueType().isVoid())
@@ -66,8 +80,10 @@ IListenable<IBlock.IListener> {
 			}
 			else if(s instanceof IArrayElementAssignment) {
 				IArrayElementAssignment ass = (IArrayElementAssignment) s;
-				if(visitor.visit(ass))
+				if(visitor.visit(ass)) {
+					ass.getIndexes().forEach(i -> i.accept(visitor));
 					ass.getExpression().accept(visitor);
+				}
 			}
 			else if(s instanceof IRecordFieldAssignment) {
 				IRecordFieldAssignment ass = (IRecordFieldAssignment) s;
@@ -152,7 +168,10 @@ IListenable<IBlock.IListener> {
 
 		// TODO missing because it is not statement, only appears on expressions
 		default void	visit(IVariableDeclaration variable)		{ }
+		
+		default void visitAny(IBlockElement element)				{ }
 	}
 
 
+	
 }

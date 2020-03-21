@@ -71,12 +71,6 @@ class ArrayAllocation extends Expression implements IArrayAllocation {
 	}
 
 	@Override
-	public boolean isDecomposable() {
-		return true;
-	}	
-
-
-	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
 		assert values.size() > 0 && values.size() <= type.getDimensions();
 		IStackFrame frame = stack.getTopFrame();
