@@ -29,7 +29,7 @@ public class Visitor implements IVisitor {
 	private SelectionNode lastSelectionNode = null;
 	private IBranchNode lastLoopNode = null;
 	private IStatementNode lastBreakStatement = null;
-	private BRANCH_TYPE_STATE currentBranchType = null;
+	private BranchType currentBranchType = null;
 
 	private Deque<SelectionNode> selectionNodeStack;
 	private Deque<IBranchNode> loopNodeStack;
@@ -100,7 +100,7 @@ public class Visitor implements IVisitor {
 
 	@Override
 	public boolean visit(ISelection selection) {
-		setCurrentBranchType(BRANCH_TYPE_STATE.SELECTION);
+		setCurrentBranchType(BranchType.SELECTION);
 
 		IBranchNode if_branch = cfg.newBranch(selection.getGuard());
 
@@ -125,7 +125,7 @@ public class Visitor implements IVisitor {
 
 	@Override
 	public void endVisitBranch(ISelection selection) {
-		if(selectionNodeStack.size() > 0) setCurrentBranchType(BRANCH_TYPE_STATE.SELECTION);
+		if(selectionNodeStack.size() > 0) setCurrentBranchType(BranchType.SELECTION);
 		else setCurrentBranchType(null);
 
 		handler.updateOrphansList(lastNode);
@@ -136,7 +136,7 @@ public class Visitor implements IVisitor {
 
 	@Override
 	public boolean visitAlternative(ISelection selection) {
-		setCurrentBranchType(BRANCH_TYPE_STATE.ALTERNATIVE);
+		setCurrentBranchType(BranchType.ALTERNATIVE);
 
 		handler.updateOrphansList(lastNode);
 
@@ -145,7 +145,7 @@ public class Visitor implements IVisitor {
 
 	@Override
 	public void endVisitAlternative(ISelection selection) {
-		if(selectionNodeStack.size() > 0) setCurrentBranchType(BRANCH_TYPE_STATE.SELECTION);
+		if(selectionNodeStack.size() > 0) setCurrentBranchType(BranchType.SELECTION);
 		else setCurrentBranchType(null);
 
 		if(!selection.getAlternativeBlock().isEmpty()) 
@@ -227,10 +227,10 @@ public class Visitor implements IVisitor {
 	public IBranchNode getLastLoopNode() {
 		return lastLoopNode;
 	}
-	public void setCurrentBranchType(BRANCH_TYPE_STATE currentBranchType) {
+	public void setCurrentBranchType(BranchType currentBranchType) {
 		this.currentBranchType = currentBranchType;
 	}
-	public BRANCH_TYPE_STATE getCurrentBranchType() {
+	public BranchType getCurrentBranchType() {
 		return currentBranchType;
 	}
 	public Deque<SelectionNode> getSelectionNodeStack() {

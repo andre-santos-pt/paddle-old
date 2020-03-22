@@ -56,6 +56,7 @@ public class BranchNode extends Node implements IBranchNode {
 	
 	@Override
 	public boolean isEquivalentTo(INode node) {
+		if(!(node instanceof IBranchNode)) return false;
 		IBranchNode n = (IBranchNode) node; // checked by super
 		return super.isEquivalentTo(node) &&
 				(

@@ -7,6 +7,6 @@ package pt.iscte.paddle.model.cfg.impl;
  * @description The type of branch that the visitor is currently in.
  *
  */
-public enum BRANCH_TYPE_STATE {
+public enum BranchType {
 	SELECTION, ALTERNATIVE, LOOP
 }

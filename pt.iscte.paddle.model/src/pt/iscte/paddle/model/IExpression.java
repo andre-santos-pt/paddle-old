@@ -23,10 +23,14 @@ public interface IExpression extends IProgramElement, IExpressionView {
 		return this;
 	}
 	
-	default boolean isDecomposable() {
+	default boolean isSimple() {
+		return this instanceof ISimpleExpression;
+	}
+	
+	default boolean isComposite() {
 		return this instanceof ICompositeExpression;
 	}
-
+	
 	int getNumberOfParts();
 
 	default List<IExpression> getParts() {
@@ -77,6 +81,7 @@ public interface IExpression extends IProgramElement, IExpressionView {
 	}
 
 	static void visitPart(IVisitor visitor, IExpression part) {
+		visitor.visitAny(part);
 		if(part instanceof IArrayAllocation) {
 			IArrayAllocation alloc = (IArrayAllocation) part; 
 			if(visitor.visit(alloc))
@@ -177,6 +182,8 @@ public interface IExpression extends IProgramElement, IExpressionView {
 
 		default void 	visit(IRecordAllocation exp) 		{ }
 		default void 	visit(IRecordFieldExpression exp) 	{ }
+		
+		default void 	visitAny(IExpression exp)			{ }
 
 	}
 }

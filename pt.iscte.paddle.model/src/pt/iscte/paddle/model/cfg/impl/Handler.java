@@ -25,7 +25,7 @@ public class Handler {
 	 */
 	public void handleStatementVisit(INode statement) {
 
-		if(visitor.getCurrentBranchType() != BRANCH_TYPE_STATE.ALTERNATIVE)
+		if(visitor.getCurrentBranchType() != BranchType.ALTERNATIVE)
 			this.handleOrphansAdoption(statement);
 
 		this.setLastBreakNext(statement);
@@ -56,7 +56,7 @@ public class Handler {
 		this.setLastLoopNext(branch);
 		this.setLastBreakNext(branch);
 
-		if(visitor.getCurrentBranchType() != BRANCH_TYPE_STATE.ALTERNATIVE)
+		if(visitor.getCurrentBranchType() != BranchType.ALTERNATIVE)
 			this.handleOrphansAdoption(branch);
 
 		INode lastNode = visitor.getLastNode();
@@ -98,7 +98,7 @@ public class Handler {
 	}
 	
 	public void adoptOrphans(SelectionNode selection, INode parent) {
-		if(visitor.getCurrentBranchType() != BRANCH_TYPE_STATE.ALTERNATIVE) 	
+		if(visitor.getCurrentBranchType() != BranchType.ALTERNATIVE) 	
 			selection.orphans.forEach(node -> node.setNext(parent));
 
 		selection.orphans.clear();
