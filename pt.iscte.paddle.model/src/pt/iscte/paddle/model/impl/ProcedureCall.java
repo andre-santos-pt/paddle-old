@@ -22,15 +22,14 @@ import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariableDeclaration;
 
-class ProcedureCall extends Expression implements IProcedureCall, IProcedureCallExpression, IEvaluable, IExecutable {
+public class ProcedureCall extends Expression implements IProcedureCall, IProcedureCallExpression, IEvaluable, IExecutable {
 	private final IBlock parent;
-	private final IProcedureDeclaration procedure;
+	private IProcedureDeclaration procedure;
 	private final ImmutableList<IExpression> arguments;
 	
 	public ProcedureCall(Block parent, IProcedure procedure, int index, List<IExpression> arguments) {
-//		assert procedure != null;
 		this.parent = parent;
-		this.procedure = procedure == null ? new IProcedureDeclaration.Unbound("procedure") : procedure;
+		this.procedure = procedure;
 		this.arguments = ImmutableList.copyOf(arguments);
 		if(parent != null)
 			parent.addChild(this, index);
@@ -110,37 +109,4 @@ class ProcedureCall extends Expression implements IProcedureCall, IProcedureCall
 	public List<IExpression> getParts() {
 		return arguments;
 	}
-	
-	IProcedureDeclaration UNBOUND = new IProcedureDeclaration() {
-		
-		@Override
-		public void setProperty(Object key, Object value) {
-			
-		}
-		
-		@Override
-		public Object getProperty(Object key) {
-			return null;
-		}
-		
-		@Override
-		public IType getReturnType() {
-			return null;
-		}
-		
-		@Override
-		public List<IVariableDeclaration> getParameters() {
-			return Collections.emptyList();
-		}
-		
-		@Override
-		public IProcedureCallExpression expression(List<IExpression> args) {
-			return null;
-		}
-		
-		@Override
-		public IVariableDeclaration addParameter(IType type) {
-			return null;
-		}
-	};
 }

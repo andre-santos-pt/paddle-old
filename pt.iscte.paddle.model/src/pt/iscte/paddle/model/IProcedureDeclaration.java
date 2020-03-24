@@ -84,46 +84,6 @@ public interface IProcedureDeclaration extends IProgramElement {
 		return hasSameSignature(procedure) && getReturnType().equals(procedure.getReturnType());
 	}
 
-	class Unbound implements IProcedureDeclaration {
-		String id;
-		public Unbound(String id) {
-			this.id = id;
-		}
 
-		@Override
-		public void setProperty(Object key, Object value) {
-
-		}
-
-		@Override
-		public Object getProperty(Object key) {
-			return null;
-		}
-		
-		@Override
-		public String getId() {
-			return id;
-		}
-
-		@Override
-		public IType getReturnType() {
-			return null;
-		}
-
-		@Override
-		public List<IVariableDeclaration> getParameters() {
-			return Collections.emptyList();
-		}
-
-		@Override
-		public IProcedureCallExpression expression(List<IExpression> args) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public IVariableDeclaration addParameter(IType type) {
-			throw new UnsupportedOperationException();
-		}
-	};
 
 }

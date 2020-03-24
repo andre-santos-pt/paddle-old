@@ -1,6 +1,9 @@
 package pt.iscte.paddle.model;
 
+import java.util.Collections;
 import java.util.List;
+
+import pt.iscte.paddle.model.impl.ProcedureCall;
 
 
 public interface IProcedureCall extends IStatement {
@@ -11,6 +14,9 @@ public interface IProcedureCall extends IStatement {
 		return false;
 	}
 	
+	default boolean isBound() {
+		return getProcedure() != null;
+	}
 	
 	
 	@Override
@@ -29,5 +35,11 @@ public interface IProcedureCall extends IStatement {
 		}
 		return args;
 	}
-
+	
+	static IProcedureCall unboundExpression(String id) {
+		ProcedureCall call = new ProcedureCall(null, null, -1, Collections.emptyList());
+		call.setId(id);
+		return call;
+	}
+	
 }
