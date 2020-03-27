@@ -24,19 +24,26 @@ public class Handler {
 	 * @param INode The statement that is has been visited and will be inserted in the Control Flow Graph.
 	 */
 	public void handleStatementVisit(INode statement) {
-
-		if(visitor.getCurrentBranchType() != BranchType.ALTERNATIVE)
+		
+		if(visitor.getCurrentBranchType() != BranchType.ALTERNATIVE) {
+			this.setLastSelectionBranch(statement);
 			this.handleOrphansAdoption(statement);
+		}
+			
 
 		this.setLastBreakNext(statement);
-		this.setLastSelectionNext(statement);		
+		
+		this.setLastSelectionNext(statement);
 		this.setLastLoopNext(statement);
 
 		INode lastNode = visitor.getLastNode();
 		if(lastNode == null) 
 			this.cfg.getEntryNode().setNext(statement);
-		else if(lastNode instanceof IBranchNode && !((IBranchNode) lastNode).hasBranch()) 
-			((IBranchNode) lastNode).setBranch(statement);
+		else if(lastNode instanceof IBranchNode && !((IBranchNode) lastNode).hasBranch()) {
+			if(visitor.getCurrentBranchType() != null && visitor.getCurrentBranchType().equals(BranchType.ALTERNATIVE)) ((IBranchNode) lastNode).setNext(statement); 
+			else ((IBranchNode) lastNode).setBranch(statement);
+		}
+			
 		/* The middle condition is duo to the possibility of having an assignment inside an else, that can't be set as the lastNode's next.*/
 		else if(lastNode != null && !(lastNode instanceof IBranchNode) 
 				&& (visitor.getSelectionNodeStack().size() == 0 || !visitor.getSelectionNodeStack().peek().orphans.contains(lastNode)) 
@@ -82,6 +89,12 @@ public class Handler {
 			visitor.setlastSelectionNode(null);
 		}
 	}
+	
+	public void setLastSelectionBranch(INode node) {
+		if(visitor.getLastSelectionBranch() != null && !visitor.getLastSelectionBranch().hasBranch()) {
+			visitor.getLastSelectionBranch().setBranch(node);
+		}
+	}
 
 
 	public void setLastBreakNext(INode node) {
@@ -92,14 +105,16 @@ public class Handler {
 	}
 
 	public void handleOrphansAdoption(INode node) {
-		if(visitor.getLastSelectionNode() != null 
+		if(visitor.getLastSelectionNode() != null
 				&& visitor.getLastSelectionOrphans().size() > 0) 
 			adoptOrphans(visitor.getLastSelectionNode(), node);
 	}
 	
 	public void adoptOrphans(SelectionNode selection, INode parent) {
 		if(visitor.getCurrentBranchType() != BranchType.ALTERNATIVE) 	
-			selection.orphans.forEach(node -> node.setNext(parent));
+			selection.orphans.forEach(node -> {
+				if(node.getNext() == null) node.setNext(parent);
+			});
 
 		selection.orphans.clear();
 	}

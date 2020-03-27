@@ -193,6 +193,7 @@ public class Visitor implements IVisitor {
 
 		ret.setNext(cfg.getExitNode());
 		setLastNode(ret);
+		
 		return false;
 	}
 
