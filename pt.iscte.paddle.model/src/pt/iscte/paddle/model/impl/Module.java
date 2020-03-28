@@ -82,8 +82,9 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 			cmd.execute();
 		else
 			history.executeCommand(cmd);
+		
 //		System.out.println("CMD: " + cmd.toText());
-//		getListeners().forEachRemaining(l -> l.commandExecuted(cmd));
+		getListeners().forEachRemaining(l -> l.commandExecuted(cmd));
 	}
 	
 	public void undo() {
@@ -164,39 +165,84 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		return add.getElement();
 	}
 
+	private class AddRecord implements IAddCommand<IRecordType> {
+		final String id;
+		private IRecordType type;
+		
+		AddRecord(String id) {
+			this.id = id;
+		}
+		
+		@Override
+		public void execute() {
+			type = new RecordType(Module.this);
+			type.setId(id);
+			records.add(type);
+		}
+
+		@Override
+		public void undo() {
+			records.remove(type);
+		}
+
+		@Override
+		public IRecordType getElement() {
+			return type;
+		}
+
+		@Override
+		public IProgramElement getParent() {
+			return Module.this;
+		}
+	}
+	
 	@Override
 	public IRecordType addRecordType() {
-		IRecordType struct = new RecordType();
-		records.add(struct);
-		return struct;
+		return addRecordType(null);
 	}
 
+	@Override
+	public IRecordType addRecordType(String id) {
+		AddRecord add = new AddRecord(id);
+		executeCommand(add);
+		return add.getElement();
+	}
+	
 	private class AddProcedure implements IAddCommand<IProcedure> {
 		final String id;
 		final IType returnType;
 		IProcedure procedure;
 		String[] flags;
-		AddProcedure(String id, IType returnType, String ... flags) {
+		int index;
+		
+		AddProcedure(String id, IType returnType, int index, String ... flags) {
 			this.id = id;
 			this.returnType = returnType;
+			this.index = index;
 			this.flags = flags;
 		}
 
-		AddProcedure(IProcedure procedure) {
+		AddProcedure(IProcedure procedure, int index) {
 			this.procedure = procedure;
 			this.returnType = procedure.getReturnType();
 			this.id = procedure.getId();
+			this.index = index;
 		}
 		
 		@Override
 		public void execute() {
+			assert index == -1 || index >= 0 && index <= procedures.size();
 			if(procedure == null) {
 				procedure = new Procedure(Module.this, returnType);
 				procedure.setId(id);
 				for(String f : flags)
 					procedure.setFlag(f);
 			}
-			procedures.add(procedure);
+			if(index == -1)
+				procedures.add(procedure);
+			else
+				procedures.add(index, procedure);
+			
 			getListeners().forEachRemaining(l -> l.procedureAdded(procedure));
 		}
 
@@ -220,7 +266,12 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 
 	@Override
 	public IProcedure addProcedure(String id, IType returnType, String ... flags) {
-		AddProcedure proc = new AddProcedure(id, returnType, flags);
+		return addProcedureAt(id, returnType, -1, flags);
+	}
+	
+	@Override
+	public IProcedure addProcedureAt(String id, IType returnType, int index, String... flags) {
+		AddProcedure proc = new AddProcedure(id, returnType, index, flags);
 		executeCommand(proc);
 		return proc.getElement();
 	}
@@ -320,6 +371,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	
 	private class RemoveProcedure implements IDeleteCommand<IProcedure> {
 		final IProcedure procedure;
+		int index;
 		
 		public RemoveProcedure(IProcedure procedure) {
 			this.procedure = procedure;
@@ -327,14 +379,14 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		
 		@Override
 		public void execute() {
-//			int index = procedures.indexOf(procedure);
+			index = procedures.indexOf(procedure);
 			procedures.remove(procedure);
 			getListeners().forEachRemaining(l -> l.procedureRemoved(procedure));
 		}
 
 		@Override
 		public void undo() {
-			new AddProcedure(procedure).execute();
+			new AddProcedure(procedure, index).execute();
 		}
 
 		@Override

@@ -214,8 +214,11 @@ public interface IStatementContainer {
 		return addCallAt(procedure, index, Arrays.asList(args));
 	}
 	
-	default IBlockElement removeElement(int index) {
-		return getBlock().removeElement(index);
-	}
+//	default IBlockElement removeElement(int index) {
+//		return getBlock().removeElement(index);
+//	}
 
+	default void removeElement(IBlockElement child) {
+		getBlock().removeElement(child);
+	}
 }

@@ -14,7 +14,7 @@ import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableExpression;
 
-class RecordFieldExpression extends Expression implements IRecordFieldExpression {
+public class RecordFieldExpression extends Expression implements IRecordFieldExpression {
 
 	private final IExpression target;
 	private final IVariableDeclaration field;

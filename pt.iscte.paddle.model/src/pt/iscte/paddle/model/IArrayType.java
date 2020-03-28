@@ -3,6 +3,8 @@ package pt.iscte.paddle.model;
 import java.util.Arrays;
 import java.util.List;
 
+import pt.iscte.paddle.model.impl.Literal;
+
 public interface IArrayType extends IType {
 	int getDimensions();
 	IType getComponentType();
@@ -12,7 +14,7 @@ public interface IArrayType extends IType {
 	}
 	
 	default IExpression getDefaultExpression() {
-		return ILiteral.NULL;
+		return Literal.NULL;
 	}
 	
 	default boolean isSame(IProgramElement e) {

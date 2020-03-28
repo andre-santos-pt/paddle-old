@@ -9,4 +9,5 @@ Require-Bundle: com.google.guava;bundle-version="21.0.0";visibility:=reexport
 Export-Package: pt.iscte.paddle.interpreter,
  pt.iscte.paddle.model,
  pt.iscte.paddle.model.cfg,
+ pt.iscte.paddle.model.commands,
  pt.iscte.paddle.model.validation

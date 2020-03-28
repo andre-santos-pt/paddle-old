@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.model.commands.ICommand;
 import pt.iscte.paddle.model.impl.Module;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
 
@@ -14,11 +15,14 @@ import pt.iscte.paddle.model.validation.ISemanticProblem;
 public interface IModule extends IProgramElement, IListenable<IModule.IListener> {
 	
 	interface IListener {
-//		default void commandExecuted(ICommand<?> command) { }
+		default void commandExecuted(ICommand<?> command) { }
 		default void constantAdded(IConstantDeclaration constant) { }
 		default void constantRemoved(IConstantDeclaration constant) { }
 		default void procedureAdded(IProcedure procedure) { }
 		default void procedureRemoved(IProcedure procedure) { }
+		
+		default void recordTypeAdded(IRecordType type)	{ }
+		// TODO record remove
 	}
 	
 	static IModule create() {
@@ -54,11 +58,21 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	
 	IRecordType addRecordType();
 	
+	IRecordType addRecordType(String id);
+	
+	
 	default IProcedure addProcedure(IType returnType, String ... flags) {
 		return addProcedure(null, returnType, flags);
 	}
 	
+//	default IProcedure addProcedure(String id, IType returnType, int index, String ... flags) {
+//		return addProcedureAt(null, returnType, index, flags);
+//	}
+	
 	IProcedure addProcedure(String id, IType returnType, String ... flags);
+	
+	IProcedure addProcedureAt(String id, IType returnType, int index, String ... flags);
+
 
 	void addProcedure(IProcedure procedure);
 	

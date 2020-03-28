@@ -13,4 +13,13 @@ public interface IBlockElement extends IProgramElement {
 		
 		return (IProcedure) p;
 	}
+	
+	default void remove() {
+		IProgramElement parent = getParent();
+		if(parent instanceof IStatementContainer)
+			((IStatementContainer) parent).removeElement(this);
+		else if(parent instanceof IRecordType)
+			((IRecordType) parent).removeField((IVariableDeclaration) this);
+			
+	}
 }

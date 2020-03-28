@@ -146,12 +146,17 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 		((Module) getProcedure().getModule()).executeCommand(new RemoveChild(e));
 	}
 	
-	@Override
-	public IBlockElement removeElement(int index) {
-		assert index >= 0 && index <= Block.this.getChildren().size() : index + ": block contains " + Block.this.getChildren().size() + " children";
-		IBlockElement e = children.get(index);
-		remove(e);
-		return e;
+//	@Override
+//	public IBlockElement removeElement(int index) {
+//		assert index >= 0 && index <= Block.this.getChildren().size() : index + ": block contains " + Block.this.getChildren().size() + " children";
+//		IBlockElement e = children.get(index);
+//		remove(e);
+//		return e;
+//	}
+
+	public void removeElement(IBlockElement child)  {
+		assert children.contains(child);
+		remove(child);
 	}
 	
 	@Override

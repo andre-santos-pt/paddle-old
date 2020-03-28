@@ -1,5 +1,7 @@
 package pt.iscte.paddle.model;
 
+import pt.iscte.paddle.model.impl.Literal;
+
 public interface IReferenceType extends IType {
 
 	IType getTarget();
@@ -25,7 +27,7 @@ public interface IReferenceType extends IType {
 	
 	@Override
 	default IExpression getDefaultExpression() {
-		return ILiteral.NULL;
+		return Literal.NULL;
 	}
 	
 }

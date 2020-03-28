@@ -32,8 +32,8 @@ public class TestList extends BaseTest {
 	IVariableDeclaration list = init.addParameter(IntList.reference());
 
 	IBlock initBody = init.getBody();
-	IRecordFieldAssignment hAss = initBody.addRecordFieldAssignment(list.field(head), ILiteral.NULL);
-	IRecordFieldAssignment tAss = initBody.addRecordFieldAssignment(list.field(tail), ILiteral.NULL);
+	IRecordFieldAssignment hAss = initBody.addRecordFieldAssignment(list.field(head), ILiteral.getNull());
+	IRecordFieldAssignment tAss = initBody.addRecordFieldAssignment(list.field(tail), ILiteral.getNull());
 
 
 	IProcedure add = module.addProcedure(VOID);
@@ -42,7 +42,7 @@ public class TestList extends BaseTest {
 	IBlock addBody = add.getBody();
 	IVariableDeclaration n = addBody.addVariable(Node.reference(), Node.heapAllocation());
 	IRecordFieldAssignment nAss = addBody.addRecordFieldAssignment(n.field(element), e);
-	ISelection checkEmpty = addBody.addSelectionWithAlternative(EQUAL.on(list_.field(head), ILiteral.NULL));
+	ISelection checkEmpty = addBody.addSelectionWithAlternative(EQUAL.on(list_.field(head), ILiteral.getNull()));
 	IRecordFieldAssignment hAss_ = checkEmpty.getBlock().addRecordFieldAssignment(list_.field(head), n);
 	IRecordFieldAssignment tAss_ = checkEmpty.getBlock().addRecordFieldAssignment(list_.field(tail), n);
 
@@ -56,7 +56,7 @@ public class TestList extends BaseTest {
 	IVariableDeclaration e_ = exists.addParameter(INT);
 	IBlock existsBody = exists.getBody();
 	IVariableDeclaration n_ = existsBody.addVariable(Node.reference(), list__.field(head));
-	ILoop findLoop = existsBody.addLoop(DIFFERENT.on(n_, ILiteral.NULL));
+	ILoop findLoop = existsBody.addLoop(DIFFERENT.on(n_, ILiteral.getNull()));
 	ISelection iffind = findLoop.addSelection(EQUAL.on(n_.field(element), e_));
 	IReturn retTrue = iffind.getBlock().addReturn(BOOLEAN.literal(true));
 	IVariableAssignment moveNext = findLoop.addAssignment(n_, n_.field(next));

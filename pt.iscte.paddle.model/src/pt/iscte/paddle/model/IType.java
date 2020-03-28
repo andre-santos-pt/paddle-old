@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.model.impl.ArrayType;
+import pt.iscte.paddle.model.impl.Literal;
 import pt.iscte.paddle.model.impl.PrimitiveType;
 
 public interface IType extends IProgramElement  {
@@ -138,7 +139,7 @@ public interface IType extends IProgramElement  {
 		
 		@Override
 		public IExpression getDefaultExpression() {
-			throw new UnsupportedOperationException();
+			return Literal.NULL;
 		}
 	};
 
@@ -185,7 +186,7 @@ public interface IType extends IProgramElement  {
 		
 		@Override
 		public IExpression getDefaultExpression() {
-			return ILiteral.NULL;
+			return Literal.NULL;
 		}
 	};
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.model.IOperator.OperationType;
+import pt.iscte.paddle.model.impl.Literal;
 
 /**
  * Immutable
@@ -46,7 +47,7 @@ public interface IExpression extends IProgramElement, IExpressionView {
 	}
 
 	default boolean isNull() {
-		return this == ILiteral.NULL;
+		return this == Literal.NULL;
 	}
 
 	IConditionalExpression conditional(IExpression trueCase, IExpression falseCase);

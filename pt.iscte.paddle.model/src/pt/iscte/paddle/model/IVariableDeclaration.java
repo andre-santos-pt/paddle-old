@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import pt.iscte.paddle.model.impl.RecordFieldExpression;
 import pt.iscte.paddle.model.impl.VariableExpression;
 
 public interface IVariableDeclaration extends IInnocuousStatement, IExpressionView {
@@ -62,7 +63,9 @@ public interface IVariableDeclaration extends IInnocuousStatement, IExpressionVi
 	
 	IRecordFieldExpression field(IVariableDeclaration field);
 	
-	
+	default IRecordFieldExpression field(String id) {
+		return field(new UnboundVariable(id));
+	}
 	
 	class UnboundVariable implements IVariableDeclaration {
 		
@@ -111,8 +114,7 @@ public interface IVariableDeclaration extends IInnocuousStatement, IExpressionVi
 		
 		@Override
 		public IRecordFieldExpression field(IVariableDeclaration field) {
-			// TODO Auto-generated method stub
-			return null;
+			return new RecordFieldExpression(this.expression(), field);
 		}
 
 		@Override
