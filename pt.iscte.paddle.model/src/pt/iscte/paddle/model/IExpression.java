@@ -1,10 +1,12 @@
 package pt.iscte.paddle.model;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.model.IOperator.OperationType;
+import pt.iscte.paddle.model.IVariableDeclaration.UnboundVariable;
 import pt.iscte.paddle.model.impl.Literal;
 
 /**
@@ -22,6 +24,28 @@ public interface IExpression extends IProgramElement, IExpressionView {
 	@Override
 	default IExpression expression() {
 		return this;
+	}
+	
+	IArrayLength length(List<IExpression> indexes);
+	default IArrayLength length(IExpression ... indexes) {
+		return length(Arrays.asList(indexes));
+	}
+	default IArrayLength length(IExpressionView ... views) {
+		return length(IExpressionView.toList(views));
+	}
+	
+	IArrayElement element(List<IExpression> indexes);
+	default IArrayElement element(IExpression ... indexes) {
+		return element(Arrays.asList(indexes));
+	}
+	default IArrayElement element(IExpressionView ... views) {
+		return element(IExpressionView.toList(views));
+	}
+
+	IRecordFieldExpression field(IVariableDeclaration field); 
+	
+	default IRecordFieldExpression field(String id) {
+		return field(new UnboundVariable(id));
 	}
 	
 	default boolean isSimple() {

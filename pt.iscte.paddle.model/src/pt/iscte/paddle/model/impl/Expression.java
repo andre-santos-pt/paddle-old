@@ -8,14 +8,33 @@ import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IEvaluable;
 import pt.iscte.paddle.interpreter.IValue;
+import pt.iscte.paddle.model.IArrayElement;
+import pt.iscte.paddle.model.IArrayLength;
 import pt.iscte.paddle.model.IConditionalExpression;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IExpressionIterator;
+import pt.iscte.paddle.model.IRecordFieldExpression;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 abstract class Expression extends ProgramElement implements IEvaluable, IExpression {
 
 	Expression(String...flags) {
 		super(flags);
+	}
+	
+	@Override
+	public IRecordFieldExpression field(IVariableDeclaration field) {
+		return new RecordFieldExpression(this, field);
+	}	
+	
+	@Override
+	public IArrayLength length(List<IExpression> indexes) {
+		return new ArrayLength(this, indexes);
+	}
+	
+	@Override
+	public IArrayElement element(List<IExpression> indexes) {
+		return new ArrayElement(this, indexes);
 	}
 	
 	@Override
@@ -25,7 +44,7 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 
 	// TODO evaluate only one
 	// ideia: decompose() -> iterador que para quando nao e preciso mais
-	static class Conditional extends ProgramElement implements IConditionalExpression, IEvaluable {
+	static class Conditional extends Expression implements IConditionalExpression, IEvaluable {
 		private ImmutableList<IExpression> parts;
 		
 		public Conditional(IExpression condition, IExpression trueCase, IExpression falseCase) {

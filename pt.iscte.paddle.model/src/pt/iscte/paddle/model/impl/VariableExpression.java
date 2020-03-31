@@ -50,20 +50,20 @@ public class VariableExpression extends Expression implements IVariableExpressio
 		return new VariableDereference(this);
 	}
 	
-	@Override
-	public IRecordFieldExpression field(IVariableDeclaration field) {
-		return new RecordFieldExpression(this, field);
-	}	
-	
-	@Override
-	public IArrayLength length(List<IExpression> indexes) {
-		return new ArrayLength(this, indexes);
-	}
-	
-	@Override
-	public IArrayElement element(List<IExpression> indexes) {
-		return new ArrayElement(this, indexes);
-	}
+//	@Override
+//	public IRecordFieldExpression field(IVariableDeclaration field) {
+//		return new RecordFieldExpression(this, field);
+//	}	
+//	
+//	@Override
+//	public IArrayLength length(List<IExpression> indexes) {
+//		return new ArrayLength(this, indexes);
+//	}
+//	
+//	@Override
+//	public IArrayElement element(List<IExpression> indexes) {
+//		return new ArrayElement(this, indexes);
+//	}
 	
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {

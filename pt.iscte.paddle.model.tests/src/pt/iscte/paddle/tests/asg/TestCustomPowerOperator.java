@@ -49,7 +49,7 @@ public class TestCustomPowerOperator extends BaseTest {
 
 		@Override
 		public IBinaryExpression on(IExpression leftOperand, IExpression rightOperand) {
-			return IBinaryExpression.create(this, leftOperand, rightOperand);
+			return this.on(leftOperand, rightOperand);
 		}
 
 		@Override

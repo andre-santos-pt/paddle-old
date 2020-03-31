@@ -15,13 +15,4 @@ public interface IVariableDereference extends ISimpleExpression {
 		return e instanceof IVariableDereference &&
 				getTarget().isSame(((IVariableDereference) e).getTarget());
 	}
-	 
-	default IExpression length(IExpressionView ... indexes) {
-		return getTarget().length(indexes);
-	}
-
-	default IExpressionView element(IExpressionView ... views) {
-		return getTarget().element(views);
-	}
-	
 }

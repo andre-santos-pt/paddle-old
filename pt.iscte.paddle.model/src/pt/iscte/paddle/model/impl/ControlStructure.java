@@ -18,6 +18,8 @@ abstract class ControlStructure extends ProgramElement implements IControlStruct
 		this.guard = guard;
 		this.block = parent.addLooseBlock(this);
 		parent.addChild(this, index);
+		
+		guard.setProperty(IControlStructure.class, this);
 	}
 	
 	@Override

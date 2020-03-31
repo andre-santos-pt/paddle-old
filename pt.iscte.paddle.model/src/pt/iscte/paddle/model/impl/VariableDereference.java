@@ -6,14 +6,19 @@ import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.IValue;
+import pt.iscte.paddle.model.IArrayElement;
+import pt.iscte.paddle.model.IArrayLength;
+import pt.iscte.paddle.model.IExpressionView;
+import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableDereference;
 import pt.iscte.paddle.model.IVariableExpression;
 
 public class VariableDereference extends Expression implements IVariableDereference {
 	private final IVariableExpression variable;
-	
+
 	public VariableDereference(IVariableExpression variable) {
 		assert variable != null;
 		this.variable = variable;
@@ -42,7 +47,7 @@ public class VariableDereference extends Expression implements IVariableDerefere
 			var = ((VariableDereference) var).variable;
 		return var;
 	}
-	
+
 	@Override
 	public String toString() {
 		return getId();
@@ -56,5 +61,17 @@ public class VariableDereference extends Expression implements IVariableDerefere
 	@Override
 	public String getId() {
 		return variable.getId();
+	}
+
+	public IArrayLength length(IExpressionView ... indexes) {
+		return variable.length(indexes);
+	}
+
+	public IArrayElement element(IExpressionView ... views) {
+		return variable.element(views);
+	}
+	
+	public IRecordFieldExpression field(IVariableDeclaration var) {
+		return variable.field(var);
 	}
 }

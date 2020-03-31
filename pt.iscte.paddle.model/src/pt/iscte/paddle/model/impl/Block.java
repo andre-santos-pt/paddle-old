@@ -103,8 +103,6 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	void addChild(IBlockElement e, int index) {
 		assert e != null;
 		((Module) getProcedure().getModule()).executeCommand(new AddChild(e, index));
-//		children.add(e);
-//		getListeners().forEachRemaining(l -> l.elementAdded(e, children.size()-1));
 	}
 
 	private class RemoveChild implements IDeleteCommand<IBlockElement> {
@@ -134,11 +132,6 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 		public IBlockElement getElement() {
 			return element;
 		}
-
-//		@Override
-//		public IProgramElement getParent() {
-//			return Block.this;
-//		}
 	}
 	
 	void remove(IBlockElement e) {
@@ -146,14 +139,6 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 		((Module) getProcedure().getModule()).executeCommand(new RemoveChild(e));
 	}
 	
-//	@Override
-//	public IBlockElement removeElement(int index) {
-//		assert index >= 0 && index <= Block.this.getChildren().size() : index + ": block contains " + Block.this.getChildren().size() + " children";
-//		IBlockElement e = children.get(index);
-//		remove(e);
-//		return e;
-//	}
-
 	public void removeElement(IBlockElement child)  {
 		assert children.contains(child);
 		remove(child);

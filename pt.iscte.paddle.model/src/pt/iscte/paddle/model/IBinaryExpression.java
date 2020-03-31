@@ -27,8 +27,8 @@ public interface IBinaryExpression extends ICompositeExpression {
 				getRightOperand().isSame(((IBinaryExpression) e).getRightOperand());
 	}
 	
-	static IBinaryExpression create(IBinaryOperator operator, IExpression leftOperand, IExpression rightOperand) {
-		return new BinaryExpression(operator, leftOperand, rightOperand);
-	}
+//	static IBinaryExpression create(IBinaryOperator operator, IExpression leftOperand, IExpression rightOperand) {
+//		return new BinaryExpression(operator, leftOperand, rightOperand);
+//	}
 }
 
