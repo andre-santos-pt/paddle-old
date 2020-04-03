@@ -18,7 +18,7 @@ public interface IProcedure extends IProcedureDeclaration {
 	
 	IBlock getBody();
 	
-	default IControlFlowGraph getCFG(){
+	default IControlFlowGraph generateCFG(){
 		IControlFlowGraph cfg = IControlFlowGraph.create(this);
 		IVisitor visitor = new Visitor(cfg);
 		
