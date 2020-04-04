@@ -175,6 +175,7 @@ public class Visitor implements IVisitor {
 		/* When a loop inside another loop finishes and there no statements of branches left before ending the wrapping loop, so
 		 * the inside loop's next needs to become the wrapping loop.*/
 		handler.setLastLoopNext(finishedLoopBranch);
+		handler.setLastSelectionBranch(finishedLoopBranch);
 
 		if(lastNode != null && lastNode.getNext() == null) lastNode.setNext(finishedLoopBranch);
 

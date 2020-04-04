@@ -40,7 +40,7 @@ public class TestCFGPathBetweenNodes extends BaseTest{
 
 	@Override
 	protected IControlFlowGraph cfg() {
-		IControlFlowGraph cfg = max.getCFG();
+		IControlFlowGraph cfg = max.generateCFG();
 		return super.cfg();
 	}
 
@@ -89,7 +89,7 @@ public class TestCFGPathBetweenNodes extends BaseTest{
 
 		s_ret.setNext(cfg.getExitNode());
 
-		IControlFlowGraph cfg2 = max.getCFG();
+		IControlFlowGraph cfg2 = max.generateCFG();
 		
 		List<Path> paths = cfg2.pathsBetweenNodes(s_mAss, s_iInc);
 		
