@@ -50,6 +50,7 @@ public class BaseTest {
 	final protected IModule module;
 
 	private IProcedure main;
+	private IProcedure testproc;
 	private IProgramState state;
 
 	private List<ISemanticProblem> problems;
@@ -88,6 +89,8 @@ public class BaseTest {
 						if (o instanceof IProcedure) {
 							if (main == null || f.getName().equals("main"))
 								main = (IProcedure) o;
+							
+							testproc = (IProcedure) o;
 						} 
 					}
 				}
@@ -104,18 +107,7 @@ public class BaseTest {
 	}
 
 	private void compile() {
-		String code = module.translate(translator);
-//		File file = new File("src/" + module.getId() + ".java");
-//		System.out.println("\\begin{lstlisting}");
-		System.out.print(code + "\n");
-//		System.out.println("\\end{lstlisting}");
-//		try {
-//			PrintWriter writer = new PrintWriter(file);
-//			writer.println(code);
-//			writer.close();
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		}
+		System.out.print(module.translate(translator) + "\n");
 		
 		problems = module.checkSemantics();
 		for (ISemanticProblem p : problems) {
@@ -123,13 +115,11 @@ public class BaseTest {
 		}
 		assertTrue("Semantic errors", problems.isEmpty());
 		
-//		IControlFlowGraph cfg = cfg();
-//		if(cfg != null) {
-//			Builder cfgBuilder = new Builder(main);
-//			cfgBuilder.display();
-//			IControlFlowGraph cfg2 = cfgBuilder.getCFG();
-//			assertTrue("CFG does not match", cfg.isEquivalentTo(cfg2));
-//		}
+		IControlFlowGraph cfg = cfg();
+		if(cfg != null) {
+			IControlFlowGraph cfg2 = testproc.generateCFG();
+			assertTrue("CFG does not match", cfg.isEquivalentTo(cfg2));
+		}
 	}
 
 	public IModule getModule() {
