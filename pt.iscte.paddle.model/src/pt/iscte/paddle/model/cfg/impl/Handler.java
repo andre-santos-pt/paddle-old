@@ -32,7 +32,6 @@ public class Handler {
 			
 
 		this.setLastBreakNext(statement);
-		
 		this.setLastSelectionNext(statement);
 		this.setLastLoopNext(statement);
 
@@ -57,7 +56,7 @@ public class Handler {
 	 * This meaning that it will place itself has the next loop Branch node for the previous one.
 	 * @param IBranchNode branch The statement that is has been visited and will be inserted in the Control Flow Graph.
 	 */
-	public void handleBranchVisit(IBranchNode branch) {		
+	public void handleBranchVisit(IBranchNode branch) {	
 
 		this.setLastSelectionNext(branch);
 		this.setLastLoopNext(branch);

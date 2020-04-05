@@ -42,6 +42,21 @@ public interface IControlFlowGraph {
 		}
 	}
 	
+	default List<INode> generateSubCFG(INode source, INode destination){
+		List<INode> nodes = new ArrayList<INode>();
+		nodes.add(getEntryNode());
+		
+		List<Path> paths = pathsBetweenNodes(source, destination);
+		
+		for (Path path : paths) {
+			path.nodes.forEach(node -> {
+				if(!nodes.contains(node)) nodes.add(node);
+			});
+		}
+		nodes.add(getExitNode());
+		return nodes;
+	}
+	
 	/**
 	 * Goes through the ControlFlowGraph nodes searching for all the possible paths between the supplied source and destination nodes.
 	 * @param source The source node where the search will start.
