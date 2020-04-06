@@ -25,7 +25,6 @@ public interface IProcedure extends IProcedureDeclaration {
 		this.accept(visitor);
 
 		cfg.getNodes().forEach(node -> {
-			System.out.println("node: " + node.getNext());
 			if(node.getNext() == null && !node.isExit()) node.setNext(cfg.getExitNode());
 		});
 
