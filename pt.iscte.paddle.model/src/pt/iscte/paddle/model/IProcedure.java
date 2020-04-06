@@ -24,9 +24,10 @@ public interface IProcedure extends IProcedureDeclaration {
 
 		this.accept(visitor);
 
-		cfg.getNodes().forEach(node -> {
-			if(node.getNext() == null && !node.isExit()) node.setNext(cfg.getExitNode());
-		});
+		if(this.getReturnType() == IType.VOID)
+			cfg.getNodes().forEach(node -> {
+				if(node.getNext() == null && !node.isExit()) node.setNext(cfg.getExitNode());
+			});
 
 		return cfg;
 	}
