@@ -132,7 +132,8 @@ public enum PrimitiveType implements IValueType {
 		
 		@Override
 		public ILiteral literal(Object obj) {
-			return (Boolean) obj ? TRUE : FALSE;
+			assert obj instanceof Boolean;
+			return (Boolean) obj ? new Literal(BOOLEAN, "true") : new Literal(BOOLEAN, "false");
 		}
 		
 		@Override
@@ -141,8 +142,8 @@ public enum PrimitiveType implements IValueType {
 		}
 	};
 	
-	private static ILiteral TRUE = new Literal(BOOLEAN, "true");
-	private static ILiteral FALSE = new Literal(BOOLEAN, "false");
+//	private static ILiteral TRUE = new Literal(BOOLEAN, "true");
+//	private static ILiteral FALSE = new Literal(BOOLEAN, "false");
 
 	@Override
 	public String toString() {
