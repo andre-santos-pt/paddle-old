@@ -73,7 +73,7 @@ public class Handler {
 
 	public void setLastLoopNext(INode node) {
 		if(visitor.getLastLoopNode() != null 
-				&& visitor.getLastLoopNode().hasBranch() 
+//				&& visitor.getLastLoopNode().hasBranch() 
 				&& visitor.getLastNode().getNext() != null) {
 			visitor.getLastLoopNode().setNext(node);
 			visitor.setLastLoopNode(null);
