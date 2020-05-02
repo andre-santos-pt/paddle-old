@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import pt.iscte.paddle.model.IBlock.IVisitor;
+import pt.iscte.paddle.model.cfg.IBranchNode;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.cfg.impl.Visitor;
 
@@ -27,6 +28,7 @@ public interface IProcedure extends IProcedureDeclaration {
 		if(this.getReturnType() == IType.VOID)
 			cfg.getNodes().forEach(node -> {
 				if(node.getNext() == null && !node.isExit()) node.setNext(cfg.getExitNode());
+				if(node instanceof IBranchNode && !((IBranchNode) node).hasBranch() && !node.isExit()) ((IBranchNode) node).setBranch(cfg.getExitNode());
 			});
 
 		return cfg;
