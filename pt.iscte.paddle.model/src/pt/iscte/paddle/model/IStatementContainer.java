@@ -105,6 +105,10 @@ public interface IStatementContainer {
 		return addArrayElementAssignmentAt(target.expression(), exp, getBlock().getSize(), IExpressionView.toList(indexes));
 	}
 	
+	default IArrayElementAssignment addArrayElementAssignment(IVariableDeclaration target, IExpressionView exp, IExpressionView<?> ... indexes) {
+		return addArrayElementAssignmentAt(target.expression(), exp.expression(), getBlock().getSize(), IExpressionView.toList(indexes));
+	}
+	
 	
 	default IArrayElementAssignment addArrayElementAssignment(ITargetExpression target, IExpression exp, IExpression ... indexes) {
 		return addArrayElementAssignmentAt(target, exp, getBlock().getSize(), indexes);
