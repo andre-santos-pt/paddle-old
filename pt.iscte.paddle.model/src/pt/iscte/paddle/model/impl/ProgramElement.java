@@ -13,7 +13,7 @@ public class ProgramElement implements IProgramElement {
 	private Map<Object, Object> properties = Collections.emptyMap();
 	private List<IPropertyListener> listeners = Collections.emptyList();
 	
-	ProgramElement(String ... flags) {
+	public ProgramElement(String ... flags) {
 		for(String f : flags)
 			setFlag(f);
 	}

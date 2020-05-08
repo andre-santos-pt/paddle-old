@@ -1,3 +1,4 @@
+package pt.iscte.paddle.model.demo;
 import static pt.iscte.paddle.model.IOperator.ADD;
 import static pt.iscte.paddle.model.IOperator.DIFFERENT;
 import static pt.iscte.paddle.model.IOperator.GREATER;

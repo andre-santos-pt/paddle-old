@@ -3,8 +3,6 @@ package pt.iscte.paddle.model;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.model.IOperator.OperationType;
 import pt.iscte.paddle.model.IVariableDeclaration.UnboundVariable;
 import pt.iscte.paddle.model.impl.Literal;
@@ -13,7 +11,7 @@ import pt.iscte.paddle.model.impl.Literal;
  * Immutable
  *
  */
-public interface IExpression extends IProgramElement, IExpressionView {
+public interface IExpression extends IProgramElement, IExpressionView<IExpression> {
 	IType getType();
 
 	// TODO concretize expression
@@ -25,6 +23,7 @@ public interface IExpression extends IProgramElement, IExpressionView {
 	default IExpression expression() {
 		return this;
 	}
+	
 	
 	IArrayLength length(List<IExpression> indexes);
 	default IArrayLength length(IExpression ... indexes) {
@@ -59,7 +58,7 @@ public interface IExpression extends IProgramElement, IExpressionView {
 	int getNumberOfParts();
 
 	default List<IExpression> getParts() {
-		return ImmutableList.of();
+		return List.of();
 	}
 
 	default OperationType getOperationType() {

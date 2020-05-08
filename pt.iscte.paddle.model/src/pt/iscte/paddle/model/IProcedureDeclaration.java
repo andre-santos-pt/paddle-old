@@ -1,7 +1,6 @@
 package pt.iscte.paddle.model;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,19 +22,6 @@ public interface IProcedureDeclaration extends IProgramElement {
 		return expression(IExpressionView.toList(views));
 	}
 
-//	default IProcedureCallExpression expression(List<IExpression> args) {
-//		return (IProcedureCallExpression) call(args);
-//	}
-//	
-//	default IProcedureCallExpression expression(IExpression ... args) {
-//		return expression(Arrays.asList(args));
-//	}
-//	
-//	default IProcedureCallExpression expression(IExpressionView ... views) {
-//		return expression(IExpressionView.toList(views));
-//	}
-	
-	
 	default String shortSignature() {
 		return getId() + "(...)";
 	}

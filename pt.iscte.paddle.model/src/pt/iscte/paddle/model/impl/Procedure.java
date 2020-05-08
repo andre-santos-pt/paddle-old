@@ -8,7 +8,6 @@ import java.util.List;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProcedure;
-import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IProcedureCallExpression;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariableDeclaration;

@@ -2,7 +2,7 @@ package pt.iscte.paddle.interpreter;
 
 import pt.iscte.paddle.model.IProgramElement;
 
-public class ExecutionError extends Exception {
+public class ExecutionError extends RuntimeException {
 	public enum Type {
 		NULL_POINTER,
 		ARRAY_INDEX_BOUNDS,

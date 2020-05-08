@@ -1,6 +1,6 @@
 package pt.iscte.paddle.model;
 
-public interface IProcedureCallExpression extends IProcedureCall, ICompositeExpression {
+public interface IProcedureCallExpression extends IProcedureCall, ICompositeExpression, ITargetExpression {
 
 	@Override
 	default boolean includes(IVariableDeclaration variable) {

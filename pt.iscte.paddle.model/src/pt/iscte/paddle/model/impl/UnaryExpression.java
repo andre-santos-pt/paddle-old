@@ -3,8 +3,6 @@ package pt.iscte.paddle.model.impl;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IExpression;
@@ -15,13 +13,13 @@ import pt.iscte.paddle.model.IUnaryOperator;
 
 public class UnaryExpression extends Expression implements IUnaryExpression {
 	private final IUnaryOperator operator;
-	private final ImmutableList<IExpression> operand;
+	private final List<IExpression> operand;
 	
 	public UnaryExpression(IUnaryOperator operator, IExpression expression) {
 		assert operator != null;
 		assert expression != null;
 		this.operator = operator;
-		this.operand = ImmutableList.of(expression);
+		this.operand = List.of(expression);
 	}
 
 	

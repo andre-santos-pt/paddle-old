@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.Iterables;
-
 import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IModel2CodeTranslator;
@@ -286,7 +284,11 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 
 	@Override
 	public IProcedure resolveProcedure(IProcedureDeclaration procedureDeclaration) {
-		for(IProcedure p : Iterables.concat(procedures, builtinProcedures))
+		for(IProcedure p : procedures)
+			if(p.hasSameSignature(procedureDeclaration))
+				return p;
+
+		for(IProcedure p : builtinProcedures)
 			if(p.hasSameSignature(procedureDeclaration))
 				return p;
 
@@ -295,7 +297,11 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 
 	@Override
 	public IProcedure resolveProcedure(String id, IType... paramTypes) {
-		for(IProcedure p : Iterables.concat(procedures, builtinProcedures))
+		for(IProcedure p : procedures)
+			if(p.matchesSignature(id, paramTypes))
+				return p;
+		
+		for(IProcedure p : builtinProcedures)
 			if(p.matchesSignature(id, paramTypes))
 				return p;
 

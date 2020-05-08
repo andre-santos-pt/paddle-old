@@ -2,8 +2,6 @@ package pt.iscte.paddle.model.impl;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IEvaluable;
@@ -45,10 +43,10 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 	// TODO evaluate only one
 	// ideia: decompose() -> iterador que para quando nao e preciso mais
 	static class Conditional extends Expression implements IConditionalExpression, IEvaluable {
-		private ImmutableList<IExpression> parts;
+		private List<IExpression> parts;
 		
 		public Conditional(IExpression condition, IExpression trueCase, IExpression falseCase) {
-			parts = ImmutableList.of(condition, trueCase, falseCase);
+			parts = List.of(condition, trueCase, falseCase);
 		}
 		
 		@Override

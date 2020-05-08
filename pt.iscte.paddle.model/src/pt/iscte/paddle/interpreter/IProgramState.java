@@ -21,11 +21,11 @@ public interface IProgramState {
 	IValue getValue(Object object);
 	
 	
-	default IArray allocateArray(IType baseType, int ... dimensions) {
+	default IArray allocateArray(IType baseType, int ... dimensions) throws ExecutionError {
 		return getHeapMemory().allocateArray(baseType, dimensions);
 	}
 
-	default IRecord allocateRecord(IRecordType type) {
+	default IRecord allocateRecord(IRecordType type) throws ExecutionError {
 		return getHeapMemory().allocateRecord(type);
 	}
 	

@@ -12,7 +12,6 @@ import pt.iscte.paddle.model.IBinaryExpression;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IBreak;
 import pt.iscte.paddle.model.IConditionalExpression;
-import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.IConstantExpression;
 import pt.iscte.paddle.model.IContinue;
 import pt.iscte.paddle.model.ILiteral;
@@ -32,7 +31,6 @@ import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableDereference;
 import pt.iscte.paddle.model.IVariableExpression;
-import pt.iscte.paddle.model.IBlock.IVisitor;
 
 public class SemanticChecker {
 	private ISemanticChecker checker;

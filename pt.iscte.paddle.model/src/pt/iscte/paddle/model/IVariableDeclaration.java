@@ -3,12 +3,10 @@ package pt.iscte.paddle.model;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.model.impl.RecordFieldExpression;
 import pt.iscte.paddle.model.impl.VariableExpression;
 
-public interface IVariableDeclaration extends IInnocuousStatement, IExpressionView {
+public interface IVariableDeclaration extends IInnocuousStatement, IExpressionView<IVariableExpression> {
 	IProgramElement getParent();
 	IType getType();
 
@@ -22,7 +20,7 @@ public interface IVariableDeclaration extends IInnocuousStatement, IExpressionVi
 
 	@Override
 	default List<IExpression> getExpressionParts() {
-		return ImmutableList.of();
+		return List.of();
 	}
 	
 	default boolean isUnbound() {

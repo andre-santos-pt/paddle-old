@@ -2,8 +2,6 @@ package pt.iscte.paddle.model;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 public interface IVariableAssignment extends IStatement {
 	// OCL: variable must be owned by the same procedure
 	IVariableDeclaration getTarget();
@@ -12,7 +10,7 @@ public interface IVariableAssignment extends IStatement {
 	
 	@Override
 	default List<IExpression> getExpressionParts() {
-		return ImmutableList.of(getExpression());
+		return List.of(getExpression());
 	}
 	
 	default boolean isIncrement() {

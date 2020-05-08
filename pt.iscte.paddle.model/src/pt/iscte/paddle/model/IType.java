@@ -2,11 +2,9 @@ package pt.iscte.paddle.model;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.model.impl.ArrayType;
 import pt.iscte.paddle.model.impl.Literal;
@@ -23,15 +21,6 @@ public interface IType extends IProgramElement  {
 		return isSame(type);
 	}
 	
-//	boolean isSame(IType type);
-	
-//	{
-//		if(isValueType() && type.isValueType())
-//			return this.equals(type);
-//		else if(isReference() && type.isReference())
-//			return ((IReferenceType) this).getTarget().isSame(((IReferenceType) type).getTarget());
-//	}
-		
 	default boolean isVoid() {
 		return this == VOID;
 	}
@@ -59,7 +48,7 @@ public interface IType extends IProgramElement  {
 	IValueType BOOLEAN = PrimitiveType.BOOLEAN;
 	// TODO IDataType CHAR
 
-	ImmutableCollection<IValueType> VALUE_TYPES = ImmutableList.of(INT, DOUBLE, BOOLEAN);
+	List<IValueType> VALUE_TYPES = List.of(INT, DOUBLE, BOOLEAN);
 
 	static IType match(String type) {		
 		for(IValueType t : VALUE_TYPES)
@@ -75,7 +64,6 @@ public interface IType extends IProgramElement  {
 	// TODO to impl
 	class Instances {
 		private static Map<IType, IArrayType> mapArrayTypes = new HashMap<>();
-		
 		
 	}
 	

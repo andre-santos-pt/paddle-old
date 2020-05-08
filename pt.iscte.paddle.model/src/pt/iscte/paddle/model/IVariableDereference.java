@@ -1,6 +1,6 @@
 package pt.iscte.paddle.model;
 
-public interface IVariableDereference extends ISimpleExpression {
+public interface IVariableDereference extends ISimpleExpression, ITargetExpression {
 
 	IVariableExpression getTarget();
 

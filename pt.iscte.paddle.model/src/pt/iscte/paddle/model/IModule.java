@@ -3,8 +3,6 @@ package pt.iscte.paddle.model;
 import java.util.Collection;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.model.commands.ICommand;
 import pt.iscte.paddle.model.impl.Module;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
@@ -41,7 +39,7 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	
 	default Collection<IModule> getImports() {
 		// TODO imports
-		return ImmutableList.of();
+		return List.of();
 	}
 	
 	List<IConstantDeclaration> getConstants();

@@ -88,28 +88,37 @@ public interface IStatementContainer {
 	
 	
 	
-	default IArrayElementAssignment addArrayElementAssignment(IExpression target, IExpression exp, List<IExpression> indexes) {
+	default IArrayElementAssignment addArrayElementAssignment(ITargetExpression target, IExpression exp, List<IExpression> indexes) {
 		return addArrayElementAssignmentAt(target, exp, getBlock().getSize(), indexes);
 	}
 
-	default IArrayElementAssignment addArrayElementAssignmentAt(IExpression target, IExpression exp, int index, List<IExpression> indexes) {
+	default IArrayElementAssignment addArrayElementAssignmentAt(ITargetExpression target, IExpression exp, int index, List<IExpression> indexes) {
 		return getBlock().addArrayElementAssignmentAt(target, exp, index, indexes);
 	}
+	
 	
 	default IArrayElementAssignment addArrayElementAssignment(IVariableDeclaration target, IExpression exp, IExpression ... indexes) {
 		return addArrayElementAssignmentAt(target.expression(), exp, getBlock().getSize(), indexes);
 	}
 	
-	default IArrayElementAssignment addArrayElementAssignment(IExpressionView target, IExpressionView exp, IExpressionView ... views) {
-		return addArrayElementAssignmentAt(target.expression(), exp.expression(), getBlock().getSize(), IExpressionView.toList(views));
+	default IArrayElementAssignment addArrayElementAssignment(IVariableDeclaration target, IExpression exp, IExpressionView<?> ... indexes) {
+		return addArrayElementAssignmentAt(target.expression(), exp, getBlock().getSize(), IExpressionView.toList(indexes));
 	}
 	
 	
-	default IArrayElementAssignment addArrayElementAssignment(IExpression target, IExpression exp, IExpression ... indexes) {
+	default IArrayElementAssignment addArrayElementAssignment(ITargetExpression target, IExpression exp, IExpression ... indexes) {
 		return addArrayElementAssignmentAt(target, exp, getBlock().getSize(), indexes);
 	}
 	
-	default IArrayElementAssignment addArrayElementAssignmentAt(IExpression target, IExpression exp, int index, IExpression ... indexes) {
+	default IArrayElementAssignment addArrayElementAssignment(ITargetExpression target, IExpressionView<?> exp, IExpression ... indexes) {
+		return addArrayElementAssignmentAt(target, exp.expression(), getBlock().getSize(), indexes);
+	}
+	
+	default IArrayElementAssignment addArrayElementAssignment(ITargetExpression target, IExpressionView<?> exp, IExpressionView ... indexes) {
+		return addArrayElementAssignmentAt(target, exp.expression(), getBlock().getSize(), IExpressionView.toList(indexes));
+	}
+	
+	default IArrayElementAssignment addArrayElementAssignmentAt(ITargetExpression target, IExpression exp, int index, IExpression ... indexes) {
 		return addArrayElementAssignmentAt(target, exp, index, Arrays.asList(indexes));
 	}
 
