@@ -9,7 +9,7 @@ public interface IArrayElementAssignment extends IStatement {
 		return getIndexes().size();
 	}
 	
-	IExpression getTarget();
+	ITargetExpression getTarget();
 	IExpression getExpression();
 	IBlock getParent();
 	

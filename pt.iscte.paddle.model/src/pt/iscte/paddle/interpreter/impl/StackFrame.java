@@ -128,12 +128,12 @@ class StackFrame implements IStackFrame {
 	}
 
 	@Override
-	public IArray allocateArray(IType baseType, int[] dimensions) {
+	public IArray allocateArray(IType baseType, int[] dimensions) throws ExecutionError {
 		return memory.allocateArray(baseType, dimensions);
 	}
 
 	@Override
-	public IRecord allocateRecord(IRecordType type) {
+	public IRecord allocateRecord(IRecordType type) throws ExecutionError {
 		return memory.allocateRecord(type);
 	}
 

@@ -19,6 +19,7 @@ import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatement;
+import pt.iscte.paddle.model.ITargetExpression;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
@@ -215,7 +216,7 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	}
 
 	@Override
-	public IArrayElementAssignment addArrayElementAssignmentAt(IExpression target, IExpression exp, int index, List<IExpression> indexes) {
+	public IArrayElementAssignment addArrayElementAssignmentAt(ITargetExpression target, IExpression exp, int index, List<IExpression> indexes) {
 		// TODO OCL: variable must be owned by the same procedure of expression
 		return new ArrayElementAssignment(this, target, exp, index, indexes);
 	}

@@ -1,9 +1,6 @@
 package pt.iscte.paddle.model.impl;
 
-import java.util.Collections;
 import java.util.List;
-
-import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ExecutionError.Type;
@@ -20,17 +17,16 @@ import pt.iscte.paddle.model.IProcedureCallExpression;
 import pt.iscte.paddle.model.IProcedureDeclaration;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class ProcedureCall extends Expression implements IProcedureCall, IProcedureCallExpression, IEvaluable, IExecutable {
 	private final IBlock parent;
 	private IProcedureDeclaration procedure;
-	private final ImmutableList<IExpression> arguments;
+	private final List<IExpression> arguments;
 	
 	public ProcedureCall(Block parent, IProcedure procedure, int index, List<IExpression> arguments) {
 		this.parent = parent;
 		this.procedure = procedure;
-		this.arguments = ImmutableList.copyOf(arguments);
+		this.arguments = List.copyOf(arguments);
 		if(parent != null)
 			parent.addChild(this, index);
 	}

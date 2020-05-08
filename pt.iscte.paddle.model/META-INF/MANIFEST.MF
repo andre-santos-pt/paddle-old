@@ -5,7 +5,6 @@ Bundle-SymbolicName: pt.iscte.paddle.model
 Bundle-Version: 0.4
 Automatic-Module-Name: pt.iscte.paddle.model
 Bundle-RequiredExecutionEnvironment: JavaSE-11
-Require-Bundle: com.google.guava;bundle-version="21.0.0";visibility:=reexport
 Export-Package: pt.iscte.paddle.interpreter,
  pt.iscte.paddle.model,
  pt.iscte.paddle.model.cfg,

@@ -1,3 +1,4 @@
+package pt.iscte.paddle.model.demo;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.interpreter.IMachine;

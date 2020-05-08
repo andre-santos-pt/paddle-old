@@ -3,8 +3,6 @@ package pt.iscte.paddle.model;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 public interface IReturn extends IStatement {
 	IExpression getExpression(); // may be null (void)
 	IBlock getParent();
@@ -22,6 +20,6 @@ public interface IReturn extends IStatement {
 		if(getExpression() == null)
 			return Collections.emptyList();
 		else
-			return ImmutableList.of(getExpression());
+			return List.of(getExpression());
 	}
 }

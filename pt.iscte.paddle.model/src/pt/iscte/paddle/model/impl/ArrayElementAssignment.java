@@ -2,8 +2,6 @@ package pt.iscte.paddle.model.impl;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.interpreter.ArrayIndexError;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IArray;
@@ -15,22 +13,23 @@ import pt.iscte.paddle.interpreter.NullPointerError;
 import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IExpression;
+import pt.iscte.paddle.model.ITargetExpression;
 
 class ArrayElementAssignment extends Statement implements IArrayElementAssignment {
-	private final IExpression target;
-	private final ImmutableList<IExpression> indexes;
+	private final ITargetExpression target;
+	private final List<IExpression> indexes;
 	private final IExpression expression;
 	
-	public ArrayElementAssignment(IBlock parent, IExpression target, IExpression expression, int index, List<IExpression> indexes) {
+	public ArrayElementAssignment(IBlock parent, ITargetExpression target, IExpression expression, int index, List<IExpression> indexes) {
 		super(parent);
 		this.target = target;
-		this.indexes = ImmutableList.copyOf(indexes);
+		this.indexes = List.copyOf(indexes);
 		this.expression = expression;
 		addToParent(index);
 	}
 
 	@Override
-	public IExpression getTarget() {
+	public ITargetExpression getTarget() {
 		return target;
 	}
 	

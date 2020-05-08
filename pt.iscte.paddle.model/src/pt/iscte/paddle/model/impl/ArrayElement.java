@@ -1,8 +1,8 @@
 package pt.iscte.paddle.model.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import com.google.common.collect.ImmutableList;
 
 import pt.iscte.paddle.interpreter.ArrayIndexError;
 import pt.iscte.paddle.interpreter.ExecutionError;
@@ -16,13 +16,15 @@ import pt.iscte.paddle.model.IModel2CodeTranslator;
 
 class ArrayElement extends Expression implements IArrayElement {
 	private final IExpression target;
-	private final ImmutableList<IExpression> parts;
-	private final ImmutableList<IExpression> indexes;
+	private final List<IExpression> parts;
+	private final List<IExpression> indexes;
 	
 	public ArrayElement(IExpression target, List<IExpression> indexes) {
 		this.target = target;
-		this.parts = ImmutableList.<IExpression>builder().add(target).addAll(indexes).build();
-		this.indexes = ImmutableList.copyOf(indexes);
+		this.parts = new ArrayList<>(1 + indexes.size());
+		this.parts.add(target);
+		this.parts.addAll(indexes);
+		this.indexes = List.copyOf(indexes);
 	}
 	
 	@Override
@@ -55,7 +57,7 @@ class ArrayElement extends Expression implements IArrayElement {
 	
 	@Override
 	public List<IExpression> getParts() {
-		return parts;
+		return Collections.unmodifiableList(parts);
 	}
 	
 	@Override

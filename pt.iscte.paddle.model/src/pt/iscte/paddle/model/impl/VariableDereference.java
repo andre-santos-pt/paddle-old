@@ -11,7 +11,6 @@ import pt.iscte.paddle.model.IArrayLength;
 import pt.iscte.paddle.model.IExpressionView;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableDereference;
 import pt.iscte.paddle.model.IVariableExpression;

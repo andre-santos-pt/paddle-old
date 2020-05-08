@@ -1,9 +1,6 @@
 package pt.iscte.paddle.model;
 
-import java.util.Arrays;
-import java.util.List;
-
-public interface IVariableExpression extends ISimpleExpression {
+public interface IVariableExpression extends ISimpleExpression, ITargetExpression {
 
 	IVariableDeclaration getVariable();
 	

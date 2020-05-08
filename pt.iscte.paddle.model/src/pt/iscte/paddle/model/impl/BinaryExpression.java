@@ -2,8 +2,6 @@ package pt.iscte.paddle.model.impl;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IValue;
@@ -15,14 +13,14 @@ import pt.iscte.paddle.model.IType;
 
 public class BinaryExpression extends Expression implements IBinaryExpression {
 	private final IBinaryOperator operator;
-	private final ImmutableList<IExpression> parts;
+	private final List<IExpression> parts;
 	
 	public BinaryExpression(IBinaryOperator operator, IExpression left, IExpression right) {
 		assert operator != null;
 		assert left != null;
 		assert right != null;
 		this.operator = operator;
-		parts = ImmutableList.of(left, right);
+		parts = List.of(left, right);
 	}
 
 	@Override

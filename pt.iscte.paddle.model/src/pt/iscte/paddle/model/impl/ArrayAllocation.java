@@ -2,8 +2,6 @@ package pt.iscte.paddle.model.impl;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.ExecutionError.Type;
 import pt.iscte.paddle.interpreter.IArray;
@@ -17,13 +15,13 @@ import pt.iscte.paddle.model.IType;
 
 class ArrayAllocation extends Expression implements IArrayAllocation {
 	private final IArrayType type;
-	private final ImmutableList<IExpression> dimensions;
+	private final List<IExpression> dimensions;
 
 	private final boolean onHeap;
 	
 	private ArrayAllocation(IArrayType arrayType, List<IExpression> dimensions, boolean onHeap) {
 		this.type = arrayType;
-		this.dimensions = ImmutableList.copyOf(dimensions);
+		this.dimensions = List.copyOf(dimensions);
 		this.onHeap = onHeap;
 	}
 
@@ -45,11 +43,6 @@ class ArrayAllocation extends Expression implements IArrayAllocation {
 		return onHeap;
 	}
 	
-//	@Override
-//	public IArrayType getArrayType() {
-//		return type;
-//	}
-
 	@Override
 	public List<IExpression> getDimensions() {
 		return dimensions;

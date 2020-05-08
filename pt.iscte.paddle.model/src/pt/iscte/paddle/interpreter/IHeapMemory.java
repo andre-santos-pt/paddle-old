@@ -1,6 +1,5 @@
 package pt.iscte.paddle.interpreter;
 
-import com.google.common.util.concurrent.ExecutionError;
 
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IType;

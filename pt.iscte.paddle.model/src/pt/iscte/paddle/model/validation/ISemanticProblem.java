@@ -2,8 +2,6 @@ package pt.iscte.paddle.model.validation;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-
 import pt.iscte.paddle.model.IProgramElement;
 
 public interface ISemanticProblem {
@@ -24,11 +22,11 @@ public interface ISemanticProblem {
 	
 	class SemanticProblem implements ISemanticProblem {
 		private final String message;
-		private final ImmutableList<IProgramElement> elements;
+		private final List<IProgramElement> elements;
 		
 		private SemanticProblem(String message, IProgramElement ... elements) {
 			this.message = message;
-			this.elements = ImmutableList.copyOf(elements);
+			this.elements = List.of(elements);
 		}
 		
 		@Override

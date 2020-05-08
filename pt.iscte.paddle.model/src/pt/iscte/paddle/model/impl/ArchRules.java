@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.google.common.reflect.ClassPath;
-import com.google.common.reflect.ClassPath.ClassInfo;
-
 import pt.iscte.paddle.model.IBinaryOperator;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IModule;
@@ -16,14 +13,15 @@ import pt.iscte.paddle.model.IUnaryOperator;
 
 public class ArchRules {
 
+	// TODO redo
 	public static Collection<Class<?>> properSubTypes(Class<?> superType, String basePackage, boolean onlyInterface) throws IOException {
-		ClassPath cp = ClassPath.from(ClassLoader.getSystemClassLoader());
+//		ClassPath cp = ClassPath.from(ClassLoader.getSystemClassLoader());
 		List<Class<?>> list = new ArrayList<Class<?>>();
-		for (ClassInfo classInfo : cp.getTopLevelClassesRecursive(basePackage)) {
-			Class<?> c = classInfo.load();
-			if((!onlyInterface || c.isInterface()) && c != superType && superType.isAssignableFrom(c))
-				list.add(c);
-		}
+//		for (ClassInfo classInfo : cp.getTopLevelClassesRecursive(basePackage)) {
+//			Class<?> c = classInfo.load();
+//			if((!onlyInterface || c.isInterface()) && c != superType && superType.isAssignableFrom(c))
+//				list.add(c);
+//		}
 		return list;
 	}
 

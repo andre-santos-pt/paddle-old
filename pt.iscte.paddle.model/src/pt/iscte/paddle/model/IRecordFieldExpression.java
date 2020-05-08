@@ -11,7 +11,7 @@ import pt.iscte.paddle.interpreter.IRecord;
 import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.NullPointerError;
 
-public interface IRecordFieldExpression extends ISimpleExpression {
+public interface IRecordFieldExpression extends ISimpleExpression, ITargetExpression {
 
 	IExpression getTarget();
 	IVariableDeclaration getField();

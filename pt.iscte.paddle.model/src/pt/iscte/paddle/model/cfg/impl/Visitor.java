@@ -1,20 +1,19 @@
 package pt.iscte.paddle.model.cfg.impl;
-import pt.iscte.paddle.model.ILoop;
-import pt.iscte.paddle.model.IProcedureCall;
-import pt.iscte.paddle.model.IReturn;
-import pt.iscte.paddle.model.ISelection;
-import pt.iscte.paddle.model.IVariableAssignment;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-import pt.iscte.paddle.model.IBlock.IVisitor;
 import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlock;
+import pt.iscte.paddle.model.IBlock.IVisitor;
 import pt.iscte.paddle.model.IBreak;
 import pt.iscte.paddle.model.IContinue;
+import pt.iscte.paddle.model.ILoop;
+import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IReturn;
+import pt.iscte.paddle.model.ISelection;
+import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.cfg.IBranchNode;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.cfg.INode;

@@ -1,9 +1,7 @@
 package pt.iscte.paddle.model.cfg;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlockElement;
@@ -16,7 +14,6 @@ import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatement;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
-import pt.iscte.paddle.model.cfg.IControlFlowGraph.Path;
 import pt.iscte.paddle.model.cfg.impl.ControlFlowGraph;
 
 public interface IControlFlowGraph {
