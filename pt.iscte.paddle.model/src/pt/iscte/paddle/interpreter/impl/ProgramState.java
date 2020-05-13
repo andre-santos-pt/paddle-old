@@ -190,6 +190,11 @@ public class ProgramState implements IProgramState {
 					public void statementExecutionEnd(IStatement statement) {
 						listeners.forEach(l -> l.step(statement));
 					}
+					
+					@Override
+					public void expressionEvaluationEnd(IExpression expression, IValue result) {
+						listeners.forEach(l -> l.step(expression));
+					}
 				});
 			}
 
