@@ -1,4 +1,4 @@
-package pt.iscte.paddle.java.antlr;
+package pt.iscte.paddle.model.java;
 import java.nio.charset.Charset;
 
 import org.antlr.v4.runtime.CharStream;
@@ -6,16 +6,20 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
+import pt.iscte.paddle.java.antlr.Java8Lexer;
+import pt.iscte.paddle.java.antlr.Java8Parser;
 import pt.iscte.paddle.java.antlr.Java8Parser.AssignmentContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.CompilationUnitContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.MethodDeclarationContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ReturnStatementContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.VariableDeclaratorContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.WhileStatementContext;
+import pt.iscte.paddle.java.antlr.Java8ParserBaseListener;
+import pt.iscte.paddle.java.antlr.Java8ParserListener;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
-		CharStream stream = CharStreams.fromFileName("pt/iscte/paddle/java/Test.java",Charset.forName("UTF-8"));
+		CharStream stream = CharStreams.fromFileName("pt/iscte/paddle/model/java/Test.java",Charset.forName("UTF-8"));
 		Java8Lexer lexer = new Java8Lexer(stream);
 		Java8Parser parser = new Java8Parser(new CommonTokenStream(lexer));
 

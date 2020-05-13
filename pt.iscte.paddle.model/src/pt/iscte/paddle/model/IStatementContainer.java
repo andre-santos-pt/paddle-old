@@ -96,7 +96,7 @@ public interface IStatementContainer {
 		return getBlock().addArrayElementAssignmentAt(target, exp, index, indexes);
 	}
 	
-	
+	// TODO verify index constraints
 	default IArrayElementAssignment addArrayElementAssignment(IVariableDeclaration target, IExpression exp, IExpression ... indexes) {
 		return addArrayElementAssignmentAt(target.expression(), exp, getBlock().getSize(), indexes);
 	}
