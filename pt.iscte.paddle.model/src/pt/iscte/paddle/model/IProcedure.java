@@ -7,6 +7,7 @@ import pt.iscte.paddle.model.IBlock.IVisitor;
 import pt.iscte.paddle.model.cfg.IBranchNode;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.cfg.impl.Visitor;
+import pt.iscte.paddle.model.impl.ProcedureCall;
 
 /**
  * Mutable
@@ -105,7 +106,7 @@ public interface IProcedure extends IProcedureDeclaration {
 
 		@Override
 		public IProcedureCallExpression expression(List<IExpression> args) {
-			return null;
+			return new ProcedureCall(null, this, -1, args);
 		}
 
 		@Override

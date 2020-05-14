@@ -25,6 +25,7 @@ import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.commands.IAddCommand;
 import pt.iscte.paddle.model.commands.IDeleteCommand;
+import pt.iscte.paddle.model.commands.IMoveCommand;
 
 class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock {
 	private final IProgramElement parent;
@@ -145,9 +146,58 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 		remove(child);
 	}
 	
+	class MoveChild implements IMoveCommand<IBlockElement> {
+		final IBlockElement element;
+		final IBlockElement target;
+		int from;
+		int to;
+		
+		public MoveChild(IBlockElement element, IBlockElement target) {
+			this.element = element;
+			this.target = target;
+		}
+
+		@Override
+		public IBlockElement getElement() {
+			return element;
+		}
+		
+		@Override
+		public IProgramElement getDestination() {
+			return target;
+		}
+		
+		@Override
+		public void execute() {
+			from = children.indexOf(element);
+			to = children.indexOf(target);
+			children.remove(element);
+			children.add(to, element);
+			getListeners().forEachRemaining(l -> l.elementRemoved(element, from));
+			getListeners().forEachRemaining(l -> l.elementAdded(element, to));
+		}
+
+		@Override
+		public void undo() {
+			int from = children.indexOf(element);
+			int to = children.indexOf(target);
+			children.remove(element);
+			children.add(to, element);
+			getListeners().forEachRemaining(l -> l.elementRemoved(element, from));
+			getListeners().forEachRemaining(l -> l.elementAdded(element, to));
+			
+		}
+	}
+	
+	public void moveAfter(IBlockElement element, IBlockElement target) {
+		((Module) getProcedure().getModule()).executeCommand(new MoveChild(element, target));
+	}
+	
+	
+	
 	@Override
 	public IBlock addBlockAt(int index, String ... flags) {
-		return new Block(this, true, index, flags);
+		return new Block(this, true, index, flags); // TODO command
 	}
 	
 	IBlock addLooseBlock(IProgramElement parent) {

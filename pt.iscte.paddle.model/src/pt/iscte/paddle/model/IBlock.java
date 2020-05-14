@@ -23,8 +23,19 @@ IListenable<IBlock.IListener> {
 	
 	boolean isEmpty();
 
+	default IBlockElement getFirst() {
+		assert !isEmpty();
+		return getChildren().get(0);
+	}
+	
+	default IBlockElement getLast() {
+		assert !isEmpty();
+		return getChildren().get(getSize()-1);
+	}
+	
 	int getDepth();
 
+	void moveAfter(IBlockElement element, IBlockElement target);
 	
 	@Override
 	default IBlock getBlock() {
@@ -170,6 +181,8 @@ IListenable<IBlock.IListener> {
 		
 		default void visitAny(IBlockElement element)				{ }
 	}
+
+	
 
 
 	

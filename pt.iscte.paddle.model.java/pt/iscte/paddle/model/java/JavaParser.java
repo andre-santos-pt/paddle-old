@@ -31,7 +31,6 @@ public class JavaParser {
 		String id = file.getName().substring(0, file.getName().lastIndexOf('.'));
 		IModule m = IModule.create(id);
 		Listener l = new Listener(m);
-		
 		ParseTreeWalker walker = new ParseTreeWalker();
 	    walker.walk(l, parser.compilationUnit());
 		return m;
