@@ -8,7 +8,7 @@ import pt.iscte.paddle.model.IRecordAllocation;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IType;
 
-class RecordAllocation extends Expression implements IRecordAllocation {
+public class RecordAllocation extends Expression implements IRecordAllocation {
 
 	private final IRecordType type;
 	
