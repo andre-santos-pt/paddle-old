@@ -3,19 +3,17 @@ package pt.iscte.paddle.model.java;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import pt.iscte.paddle.interpreter.IRecord;
 import pt.iscte.paddle.java.antlr.Java8Parser.AdditiveExpressionContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.AndExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ArgumentListContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ArrayAccess_lfno_primaryContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ArrayCreationExpressionContext;
@@ -23,27 +21,32 @@ import pt.iscte.paddle.java.antlr.Java8Parser.ArrayInitializerContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.AssignmentContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.BasicForStatementContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.BreakStatementContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.CastExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ClassInstanceCreationExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ClassInstanceCreationExpression_lfno_primaryContext;
-import pt.iscte.paddle.java.antlr.Java8Parser.CompilationUnitContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.ConditionalAndExpressionContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.ConditionalOrExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ConstructorDeclarationContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ContinueStatementContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.ElementValueArrayInitializerContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.EqualityExpressionContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.ExclusiveOrExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ExpressionNameContext;
-import pt.iscte.paddle.java.antlr.Java8Parser.FieldDeclarationContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.FieldAccessContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.FieldAccess_lf_primaryContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.FieldAccess_lfno_primaryContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ForInitContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ForStatementContext;
-import pt.iscte.paddle.java.antlr.Java8Parser.FormalParameterContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.IfThenElseStatementContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.IfThenElseStatementNoShortIfContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.IfThenStatementContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.InclusiveOrExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.LiteralContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.LocalVariableDeclarationContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.MethodDeclarationContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.MethodInvocationContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.MethodInvocation_lfno_primaryContext;
-import pt.iscte.paddle.java.antlr.Java8Parser.MethodModifierContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.MultiplicativeExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.PostDecrementExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.PostDecrementExpression_lf_postfixExpressionContext;
@@ -56,7 +59,9 @@ import pt.iscte.paddle.java.antlr.Java8Parser.RelationalExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ReturnStatementContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.StatementExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.StatementNoShortIfContext;
-import pt.iscte.paddle.java.antlr.Java8Parser.UnannTypeContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.ThrowStatementContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.UnaryExpressionContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.UnaryExpressionNotPlusMinusContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.VariableDeclaratorContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.VariableDeclaratorListContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.WhileStatementContext;
@@ -65,104 +70,62 @@ import pt.iscte.paddle.model.IArrayType;
 import pt.iscte.paddle.model.IBinaryOperator;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IBlockElement;
+import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.IExpression;
+import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
-import pt.iscte.paddle.model.IProcedureCallExpression;
+import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IReferenceType;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatement;
 import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.IUnaryOperator;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
-import pt.iscte.paddle.model.cfg.IStatementNode;
 
-class Listener extends Java8ParserBaseListener {
-	private final String INSTANCE_FLAG = "instance";
-	private final String CONSTRUCTOR_FLAG = "constructor";
-
+class ParserListener extends Java8ParserBaseListener {
 	private final IModule module;
 	private IProcedure currentProcedure;
-	private Deque<IBlock> blockStack;
-	private Deque<IExpression> expressionStack = new ArrayDeque<>();
+	Deque<IBlock> blockStack;
+	Deque<IExpression> expressionStack;
 
-	private Map<MethodDeclarationContext, IProcedure> procMap;
-	private IRecordType classType;
+	private final IRecordType classType;
 
-	private List<ParseTree> unsupported;
+	private final ParserAux aux;
 
-	public Listener(IModule module) {
+	public ParserListener(IModule module, IRecordType classType, ParserAux aux) {
 		assert module.getId() != null;
 		this.module = module;
-		procMap = new HashMap<>();
-		unsupported = new ArrayList<>();
-	}
-
-	private void unsupported(ParseTree ctx) {
-		Token t = ctx instanceof TerminalNode ? ((TerminalNode) ctx).getSymbol() : ((ParserRuleContext) ctx).getStart();
-		System.err.println("unsupported: " + ctx.getText() + " line " + t.getLine());
-		unsupported.add(ctx);
-	}
-
-	@Override
-	public void enterCompilationUnit(CompilationUnitContext ctx) {
-		classType = module.addRecordType();
-		classType.setId(module.getId());
-		module.setProperty(IRecordType.class, classType);
-		ParseTreeWalker walker = new ParseTreeWalker();
-		walker.walk(new Java8ParserBaseListener() {
-			IProcedure proc;
-			public void enterMethodDeclaration(MethodDeclarationContext ctx) {
-				String id = ctx.methodHeader().methodDeclarator().Identifier().toString();
-				UnannTypeContext t = ctx.methodHeader().result().unannType();
-//				String type = t == null ? Keyword.VOID.keyword() : t.getText();
-				IType type = t == null ? IType.VOID : matchPrimitiveType(t);
-				proc = module.addProcedure(id, type);
-				if(!hasModifier(ctx, Keyword.STATIC.keyword())) {
-					proc.setFlag(INSTANCE_FLAG);
-					IVariableDeclaration self = proc.addParameter(classType);
-					self.setId(Keyword.THIS.keyword());
-				}
-				procMap.put(ctx, proc);
-			}
-
-			@Override
-			public void enterConstructorDeclaration(ConstructorDeclarationContext ctx) {
-				// TODO constructor
-				System.err.println("CONST " + ctx.getText());
-			}
-			@Override
-			public void enterFormalParameter(FormalParameterContext ctx) {
-				String id = ctx.variableDeclaratorId().Identifier().getText();
-				IType t = matchPrimitiveType(ctx.unannType());
-				if(t == null)
-					t = matchRecordType(ctx.unannType());
-				IVariableDeclaration p = proc.addParameter(t);
-				p.setId(id);
-			}
-		}, ctx);
+		this.classType = classType;
+		this.aux = aux;
 		blockStack = new ArrayDeque<>();
-	}
-
-	private boolean hasModifier(MethodDeclarationContext ctx, String keyword) {
-		for (MethodModifierContext mCtx : ctx.methodModifier()) {
-			if(mCtx.getText().equals(keyword))
-				return true;
-		}
-		return false;
+		expressionStack = new ArrayDeque<>();
 	}
 
 	@Override
 	public void enterMethodDeclaration(MethodDeclarationContext ctx) {
-		currentProcedure = procMap.get(ctx);
+		currentProcedure =  aux.getMethod(ctx, classType);
 		assert currentProcedure != null : ctx;
 		blockStack.push(currentProcedure.getBody());
 	}
 
 	@Override
 	public void exitMethodDeclaration(MethodDeclarationContext ctx) {
+		blockStack.pop();
+	}
+
+	@Override
+	public void enterConstructorDeclaration(ConstructorDeclarationContext ctx) {
+		currentProcedure = aux.getConstructor(ctx, classType);
+		assert currentProcedure != null : ctx;
+		blockStack.push(currentProcedure.getBody());
+	}
+
+	@Override
+	public void exitConstructorDeclaration(ConstructorDeclarationContext ctx) {
 		blockStack.pop();
 	}
 
@@ -183,7 +146,7 @@ class Listener extends Java8ParserBaseListener {
 		if(parent instanceof LocalVariableDeclarationContext) {
 			LocalVariableDeclarationContext con = (LocalVariableDeclarationContext) ctx.getParent().getParent();
 			boolean isFor = con.getParent() instanceof ForInitContext;
-			IVariableDeclaration dec = blockStack.peek().addVariable(matchPrimitiveType(con.unannType()));
+			IVariableDeclaration dec = blockStack.peek().addVariable(aux.matchPrimitiveType(con.unannType()));
 			dec.setId(varId);
 			if(isFor)
 				dec.setFlag(Keyword.FOR.name());
@@ -193,10 +156,10 @@ class Listener extends Java8ParserBaseListener {
 					ass.setFlag(Keyword.FOR.name());
 			}
 		}
-		else if(parent instanceof FieldDeclarationContext) {
-			UnannTypeContext unannType = ((FieldDeclarationContext) parent).unannType();
-			classType.addField(matchPrimitiveType(unannType), varId);
-		}
+		//		else if(parent instanceof FieldDeclarationContext) {
+		//			UnannTypeContext unannType = ((FieldDeclarationContext) parent).unannType();
+		//			classType.addField(aux.matchPrimitiveType(unannType), varId);
+		//		}
 
 	}
 
@@ -204,40 +167,46 @@ class Listener extends Java8ParserBaseListener {
 	public void exitAssignment(AssignmentContext ctx) {
 		IStatement statement = null;
 		if(ctx.leftHandSide().expressionName() != null) {
-			String id = ctx.leftHandSide().expressionName().getText();
-			IVariableDeclaration var = matchVariable(id);
-			if(ctx.assignmentOperator().ASSIGN() != null)
-				blockStack.peek().addAssignment(var, expressionStack.pop());
+			IVariableDeclaration var = matchVariable(ctx.leftHandSide().expressionName());
+			if(var.isRecordField()) {
+				blockStack.peek().addRecordFieldAssignment(currentProcedure.getVariable(ParserAux.THIS).field(var), expressionStack.pop());
+			}
 			else {
-				IBinaryOperator op = matchBinaryOperator(ctx.assignmentOperator());
-				statement = blockStack.peek().addAssignment(var, op.on(var, expressionStack.pop()));
+				if(ctx.assignmentOperator().ASSIGN() != null)
+					blockStack.peek().addAssignment(var, expressionStack.pop());
+				else {
+					IBinaryOperator op = aux.matchBinaryOperator(ctx.assignmentOperator());
+					statement = blockStack.peek().addAssignment(var, op.on(var, expressionStack.pop()));
+				}
 			}
 		}
-		else if(ctx.leftHandSide().arrayAccess() != null) {
-			String id = ctx.leftHandSide().arrayAccess().expressionName().getText();
+		else if(ctx.leftHandSide().arrayAccess() != null && ctx.assignmentOperator().ASSIGN() != null) {
+			IVariableDeclaration var = matchVariable(ctx.leftHandSide().arrayAccess().expressionName());
+			IExpression exp = expressionStack.pop();
+			int dims = ctx.leftHandSide().arrayAccess().expression().size();
+			// TODO this.?
+			statement = blockStack.peek().addArrayElementAssignment(var, exp, getIndexes(dims));
+		}
+		else if(ctx.leftHandSide().fieldAccess() != null) {
+			System.out.println(ctx.leftHandSide().fieldAccess().getText());
+			FieldAccessContext f = ctx.leftHandSide().fieldAccess();
+			IVariableDeclaration var = matchVariable(f.getChild(0));
+			IExpression exp = var.expression();
+			for(int i = 2; i < f.getChildCount(); i += 2)
+				exp = exp.field(f.getChild(i).getText());
 
-			IVariableDeclaration var = matchVariable(id);
-			if(ctx.assignmentOperator().ASSIGN() != null) {
-				IExpression exp = expressionStack.pop();
-				int dims = ctx.leftHandSide().arrayAccess().expression().size();
-				IExpression[] indexes = new IExpression[dims];
-				while(dims-- > 0)
-					indexes[dims] = expressionStack.pop();
-				statement = blockStack.peek().addArrayElementAssignment(var, exp, indexes);
-			}
+			statement = blockStack.peek().addRecordFieldAssignment((IRecordFieldExpression) exp, expressionStack.pop());
 		}
 		else
-			unsupported(ctx);
+			aux.unsupported("asssignment", ctx);
 
 		if(statement != null && containedIn(ctx, BasicForStatementContext.class))
 			statement.setFlag(Keyword.FOR.name());
 
 		// TODO records
+
+		// TODO constructor call
 	}
-
-
-
-
 
 
 
@@ -264,7 +233,7 @@ class Listener extends Java8ParserBaseListener {
 
 	@Override
 	public void exitIfThenElseStatementNoShortIf(IfThenElseStatementNoShortIfContext ctx) {
-		unsupported(ctx);
+		aux.unsupported("if-else", ctx);
 	}
 
 	@Override
@@ -322,15 +291,34 @@ class Listener extends Java8ParserBaseListener {
 		List<IExpression> args = new ArrayList<>();
 		IProcedure p = null;
 		if(memberCall) {
-			IRecordType instanceType = memberCall ? findVariableType(targetVarId) : null;
-			p = matchInstanceProcedure(methodId, instanceType, argList);
-			IVariableDeclaration var = currentProcedure.getVariable(targetVarId);
-			if(var == null)
-				var = new IVariableDeclaration.UnboundVariable(targetVarId);
-			args.add(var.expression());
+			IVariableDeclaration var = currentProcedure.getVariable(targetVarId); // local
+			if(var == null) { // field
+				for(IVariableDeclaration f : classType.getFields())
+					if(f.getId().equals(targetVarId)) {
+						var = f;
+						args.add(var.expression());
+						break;
+					}
+			}
+
+			if(var == null) { // namespace
+				for(IProcedure pr : module.getProcedures())
+					if(targetVarId.equals(pr.getProperty("namespace")) && pr.getId().equals(methodId)) {
+						p = pr;
+						break;
+					}	
+			}
+
+			if(p == null && var == null) {
+				IRecordType varType = findVariableType(targetVarId);
+				p = matchInstanceProcedure(methodId, varType, argList);
+				if(var == null)
+					var = new IVariableDeclaration.UnboundVariable(targetVarId);
+				args.add(var.expression());
+			}
 		}
 		else {
-			p = matchInstanceProcedure(methodId, module.getProperty(IRecordType.class), argList);
+			p = matchInstanceProcedure(methodId, classType, argList);
 			if(p != null)
 				args.add(currentProcedure.getVariable(Keyword.THIS.keyword()).expression());
 			else
@@ -354,32 +342,64 @@ class Listener extends Java8ParserBaseListener {
 	}
 
 
-
-
-
-
-
-
-
 	private IRecordType findVariableType(String id) {
-		if(id.equals(Keyword.THIS.keyword()) && currentProcedure.is(INSTANCE_FLAG))
-			return module.getProperty(IRecordType.class);
+		//		if(id.equals(Keyword.THIS.keyword()) && currentProcedure.is(ParserAux.INSTANCE_FLAG))
+		//			return classType; 
 
 		IVariableDeclaration v = currentProcedure.getVariable(id);
 		IType t = v == null ? null : v.getType();
 		return t instanceof IRecordType ? (IRecordType) t : null;
 	}
 
+
+
+
 	@Override
 	public void enterExpressionName(ExpressionNameContext ctx) {
-		if(ctx.getParent() instanceof PostfixExpressionContext)
-			expressionStack.push(matchVariable(ctx.Identifier().getText()).expression());
+		if(ctx.getParent() instanceof PostfixExpressionContext) {
+			IConstantDeclaration con = matchConstant(ctx.getChild(0));
+			if(con != null) {
+				expressionStack.push(con.expression());
+			}
+			else {
+				IVariableDeclaration var = matchVariable(ctx.getChild(0));
+				if(var.getType() instanceof IArrayType && ctx.getChildCount() == 3 && ctx.getChild(2).getText().equals("length")) {
+					expressionStack.push(var.length());
+				}
+				else {
+					IExpression exp = var.isRecordField() ? currentProcedure.getVariable(ParserAux.THIS).field(var) : var.expression();
+					for(int i = 2; i < ctx.getChildCount(); i += 2) {
+						exp = exp.field(ctx.getChild(i).getText());
+					}
+					expressionStack.push(exp);
+				}
+			}
+		}
+		//		else
+		//			System.out.println("exp " + ctx.getText() + " " + ctx.getParent().getText() + "   " + ctx.start.getLine() +  "   " + ctx.getParent().getClass());
+
+	}
+
+
+	@Override
+	public void enterFieldAccess_lf_primary(FieldAccess_lf_primaryContext ctx) {
+		System.out.println("fiel ass primary" + ctx.getText() + " " + ctx.getParent().getClass());
+	}
+
+	@Override
+	public void enterFieldAccess_lfno_primary(FieldAccess_lfno_primaryContext ctx) {
+		System.out.println("fiel ass lfno" + ctx.getText() + " " + ctx.getParent().getClass());
+	}
+
+	@Override
+	public void enterFieldAccess(FieldAccessContext ctx) {
+		System.out.println("fiel ass " + ctx.getText() + " " + ctx.getParent().getClass());
 	}
 
 	@Override
 	public void exitArrayAccess_lfno_primary(ArrayAccess_lfno_primaryContext ctx) {
-		String id = ctx.expressionName().getText();
-		expressionStack.push(matchVariable(id).element(getIndexes(ctx.expression().size())).expression());
+		IVariableDeclaration var = matchVariable(ctx.expressionName());
+		expressionStack.push(var.element(getIndexes(ctx.expression().size())).expression());
 		super.exitArrayAccess_lfno_primary(ctx);
 	}
 
@@ -396,63 +416,76 @@ class Listener extends Java8ParserBaseListener {
 			expressionStack.push(IType.INT.literal(Integer.parseInt(ctx.getText())));
 		else if(ctx.FloatingPointLiteral() != null)
 			expressionStack.push(IType.DOUBLE.literal(Double.parseDouble(ctx.getText())));
-		// TODO other types
+		else if(ctx.BooleanLiteral() != null)
+			expressionStack.push(IType.BOOLEAN.literal(Boolean.parseBoolean(ctx.getText())));
+		else if(ctx.StringLiteral() != null)
+			expressionStack.push(module.getRecordType("String").heapAllocation());
+		else if(ctx.NullLiteral() != null)
+			expressionStack.push(ILiteral.getNull());
+		else
+			aux.unsupported("literal", ctx);
 	}
 
-	@Override
-	public void exitAdditiveExpression(AdditiveExpressionContext ctx) {
-		pushBinaryOperation(ctx.ADD(), ctx.SUB());
-	}
 
-	@Override
-	public void exitMultiplicativeExpression(MultiplicativeExpressionContext ctx) {
-		pushBinaryOperation(ctx.MUL(), ctx.DIV(), ctx.MOD());
-	}
-
-	@Override
-	public void exitEqualityExpression(EqualityExpressionContext ctx) {
-		pushBinaryOperation(ctx.EQUAL(), ctx.NOTEQUAL());
-	}
-
-	@Override
-	public void exitRelationalExpression(RelationalExpressionContext ctx) {
-		pushBinaryOperation(ctx.LT(), ctx.LE(), ctx.GT(), ctx.GE());
-	}
 
 	@Override
 	public void exitArrayCreationExpression(ArrayCreationExpressionContext ctx) {
 		IType t = null;
 		if(ctx.primitiveType() != null)
-			t = matchPrimitiveType(ctx.primitiveType());
+			t = aux.matchPrimitiveType(ctx.primitiveType());
 		else if(ctx.classOrInterfaceType() != null)
-			t = matchRecordType(ctx.classOrInterfaceType());
-		//		else if(ctx.arrayInitializer() != null) {
-		//			// TODO array initializer
-		//		}
-		else 
-			unsupported(ctx);
+			t = aux.matchRecordType(ctx.classOrInterfaceType());
 
-		expressionStack.push(t.array().heapAllocation(getIndexes(ctx.dimExprs().dimExpr().size())));
-		// TODO not primitive
+
+		if(ctx.arrayInitializer() != null) {
+			int dims = ctx.dims().getChildCount();
+			expressionStack.push(t.array().heapAllocation(getIndexes(dims)));
+			//			// TODO array initializer
+			System.out.println("intin " + ctx.arrayInitializer().getText());
+		}
+		else {
+			int dims = ctx.dimExprs().dimExpr().size();
+			expressionStack.push(t.array().heapAllocation(getIndexes(dims)));
+
+		}
+		//		else 
+		//			aux.unsupported("array creation", ctx);
+
 	}
 
 	@Override
 	public void exitClassInstanceCreationExpression_lfno_primary(
 			ClassInstanceCreationExpression_lfno_primaryContext ctx) {
-		IRecordType t = matchRecordType(ctx.Identifier().get(0));
-		expressionStack.push(t.heapAllocation());
+		IType t = aux.matchRecordType(ctx.Identifier().get(0));
+		if(t instanceof IReferenceType && (((IReferenceType) t).getTarget() instanceof IRecordType))
+			expressionStack.push(((IRecordType)((IReferenceType)t).getTarget()).heapAllocation());
+		else
+			aux.unsupported("class type", ctx);
+
+		// Temporary
+		int size = ctx.argumentList().expression().size();
+		while(size-- > 0)
+			expressionStack.pop();
 	}
 
 	@Override
 	public void exitClassInstanceCreationExpression(ClassInstanceCreationExpressionContext ctx) {
-		IRecordType t = matchRecordType(ctx.expressionName());
-		expressionStack.push(t.heapAllocation());
+		//		IType t = aux.matchRecordType(ctx.expressionName());
+		//		expressionStack.push(t.heapAllocation());
+		System.err.println("class instance " + ctx.getText());
+	}
+
+	@Override
+	public void exitElementValueArrayInitializer(ElementValueArrayInitializerContext ctx) {
+		int size = ctx.elementValueList().elementValue().size();
+		aux.unsupported("array init " + size, ctx);
 	}
 
 	@Override
 	public void exitArrayInitializer(ArrayInitializerContext ctx) {
-		unsupported(ctx);
-		//		System.out.println("**** " + ctx.getParent().getParent().getText());
+		//		expressionStack.push(IType.INT.array().heapAllocation(dimensions))
+		aux.unsupported("array init ", ctx.getParent());
+		expressionStack.push(ILiteral.getNull());
 	}
 
 	@Override
@@ -479,48 +512,126 @@ class Listener extends Java8ParserBaseListener {
 	}
 
 
+	// UPSUPPORTED ---------------------------------
+
+	@Override
+	public void exitThrowStatement(ThrowStatementContext ctx) {
+		aux.unsupported("throws", ctx);
+	}
+
+	@Override
+	public void exitCastExpression(CastExpressionContext ctx) {
+		//		aux.unsupported("cast", ctx);
+		expressionStack.push(IUnaryOperator.TRUNCATE.on(expressionStack.pop()));
+	}
+
+	// OPERATORS ---------------------------------
+
+	@Override
+	public void exitUnaryExpression(UnaryExpressionContext ctx) {
+		if(ctx.SUB() != null)
+			expressionStack.push(IUnaryOperator.MINUS.on(expressionStack.pop()));
+	}
+
+	@Override
+	public void exitUnaryExpressionNotPlusMinus(UnaryExpressionNotPlusMinusContext ctx) {
+		if(ctx.BANG() != null)
+			expressionStack.push(IUnaryOperator.NOT.on(expressionStack.pop()));
+	}
+
+	@Override
+	public void exitAdditiveExpression(AdditiveExpressionContext ctx) {
+		pushBinaryOperation(ctx.ADD(), ctx.SUB());
+	}
+
+	@Override
+	public void exitMultiplicativeExpression(MultiplicativeExpressionContext ctx) {
+		pushBinaryOperation(ctx.MUL(), ctx.DIV(), ctx.MOD());
+	}
+
+	@Override
+	public void exitEqualityExpression(EqualityExpressionContext ctx) {
+		pushBinaryOperation(ctx.EQUAL(), ctx.NOTEQUAL());
+	}
+
+	@Override
+	public void exitRelationalExpression(RelationalExpressionContext ctx) {
+		pushBinaryOperation(ctx.LT(), ctx.LE(), ctx.GT(), ctx.GE());
+	}
+
+	@Override
+	public void exitAndExpression(AndExpressionContext ctx) {
+		pushBinaryOperation(ctx.BITAND());
+	}
+
+	@Override
+	public void exitConditionalAndExpression(ConditionalAndExpressionContext ctx) {
+		pushBinaryOperation(ctx.AND());
+	}
+
+	@Override
+	public void exitInclusiveOrExpression(InclusiveOrExpressionContext ctx) {
+		pushBinaryOperation(ctx.BITOR());
+	}
+
+	@Override
+	public void exitConditionalOrExpression(ConditionalOrExpressionContext ctx) {
+		pushBinaryOperation(ctx.OR());
+	}
+
+	@Override
+	public void exitExclusiveOrExpression(ExclusiveOrExpressionContext ctx) {
+		pushBinaryOperation(ctx.CARET());
+	}
+
 
 
 	// INCREMENTS / DECREMENTS -----------------------------------------------
 
 	@Override
 	public void enterPostIncrementExpression(PostIncrementExpressionContext ctx) {
-		IVariableDeclaration var = matchVariable(ctx.postfixExpression().getText()); // TODO array[]++
-		blockStack.peek().addIncrement(var);
+		IVariableDeclaration var = matchVariable(ctx.postfixExpression()); // TODO array[]++
+		if(var.isRecordField()) {
+			IRecordFieldExpression fexp = currentProcedure.getVariable(ParserAux.THIS).field(var);
+			IExpression acc = IBinaryOperator.ADD.on(fexp, IType.INT.literal(1));
+			blockStack.peek().addRecordFieldAssignment(fexp, acc);
+		}
+		else
+			blockStack.peek().addIncrement(var);
 	}
 
 	@Override
 	public void enterPreIncrementExpression(PreIncrementExpressionContext ctx) {
-		IVariableDeclaration var = matchVariable(ctx.unaryExpression().getText()); // TODO ++array
+		IVariableDeclaration var = matchVariable(ctx.unaryExpression()); // TODO ++array
 		blockStack.peek().addIncrement(var);
 	}
 
 	@Override
 	public void enterPostDecrementExpression(PostDecrementExpressionContext ctx) {
-		IVariableDeclaration var = matchVariable(ctx.postfixExpression().getText()); // TODO array[]++
+		IVariableDeclaration var = matchVariable(ctx.postfixExpression()); // TODO array[]++
 		blockStack.peek().addDecrement(var);
 	}
 
 	@Override
 	public void enterPreDecrementExpression(PreDecrementExpressionContext ctx) {
 		if(ctx.getParent() instanceof StatementExpressionContext) {
-			IVariableDeclaration var = matchVariable(ctx.unaryExpression().getText()); // TODO ++array
+			IVariableDeclaration var = matchVariable(ctx.unaryExpression()); // TODO ++array
 			blockStack.peek().addDecrement(var);
 		}
 		else 
-			unsupported(ctx);
+			aux.unsupported("decrement", ctx);
 	}
 
 	@Override
 	public void enterPostIncrementExpression_lf_postfixExpression(
 			PostIncrementExpression_lf_postfixExpressionContext ctx) {
-		unsupported(ctx);
+		aux.unsupported("increment", ctx);
 	}
 
 	@Override
 	public void enterPostDecrementExpression_lf_postfixExpression(
 			PostDecrementExpression_lf_postfixExpressionContext ctx) {
-		unsupported(ctx);
+		aux.unsupported("decrement", ctx);
 	}
 
 
@@ -547,7 +658,7 @@ class Listener extends Java8ParserBaseListener {
 	private void pushBinaryOperation(TerminalNode ... nodes) {
 		for(TerminalNode node : nodes) {
 			if(node != null) {
-				IBinaryOperator op = matchBinaryOperator(node);
+				IBinaryOperator op = aux.matchBinaryOperator(node);
 				if(op != null) {
 					IExpression r = expressionStack.pop();
 					IExpression l = expressionStack.pop();
@@ -567,8 +678,8 @@ class Listener extends Java8ParserBaseListener {
 			n++;
 
 		IProcedure proc = null;
-		for (IProcedure p : procMap.values()) {
-			if(p.is(INSTANCE_FLAG) && p.getId().equals(id) && p.getParameters().size() == n) // TODO arg types
+		for (IProcedure p : aux.allMethods()) {
+			if(p.is(ParserAux.INSTANCE_FLAG) && p.getId().equals(id) && p.getParameters().size() == n) // TODO arg types
 				proc = p;
 		}
 
@@ -576,102 +687,43 @@ class Listener extends Java8ParserBaseListener {
 	}
 
 	private IProcedure matchStaticProcedure(String id, ArgumentListContext args) {
-		int n = args.getChildCount();
-		if(n != 1)
+		int n = args == null ? 0 : args.getChildCount();
+		if(n > 1)
 			n = n - (n-1)/2;
 
 		IProcedure proc = null;
-		for (IProcedure p : procMap.values()) {
-			if(!p.is(INSTANCE_FLAG) && p.getId().equals(id) && p.getParameters().size() == n) // TODO arg types
+		for (IProcedure p : aux.allMethods()) {
+			if(!p.is(ParserAux.INSTANCE_FLAG) && p.getId().equals(id) && p.getParameters().size() == n) // TODO arg types
 				proc = p;
 		}
 
 		return proc;
 	}
 
-	private IVariableDeclaration matchVariable(String id) {
+	private IVariableDeclaration matchVariable(ParseTree ctx) {
+		String id = ctx.getText();
 		for(IVariableDeclaration v : currentProcedure.getVariables())
 			if(v.getId().equals(id))
 				return v;
 
+		if(currentProcedure.is(ParserAux.INSTANCE_FLAG) || currentProcedure.is(ParserAux.CONSTRUCTOR_FLAG)) {
+			for(IVariableDeclaration v : classType)
+				if(v.getId().equals(id))
+					return v;
+		}
+
+		Token t = ctx instanceof TerminalNode ? ((TerminalNode) ctx).getSymbol() : ((ParserRuleContext) ctx).getStart();
+
+		System.err.println("unbound " + id + "  " + ctx.getClass() + "  " + classType.getId() + "  " + t.getLine());
 		return new IVariableDeclaration.UnboundVariable(id);
 	}
 
-	private IBinaryOperator matchBinaryOperator(ParseTree node) {
-		switch(node.getText()) {
-		case "+": case "+=": return IBinaryOperator.ADD;
-		case "-": case "-=": return IBinaryOperator.SUB;
-		case "*": case "*=": return IBinaryOperator.MUL;
-		case "/": case "/=": return IBinaryOperator.DIV;
-		case "%": case "%=": return IBinaryOperator.MOD;
+	private IConstantDeclaration matchConstant(ParseTree ctx) {
+		String id = classType.getId() + "." + ctx.getText();
+		for(IConstantDeclaration c : module.getConstants())
+			if(c.getId().equals(id))
+				return c;
 
-		case "==": return IBinaryOperator.EQUAL;
-		case "!=": return IBinaryOperator.DIFFERENT;
-		case "<": return IBinaryOperator.SMALLER;
-		case "<=": return IBinaryOperator.SMALLER_EQ;
-		case ">": return IBinaryOperator.GREATER;
-		case ">=": return IBinaryOperator.GREATER_EQ;
-
-		case "&": case "&&": return IBinaryOperator.AND;
-		case "|": case "||": return IBinaryOperator.OR;
-		case "^": return IBinaryOperator.XOR;
-
-		default:
-			unsupported(node);
-			return null;
-		}
-	}
-
-
-	// TODO arrays
-	private IType matchPrimitiveType(ParseTree ctx) {
-		String type = ctx.getText();
-		int arrayDims = 0;
-		while(type.contains("[]")) {
-			type = type.replace("[]", "");
-			arrayDims++;
-		}
-		IType t = null;
-		switch(type) {
-		case "int" : t = IType.INT; break;
-		case "double" : t = IType.DOUBLE; break;
-		case "boolean" : t = IType.BOOLEAN; break;
-		case "char": 
-		case "short": 
-		case "byte" :
-		case "long" :
-		case "float" : unsupported(ctx); return null;
-		}
-		if(t == null)
-			return null;
-		
-		while(arrayDims-- > 0)
-			t = t.array();
-		
-		if(t instanceof IArrayType)
-			t = t.reference();
-		return t;
-	}
-	
-	// TODO arrays?
-	private IRecordType matchRecordType(ParseTree ctx) {
-		String type = ctx.getText();
-		int arrayDims = 0;
-		while(type.contains("[]")) {
-			type = type.replace("[]", "");
-			arrayDims++;
-		}
-		IRecordType recType = null;
-		for(IRecordType t : module.getRecordTypes())
-			if(t.getId().equals(type))
-				recType = t;
-		
-		if(recType == null)
-			recType = new IRecordType.UnboundRecordType(type);
-		
-//		while(arrayDims-- > 0)
-//			recType = recType.array();
-		
-		return recType; //.reference();
+		return null;
 	}
 }

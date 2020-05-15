@@ -1,5 +1,6 @@
 package pt.iscte.paddle.model;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,7 +19,6 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 		default void constantRemoved(IConstantDeclaration constant) { }
 		default void procedureAdded(IProcedure procedure) { }
 		default void procedureRemoved(IProcedure procedure) { }
-		
 		default void recordTypeAdded(IRecordType type)	{ }
 		// TODO record remove
 	}
@@ -58,14 +58,11 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	
 	IRecordType addRecordType(String id);
 	
+	IRecordType getRecordType(String id);
 	
 	default IProcedure addProcedure(IType returnType, String ... flags) {
 		return addProcedure(null, returnType, flags);
 	}
-	
-//	default IProcedure addProcedure(String id, IType returnType, int index, String ... flags) {
-//		return addProcedureAt(null, returnType, index, flags);
-//	}
 	
 	IProcedure addProcedure(String id, IType returnType, String ... flags);
 	
@@ -76,8 +73,10 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	
 	void removeProcedure(IProcedure procedure);
 	
-	void loadBuildInProcedures(Class<?> staticClass);
-
+	void loadBuiltInProcedures(Class<?> staticClass);
+	
+	void loadBuiltInProcedures(Method ... staticMethods);
+	
 
 	IProcedure getProcedure(String id);
 	

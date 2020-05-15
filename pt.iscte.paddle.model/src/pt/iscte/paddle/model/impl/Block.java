@@ -210,7 +210,10 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 		int d = getDepth();
 		for(int i = 0; i < d; i++)
 			tabs += "\t";
-		String text = "{\n";
+		String text = "{";
+		if(is("FOR"))
+			text += "\\\\ for";
+		text += "\n";
 		for(IBlockElement s : children) {
 			if(s instanceof IVariableDeclaration) {
 				IVariableDeclaration v = (IVariableDeclaration) s;
@@ -227,10 +230,25 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	}
 	
 	public int getDepth() {
-		if(!(parent instanceof Block))
-			return 1;
-		else
-			return 1 + ((Block) parent).getDepth();
+		IProgramElement b = getParent();
+		int d = 1;
+		while(!(b instanceof IProcedure)) {
+			if(b instanceof ControlStructure) {
+				b = ((ControlStructure) b).getParent();
+			}
+			else {
+				b = ((IBlock) b).getParent();
+				d++;
+			}
+		}
+		return d;
+		
+//		if(parent instanceof ControlStructure)
+//			return 1 + ((ControlStructure) parent).getBlock().getParent().getDepth();
+//		if(!(parent instanceof Block))
+//			return 1;
+//		else 
+//			return 1 + ((Block) parent).getDepth();
 	}
 	
 	public IProcedure getProcedure() {

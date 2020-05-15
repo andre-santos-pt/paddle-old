@@ -7,6 +7,7 @@ import pt.iscte.paddle.model.IBlock.IVisitor;
 import pt.iscte.paddle.model.cfg.IBranchNode;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.cfg.impl.Visitor;
+import pt.iscte.paddle.model.impl.BuiltinProcedure;
 import pt.iscte.paddle.model.impl.ProcedureCall;
 
 /**
@@ -20,6 +21,10 @@ public interface IProcedure extends IProcedureDeclaration {
 
 	IBlock getBody();
 
+	default boolean isBuiltIn() {
+		return this instanceof BuiltinProcedure;
+	}
+	
 	default IControlFlowGraph generateCFG(){
 		IControlFlowGraph cfg = IControlFlowGraph.create(this);
 		IVisitor visitor = new Visitor(cfg);

@@ -5,7 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import pt.iscte.paddle.model.impl.Literal;
+import pt.iscte.paddle.model.impl.ProgramElement;
 import pt.iscte.paddle.model.impl.RecordAllocation;
+import pt.iscte.paddle.model.impl.ReferenceType;
 
 /**
  * Mutable
@@ -48,90 +50,63 @@ public interface IRecordType extends IType, Iterable<IVariableDeclaration>, ILis
 		return getFields().iterator();
 	}
 
-	class UnboundRecordType implements IRecordType {
-		final String id;
+	class UnboundRecordType extends ProgramElement implements IRecordType {
 		public UnboundRecordType(String id) {
-			this.id = id;
+			setId(id);
 		}
 		@Override
 		public int getMemoryBytes() {
-			// TODO Auto-generated method stub
-			return 0;
+			return 4;
 		}
 
 		@Override
 		public IReferenceType reference() {
-			// TODO Auto-generated method stub
-			return null;
+			return new ReferenceType(this);
 		}
 
-		@Override
-		public void setProperty(Object key, Object value) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public String getId() {
-			return id;
-		}
-		
 		@Override
 		public String toString() {
-			return id;
+			return getId();
 		}
 		
 		@Override
-		public Object getProperty(Object key) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void addListener(IListener listener) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void removeListener(IListener listener) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
 		public IModule getModule() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public List<IVariableDeclaration> getFields() {
-			// TODO Auto-generated method stub
-			return null;
+			return List.of();
 		}
 
 		@Override
 		public IVariableDeclaration addField(IType type) {
-			// TODO Auto-generated method stub
-			return null;
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
 		public IVariableDeclaration addField(IType type, String id, List<String> flags) {
-			// TODO Auto-generated method stub
-			return null;
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
 		public void removeField(IVariableDeclaration var) {
-			// TODO Auto-generated method stub
-			
+			throw new UnsupportedOperationException();
 		}
 
 		@Override
 		public IRecordAllocation heapAllocation() {
 			return new RecordAllocation(this);
+		}
+		@Override
+		public void addListener(IListener listener) {
+			throw new UnsupportedOperationException();
+			
+		}
+		@Override
+		public void removeListener(IListener listener) {
+			throw new UnsupportedOperationException();
+			
 		}
 		
 	}
