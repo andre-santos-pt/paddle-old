@@ -25,5 +25,9 @@ public class ConstantExpression extends Expression implements IConstantExpressio
 		return constant;
 	}
 	
+	@Override
+	public String toString() {
+		return constant.getId();
+	}
 	
 }

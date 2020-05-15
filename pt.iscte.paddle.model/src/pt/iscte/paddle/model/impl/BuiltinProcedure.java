@@ -23,6 +23,7 @@ public class BuiltinProcedure extends Procedure {
 			addParameter(matchType(p.getType()));
 		}
 		setId(method.getName());
+		setProperty("namespace", method.getDeclaringClass().getSimpleName());
 	}
 
 	public static boolean isValidForBuiltin(Method method) {
@@ -37,7 +38,7 @@ public class BuiltinProcedure extends Procedure {
 		}
 		return true;
 	}
-	
+
 	private static IType matchType(Class<?> c) {
 		for(IValueType t : IType.VALUE_TYPES)
 			if(t.matchesPrimitiveType(c))

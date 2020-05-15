@@ -88,7 +88,7 @@ class Procedure extends ProgramElement implements IProcedure {
 		for(IVariableDeclaration p : paramsView) {
 			if(!params.isEmpty())
 				params += ", ";
-			params += p.getType().getId() + " " + p.getId();
+			params += p.getType() + " " + p.getId();
 		}
 
 		return returnType + " " + getId() + "(" + params + ") " + body.toString();

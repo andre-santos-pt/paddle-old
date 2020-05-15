@@ -28,7 +28,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	private final List<IRecordType> records;
 	private final List<IProcedure> procedures;
 
-	private final List<IProcedure> builtinProcedures;
+//	private final List<IProcedure> builtinProcedures;
 
 	private final History history;
 	
@@ -62,17 +62,24 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		constants = new ArrayList<>();
 		records = new ArrayList<>();
 		procedures = new ArrayList<>();
-		builtinProcedures = new ArrayList<>();
+//		builtinProcedures = new ArrayList<>();
 		history = recordHistory ? new History() : null;
 	}
 
-	public void loadBuildInProcedures(Class<?> staticClass) {
+	public void loadBuiltInProcedures(Class<?> staticClass) {
 		for (Method method : staticClass.getDeclaredMethods()) {
 			if(BuiltinProcedure.isValidForBuiltin(method))
-				builtinProcedures.add(new BuiltinProcedure(this, method));
-			else
-				System.err.println("not valid for built-in procedure: " + method);
+				procedures.add(new BuiltinProcedure(this, method));
+//			else
+//				System.err.println("not valid for built-in procedure: " + method);
 		}
+	}
+	
+	@Override
+	public void loadBuiltInProcedures(Method... staticMethods) {
+		for(Method m : staticMethods)
+			if(BuiltinProcedure.isValidForBuiltin(m))
+				procedures.add(new BuiltinProcedure(this, m));
 	}
 	
 	void executeCommand(ICommand<?> cmd) {
@@ -206,6 +213,14 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		return add.getElement();
 	}
 	
+	@Override
+	public IRecordType getRecordType(String id) {
+		for(IRecordType t : records)
+			if(t.getId().equals(id))
+				return t;
+		return null;
+	}
+	
 	private class AddProcedure implements IAddCommand<IProcedure> {
 		final String id;
 		final IType returnType;
@@ -288,9 +303,9 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 			if(p.hasSameSignature(procedureDeclaration))
 				return p;
 
-		for(IProcedure p : builtinProcedures)
-			if(p.hasSameSignature(procedureDeclaration))
-				return p;
+//		for(IProcedure p : builtinProcedures)
+//			if(p.hasSameSignature(procedureDeclaration))
+//				return p;
 
 		return null;
 	}
@@ -301,9 +316,9 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 			if(p.matchesSignature(id, paramTypes))
 				return p;
 		
-		for(IProcedure p : builtinProcedures)
-			if(p.matchesSignature(id, paramTypes))
-				return p;
+//		for(IProcedure p : builtinProcedures)
+//			if(p.matchesSignature(id, paramTypes))
+//				return p;
 
 		return null;
 	}
@@ -325,13 +340,13 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 			text += "} " + r.getId() + ";\n\n";
 		}
 
-		for (IProcedure p : builtinProcedures)
-			System.out.println(p.longSignature() + "\t(built-in)\n");
-
-		text += "\n";
+//		for (IProcedure p : builtinProcedures)
+//			System.out.println(p.longSignature() + "\t(built-in)\n");
+//		text += "\n";
 
 		for (IProcedure p : procedures)
-			text += p + "\n\n";
+			if(!p.isBuiltIn())
+				text += p + "\n\n";
 
 		return text;
 	}
@@ -351,13 +366,14 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		for(IRecordType r : records)
 			text += t.declaration(r);
 
-		for (IProcedure p : builtinProcedures)
-			System.out.println(p.longSignature() + "\t(built-in)\n");
+//		for (IProcedure p : builtinProcedures)
+//			System.out.println(p.longSignature() + "\t(built-in)\n");
 
 		//		text += "\n";
 
 		for (IProcedure p : procedures)
-			text += p.translate(t);
+			if(!p.isBuiltIn())
+				text += p.translate(t);
 
 		return text + t.close(this);
 	}
