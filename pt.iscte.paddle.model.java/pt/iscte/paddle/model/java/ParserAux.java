@@ -96,8 +96,8 @@ public class ParserAux {
 	IType matchPrimitiveType(ParseTree ctx) {
 		String type = ctx.getText();
 		int arrayDims = 0;
-		while(type.contains("[]")) {
-			type = type.replace("[]", "");
+		while(type.endsWith("[]")) {
+			type = type.substring(0, type.length()-2);
 			arrayDims++;
 		}
 		IType t = null;
@@ -144,21 +144,37 @@ public class ParserAux {
 		return recType.reference();
 	}
 
-	public void addMethod(MethodDeclarationContext ctx, IRecordType namespace, IProcedure proc) {
-		methods.put(namespace.getId() + ctx.start.getTokenIndex(), proc);
+	public void addMethod(MethodDeclarationContext ctx, String namespace, IProcedure proc) {
+		methods.put(namespace + ctx.start.getTokenIndex(), proc);
 	}
 
-	public void addConstructor(ConstructorDeclarationContext ctx, IRecordType namespace, IProcedure proc) {
-		constructors.put(namespace.getId() + ctx.start.getTokenIndex(), proc);
+	public void addConstructor(ConstructorDeclarationContext ctx, String namespace, IProcedure proc) {
+		constructors.put(namespace + ctx.start.getTokenIndex(), proc);
 	}
 
-	public IProcedure getMethod(MethodDeclarationContext ctx, IRecordType namespace) {
-		return methods.get(namespace.getId() + ctx.start.getTokenIndex());
+	public IProcedure getMethod(MethodDeclarationContext ctx, String namespace) {
+		return methods.get(namespace + ctx.start.getTokenIndex());
 	}
 
-	public IProcedure getConstructor(ConstructorDeclarationContext ctx, IRecordType namespace) {
-		return constructors.get(namespace.getId() + ctx.start.getTokenIndex());
+	public IProcedure getMethod(String namespace, String methodId) {
+		for(IProcedure p : methods.values())
+			if(namespace.equals(p.getProperty("namespace")) && methodId.equals(p.getId()))
+				return p;
+		return null;
 	}
+	
+	public IProcedure getConstructor(ConstructorDeclarationContext ctx, String namespace) {
+		return constructors.get(namespace + ctx.start.getTokenIndex());
+	}
+	
+	public IProcedure getConstructor(IType type, int nParams) {
+		for(IProcedure p : constructors.values())
+			if(p.getReturnType().isSame(type) && p.getParameters().size() == nParams)
+				return p;
+		
+		return null;
+	}
+	
 
 	public Iterable<IProcedure> allMethods() {
 		return methods.values();

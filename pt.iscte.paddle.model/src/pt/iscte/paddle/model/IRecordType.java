@@ -23,6 +23,14 @@ public interface IRecordType extends IType, Iterable<IVariableDeclaration>, ILis
 	
 	List<IVariableDeclaration> getFields();
 	
+	default IVariableDeclaration getField(String id) {
+		for(IVariableDeclaration f : getFields())
+			if(id.equals(f.getId()))
+				return f;
+		
+		return null;
+	}
+	
 	IVariableDeclaration addField(IType type);
 
 	IVariableDeclaration addField(IType type, String id, List<String> flags);
@@ -110,4 +118,6 @@ public interface IRecordType extends IType, Iterable<IVariableDeclaration>, ILis
 		}
 		
 	}
+
+
 }
