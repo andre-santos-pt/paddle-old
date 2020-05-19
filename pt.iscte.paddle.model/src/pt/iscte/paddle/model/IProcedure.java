@@ -43,6 +43,13 @@ public interface IProcedure extends IProcedureDeclaration {
 					foundRecursiveCall = true;
 				return true;
 			}
+			
+			@Override
+			public boolean visit(IProcedureCallExpression exp) {
+				if(exp.getProcedure().equals(IProcedure.this))
+					foundRecursiveCall = true;
+				return true;
+			}
 		};
 		RecFind r = new RecFind();
 		getBody().accept(r);
