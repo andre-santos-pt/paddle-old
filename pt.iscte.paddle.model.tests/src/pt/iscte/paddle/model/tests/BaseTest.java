@@ -64,7 +64,7 @@ public class BaseTest {
 	public BaseTest(IModule module) {
 		this.module = module;
 		for(Class<?> builtin : getBuiltins())
-			module.loadBuildInProcedures(builtin);		
+			module.loadBuiltInProcedures(builtin);		
 		module.setId(getClass().getSimpleName());
 		problems = Collections.emptyList();
 	}

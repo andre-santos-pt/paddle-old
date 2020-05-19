@@ -66,12 +66,10 @@ public class PreParserListener extends Java8ParserBaseListener {
 				}
 			}
 			else {
-				if(ctx.variableInitializer() != null)
+				if(ctx.variableInitializer() != null) {
 					aux.unsupported("field initializer", ctx.variableInitializer());
-				else {
-					selfType.addField(type, varId);
 				}
-				
+				selfType.addField(type, varId);
 			}
 		}
 	}
@@ -87,17 +85,17 @@ public class PreParserListener extends Java8ParserBaseListener {
 			IVariableDeclaration self = proc.addParameter(selfType.reference());
 			self.setId(ParserAux.THIS);
 		}
-		aux.addMethod(ctx, selfType, proc);
+		aux.addMethod(ctx, selfType.getId(), proc);
 	}
 
 	@Override
 	public void enterConstructorDeclaration(ConstructorDeclarationContext ctx) {
-		proc = module.addProcedure(IType.VOID);
+		proc = module.addProcedure(selfType.reference());
 		proc.setFlag(ParserAux.CONSTRUCTOR_FLAG);
 		proc.setId("$" + selfType.getId());
-		IVariableDeclaration self = proc.addParameter(selfType.reference());
-		self.setId(ParserAux.THIS);
-		aux.addConstructor(ctx, selfType, proc);
+//		IVariableDeclaration self = proc.addParameter(selfType.reference());
+//		self.setId(ParserAux.THIS);
+		aux.addConstructor(ctx, selfType.getId(), proc);
 	}
 	
 	@Override

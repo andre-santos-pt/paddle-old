@@ -83,4 +83,9 @@ public class ArrayType extends ProgramElement implements IArrayType {
 	public IArrayAllocation heapAllocation(List<IExpression> dimensions) {
 		return ArrayAllocation.heap(this, dimensions);
 	}
+	
+	@Override
+	public IArrayAllocation heapAllocationWith(List<IExpression> elements) {
+		return new PredefinedArrayAllocation(this, false, elements);
+	}
 }

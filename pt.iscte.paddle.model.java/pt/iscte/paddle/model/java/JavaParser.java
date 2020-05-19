@@ -55,7 +55,7 @@ public class JavaParser {
 		}
 		
 		for(Entry<IRecordType, File> e : types.entrySet()) {
-			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName("UTF-8"));
+			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName("ISO-8859-1"));
 			Java8Lexer lexer = new Java8Lexer(s);
 			Java8Parser p = new Java8Parser(new CommonTokenStream(lexer));
 			PreParserListener l = new PreParserListener(module, e.getKey(), aux);
@@ -64,6 +64,7 @@ public class JavaParser {
 		}
 		
 		for(Entry<IRecordType, File> e : types.entrySet()) {
+			System.out.println("parsing " + e.getKey().getId());
 			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName("UTF-8"));
 			Java8Lexer lexer = new Java8Lexer(s);
 			Java8Parser p = new Java8Parser(new CommonTokenStream(lexer));

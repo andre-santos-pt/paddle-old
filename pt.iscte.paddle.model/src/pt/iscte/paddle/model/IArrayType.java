@@ -35,12 +35,20 @@ public interface IArrayType extends IType {
 	
 	IArrayAllocation heapAllocation(List<IExpression> dimensions);
 	
+	
+	
 	default IArrayAllocation heapAllocation(IExpression ... dimensions) {
 		return heapAllocation(Arrays.asList(dimensions));
 	}
+	
 	default IArrayAllocation heapAllocation(IExpressionView ... views) {
 		return heapAllocation(IExpressionView.toList(views));
 	}
 	
+	IArrayAllocation heapAllocationWith(List<IExpression> elements);
+	
+	default IArrayAllocation heapAllocationWith(IExpression ... elements) {
+		return heapAllocationWith(Arrays.asList(elements));
+	}
 
 }

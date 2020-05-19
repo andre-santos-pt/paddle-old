@@ -27,6 +27,11 @@ public class ReferenceType extends ProgramElement implements IReferenceType {
 	}
 	
 	@Override
+	public String getId() {
+		return target.getId();
+	}
+	
+	@Override
 	public String toString() {
 		return "*" + target.getId();
 	}

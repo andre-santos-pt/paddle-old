@@ -3,7 +3,9 @@ package pt.iscte.paddle.model.java;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
@@ -36,6 +38,7 @@ import pt.iscte.paddle.java.antlr.Java8Parser.ExpressionNameContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.FieldAccessContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.FieldAccess_lf_primaryContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.FieldAccess_lfno_primaryContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.FieldDeclarationContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ForInitContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ForStatementContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.IfThenElseStatementContext;
@@ -46,6 +49,7 @@ import pt.iscte.paddle.java.antlr.Java8Parser.LiteralContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.LocalVariableDeclarationContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.MethodDeclarationContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.MethodInvocationContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.MethodInvocation_lf_primaryContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.MethodInvocation_lfno_primaryContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.MultiplicativeExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.PostDecrementExpressionContext;
@@ -55,6 +59,9 @@ import pt.iscte.paddle.java.antlr.Java8Parser.PostIncrementExpression_lf_postfix
 import pt.iscte.paddle.java.antlr.Java8Parser.PostfixExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.PreDecrementExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.PreIncrementExpressionContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.PrimaryContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.PrimaryNoNewArray_lfno_arrayAccessContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.PrimaryNoNewArray_lfno_primaryContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.RelationalExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.ReturnStatementContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.StatementExpressionContext;
@@ -64,6 +71,7 @@ import pt.iscte.paddle.java.antlr.Java8Parser.UnaryExpressionContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.UnaryExpressionNotPlusMinusContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.VariableDeclaratorContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.VariableDeclaratorListContext;
+import pt.iscte.paddle.java.antlr.Java8Parser.VariableInitializerContext;
 import pt.iscte.paddle.java.antlr.Java8Parser.WhileStatementContext;
 import pt.iscte.paddle.java.antlr.Java8ParserBaseListener;
 import pt.iscte.paddle.model.IArrayType;
@@ -76,15 +84,18 @@ import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IProcedure.UnboundProcedure;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IReferenceType;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatement;
+import pt.iscte.paddle.model.ITargetExpression;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IUnaryOperator;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
+import pt.iscte.paddle.util.MultiMapList;
 
 class ParserListener extends Java8ParserBaseListener {
 	private final IModule module;
@@ -107,7 +118,7 @@ class ParserListener extends Java8ParserBaseListener {
 
 	@Override
 	public void enterMethodDeclaration(MethodDeclarationContext ctx) {
-		currentProcedure =  aux.getMethod(ctx, classType);
+		currentProcedure =  aux.getMethod(ctx, classType.getId());
 		assert currentProcedure != null : ctx;
 		blockStack.push(currentProcedure.getBody());
 	}
@@ -119,18 +130,40 @@ class ParserListener extends Java8ParserBaseListener {
 
 	@Override
 	public void enterConstructorDeclaration(ConstructorDeclarationContext ctx) {
-		currentProcedure = aux.getConstructor(ctx, classType);
+		currentProcedure = aux.getConstructor(ctx, classType.getId());
 		assert currentProcedure != null : ctx;
-		blockStack.push(currentProcedure.getBody());
+		IBlock body = currentProcedure.getBody();
+		IVariableDeclaration thisVar = body.addVariable(classType, ParserAux.CONSTRUCTOR_FLAG);
+		body.addAssignment(thisVar, classType.heapAllocation(), ParserAux.CONSTRUCTOR_FLAG);
+		thisVar.setId(ParserAux.THIS);
+		for (IVariableDeclaration f : classType.getFields()) {
+			if(fieldInit.containsKey(f)) {
+				IExpression exp = fieldInit.get(f); // TODO field init to pre-parsing?
+				body.addRecordFieldAssignment(thisVar.field(f), exp);
+			}
+		}
+		blockStack.push(body);
 	}
 
 	@Override
 	public void exitConstructorDeclaration(ConstructorDeclarationContext ctx) {
-		blockStack.pop();
+		IBlock body = blockStack.pop();
+		IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS);
+		body.addReturn(thisVar.expression());
+		body.setFlag(ParserAux.CONSTRUCTOR_FLAG);
 	}
+	
+	private Map<IVariableDeclaration, IExpression> fieldInit = new HashMap<>();
+	
 
 	@Override
 	public void exitReturnStatement(ReturnStatementContext ctx) {
+		if(ctx.expression() != null && contains(ctx.expression(), AssignmentContext.class)) {
+			aux.unsupported("assignments as expressions", ctx);
+			blockStack.peek().addReturn();
+			return;
+		}
+
 		if(ctx.expression() == null)
 			blockStack.peek().addReturn();
 		else
@@ -146,7 +179,7 @@ class ParserListener extends Java8ParserBaseListener {
 		if(parent instanceof LocalVariableDeclarationContext) {
 			LocalVariableDeclarationContext con = (LocalVariableDeclarationContext) ctx.getParent().getParent();
 			boolean isFor = con.getParent() instanceof ForInitContext;
-			IVariableDeclaration dec = blockStack.peek().addVariable(aux.matchPrimitiveType(con.unannType()));
+			IVariableDeclaration dec = blockStack.peek().addVariable(aux.matchType(con.unannType()));
 			dec.setId(varId);
 			if(isFor)
 				dec.setFlag(Keyword.FOR.name());
@@ -155,16 +188,22 @@ class ParserListener extends Java8ParserBaseListener {
 				if(isFor)
 					ass.setFlag(Keyword.FOR.name());
 			}
+		}		
+		else if(parent instanceof FieldDeclarationContext) {
+			FieldDeclarationContext fieldDec = (FieldDeclarationContext) parent;
+			IType type = aux.matchType(fieldDec.unannType());
+			boolean constant = ParserAux.hasModifier(fieldDec, Keyword.STATIC) && ParserAux.hasModifier(fieldDec, Keyword.FINAL);
+			if(!constant && ctx.variableInitializer() != null) {
+				IVariableDeclaration field = classType.getField(varId);
+				fieldInit.put(field, expressionStack.pop());
+			}
 		}
-		//		else if(parent instanceof FieldDeclarationContext) {
-		//			UnannTypeContext unannType = ((FieldDeclarationContext) parent).unannType();
-		//			classType.addField(aux.matchPrimitiveType(unannType), varId);
-		//		}
 
 	}
 
 	@Override
 	public void exitAssignment(AssignmentContext ctx) {
+//		System.out.println("ASS " + ctx.getText());
 		IStatement statement = null;
 		if(ctx.leftHandSide().expressionName() != null) {
 			IVariableDeclaration var = matchVariable(ctx.leftHandSide().expressionName());
@@ -181,11 +220,24 @@ class ParserListener extends Java8ParserBaseListener {
 			}
 		}
 		else if(ctx.leftHandSide().arrayAccess() != null && ctx.assignmentOperator().ASSIGN() != null) {
-			IVariableDeclaration var = matchVariable(ctx.leftHandSide().arrayAccess().expressionName());
+			PrimaryNoNewArray_lfno_arrayAccessContext prim = ctx.leftHandSide().arrayAccess().primaryNoNewArray_lfno_arrayAccess();
+			ITargetExpression target;
+			if(prim != null && prim.getChild(0) instanceof FieldAccessContext) {
+				FieldAccessContext fa = (FieldAccessContext) prim.getChild(0);
+				String varId = fa.primary().getText();
+				String fieldId = fa.Identifier().getText();
+				IVariableDeclaration var = currentProcedure.getVariable(varId);
+				if(var == null)
+					var = new IVariableDeclaration.UnboundVariable("?" + varId);
+				
+				target = var.field(fieldId);
+			}
+			else
+				target = matchVariable(ctx.leftHandSide().arrayAccess().expressionName()).expression(); // TODO may send null
 			IExpression exp = expressionStack.pop();
 			int dims = ctx.leftHandSide().arrayAccess().expression().size();
 			// TODO this.?
-			statement = blockStack.peek().addArrayElementAssignment(var, exp, getIndexes(dims));
+			statement = blockStack.peek().addArrayElementAssignment(target, exp, getStackTop(dims));
 		}
 		else if(ctx.leftHandSide().fieldAccess() != null) {
 			System.out.println(ctx.leftHandSide().fieldAccess().getText());
@@ -202,10 +254,6 @@ class ParserListener extends Java8ParserBaseListener {
 
 		if(statement != null && containedIn(ctx, BasicForStatementContext.class))
 			statement.setFlag(Keyword.FOR.name());
-
-		// TODO records
-
-		// TODO constructor call
 	}
 
 
@@ -296,9 +344,12 @@ class ParserListener extends Java8ParserBaseListener {
 				for(IVariableDeclaration f : classType.getFields())
 					if(f.getId().equals(targetVarId)) {
 						var = f;
-						args.add(var.expression());
 						break;
 					}
+			}	
+			if(var != null) {
+				args.add(var.expression());
+				p = aux.getMethod(var.getType().getId(), methodId);
 			}
 
 			if(var == null) { // namespace
@@ -309,12 +360,8 @@ class ParserListener extends Java8ParserBaseListener {
 					}	
 			}
 
-			if(p == null && var == null) {
-				IRecordType varType = findVariableType(targetVarId);
-				p = matchInstanceProcedure(methodId, varType, argList);
-				if(var == null)
-					var = new IVariableDeclaration.UnboundVariable(targetVarId);
-				args.add(var.expression());
+			if(var == null) {
+				var = new IVariableDeclaration.UnboundVariable(targetVarId);
 			}
 		}
 		else {
@@ -324,8 +371,9 @@ class ParserListener extends Java8ParserBaseListener {
 			else
 				p = matchStaticProcedure(methodId, argList);
 		}
+
 		if(p == null)
-			p = new IProcedure.UnboundProcedure(methodId);
+			p = new IProcedure.UnboundProcedure("??" + methodId);
 
 		if(argList != null) {
 			argList.children.forEach(c -> {
@@ -343,9 +391,6 @@ class ParserListener extends Java8ParserBaseListener {
 
 
 	private IRecordType findVariableType(String id) {
-		//		if(id.equals(Keyword.THIS.keyword()) && currentProcedure.is(ParserAux.INSTANCE_FLAG))
-		//			return classType; 
-
 		IVariableDeclaration v = currentProcedure.getVariable(id);
 		IType t = v == null ? null : v.getType();
 		return t instanceof IRecordType ? (IRecordType) t : null;
@@ -356,6 +401,7 @@ class ParserListener extends Java8ParserBaseListener {
 
 	@Override
 	public void enterExpressionName(ExpressionNameContext ctx) {
+		//		System.out.println("EXP " + ctx.getText() + "  " + ctx.getParent().getClass());
 		if(ctx.getParent() instanceof PostfixExpressionContext) {
 			IConstantDeclaration con = matchConstant(ctx.getChild(0));
 			if(con != null) {
@@ -381,29 +427,36 @@ class ParserListener extends Java8ParserBaseListener {
 	}
 
 
-	@Override
-	public void enterFieldAccess_lf_primary(FieldAccess_lf_primaryContext ctx) {
-		System.out.println("fiel ass primary" + ctx.getText() + " " + ctx.getParent().getClass());
-	}
-
-	@Override
-	public void enterFieldAccess_lfno_primary(FieldAccess_lfno_primaryContext ctx) {
-		System.out.println("fiel ass lfno" + ctx.getText() + " " + ctx.getParent().getClass());
-	}
-
-	@Override
-	public void enterFieldAccess(FieldAccessContext ctx) {
-		System.out.println("fiel ass " + ctx.getText() + " " + ctx.getParent().getClass());
-	}
+//	@Override
+//	public void enterFieldAccess_lf_primary(FieldAccess_lf_primaryContext ctx) {
+//		System.out.println("fiel ass primary" + ctx.getText() + " " + ctx.getParent().getClass());
+//	}
+//
+//	@Override
+//	public void enterFieldAccess_lfno_primary(FieldAccess_lfno_primaryContext ctx) {
+//		System.out.println("fiel ass lfno" + ctx.getText() + " " + ctx.getParent().getClass());
+//	}
+//
+//	@Override
+//	public void enterFieldAccess(FieldAccessContext ctx) {
+//		System.out.println("fiel ass " + ctx.getText() + " " + ctx.getParent().getClass());
+//	}
 
 	@Override
 	public void exitArrayAccess_lfno_primary(ArrayAccess_lfno_primaryContext ctx) {
+		// TODO array access call target
+		// tmp
+		if(ctx.expressionName() == null)
+			System.err.println("problem array access: " + ctx.getText());
+		IExpression[] indexes = getStackTop(ctx.expression().size());
 		IVariableDeclaration var = matchVariable(ctx.expressionName());
-		expressionStack.push(var.element(getIndexes(ctx.expression().size())).expression());
-		super.exitArrayAccess_lfno_primary(ctx);
+		if(var.isRecordField())
+			expressionStack.push(currentProcedure.getVariable(ParserAux.THIS).field(var).element(indexes));
+		else
+			expressionStack.push(var.element(indexes));
 	}
 
-	private IExpression[] getIndexes(int n) {
+	private IExpression[] getStackTop(int n) {
 		IExpression[] indexes = new IExpression[n];
 		while(n-- > 0)
 			indexes[n] = expressionStack.pop();
@@ -438,34 +491,35 @@ class ParserListener extends Java8ParserBaseListener {
 
 
 		if(ctx.arrayInitializer() != null) {
-			int dims = ctx.dims().getChildCount();
-			expressionStack.push(t.array().heapAllocation(getIndexes(dims)));
-			//			// TODO array initializer
-			System.out.println("intin " + ctx.arrayInitializer().getText());
+			int elements = ctx.arrayInitializer().variableInitializerList().variableInitializer().size();
+			expressionStack.push(t.array().heapAllocationWith(getStackTop(elements)));
 		}
 		else {
 			int dims = ctx.dimExprs().dimExpr().size();
-			expressionStack.push(t.array().heapAllocation(getIndexes(dims)));
+			expressionStack.push(t.array().heapAllocation(getStackTop(dims)));
 
 		}
-		//		else 
-		//			aux.unsupported("array creation", ctx);
-
 	}
 
 	@Override
 	public void exitClassInstanceCreationExpression_lfno_primary(
 			ClassInstanceCreationExpression_lfno_primaryContext ctx) {
 		IType t = aux.matchRecordType(ctx.Identifier().get(0));
-		if(t instanceof IReferenceType && (((IReferenceType) t).getTarget() instanceof IRecordType))
-			expressionStack.push(((IRecordType)((IReferenceType)t).getTarget()).heapAllocation());
+		if(t instanceof IReferenceType && (((IReferenceType) t).getTarget() instanceof IRecordType)) {
+			int size = ctx.argumentList() == null ? 0 : ctx.argumentList().expression().size();
+			if(size == 0) {
+				expressionStack.push(((IRecordType)((IReferenceType)t).getTarget()).heapAllocation());
+			}
+			else {
+
+				IProcedure c = aux.getConstructor(t, size); // TODO arg types
+				if(c == null)
+					c = new IProcedure.UnboundProcedure("?" + t.getId()); 
+				expressionStack.push(c.expression(getStackTop(size)));
+			}
+		}
 		else
 			aux.unsupported("class type", ctx);
-
-		// Temporary
-		int size = ctx.argumentList().expression().size();
-		while(size-- > 0)
-			expressionStack.pop();
 	}
 
 	@Override
@@ -475,21 +529,37 @@ class ParserListener extends Java8ParserBaseListener {
 		System.err.println("class instance " + ctx.getText());
 	}
 
-	@Override
-	public void exitElementValueArrayInitializer(ElementValueArrayInitializerContext ctx) {
-		int size = ctx.elementValueList().elementValue().size();
-		aux.unsupported("array init " + size, ctx);
-	}
+	//	@Override
+	//	public void exitElementValueArrayInitializer(ElementValueArrayInitializerContext ctx) {
+	//		int size = ctx.elementValueList().elementValue().size();
+	//		aux.unsupported("array init " + size, ctx);
+	//	}
+
+	//	@Override
+	//	public void exitArrayInitializer(ArrayInitializerContext ctx) {
+	//		expressionStack.push(IType.INT.array().heapAllocation(dimensions))
+	//		aux.unsupported("array init " + ctx.getParent().getClass(), ctx);
+	//		for (VariableInitializerContext i : ctx.variableInitializerList().variableInitializer()) {
+	//			System.err.println(i.getText());
+	//		}
+	//		expressionStack.push(e);
+	// pop unused
+	//		expressionStack.push(ILiteral.getNull());
+	//	}
 
 	@Override
-	public void exitArrayInitializer(ArrayInitializerContext ctx) {
-		//		expressionStack.push(IType.INT.array().heapAllocation(dimensions))
-		aux.unsupported("array init ", ctx.getParent());
-		expressionStack.push(ILiteral.getNull());
+	public void exitMethodInvocation_lf_primary(MethodInvocation_lf_primaryContext ctx) {
+//		System.out.println("MP " + prim.getText());
+		PrimaryContext prim = (PrimaryContext) ctx.getParent().getParent();
+		PrimaryNoNewArray_lfno_primaryContext c = prim.primaryNoNewArray_lfno_primary();
+		String fieldId = c.getText();
+		String methodId = ctx.Identifier().getText();
+		handleMethodCall(fieldId, methodId, ctx.argumentList(), false);
 	}
-
+	
 	@Override
 	public void exitMethodInvocation_lfno_primary(MethodInvocation_lfno_primaryContext ctx) {
+//		System.out.println("M " + ctx.getText());
 		String varId = ctx.typeName() != null ? ctx.typeName().getText() : null;
 		String methodId = ctx.methodName() != null ? ctx.methodName().Identifier().getText() : ctx.Identifier().getText();
 		handleMethodCall(varId, methodId, ctx.argumentList(), false);
@@ -517,6 +587,8 @@ class ParserListener extends Java8ParserBaseListener {
 	@Override
 	public void exitThrowStatement(ThrowStatementContext ctx) {
 		aux.unsupported("throws", ctx);
+		expressionStack.pop(); // exception object
+		blockStack.peek().addReturn();
 	}
 
 	@Override
@@ -655,6 +727,18 @@ class ParserListener extends Java8ParserBaseListener {
 		return false;
 	}
 
+	private boolean contains(RuleContext ctx, Class<?> t) {
+		RuleContext parent = ctx.getParent();
+		for(int i = 0; i < ctx.getChildCount(); i++) {
+			ParseTree child = ctx.getChild(i);
+			if(child.getClass().equals(t))
+				return true;
+			else if(child instanceof RuleContext && contains((RuleContext) child, t))
+				return true;
+		}
+		return false;
+	}
+
 	private void pushBinaryOperation(TerminalNode ... nodes) {
 		for(TerminalNode node : nodes) {
 			if(node != null) {
@@ -679,7 +763,7 @@ class ParserListener extends Java8ParserBaseListener {
 
 		IProcedure proc = null;
 		for (IProcedure p : aux.allMethods()) {
-			if(p.is(ParserAux.INSTANCE_FLAG) && p.getId().equals(id) && p.getParameters().size() == n) // TODO arg types
+			if(p.is(ParserAux.INSTANCE_FLAG) && id.equals(p.getId()) && p.getParameters().size() == n) // TODO arg types
 				proc = p;
 		}
 
@@ -715,7 +799,7 @@ class ParserListener extends Java8ParserBaseListener {
 		Token t = ctx instanceof TerminalNode ? ((TerminalNode) ctx).getSymbol() : ((ParserRuleContext) ctx).getStart();
 
 		System.err.println("unbound " + id + "  " + ctx.getClass() + "  " + classType.getId() + "  " + t.getLine());
-		return new IVariableDeclaration.UnboundVariable(id);
+		return new IVariableDeclaration.UnboundVariable("?" + id);
 	}
 
 	private IConstantDeclaration matchConstant(ParseTree ctx) {

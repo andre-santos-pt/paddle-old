@@ -29,6 +29,7 @@ public class TestFactorial extends BaseTest {
 	@Case("0")
 	public void testBaseCase(IExecutionData data) {
 		equal(1, data.getReturnValue());
+		System.out.println(factorial.isRecursive());
 	}
 	
 	@Case("5")
