@@ -56,8 +56,8 @@ public class ParserAux {
 
 	void unsupported(String text, ParseTree ctx) {
 		Token t = ctx instanceof TerminalNode ? ((TerminalNode) ctx).getSymbol() : ((ParserRuleContext) ctx).getStart();
-		System.err.println("unsupported " + text + ": " + ctx.getText() +
-				" location " + t.getInputStream().getSourceName() + ":" + t.getLine());
+//		System.err.println("unsupported " + text + ": " + ctx.getText() +
+//				" location " + t.getInputStream().getSourceName() + ":" + t.getLine());
 		unsupported.add(ctx);
 	}
 

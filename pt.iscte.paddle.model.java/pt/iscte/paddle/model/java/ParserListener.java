@@ -240,7 +240,6 @@ class ParserListener extends Java8ParserBaseListener {
 			statement = blockStack.peek().addArrayElementAssignment(target, exp, getStackTop(dims));
 		}
 		else if(ctx.leftHandSide().fieldAccess() != null) {
-			System.out.println(ctx.leftHandSide().fieldAccess().getText());
 			FieldAccessContext f = ctx.leftHandSide().fieldAccess();
 			IVariableDeclaration var = matchVariable(f.getChild(0));
 			IExpression exp = var.expression();
@@ -401,8 +400,9 @@ class ParserListener extends Java8ParserBaseListener {
 
 	@Override
 	public void enterExpressionName(ExpressionNameContext ctx) {
-		//		System.out.println("EXP " + ctx.getText() + "  " + ctx.getParent().getClass());
+//				System.out.println("EXP " + ctx.getText() + "  " + ctx.getParent().getParent().getClass());
 		if(ctx.getParent() instanceof PostfixExpressionContext) {
+			
 			IConstantDeclaration con = matchConstant(ctx.getChild(0));
 			if(con != null) {
 				expressionStack.push(con.expression());
@@ -450,9 +450,9 @@ class ParserListener extends Java8ParserBaseListener {
 			System.err.println("problem array access: " + ctx.getText());
 		IExpression[] indexes = getStackTop(ctx.expression().size());
 		IVariableDeclaration var = matchVariable(ctx.expressionName());
-		if(var.isRecordField())
-			expressionStack.push(currentProcedure.getVariable(ParserAux.THIS).field(var).element(indexes));
-		else
+//		if(var.isRecordField())
+//			expressionStack.push(currentProcedure.getVariable(ParserAux.THIS).field(var).element(indexes));
+//		else
 			expressionStack.push(var.element(indexes));
 	}
 
@@ -550,7 +550,7 @@ class ParserListener extends Java8ParserBaseListener {
 	@Override
 	public void exitMethodInvocation_lf_primary(MethodInvocation_lf_primaryContext ctx) {
 //		System.out.println("MP " + prim.getText());
-		PrimaryContext prim = (PrimaryContext) ctx.getParent().getParent();
+		PrimaryContext prim = (PrimaryContext) ctx.getParent().getParent(); // TODO problem other types
 		PrimaryNoNewArray_lfno_primaryContext c = prim.primaryNoNewArray_lfno_primary();
 		String fieldId = c.getText();
 		String methodId = ctx.Identifier().getText();
@@ -785,7 +785,32 @@ class ParserListener extends Java8ParserBaseListener {
 	}
 
 	private IVariableDeclaration matchVariable(ParseTree ctx) {
-		String id = ctx.getText();
+		String[] parts = ctx.getText().split("\\.");
+		IVariableDeclaration v = getVariable(parts[0]);
+		if(parts.length > 1) {
+			IRecordType type = (IRecordType) ((IReferenceType) v.getType()).getTarget();
+			for(int i = 1; i < parts.length; i++)
+				v = type.getField(parts[i]);
+			
+		}
+		return v;
+//		for(IVariableDeclaration v : currentProcedure.getVariables())
+//			if(v.getId().equals(id))
+//				return v;
+//
+//		if(currentProcedure.is(ParserAux.INSTANCE_FLAG) || currentProcedure.is(ParserAux.CONSTRUCTOR_FLAG)) {
+//			for(IVariableDeclaration v : classType)
+//				if(v.getId().equals(id))
+//					return v;
+//		}
+
+//		Token t = ctx instanceof TerminalNode ? ((TerminalNode) ctx).getSymbol() : ((ParserRuleContext) ctx).getStart();
+//		String id = ctx.getText();
+//		System.err.println("unbound " + id + "  " + ctx.getClass() + "  " + classType.getId() + "  " + t.getLine());
+//		return new IVariableDeclaration.UnboundVariable("?" + id);
+	}
+
+	private IVariableDeclaration getVariable(String id) {
 		for(IVariableDeclaration v : currentProcedure.getVariables())
 			if(v.getId().equals(id))
 				return v;
@@ -795,13 +820,10 @@ class ParserListener extends Java8ParserBaseListener {
 				if(v.getId().equals(id))
 					return v;
 		}
-
-		Token t = ctx instanceof TerminalNode ? ((TerminalNode) ctx).getSymbol() : ((ParserRuleContext) ctx).getStart();
-
-		System.err.println("unbound " + id + "  " + ctx.getClass() + "  " + classType.getId() + "  " + t.getLine());
+		System.err.println("unbound " + id + "  " + classType.getId());
 		return new IVariableDeclaration.UnboundVariable("?" + id);
 	}
-
+	
 	private IConstantDeclaration matchConstant(ParseTree ctx) {
 		String id = classType.getId() + "." + ctx.getText();
 		for(IConstantDeclaration c : module.getConstants())
