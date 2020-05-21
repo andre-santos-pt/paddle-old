@@ -55,7 +55,7 @@ public enum PrimitiveType implements IValueType {
 		
 		@Override
 		public IExpression getDefaultExpression() {
-			return IType.INT.literal(0);
+			return literal(0);
 		}
 	}, 
 	DOUBLE {
@@ -99,7 +99,7 @@ public enum PrimitiveType implements IValueType {
 		
 		@Override
 		public IExpression getDefaultExpression() {
-			return IType.DOUBLE.literal(0.0);
+			return literal(0.0);
 		}
 	}, 
 	BOOLEAN {
@@ -138,12 +138,52 @@ public enum PrimitiveType implements IValueType {
 		
 		@Override
 		public IExpression getDefaultExpression() {
-			return IType.BOOLEAN.literal(false);
+			return literal(false);
 		}
-	};
-	
-//	private static ILiteral TRUE = new Literal(BOOLEAN, "true");
-//	private static ILiteral FALSE = new Literal(BOOLEAN, "false");
+	},
+	CHAR {
+		@Override
+		public boolean matchesPrimitiveType(Class<?> clazz) {
+			return clazz.equals(char.class);
+		}
+
+		@Override
+		public ILiteral literal(Object obj) {
+			assert obj instanceof Character;
+			return new Literal(CHAR, "'" +  ((Character) obj).charValue() + "'");
+		}
+
+		@Override
+		public Object getDefaultValue() {
+			return Character.valueOf('a');
+		}
+
+		@Override
+		public int getMemoryBytes() {
+			return 2;
+		}
+
+		@Override
+		public IExpression getDefaultExpression() {
+			return literal('a');
+		}
+
+		@Override
+		public boolean matches(Object object) {
+			return Character.class.isInstance(object);
+		}
+
+		@Override
+		public boolean matchesLiteral(String literal) {
+			return literal.matches("'\\.'");
+		}
+
+		@Override
+		public Object create(String literal) {
+			return Character.valueOf(literal.charAt(1));
+		}
+	}
+	;
 
 	@Override
 	public String toString() {

@@ -41,12 +41,16 @@ public interface IType extends IProgramElement  {
 		return this instanceof IReferenceType;
 	}
 	
+	default boolean isArrayReference() {
+		return isReference() && ((IReferenceType) this).getTarget() instanceof IArrayType;
+	}
+	
 	IReferenceType reference();
 	
 	IValueType INT = PrimitiveType.INT;
 	IValueType DOUBLE = PrimitiveType.DOUBLE;
 	IValueType BOOLEAN = PrimitiveType.BOOLEAN;
-	// TODO IDataType CHAR
+	IValueType CHAR = PrimitiveType.CHAR;
 
 	List<IValueType> VALUE_TYPES = List.of(INT, DOUBLE, BOOLEAN);
 

@@ -175,18 +175,25 @@ public interface IStatementContainer {
 		return getBlock().addReturnAt(index);
 	}
 	
-	default IReturn addReturn(IVariableDeclaration variable) {
-		return addReturn(variable.expression());
-	}
+//	default IReturn addReturn(IVariableDeclaration variable) {
+//		return addReturn(variable.expression());
+//	}
 	
-	default IReturn addReturn(IExpression expression) {
+	default IReturn addReturn(IExpressionView<? extends IExpression> expression) {
 		return addReturnAt(expression, getBlock().getSize());
 	}
 	
-	default IReturn addReturnAt(IExpression expression, int index) {
-		return getBlock().addReturnAt(expression, index);
+	default IReturn addReturnAt(IExpressionView<? extends IExpression> expression, int index) {
+		return getBlock().addReturnAt(expression.expression(), index);
 	}
 	
+	default IReturn addReturnError(IExpressionView<? extends IExpression> expression) {
+		return addReturnErrorAt(expression, getBlock().getSize());
+	}
+	
+	default IReturn addReturnErrorAt(IExpressionView<? extends IExpression> expression, int index) {
+		return getBlock().addReturnErrorAt(expression, index);
+	}
 	
 	
 	default IBreak addBreak() {

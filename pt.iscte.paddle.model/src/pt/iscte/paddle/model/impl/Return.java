@@ -9,22 +9,29 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IReturn;
 
 class Return extends Statement implements IReturn {
-
+	
 	private final IExpression expression;
+	private final boolean error;
 	
 	public Return(Block parent, int index) {
-		this(parent, null, index);
+		this(parent, null, index, false);
 	}
 	
-	public Return(Block parent, IExpression expression, int index) {
+	public Return(Block parent, IExpression expression, int index, boolean error) {
 		super(parent);
 		this.expression = expression;
+		this.error = error;
 		addToParent(index);
 	}
 
 	@Override
 	public IExpression getExpression() {
 		return expression;
+	}
+	
+	@Override
+	public boolean isError() {
+		return error;
 	}
 	
 	@Override

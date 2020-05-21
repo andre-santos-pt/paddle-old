@@ -22,7 +22,7 @@ import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableDereference;
 
-public class Types extends Rule {
+public class CheckTypes extends Rule {
 
 	@Override
 	public boolean visit(IUnaryExpression exp) {
@@ -46,7 +46,7 @@ public class Types extends Rule {
 	public boolean visit(IReturn returnStatement) {
 		IProcedure procedure = returnStatement.getParent().getProcedure();
 		if(procedure.getReturnType().isVoid())  {
-			if(returnStatement.getExpression() != null)
+			if(!returnStatement.isError() && returnStatement.getExpression() != null)
 				addProblem("void procedures cannot return values", procedure, returnStatement);
 		}
 		else {
@@ -67,15 +67,17 @@ public class Types extends Rule {
 
 	@Override
 	public boolean visit(IProcedureCall exp) {
-		List<IVariableDeclaration> parameters = exp.getProcedure().getParameters();
-		List<IExpression> arguments = exp.getArguments();
-		if(parameters.size() != arguments.size()) {
-			addProblem(ISemanticProblem.create("wrong number of arguments, given that " + exp.getProcedure().longSignature() + " has " + parameters.size() + " parameters.", exp.getProcedure(), exp));
-			return true;
-		}
-		for (int i = 0; i < parameters.size(); i++) {
-			if(!parameters.get(i).getType().isCompatible(arguments.get(i).getType()))
-				addProblem(ISemanticProblem.create(exp + ", incompatible argument (" + i + ")", parameters.get(i).getType(), arguments.get(i).getType()));
+		if(exp.isBound()) {
+			List<IVariableDeclaration> parameters = exp.getProcedure().getParameters();
+			List<IExpression> arguments = exp.getArguments();
+			if(parameters.size() != arguments.size()) {
+				addProblem(ISemanticProblem.create("wrong number of arguments, given that " + exp.getProcedure().longSignature() + " has " + parameters.size() + " parameters.", exp.getProcedure(), exp));
+				return true;
+			}
+			for (int i = 0; i < parameters.size(); i++) {
+				if(!parameters.get(i).getType().isCompatible(arguments.get(i).getType()))
+					addProblem(ISemanticProblem.create(exp + ", incompatible argument (" + i + ")", parameters.get(i).getType(), arguments.get(i).getType()));
+			}
 		}
 		return true;
 	}
@@ -102,10 +104,10 @@ public class Types extends Rule {
 	@Override
 	public boolean visit(IVariableAssignment assignment) {
 		checkAssignmentTypes(assignment.getTarget(), assignment.getExpression());
-		
+
 		if(!assignment.getOwnerProcedure().getVariables().contains(assignment.getTarget()))
 			addProblem("unknown variable " + assignment.getTarget().getId(), assignment.getTarget());
-		
+
 		return true;
 	}
 
