@@ -70,6 +70,8 @@ public interface IProcedureDeclaration extends IProgramElement {
 		return hasSameSignature(procedure) && getReturnType().equals(procedure.getReturnType());
 	}
 
+	
+
 
 
 }

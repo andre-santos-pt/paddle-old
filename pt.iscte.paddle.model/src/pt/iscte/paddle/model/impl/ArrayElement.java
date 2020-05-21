@@ -13,13 +13,14 @@ import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IArrayElement;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IModel2CodeTranslator;
+import pt.iscte.paddle.model.ITargetExpression;
 
 class ArrayElement extends Expression implements IArrayElement {
-	private final IExpression target;
+	private final ITargetExpression target;
 	private final List<IExpression> parts;
 	private final List<IExpression> indexes;
 	
-	public ArrayElement(IExpression target, List<IExpression> indexes) {
+	public ArrayElement(ITargetExpression target, List<IExpression> indexes) {
 		this.target = target;
 		this.parts = new ArrayList<>(1 + indexes.size());
 		this.parts.add(target);
@@ -33,7 +34,7 @@ class ArrayElement extends Expression implements IArrayElement {
 	}
 	
 	@Override
-	public IExpression getTarget() {
+	public ITargetExpression getTarget() {
 		return target;
 	}
 	

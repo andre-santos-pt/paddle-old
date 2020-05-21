@@ -12,6 +12,7 @@ import pt.iscte.paddle.model.IConditionalExpression;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IExpressionIterator;
 import pt.iscte.paddle.model.IRecordFieldExpression;
+import pt.iscte.paddle.model.ITargetExpression;
 import pt.iscte.paddle.model.IVariableDeclaration;
 
 abstract class Expression extends ProgramElement implements IEvaluable, IExpression {
@@ -32,7 +33,8 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 	
 	@Override
 	public IArrayElement element(List<IExpression> indexes) {
-		return new ArrayElement(this, indexes);
+		assert this instanceof ITargetExpression;
+		return new ArrayElement((ITargetExpression) this, indexes);
 	}
 	
 	@Override

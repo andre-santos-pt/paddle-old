@@ -6,6 +6,7 @@ import java.util.List;
 public interface IReturn extends IStatement {
 	IExpression getExpression(); // may be null (void)
 	IBlock getParent();
+	boolean isError();
 
 	default boolean isVoid() {
 		return getExpression() == null;

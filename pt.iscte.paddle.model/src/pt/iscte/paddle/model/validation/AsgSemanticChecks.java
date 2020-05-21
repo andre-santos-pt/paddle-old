@@ -11,7 +11,7 @@ public class AsgSemanticChecks implements ISemanticChecker {
 		return List.of(
 				Args.class,
 				BreakContinueLocation.class,
-				Types.class
+				CheckTypes.class
 				);
 	}
 

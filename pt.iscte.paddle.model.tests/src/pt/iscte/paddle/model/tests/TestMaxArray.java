@@ -15,6 +15,8 @@ import pt.iscte.paddle.model.cfg.IBranchNode;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.cfg.IStatementNode;
 
+
+// TODO test Return error
 public class TestMaxArray extends BaseTest {
 
 	IProcedure max = module.addProcedure(INT);

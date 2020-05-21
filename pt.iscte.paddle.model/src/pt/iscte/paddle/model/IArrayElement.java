@@ -2,9 +2,9 @@ package pt.iscte.paddle.model;
 
 import java.util.List;
 
-public interface IArrayElement extends ICompositeExpression {
+public interface IArrayElement extends ICompositeExpression, ITargetExpression {
 
-	IExpression getTarget();
+	ITargetExpression getTarget();
 	
 	List<IExpression> getIndexes(); // size() >= 1
 	

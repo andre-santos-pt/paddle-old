@@ -10,6 +10,7 @@ import pt.iscte.paddle.model.IBlockElement;
 import pt.iscte.paddle.model.IBreak;
 import pt.iscte.paddle.model.IContinue;
 import pt.iscte.paddle.model.IExpression;
+import pt.iscte.paddle.model.IExpressionView;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
@@ -315,8 +316,12 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	}
 	
 	@Override
-	public IReturn addReturnAt(IExpression expression, int index) {
-		return new Return(this, expression, index);
+	public IReturn addReturnAt(IExpressionView<? extends IExpression> expression, int index) {
+		return new Return(this, expression.expression(), index, false);
+	}
+	
+	public IReturn addReturnErrorAt(IExpressionView<? extends IExpression> expression, int index) {
+		return new Return(this, expression.expression(), index, true);
 	}
 	
 	@Override

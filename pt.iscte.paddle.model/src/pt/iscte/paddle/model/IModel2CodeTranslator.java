@@ -147,7 +147,9 @@ public interface IModel2CodeTranslator {
 			}
 			else if(e instanceof IReturn) {
 				IExpression exp = ((IReturn) e).getExpression();
-				return exp == null ? "return;" : "return " + exp.translate(this) + ";\n";
+				String ret = exp == null ? "return;" : "return " + exp.translate(this) + ";\n";
+				if(((IReturn) e).isError())
+					ret += " // (error)";
 			}
 			else if(e instanceof IBreak)
 				return "break;\n";

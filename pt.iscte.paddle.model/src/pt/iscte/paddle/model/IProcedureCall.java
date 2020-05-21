@@ -15,7 +15,7 @@ public interface IProcedureCall extends IStatement {
 	}
 	
 	default boolean isBound() {
-		return getProcedure() != null;
+		return !(getProcedure() instanceof IProcedure.UnboundProcedure);
 	}
 	
 	
