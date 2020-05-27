@@ -27,13 +27,14 @@ import pt.iscte.paddle.model.javaparser.antlr.JavaLexer;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.CompilationUnitContext;
 
+// TODO API for text
 public class Java2Paddle {
 
 	private final String id;
 	private final File[] javaFiles;
 	boolean errors;
 	private ParserAux aux;
-
+	
 	public Java2Paddle(File file) {
 		this(file, f -> false);
 	}
@@ -58,6 +59,7 @@ public class Java2Paddle {
 			try {
 //				String charset = UniversalDetector.detectCharset(f);
 				s = CharStreams.fromFileName(f.getAbsolutePath(), Charset.forName("UTF-8"));
+				
 				JavaLexer lexer = new JavaLexer(s);
 				JavaParser p = new JavaParser(new CommonTokenStream(lexer));
 //				p.getInterpreter().setPredictionMode(PredictionMode.SLL);
