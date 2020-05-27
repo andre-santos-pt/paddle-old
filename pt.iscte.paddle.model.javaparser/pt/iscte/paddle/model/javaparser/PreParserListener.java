@@ -1,5 +1,7 @@
 package pt.iscte.paddle.model.javaparser;
 
+import java.io.File;
+
 import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
@@ -25,11 +27,13 @@ class PreParserListener extends JavaParserBaseListener {
 	private final IRecordType selfType;
 	private final ParserAux aux;
 	private IProcedure proc;
+	private File file;
 
-	public PreParserListener(IModule module, IRecordType selfType, ParserAux aux) {
+	public PreParserListener(IModule module, IRecordType selfType, File file, ParserAux aux) {
 		this.module = module;
 		this.selfType = selfType;
 		this.aux = aux;
+		this.file = file;
 	}
 
 	// TODO global vars
@@ -83,6 +87,8 @@ class PreParserListener extends JavaParserBaseListener {
 				IType.VOID : aux.matchType(typeTypeOrVoid.typeType());
 		proc = module.addProcedure(id, type);
 		proc.setProperty("namespace", selfType.getId());
+		proc.setProperty(SourceLocation.class, new SourceLocation(file, ctx.getStart().getLine()));
+		
 		ClassBodyDeclarationContext classMember = (ClassBodyDeclarationContext) ctx.getParent().getParent();
 		if(!aux.hasModifier(classMember.modifier(), Keyword.STATIC)) {
 			proc.setFlag(ParserAux.INSTANCE_FLAG);

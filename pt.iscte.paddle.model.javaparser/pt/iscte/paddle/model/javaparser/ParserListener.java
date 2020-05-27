@@ -1,5 +1,6 @@
 package pt.iscte.paddle.model.javaparser;
 
+import java.io.File;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -20,12 +21,17 @@ import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IReferenceType;
+import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
+import pt.iscte.paddle.model.IStatement;
 import pt.iscte.paddle.model.ITargetExpression;
 import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableExpression;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ArgumentsContext;
@@ -49,18 +55,20 @@ class ParserListener extends JavaParserBaseListener {
 	Deque<IExpression> expStack;
 
 	private final IRecordType classType;
-
+	private final File file;
+	
 	private Map<IVariableDeclaration, IExpression> fieldInit = new HashMap<>();
 
 	private final ParserAux aux;
 
-	public ParserListener(IModule module, IRecordType classType, ParserAux aux) {
+	public ParserListener(IModule module, IRecordType classType, File file, ParserAux aux) {
 		assert module.getId() != null;
 		this.module = module;
 		this.classType = classType;
 		this.aux = aux;
 		blockStack = new ArrayDeque<>();
 		expStack = new ArrayDeque<>();
+		this.file = file;
 	}
 
 	@Override
@@ -112,8 +120,10 @@ class ParserListener extends JavaParserBaseListener {
 		for (VariableDeclaratorContext v : ctx.variableDeclarators().variableDeclarator()) {
 			IVariableDeclaration var = blockStack.peek().addVariable(type);
 			var.setId(v.variableDeclaratorId().IDENTIFIER().getText());
-			if(v.variableInitializer() != null)
-				blockStack.peek().addAssignment(var, stackTop.get(i++));
+			if(v.variableInitializer() != null) {
+				IVariableAssignment ass = blockStack.peek().addAssignment(var, stackTop.get(i++));
+				setLocation(ass, ctx);
+			}
 		}
 	}
 
@@ -122,16 +132,16 @@ class ParserListener extends JavaParserBaseListener {
 		StatementContext stat = (StatementContext) ctx.getParent();
 		if(stat.IF() != null) {
 			ISelection sel;
-			if(stat.ELSE() == null) {
+			if(stat.ELSE() == null)
 				sel = blockStack.peek().addSelection(expStack.pop());
-			}
-			else {
+			else
 				sel = blockStack.peek().addSelectionWithAlternative(expStack.pop());
-			}
+			setLocation(sel, ctx);
 			blockStack.push(sel.getBlock());
 		}
 		else if(stat.WHILE() != null) {
 			ILoop loop = blockStack.peek().addLoop(expStack.pop());
+			setLocation(loop, ctx);
 			blockStack.push(loop.getBlock());
 		}
 	}
@@ -140,6 +150,7 @@ class ParserListener extends JavaParserBaseListener {
 	public void enterForControl(ForControlContext ctx) {
 		// create block
 		IBlock forBlock = blockStack.peek().addBlock();
+		setLocation(forBlock, ctx);
 		forBlock.setFlag(ParserAux.FOR_FLAG);
 		blockStack.push(forBlock);
 	}
@@ -169,18 +180,30 @@ class ParserListener extends JavaParserBaseListener {
 		return false;
 	}
 
+	private void setLocation(IProgramElement e, ParserRuleContext ctx) {
+		e.setProperty(SourceLocation.class, new SourceLocation(file, ctx.getStart().getLine()));
+	}
+	
+	
 	@Override
 	public void exitStatement(StatementContext ctx) {
 		if(ctx.RETURN() != null) {
+			IReturn ret;
 			if(ctx.expression().isEmpty())
-				blockStack.peek().addReturn();
+				ret = blockStack.peek().addReturn();
 			else 
-				blockStack.peek().addReturn(expStack.pop());
+				ret = blockStack.peek().addReturn(expStack.pop());
+			setLocation(ret, ctx);
 		}
 		else if(ctx.THROW() != null) {
-			blockStack.peek().addReturnError(expStack.pop());
+			IReturn ret = blockStack.peek().addReturnError(expStack.pop());
+			setLocation(ret, ctx);
 		}
-
+		else if(ctx.BREAK() != null)
+			; // TODO
+		else if(ctx.CONTINUE() != null)
+			; // TODO
+			
 		if(ctx.getParent() instanceof StatementContext) {
 			IBlock b = blockStack.pop();
 
@@ -329,14 +352,15 @@ class ParserListener extends JavaParserBaseListener {
 			else {
 				IExpression right = expStack.pop();
 				IExpression left = expStack.pop();
+				IStatement stat = null;
 				if(left instanceof IVariableExpression) {
 					IVariableDeclaration var = ((IVariableExpression) left).getVariable();
 					if(var.isLocalVariable())
-						blockStack.peek().addAssignment(var, right);
+						stat = blockStack.peek().addAssignment(var, right);
 					else {
 						assert currentProcedure.is(ParserAux.INSTANCE_FLAG);
 						IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS);
-						blockStack.peek().addRecordFieldAssignment(thisVar.field(var), right);
+						stat = blockStack.peek().addRecordFieldAssignment(thisVar.field(var), right);
 					}
 				}
 				else if(left instanceof IArrayElement) {
@@ -347,11 +371,12 @@ class ParserListener extends JavaParserBaseListener {
 						indexes.add(0, ((IArrayElement) t).getIndexes().get(0));
 						t = ((IArrayElement)t).getTarget();
 					}
-					blockStack.peek().addArrayElementAssignment(t, right, indexes);
+					stat = blockStack.peek().addArrayElementAssignment(t, right, indexes);
 				}
 				else if(left instanceof IRecordFieldExpression) {
-					blockStack.peek().addRecordFieldAssignment((IRecordFieldExpression)left, right);
+					stat = blockStack.peek().addRecordFieldAssignment((IRecordFieldExpression)left, right);
 				}
+				setLocation(stat, ctx);
 			}
 		}
 
@@ -361,7 +386,8 @@ class ParserListener extends JavaParserBaseListener {
 			IExpression left = expStack.pop();
 			if(left instanceof IVariableExpression) {
 				exp = op.on((IVariableExpression) left, exp);
-				blockStack.peek().addAssignment(((IVariableExpression) left).getVariable(), exp);
+				IVariableAssignment ass = blockStack.peek().addAssignment(((IVariableExpression) left).getVariable(), exp);
+				setLocation(ass, ctx);
 			}
 			else 
 				aux.unsupported("+= on array", ctx);
@@ -373,7 +399,8 @@ class ParserListener extends JavaParserBaseListener {
 			else {	
 				IExpression left = expStack.pop();
 				if(left instanceof IVariableExpression) {
-					blockStack.peek().addIncrement(((IVariableExpression) left).getVariable());
+					IVariableAssignment inc = blockStack.peek().addIncrement(((IVariableExpression) left).getVariable());
+					setLocation(inc, ctx);
 				}
 				else
 					aux.unsupported("++ on array", ctx);
@@ -386,7 +413,8 @@ class ParserListener extends JavaParserBaseListener {
 			else {
 				IExpression left = expStack.pop();
 				if(left instanceof IVariableExpression) {
-					blockStack.peek().addDecrement(((IVariableExpression) left).getVariable());
+					IVariableAssignment dec = blockStack.peek().addDecrement(((IVariableExpression) left).getVariable());
+					setLocation(dec, ctx);
 				}
 				else
 					aux.unsupported("-- on array", ctx);
@@ -455,9 +483,10 @@ class ParserListener extends JavaParserBaseListener {
 			args.add(0, currentProcedure.getVariable(ParserAux.THIS).expression());
 
 		if(ctx.getParent().getParent() instanceof StatementContext &&
-				((StatementContext) ctx.getParent().getParent()).statementExpression != null)
-			blockStack.peek().addCall(p, args);
-		else
+				((StatementContext) ctx.getParent().getParent()).statementExpression != null) {
+			IProcedureCall call = blockStack.peek().addCall(p, args);
+			setLocation(call, ctx);
+		} else
 			expStack.push(p.expression(args));
 	}
 
