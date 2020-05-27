@@ -1,19 +1,20 @@
 package pt.iscte.paddle.model.cfg.impl;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
-
-import pt.iscte.paddle.model.IArrayElementAssignment;
-import pt.iscte.paddle.model.IBlock;
-import pt.iscte.paddle.model.IBlock.IVisitor;
-import pt.iscte.paddle.model.IBreak;
-import pt.iscte.paddle.model.IContinue;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariableAssignment;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+
+import pt.iscte.paddle.model.IBlock.IVisitor;
+import pt.iscte.paddle.model.IArrayElementAssignment;
+import pt.iscte.paddle.model.IBlock;
+import pt.iscte.paddle.model.IBreak;
+import pt.iscte.paddle.model.IContinue;
 import pt.iscte.paddle.model.cfg.IBranchNode;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.cfg.INode;
@@ -217,12 +218,6 @@ public class Visitor implements IVisitor {
 		else lastNode.setNext(break_statement);
 
 		breakNodeStack.add(new BreakNode(break_statement, breakStatement.getParent()));
-	}
-
-	@Override
-	public void endVisit(IBlock block) {
-		System.out.println("omdwaiodwandwandawddawndaw");
-		IVisitor.super.endVisit(block);
 	}
 
 	public IBranchNode getLastLoopNode() {

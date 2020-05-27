@@ -134,6 +134,7 @@ public class Handler {
 		
 		if(lastNode instanceof IBranchNode && !((IBranchNode) lastNode).hasBranch()) ((IBranchNode) lastNode).setBranch(ret);
 		else if(lastNode != null && lastNode.getNext() == null) lastNode.setNext(ret);
+		else if (lastNode == null) cfg.getEntryNode().setNext(ret);
 //		else lastNode.getNext().setNext(ret);
 	}
 

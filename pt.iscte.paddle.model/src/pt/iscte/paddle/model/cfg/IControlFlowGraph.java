@@ -1,7 +1,9 @@
 package pt.iscte.paddle.model.cfg;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import pt.iscte.paddle.model.IArrayElementAssignment;
 import pt.iscte.paddle.model.IBlockElement;
@@ -10,10 +12,12 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatement;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
+import pt.iscte.paddle.model.cfg.IControlFlowGraph.Path;
 import pt.iscte.paddle.model.cfg.impl.ControlFlowGraph;
 
 public interface IControlFlowGraph {
@@ -51,38 +55,44 @@ public interface IControlFlowGraph {
 	default List<INode> generateSubCFG(INode source, INode destination){
 		List<INode> nodes = new ArrayList<INode>();
 		nodes.add(getEntryNode());
+		boolean start = false;
 		
-		List<Path> paths = pathsBetweenNodes(source, destination);
-		
-		for (Path path : paths) {
-			path.nodes.forEach(node -> {
-				if(!nodes.contains(node)) nodes.add(node);
-			});
+		for (INode node : getNodes()) {
+			if(node.equals(source)) start = true;
+			if(start) nodes.add(node);
+			if(node.equals(destination)) start = false;
 		}
+		
+//		List<Path> paths = pathsBetweenNodes(source, destination);
+//		
+//		for (Path path : paths) {
+//			path.nodes.forEach(node -> {
+//				if(!nodes.contains(node)) nodes.add(node);
+//			});
+//		}
 		nodes.add(getExitNode());
 		return nodes;
 	}
 	
 	default boolean usedOrChangedBetween(INode source, INode destiny, IVariableDeclaration variable) {
 		List<Path> paths = pathsBetweenNodes(source, destiny);
-		if(paths.size() == 0) return true;
+		if(paths.isEmpty()) return true;
 		for (Path path : paths) {
 
-			INode first = path.getNodes().remove(0);
-			INode last = path.getNodes().remove(path.getNodes().size() - 1);
-
-			if(!((IBlockElement) first.getElement()).getParent().isSame(((IBlockElement) last.getElement()).getParent())) return true;
-
-			for (INode node : path.getNodes()) {
+			path.getNodes().remove(0);
+			path.getNodes().remove(path.getNodes().size() - 1);
+			for (INode node : generateSubCFG(source, destiny)) {
 
 				if(node.getElement() instanceof IArrayElementAssignment 
-						&& (((IArrayElementAssignment) node.getElement()).getTarget().isSame(variable) 
+						&& (((IArrayElementAssignment) node.getElement()).getTarget().isSame(variable.expression()) 
 								|| ((IArrayElementAssignment) node.getElement()).getExpression().includes(variable))) 
 					return true;
-				else if(node.getElement() instanceof IVariableAssignment 
-						&& (((IVariableAssignment) node.getElement()).getTarget().isSame(variable) 
-								|| ((IVariableAssignment) node.getElement()).getExpression().includes(variable))) 
+				else if(node.getElement() instanceof IVariableAssignment
+						&& (((IVariableAssignment) node.getElement()).getTarget().isSame(variable.expression()) 
+								|| ((IVariableAssignment) node.getElement()).getExpression().includes(variable))) {
 					return true;
+				}
+					
 
 				else if(node.getElement() instanceof IProcedureCall) 
 					for (IExpression argument : ((IProcedureCall) node.getElement()).getArguments()) 
