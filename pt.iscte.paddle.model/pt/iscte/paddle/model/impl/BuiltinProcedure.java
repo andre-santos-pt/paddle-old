@@ -9,6 +9,7 @@ import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.interpreter.impl.Value;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IValueType;
+import pt.iscte.paddle.model.IVariableDeclaration;
 
 // TODO different types
 public class BuiltinProcedure extends Procedure {
@@ -20,10 +21,12 @@ public class BuiltinProcedure extends Procedure {
 		assert isValidForBuiltin(method);
 		this.method = method;
 		for (Parameter p : method.getParameters()) {
-			addParameter(matchType(p.getType()));
+			IVariableDeclaration v = addParameter(matchType(p.getType()));
+			v.setId(p.getName());
+			
 		}
 		setId(method.getName());
-		setProperty("namespace", method.getDeclaringClass().getSimpleName());
+		setNamespace(method.getDeclaringClass().getName());
 	}
 
 	public static boolean isValidForBuiltin(Method method) {

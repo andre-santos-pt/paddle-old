@@ -3,14 +3,12 @@ package pt.iscte.paddle.model.javaparser;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Scanner;
 import java.util.function.Predicate;
 
 import org.antlr.v4.runtime.BaseErrorListener;
@@ -44,7 +42,7 @@ public class Java2Paddle {
 		javaFiles = file.isFile() ? new File[] {file} : file.listFiles(f -> f.getName().endsWith(".java") && !exclude.test(f));
 	}
 
-	public boolean check() {
+	public boolean checkSyntax() {
 		class Listener extends BaseErrorListener {
 			int errCount = 0;
 			@Override
@@ -57,19 +55,15 @@ public class Java2Paddle {
 		for(File f : javaFiles) {
 			CharStream s;
 			try {
-//				String charset = UniversalDetector.detectCharset(f);
 				s = CharStreams.fromFileName(f.getAbsolutePath(), Charset.forName("UTF-8"));
-				
 				JavaLexer lexer = new JavaLexer(s);
 				JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-//				p.getInterpreter().setPredictionMode(PredictionMode.SLL);
 				p.addErrorListener(l);
 				CompilationUnitContext cu = p.compilationUnit();
 			} 
 			catch (IOException e) {
 				return false;
-			} finally {
-			}
+			} 
 		}
 		return l.errCount == 0;
 	}
@@ -85,11 +79,11 @@ public class Java2Paddle {
 		for(File f : javaFiles) {
 			String namespace = f.getName().substring(0, f.getName().lastIndexOf('.'));
 			IRecordType t = module.addRecordType(namespace);
+			t.setNamespace(namespace);
 			types.put(t, f);
 		}
 
 		for(Entry<IRecordType, File> e : types.entrySet()) {
-//			String charset = UniversalDetector.detectCharset(e.getValue());
 			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName("UTF-8"));
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
@@ -99,7 +93,6 @@ public class Java2Paddle {
 		}
 
 		for(Entry<IRecordType, File> e : types.entrySet()) {
-//			String charset = UniversalDetector.detectCharset(e.getValue());
 			System.out.println("parsing " + e.getKey().getId() + "  " + e.getValue());
 			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName("UTF-8"));
 			JavaLexer lexer = new JavaLexer(s);
@@ -109,7 +102,6 @@ public class Java2Paddle {
 			w.walk(l, p.compilationUnit());
 			System.out.println("done " + e.getKey().getId() + "\n blocks: " + l.blockStack + "\n exp stack: " + l.expStack);
 		}
-		
 
 		return module;
 	}
@@ -127,19 +119,6 @@ public class Java2Paddle {
 
 	public boolean hasParseProblems() {
 		return false;
-	}
-
-	private static String readSource(File file) {
-		StringBuilder src = new StringBuilder();
-		try {
-			Scanner scanner = new Scanner(file);
-			while(scanner.hasNextLine())
-				src.append(scanner.nextLine()).append('\n');
-			scanner.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return src.toString();
 	}
 
 	public List<Object> getUnsupported() {

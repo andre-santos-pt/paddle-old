@@ -31,7 +31,7 @@ public class Test {
 			File proj = new File(root, ""+n);
 
 			Java2Paddle p = new Java2Paddle(proj, f -> f.getName().equals("ImageUtil.java"));
-			if(p.check()) {
+			if(p.checkSyntax()) {
 				compilationOk.add(proj);
 				 try {
 					IModule m = p.parse();

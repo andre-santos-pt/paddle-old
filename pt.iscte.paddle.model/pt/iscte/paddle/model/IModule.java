@@ -2,7 +2,11 @@ package pt.iscte.paddle.model;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import pt.iscte.paddle.model.commands.ICommand;
 import pt.iscte.paddle.model.impl.Module;
@@ -11,7 +15,7 @@ import pt.iscte.paddle.model.validation.ISemanticProblem;
 /**
  * Mutable
  */
-public interface IModule extends IProgramElement, IListenable<IModule.IListener> {
+public interface IModule extends IModuleView, IProgramElement, IListenable<IModule.IListener> {
 	
 	interface IListener {
 		default void commandExecuted(ICommand<?> command) { }
@@ -37,14 +41,8 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	
 	void redo();
 	
-	default Collection<IModule> getImports() {
-		// TODO imports
-		return List.of();
-	}
 	
-	List<IConstantDeclaration> getConstants();
-	List<IRecordType> getRecordTypes();
-	List<IProcedure> getProcedures();
+	
 	
 
 	default IConstantDeclaration addConstant(IType type, ILiteral value, String ... flags) {
@@ -87,4 +85,46 @@ public interface IModule extends IProgramElement, IListenable<IModule.IListener>
 	List<ISemanticProblem> checkSemantics();
 
 	String translate(IModel2CodeTranslator t);
+	
+	default Set<String> getNamespaces() {
+		Set<String> set = new HashSet<String>();
+		getConstants().forEach(p -> {if(p.getNamespace() != null) set.add(p.getNamespace());});
+		getRecordTypes().forEach(p -> {if(p.getNamespace() != null)  set.add(p.getNamespace());});
+		getProcedures().forEach(p -> {if(p.getNamespace() != null)  set.add(p.getNamespace());});
+		
+		return set;
+	}
+	
+	default IModuleView createNamespaceView(String namespace) {
+		return new View(this, e -> e.getNamespace().equals(namespace));
+	}
+	
+	class View implements IModuleView {
+		private final IModule module;
+		
+		private Predicate<INamespaceElement> filter;
+		
+		View(IModule module, Predicate<INamespaceElement> filter) {
+			this.module = module;
+			this.filter = filter;
+		}
+		
+		public List<IConstantDeclaration> getConstants() {
+			return module.getConstants().stream().filter(filter).collect(Collectors.toList());
+		}
+
+		public List<IRecordType> getRecordTypes() {
+			return module.getRecordTypes().stream().filter(filter).collect(Collectors.toList());
+		}
+
+		public List<IProcedure> getProcedures() {
+			return module.getProcedures().stream().filter(filter).collect(Collectors.toList());
+		}
+
+//		public String translate(IModel2CodeTranslator t) {
+//			// TODO Auto-generated method stub
+//			return null;
+//		}
+		
+	}
 }

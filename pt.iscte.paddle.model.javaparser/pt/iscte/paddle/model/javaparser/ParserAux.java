@@ -24,7 +24,6 @@ import pt.iscte.paddle.model.javaparser.antlr.JavaParser.PrimitiveTypeContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.TypeTypeContext;
 
 class ParserAux {
-	final static String NAMESPACE_FLAG = "namespace";
 	final static String INSTANCE_FLAG = "instance";
 	final static String CONSTRUCTOR_FLAG = "constructor";
 	final static String THIS = Keyword.THIS.keyword();
@@ -179,7 +178,7 @@ class ParserAux {
 
 	public IProcedure getMethod(String namespace, String methodId) {
 		for(IProcedure p : methods.values())
-			if(namespace.equals(p.getProperty("namespace")) && methodId.equals(p.getId()))
+			if(namespace.equals(p.getNamespace()) && methodId.equals(p.getId()))
 				return p;
 		return null;
 	}

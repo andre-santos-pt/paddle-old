@@ -64,6 +64,7 @@ class PreParserListener extends JavaParserBaseListener {
 
 					IConstantDeclaration con = module.addConstant(type, ((IValueType) type).literal(obj));
 					con.setId(selfType.getId() + "." + varId);
+					con.setNamespace(selfType.getId());
 				}
 				else {
 					aux.unsupported("constant type", varDec);
@@ -86,7 +87,7 @@ class PreParserListener extends JavaParserBaseListener {
 		IType type = typeTypeOrVoid.VOID() != null ? 
 				IType.VOID : aux.matchType(typeTypeOrVoid.typeType());
 		proc = module.addProcedure(id, type);
-		proc.setProperty("namespace", selfType.getId());
+		proc.setNamespace(selfType.getId());
 		proc.setProperty(SourceLocation.class, new SourceLocation(file, ctx.getStart().getLine()));
 		
 		ClassBodyDeclarationContext classMember = (ClassBodyDeclarationContext) ctx.getParent().getParent();
@@ -108,11 +109,9 @@ class PreParserListener extends JavaParserBaseListener {
 		proc = module.addProcedure(selfType.reference());
 		proc.setFlag(ParserAux.CONSTRUCTOR_FLAG);
 		proc.setId(selfType.getId());
-		//		IVariableDeclaration self = proc.addParameter(selfType.reference());
-		//		self.setId(ParserAux.THIS);
+		proc.setNamespace(selfType.getId());
 		aux.addConstructor(ctx, selfType.getId(), proc);
 	}
-
 
 
 	@Override

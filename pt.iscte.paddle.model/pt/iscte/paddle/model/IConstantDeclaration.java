@@ -1,6 +1,6 @@
 package pt.iscte.paddle.model;
 
-public interface IConstantDeclaration extends IProgramElement, IExpressionView<IConstantExpression> {
+public interface IConstantDeclaration extends INamespaceElement, IExpressionView<IConstantExpression> {
 
 	IModule getProgram();
 	

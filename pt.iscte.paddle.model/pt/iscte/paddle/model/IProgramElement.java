@@ -10,7 +10,7 @@ public interface IProgramElement {
 	}
 	
 	String ID = "ID";
-	
+
 	
 	void setProperty(Object key, Object value);	
 

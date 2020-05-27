@@ -10,7 +10,7 @@ import pt.iscte.paddle.model.impl.ArrayType;
 import pt.iscte.paddle.model.impl.Literal;
 import pt.iscte.paddle.model.impl.PrimitiveType;
 
-public interface IType extends IProgramElement  {
+public interface IType extends INamespaceElement  {
 
 	Object getDefaultValue();
 

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public interface IProcedureDeclaration extends IProgramElement {
+public interface IProcedureDeclaration extends INamespaceElement {
 
 	List<IVariableDeclaration> getParameters();	
 
