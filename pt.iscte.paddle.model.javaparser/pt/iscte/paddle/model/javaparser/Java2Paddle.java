@@ -93,7 +93,7 @@ public class Java2Paddle {
 			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName("UTF-8"));
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-			PreParserListener l = new PreParserListener(module, e.getKey(), aux);
+			PreParserListener l = new PreParserListener(module, e.getKey(), e.getValue(), aux);
 			ParseTreeWalker w = new ParseTreeWalker();
 			w.walk(l, p.compilationUnit());
 		}
@@ -104,7 +104,7 @@ public class Java2Paddle {
 			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName("UTF-8"));
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-			ParserListener l = new ParserListener(module, e.getKey(), aux);
+			ParserListener l = new ParserListener(module, e.getKey(), e.getValue(), aux);
 			ParseTreeWalker w = new ParseTreeWalker();
 			w.walk(l, p.compilationUnit());
 			System.out.println("done " + e.getKey().getId() + "\n blocks: " + l.blockStack + "\n exp stack: " + l.expStack);
