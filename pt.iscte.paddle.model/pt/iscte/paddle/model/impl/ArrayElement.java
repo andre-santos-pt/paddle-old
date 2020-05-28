@@ -12,7 +12,6 @@ import pt.iscte.paddle.interpreter.IReference;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IArrayElement;
 import pt.iscte.paddle.model.IExpression;
-import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.ITargetExpression;
 
 class ArrayElement extends Expression implements IArrayElement {
@@ -36,24 +35,6 @@ class ArrayElement extends Expression implements IArrayElement {
 	@Override
 	public ITargetExpression getTarget() {
 		return target;
-	}
-	
-	
-	@Override
-	public String toString() {
-		String text = getTarget().toString();
-		for(IExpression e : indexes)
-			text += "[" + e + "]";
-		return text;
-	}
-	
-	
-	@Override
-	public String translate(IModel2CodeTranslator t) {
-		String text = getTarget().translate(t);
-		for(IExpression e : indexes)
-			text += "[" + e.translate(t) + "]";
-		return text;
 	}
 	
 	@Override

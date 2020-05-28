@@ -1,8 +1,7 @@
 package pt.iscte.paddle.model.demo;
 import pt.iscte.paddle.interpreter.ExecutionError;
-import pt.iscte.paddle.model.IBlock.IVisitor;
 import pt.iscte.paddle.model.IArrayElementAssignment;
-import pt.iscte.paddle.model.IModel2CodeTranslator;
+import pt.iscte.paddle.model.IBlock.IVisitor;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IVariableAssignment;
@@ -18,8 +17,7 @@ public class DemoVisitor {
 		IProcedure nats = Examples.createNaturalsFunction(module);
 		
 		// prints model as code
-		String src = module.translate(new IModel2CodeTranslator.Java());
-		System.out.println(src);
+		System.out.println(module);
 
 		IVariableDeclaration iVar = nats.getVariable("i");
 		// Model visitor

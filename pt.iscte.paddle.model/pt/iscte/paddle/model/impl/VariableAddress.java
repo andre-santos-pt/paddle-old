@@ -32,11 +32,6 @@ public class VariableAddress extends Expression implements IVariableAddress {
 	}
 	
 	@Override
-	public String toString() {
-		return "&" + variable.getId();
-	}
-
-	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) throws ExecutionError {
 		IReference reference = stack.getTopFrame().getVariableStore(variable.getVariable());
 		return reference;

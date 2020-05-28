@@ -5,17 +5,18 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.ServiceLoader;
 
 import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.ILiteral;
-import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.IModule;
+import pt.iscte.paddle.model.IModuleTranslator;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureDeclaration;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.commands.IAddCommand;
 import pt.iscte.paddle.model.commands.ICommand;
 import pt.iscte.paddle.model.commands.IDeleteCommand;
@@ -27,8 +28,6 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	private final List<IConstantDeclaration> constants;
 	private final List<IRecordType> records;
 	private final List<IProcedure> procedures;
-
-//	private final List<IProcedure> builtinProcedures;
 
 	private final History history;
 	
@@ -62,7 +61,6 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		constants = new ArrayList<>();
 		records = new ArrayList<>();
 		procedures = new ArrayList<>();
-//		builtinProcedures = new ArrayList<>();
 		history = recordHistory ? new History() : null;
 	}
 
@@ -302,11 +300,6 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		for(IProcedure p : procedures)
 			if(p.hasSameSignature(procedureDeclaration))
 				return p;
-
-//		for(IProcedure p : builtinProcedures)
-//			if(p.hasSameSignature(procedureDeclaration))
-//				return p;
-
 		return null;
 	}
 
@@ -315,40 +308,12 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		for(IProcedure p : procedures)
 			if(p.matchesSignature(id, paramTypes))
 				return p;
-		
-//		for(IProcedure p : builtinProcedures)
-//			if(p.matchesSignature(id, paramTypes))
-//				return p;
-
 		return null;
 	}
 
 	@Override
 	public String toString() {
-		String text = "";
-		for(IConstantDeclaration c : constants)
-			text += c.getType() + " " + c.getId() + " = " + c.getValue() + ";\n";
-
-		if(!constants.isEmpty())
-			text += "\n";
-
-		for(IRecordType r : records) {
-			text += "typedef struct\n{\n";
-			for (IVariableDeclaration member : r.getFields()) {
-				text += "\t" + member.getDeclaration() + ";\n";
-			}
-			text += "} " + r.getId() + ";\n\n";
-		}
-
-//		for (IProcedure p : builtinProcedures)
-//			System.out.println(p.longSignature() + "\t(built-in)\n");
-//		text += "\n";
-
-		for (IProcedure p : procedures)
-			if(!p.isBuiltIn())
-				text += p + "\n\n";
-
-		return text;
+		return Translator.INSTANCE.translate(this);
 	}
 
 	@Override
@@ -357,32 +322,10 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		return checker.check(this);
 	}
 
-	@Override
-	public String translate(IModel2CodeTranslator t) {
-		String text = t.header(this);
-		for(IConstantDeclaration c : constants)
-			text += t.declaration(c);
-
-		for(IRecordType r : records)
-			text += t.declaration(r);
-
-//		for (IProcedure p : builtinProcedures)
-//			System.out.println(p.longSignature() + "\t(built-in)\n");
-
-		//		text += "\n";
-
-		for (IProcedure p : procedures)
-			if(!p.isBuiltIn())
-				text += p.translate(t);
-
-		return text + t.close(this);
-	}
-
 	// for tests only
 	public void addProcedure(IProcedure p) {
 		procedures.add(p);
 	}
-	
 	
 	
 	@Override

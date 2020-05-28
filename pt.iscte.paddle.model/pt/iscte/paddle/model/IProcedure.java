@@ -83,10 +83,6 @@ public interface IProcedure extends IProcedureDeclaration {
 		getBody().accept(visitor);
 	}
 
-	default String translate(IModel2CodeTranslator t) {
-		return t.header(this) + t.statements(getBody()) + t.close(this);
-	}
-
 	
 	
 	public class UnboundProcedure implements IProcedure {

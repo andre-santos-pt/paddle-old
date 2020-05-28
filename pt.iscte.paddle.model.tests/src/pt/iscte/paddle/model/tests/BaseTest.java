@@ -29,7 +29,6 @@ import pt.iscte.paddle.interpreter.IProgramState;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.ILiteral;
-import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProgramElement;
@@ -55,7 +54,6 @@ public class BaseTest {
 
 	private List<ISemanticProblem> problems;
 
-	private IModel2CodeTranslator translator =  new IModel2CodeTranslator.Java();
 	
 	public BaseTest() {
 		this(IModule.create());
@@ -107,8 +105,6 @@ public class BaseTest {
 	}
 
 	private void compile() {
-		System.out.print(module.translate(translator) + "\n");
-		
 		problems = module.checkSemantics();
 		for (ISemanticProblem p : problems) {
 			System.err.println(p);

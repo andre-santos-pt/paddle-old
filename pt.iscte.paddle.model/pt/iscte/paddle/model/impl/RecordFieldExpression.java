@@ -42,14 +42,6 @@ public class RecordFieldExpression extends Expression implements IRecordFieldExp
 	}
 	
 	@Override
-	public String toString() {
-//		if(target.getType() instanceof IReferenceType)
-//			return target.toString() + "->" + field.getId();
-//		else
-			return target + "." + field.getId();
-	}
-	
-	@Override
 	public IRecordFieldExpression field(IVariableDeclaration field) {
 		return new RecordFieldExpression(this, field);
 	}

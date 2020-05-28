@@ -1,5 +1,8 @@
 package pt.iscte.paddle.model;
 
+import java.util.Collections;
+import java.util.Set;
+
 public interface IProgramElement {
 	interface IPropertyListener {
 		void propertyChanged(Object key, Object newValue, Object oldValue);
@@ -54,6 +57,10 @@ public interface IProgramElement {
 	
 	default void setId(String id) {
 		setProperty(ID, id);
+	}
+	
+	default Set<String> getFlags() {
+		return Collections.emptySet();
 	}
 	
 	

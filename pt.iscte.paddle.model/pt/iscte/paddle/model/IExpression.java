@@ -65,10 +65,6 @@ public interface IExpression extends IProgramElement, IExpressionView<IExpressio
 		return OperationType.OTHER;
 	}
 
-	default String translate(IModel2CodeTranslator t) {
-		return t.expression(this);
-	}
-
 	default boolean isNull() {
 		return this == Literal.NULL;
 	}

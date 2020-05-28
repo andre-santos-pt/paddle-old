@@ -5,7 +5,6 @@ import java.util.List;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.ILiteral;
-import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IValueType;
 
@@ -27,16 +26,6 @@ public class Literal extends Expression implements ILiteral {
 	
 	@Override
 	public String getStringValue() {
-		return value;
-	}
-	
-	@Override
-	public String toString() {
-		return value;
-	}
-	
-	@Override
-	public String translate(IModel2CodeTranslator t) {
 		return value;
 	}
 	

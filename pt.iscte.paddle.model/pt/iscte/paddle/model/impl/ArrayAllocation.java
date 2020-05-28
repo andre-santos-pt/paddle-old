@@ -49,16 +49,6 @@ class ArrayAllocation extends Expression implements IArrayAllocation {
 	}
 
 	@Override
-	public String toString() {
-		String text = "new " + type.getComponentTypeAt(type.getDimensions());
-		for(IExpression e : dimensions)
-			text += "[" + e + "]";
-		for(int n = 0; n < type.getDimensions() - dimensions.size(); n++)
-			text += "[]";
-		return text;
-	}
-
-	@Override
 	public List<IExpression> getParts() {
 		return dimensions;
 	}

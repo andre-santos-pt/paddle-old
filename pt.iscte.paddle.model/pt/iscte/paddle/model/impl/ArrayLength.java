@@ -45,15 +45,6 @@ class ArrayLength extends Expression implements IArrayLength {
 	}
 
 	@Override
-	public String toString() {
-		String text = getTarget().toString();
-		for(IExpression e : indexes)
-			text += "[" + e + "]";
-		return text + ".length";
-	}
-
-
-	@Override
 	public List<IExpression> getParts() {
 		return Collections.unmodifiableList(parts);
 	}

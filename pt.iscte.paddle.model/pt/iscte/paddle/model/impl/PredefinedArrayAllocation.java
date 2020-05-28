@@ -41,7 +41,7 @@ public class PredefinedArrayAllocation extends Expression implements IPredefined
 
 	@Override
 	public IType getType() {
-		return type;
+		return type.reference();
 	}
 
 	@Override
@@ -62,15 +62,4 @@ public class PredefinedArrayAllocation extends Expression implements IPredefined
 			array.setElement(i, values.get(i));
 		return array;
 	}
-
-	@Override
-	public String toString() {
-		String text = "new " + type.getComponentTypeAt(type.getDimensions()) + "[] {";
-		if(!elements.isEmpty())
-			text += elements.get(0);
-		for(int i = 1; i < elements.size(); i++)
-			text += ", " + elements.get(i);
-		return text + "}";
-	}
-
 }

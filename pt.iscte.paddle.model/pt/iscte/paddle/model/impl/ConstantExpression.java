@@ -24,10 +24,4 @@ public class ConstantExpression extends Expression implements IConstantExpressio
 	public IConstantDeclaration getConstant() {
 		return constant;
 	}
-	
-	@Override
-	public String toString() {
-		return constant.getId();
-	}
-	
 }

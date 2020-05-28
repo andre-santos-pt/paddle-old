@@ -24,10 +24,17 @@ import pt.iscte.paddle.model.javaparser.antlr.JavaParser.PrimitiveTypeContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.TypeTypeContext;
 
 class ParserAux {
-	final static String INSTANCE_FLAG = "instance";
-	final static String CONSTRUCTOR_FLAG = "constructor";
-	final static String THIS = Keyword.THIS.keyword();
-	final static String FOR_FLAG = Keyword.FOR.keyword();
+	final static String THIS_VAR = "$" + Keyword.THIS.keyword();
+	final static String EFOR_ITVAR = "$it";
+	final static String EFOR_SRCVAR = "$src";
+
+	final static String INSTANCE_FLAG = "INSTANCE";
+	final static String CONSTRUCTOR_FLAG = "CONSTRUCTOR";
+	
+	final static String FOR_FLAG = Keyword.FOR.name();
+	final static String EFOR_FLAG = "E" + Keyword.FOR.name();
+	final static String DO_FLAG = Keyword.DO.name();
+	
 //	final static String THROW_FLAG = Keyword.THROW.keyword();
 
 

@@ -26,15 +26,6 @@ public interface IProcedureCall extends IStatement {
 				IExpression.areSame(getArguments(), ((IProcedureCall) e).getArguments());
 	}
 
-	static String argsToString(IModel2CodeTranslator t, List<IExpression> arguments) {
-		String args = "";
-		for(IExpression e : arguments) {
-			if(!args.isEmpty())
-				args += ", ";
-			args += t.expression(e);
-		}
-		return args;
-	}
 	
 	static IProcedureCall unboundExpression(String id) {
 		ProcedureCall call = new ProcedureCall(null, null, -1, Collections.emptyList());

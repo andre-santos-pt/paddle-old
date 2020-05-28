@@ -1,15 +1,11 @@
 package pt.iscte.paddle.model.demo;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.model.IBlock.IVisitor;
-import pt.iscte.paddle.model.IArrayElementAssignment;
-import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IProcedureCallExpression;
 import pt.iscte.paddle.model.IType;
-import pt.iscte.paddle.model.IVariableAssignment;
-import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class DemoVisitorProcedureCalls {
 
@@ -25,8 +21,6 @@ public class DemoVisitorProcedureCalls {
 		main.getBody().addVariable(IType.INT, nats.expression(IType.INT.literal(5)));
 		
 		// prints model as code
-		String src = module.translate(new IModel2CodeTranslator.Java());
-		System.out.println(src);
 
 		main.accept(new IVisitor() {
 			public boolean visit(IProcedureCall call) {

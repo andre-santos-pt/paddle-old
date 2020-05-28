@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.antlr.v4.runtime.BaseErrorListener;
@@ -28,17 +29,19 @@ import pt.iscte.paddle.model.javaparser.antlr.JavaParser.CompilationUnitContext;
 // TODO API for text
 public class Java2Paddle {
 
-	private final String id;
+//	private final String id;
 	private final File[] javaFiles;
 	boolean errors;
 	private ParserAux aux;
 	
+	private final IModule module;
+	
 	public Java2Paddle(File file) {
-		this(file, f -> false);
+		this(file, f -> false, IModule.create(file.getName()));
 	}
 
-	public Java2Paddle(File file, Predicate<File> exclude) {
-		id = file.getName();
+	public Java2Paddle(File file, Predicate<File> exclude, IModule module) {
+		this.module = module;
 		javaFiles = file.isFile() ? new File[] {file} : file.listFiles(f -> f.getName().endsWith(".java") && !exclude.test(f));
 	}
 
@@ -69,9 +72,6 @@ public class Java2Paddle {
 	}
 
 	public IModule parse() throws IOException {
-		IModule module = IModule.create(id);
-		addBuiltins(module);
-
 		aux = new ParserAux(module);
 
 		Map<IRecordType, File> types = new HashMap<>();
@@ -106,16 +106,7 @@ public class Java2Paddle {
 		return module;
 	}
 
-	private void addBuiltins(IModule module) {
-		module.addRecordType(String.class.getSimpleName());
-		try {
-			module.loadBuiltInProcedures(String.class.getMethod("length"));
-			module.loadBuiltInProcedures(String.class.getMethod("trim"));
-		} catch (NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-		}
-		module.loadBuiltInProcedures(Math.class);
-	}
+	
 
 	public boolean hasParseProblems() {
 		return false;

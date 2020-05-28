@@ -48,11 +48,6 @@ public class VariableDereference extends Expression implements IVariableDerefere
 	}
 
 	@Override
-	public String toString() {
-		return getId();
-	}
-
-	@Override
 	public IType getType() {
 		return variable.getType();
 	}

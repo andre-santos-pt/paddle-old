@@ -84,7 +84,6 @@ public interface IModule extends IModuleView, IProgramElement, IListenable<IModu
 	
 	List<ISemanticProblem> checkSemantics();
 
-	String translate(IModel2CodeTranslator t);
 	
 	default Set<String> getNamespaces() {
 		Set<String> set = new HashSet<String>();

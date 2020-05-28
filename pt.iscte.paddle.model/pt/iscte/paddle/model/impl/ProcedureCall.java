@@ -10,7 +10,6 @@ import pt.iscte.paddle.interpreter.IExecutable;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IExpression;
-import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IProcedureCallExpression;
@@ -41,18 +40,6 @@ public class ProcedureCall extends Expression implements IProcedureCall, IProced
 		return arguments;
 	}
 
-	@Override
-	public String toString() {
-		return translate(IModel2CodeTranslator.JAVA);
-	}
-	
-	
-	
-	@Override
-	public String translate(IModel2CodeTranslator t) {
-		return procedure.getId() + "(" + IProcedureCall.argsToString(t, arguments) + ")";
-	}
-	
 	@Override
 	public List<IExpression> getExpressionParts() {
 		return arguments;

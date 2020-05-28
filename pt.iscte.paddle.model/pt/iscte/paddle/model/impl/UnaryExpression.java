@@ -6,7 +6,6 @@ import java.util.List;
 import pt.iscte.paddle.interpreter.ICallStack;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IExpression;
-import pt.iscte.paddle.model.IModel2CodeTranslator;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IUnaryExpression;
 import pt.iscte.paddle.model.IUnaryOperator;
@@ -43,16 +42,6 @@ public class UnaryExpression extends Expression implements IUnaryExpression {
 		return operand;
 	}
 	
-	@Override
-	public String toString() {
-		return "(" + operator.getSymbol() + getOperand() + ")";
-	}
-	
-	@Override
-	public String translate(IModel2CodeTranslator t) {
-		return "(" + t.operator(operator) + t.expression(getOperand()) + ")";
-	}
-
 	@Override
 	public IValue evalutate(List<IValue> values, ICallStack stack) {
 		assert values.size() == 1;

@@ -32,11 +32,6 @@ public class VariableExpression extends Expression implements IVariableExpressio
 	}
 	
 	@Override
-	public String toString() {
-		return variable.getId();
-	}
-	
-	@Override
 	public IVariableAddress address() {
 		return new VariableAddress(this);
 	}

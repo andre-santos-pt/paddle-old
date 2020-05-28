@@ -61,6 +61,7 @@ public enum Keyword implements CharSequence {
 	
 	WHILE,
 	FOR,
+	DO,
 	RETURN,
 	BREAK,
 	CONTINUE,

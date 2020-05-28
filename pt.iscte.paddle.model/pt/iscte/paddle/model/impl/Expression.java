@@ -11,12 +11,14 @@ import pt.iscte.paddle.model.IArrayLength;
 import pt.iscte.paddle.model.IConditionalExpression;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IExpressionIterator;
+import pt.iscte.paddle.model.IModuleTranslator;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.ITargetExpression;
 import pt.iscte.paddle.model.IVariableDeclaration;
 
 abstract class Expression extends ProgramElement implements IEvaluable, IExpression {
 
+	
 	Expression(String...flags) {
 		super(flags);
 	}
@@ -42,6 +44,11 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 		return new Conditional(this, trueCase, falseCase);
 	}	
 
+	@Override
+	public final String toString() {
+		return Translator.INSTANCE.translate(this);
+	}
+	
 	// TODO evaluate only one
 	// ideia: decompose() -> iterador que para quando nao e preciso mais
 	static class Conditional extends Expression implements IConditionalExpression, IEvaluable {

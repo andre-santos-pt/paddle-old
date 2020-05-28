@@ -23,11 +23,6 @@ public class RecordAllocation extends Expression implements IRecordAllocation {
 	}
 	
 	@Override
-	public String toString() {
-		return "new " + type.getId(); 
-	}
-
-	@Override
 	public IRecordType getRecordType() {
 		return type;
 	}

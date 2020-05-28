@@ -31,9 +31,6 @@ public interface IVariableDeclaration extends IInnocuousStatement, IExpressionVi
 		return getOwnerProcedure().getVariables().indexOf(this);
 	}
 	
-	default String getDeclaration() {
-		return getType() + " " + getId();
-	}
 	
 	IVariableExpression expression();
 	

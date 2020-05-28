@@ -3,8 +3,11 @@ package pt.iscte.paddle.model.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import pt.iscte.paddle.model.IProgramElement;
 
@@ -42,6 +45,15 @@ public class ProgramElement implements IProgramElement {
 			listeners = new ArrayList<>(3);
 		
 		listeners.add(listener);
+	}
+	
+	@Override
+	public Set<String> getFlags() {
+		Set<String> flags = new HashSet<String>();
+		for(Entry e : properties.entrySet())
+			if(e.getValue().equals(Boolean.TRUE))
+				flags.add(e.getKey().toString());
+		return flags;
 	}
 	
 }

@@ -156,7 +156,6 @@ public interface IStatementContainer {
 
 	
 	
-	
 	default ILoop addLoop(IExpression guard, String ... flags) {
 		return addLoopAt(guard, getBlock().getSize(), flags);
 	}
