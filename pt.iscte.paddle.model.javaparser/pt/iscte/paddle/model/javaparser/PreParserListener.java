@@ -3,6 +3,7 @@ package pt.iscte.paddle.model.javaparser;
 import java.io.File;
 
 import pt.iscte.paddle.model.IConstantDeclaration;
+import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IRecordType;
@@ -50,6 +51,7 @@ class PreParserListener extends JavaParserBaseListener {
 					aux.hasModifier(classMember.modifier(), Keyword.STATIC) && 
 					aux.hasModifier(classMember.modifier(), Keyword.FINAL);
 			if(constant) {
+				IConstantDeclaration con;
 				if(type instanceof IValueType) {
 					String val = varDec.variableInitializer().expression().getText();
 					Object obj = null;
@@ -62,13 +64,14 @@ class PreParserListener extends JavaParserBaseListener {
 					else
 						aux.unsupported("constant type", ctx);
 
-					IConstantDeclaration con = module.addConstant(type, ((IValueType) type).literal(obj));
-					con.setId(varId);
-					con.setNamespace(selfType.getId());
+					con = module.addConstant(type, ((IValueType) type).literal(obj));
 				}
 				else {
+					con = module.addConstant(type, ILiteral.getNull());
 					aux.unsupported("constant type", varDec);
 				}
+				con.setId(varId);
+				con.setNamespace(selfType.getId());
 			}
 			else {
 				//				if(ctx.variableInitializer() != null) {

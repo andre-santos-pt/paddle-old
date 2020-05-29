@@ -7,8 +7,9 @@ import pt.iscte.paddle.model.IBlock.IVisitor;
 import pt.iscte.paddle.model.cfg.IBranchNode;
 import pt.iscte.paddle.model.cfg.IControlFlowGraph;
 import pt.iscte.paddle.model.cfg.impl.Visitor;
-import pt.iscte.paddle.model.impl.BuiltinProcedure;
+import pt.iscte.paddle.model.impl.BuiltinProcedureReflective;
 import pt.iscte.paddle.model.impl.ProcedureCall;
+import pt.iscte.paddle.model.impl.UnboundProcedure;
 
 /**
  * Mutable
@@ -21,9 +22,6 @@ public interface IProcedure extends IProcedureDeclaration {
 
 	IBlock getBody();
 
-	default boolean isBuiltIn() {
-		return this instanceof BuiltinProcedure;
-	}
 	
 	default IControlFlowGraph generateCFG(){
 		IControlFlowGraph cfg = IControlFlowGraph.create(this);
@@ -83,68 +81,11 @@ public interface IProcedure extends IProcedureDeclaration {
 		getBody().accept(visitor);
 	}
 
-	
-	
-	public class UnboundProcedure implements IProcedure {
-		private String id;
+	static IProcedure createUnbound(String namespace, String id) {
+		return new UnboundProcedure(id, namespace);
+	}
 
-		public UnboundProcedure(String id) {
-			this.id = id;
-		}
-
-		@Override
-		public String getId() {
-			return id;
-		}
-
-		@Override
-		public List<IVariableDeclaration> getParameters() {
-			return null;
-		}
-
-		@Override
-		public IVariableDeclaration addParameter(IType type) {
-			return null;
-		}
-
-		@Override
-		public IProcedureCallExpression expression(List<IExpression> args) {
-			return new ProcedureCall(null, this, -1, args);
-		}
-
-		@Override
-		public void setProperty(Object key, Object value) {
-		}
-
-		@Override
-		public Object getProperty(Object key) {
-			return null;
-		}
-
-		@Override
-		public IModule getModule() {
-			return null;
-		}
-
-		@Override
-		public List<IVariableDeclaration> getLocalVariables() {
-			return Collections.emptyList();
-		}
-
-		@Override
-		public List<IVariableDeclaration> getVariables() {
-			return Collections.emptyList();
-		}
-
-		@Override
-		public IType getReturnType() {
-			return IType.UNBOUND;
-		}
-
-		@Override
-		public IBlock getBody() {
-			return null;
-		}
-
+	static IProcedure createUnbound(String id) {
+		return new UnboundProcedure(id, null);
 	}
 }

@@ -42,7 +42,7 @@ public class Test2DArrays extends BaseTest {
 		IVariableDeclaration n = idMatrix.addParameter(INT);		
 		IBlock body = idMatrix.getBody();
 		IVariableDeclaration id = body.addVariable(INT.array2D());
-		IVariableAssignment assignment = body.addAssignment(id, INT.array2D().stackAllocation(n, n));
+		IVariableAssignment assignment = body.addAssignment(id, INT.array2D().heapAllocation(n, n));
 		IVariableDeclaration i = body.addVariable(INT);
 		IVariableAssignment iInit = body.addAssignment(i, INT.literal(0));
 		IExpression e = DIFFERENT.on(i, n);
@@ -72,7 +72,7 @@ public class Test2DArrays extends BaseTest {
 		
 		IBlock body = naturalsMatrix.getBody();
 		
-		IArrayAllocation allocation = INT.array2D().stackAllocation(lines, cols);
+		IArrayAllocation allocation = INT.array2D().heapAllocation(lines, cols);
 		IVariableDeclaration m = body.addVariable(INT.array2D(), allocation);
 		IVariableDeclaration i = body.addVariable(INT, INT.literal(0));
 	
@@ -129,10 +129,10 @@ public class Test2DArrays extends BaseTest {
 		IProcedure main = module.addProcedure(BOOLEAN);
 		IBlock mainBody = main.getBody();
 		IVariableDeclaration array = mainBody.addVariable(INT.array2D());
-		IVariableAssignment ass2 = mainBody.addAssignment(array, INT.array2D().stackAllocation(INT.literal(3)));
-		IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(array, INT.array().stackAllocation(INT.literal(0)), INT.literal(0));
-		IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(array, INT.array().stackAllocation(INT.literal(2)), INT.literal(1));
-		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array().stackAllocation(INT.literal(4)), INT.literal(2));
+		IVariableAssignment ass2 = mainBody.addAssignment(array, INT.array2D().heapAllocation(INT.literal(3)));
+		IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(array, INT.array().heapAllocation(INT.literal(0)), INT.literal(0));
+		IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(array, INT.array().heapAllocation(INT.literal(2)), INT.literal(1));
+		IArrayElementAssignment ass5 = mainBody.addArrayElementAssignment(array, INT.array().heapAllocation(INT.literal(4)), INT.literal(2));
 		IArrayElementAssignment ass6 = mainBody.addArrayElementAssignment(array, INT.literal(5), INT.literal(2), INT.literal(2));
 		IVariableDeclaration var = mainBody.addVariable(BOOLEAN);
 		IVariableAssignment ass7 = mainBody.addAssignment(var, contains.expression(array, INT.literal(5)));

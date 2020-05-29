@@ -1,5 +1,6 @@
 package pt.iscte.paddle.model.impl;
 
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -7,7 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
+import java.util.function.Consumer;
 
+import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IModule;
@@ -66,19 +69,25 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 
 	public void loadBuiltInProcedures(Class<?> staticClass) {
 		for (Method method : staticClass.getDeclaredMethods()) {
-			if(BuiltinProcedure.isValidForBuiltin(method))
-				procedures.add(new BuiltinProcedure(this, method));
+			if(BuiltinProcedureReflective.isValidForBuiltin(this, method))
+				procedures.add(new BuiltinProcedureReflective(this, method));
 //			else
 //				System.err.println("not valid for built-in procedure: " + method);
 		}
 	}
 	
 	@Override
-	public void loadBuiltInProcedures(Method... staticMethods) {
-		for(Method m : staticMethods)
-			if(BuiltinProcedure.isValidForBuiltin(m))
-				procedures.add(new BuiltinProcedure(this, m));
+	public void loadBuiltInProcedures(Executable... staticMethods) {
+		for(Executable m : staticMethods)
+			if(BuiltinProcedureReflective.isValidForBuiltin(this, m))
+				procedures.add(new BuiltinProcedureReflective(this, m));
 	}
+	
+//	@Override
+//	public void loadBuiltInProcedure(Consumer<IValue> args, IType ... paramTypes) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 	
 	void executeCommand(ICommand<?> cmd) {
 		if(history == null)

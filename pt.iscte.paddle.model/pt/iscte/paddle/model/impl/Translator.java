@@ -7,6 +7,7 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IModuleTranslator;
 import pt.iscte.paddle.model.IProgramElement;
+import pt.iscte.paddle.model.IType;
 
 public enum Translator implements IModuleTranslator {
 
@@ -31,6 +32,11 @@ public enum Translator implements IModuleTranslator {
 	@Override
 	public String translate(IExpression expression) {
 		return translator == null ? defaultString(expression) : translator.translate(expression);
+	}
+	
+	@Override
+	public String translate(IType type) {
+		return translator == null ? defaultString(type) : translator.translate(type);
 	}
 	
 	private String defaultString(IProgramElement e) {

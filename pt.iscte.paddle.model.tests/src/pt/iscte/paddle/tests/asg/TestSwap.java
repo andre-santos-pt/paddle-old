@@ -27,7 +27,7 @@ public class TestSwap extends BaseTest {
 	IProcedure main = module.addProcedure(VOID);
 	IBlock mBody = main.getBody();
 	IVariableDeclaration array = mBody.addVariable(INT.array());
-	IVariableAssignment ass1 = mBody.addAssignment(array, INT.array().stackAllocation(INT.literal(3)));
+	IVariableAssignment ass1 = mBody.addAssignment(array, INT.array().heapAllocation(INT.literal(3)));
 
 	IArrayElementAssignment ass2 = mBody.addArrayElementAssignment(array, INT.literal(5), INT.literal(0));
 	IArrayElementAssignment ass3 = mBody.addArrayElementAssignment(array, INT.literal(7), INT.literal(1));

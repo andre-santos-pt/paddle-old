@@ -59,9 +59,9 @@ public class ProcedureCall extends Expression implements IProcedureCall, IProced
 	
 	static IValue executeInternal(ICallStack stack, IProcedureDeclaration procedure, List<IValue> args) throws ExecutionError {
 		IProcedure p = stack.getProgramState().getProgram().resolveProcedure(procedure);
-		if(p instanceof BuiltinProcedure) {
+		if(p instanceof BuiltinProcedureReflective) {
 			try {
-				return ((BuiltinProcedure) p).hookAction(args);
+				return ((BuiltinProcedureReflective) p).hookAction(args);
 			} catch (Exception e) {
 				throw new ExecutionError(Type.BUILT_IN_PROCEDURE, procedure, e.getMessage());
 			}

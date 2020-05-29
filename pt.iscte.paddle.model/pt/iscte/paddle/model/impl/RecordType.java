@@ -15,14 +15,19 @@ import pt.iscte.paddle.model.commands.IAddCommand;
 import pt.iscte.paddle.model.commands.IDeleteCommand;
 
 class RecordType extends ListenableProgramElement<IRecordType.IListener> implements IRecordType {
-	private final List<IVariableDeclaration> variables;
 	private final Module module;
+	private final List<IVariableDeclaration> variables;
 	
 	RecordType(Module module) {
 		this.module = module;
 		this.variables = new ArrayList<>(5);
 	}
 	
+	@Override
+	public String toString() {
+		return getId();
+	}
+
 	@Override
 	public IModule getModule() {
 		return module;
@@ -107,11 +112,6 @@ class RecordType extends ListenableProgramElement<IRecordType.IListener> impleme
 	public void removeField(IVariableDeclaration var) {
 		RemoveField cmd = new RemoveField(var);
 		module.executeCommand(cmd);
-	}
-	
-	@Override
-	public String toString() {
-		return getId();
 	}
 	
 	@Override

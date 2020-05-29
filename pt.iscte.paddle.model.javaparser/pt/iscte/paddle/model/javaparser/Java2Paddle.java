@@ -19,6 +19,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.mozilla.universalchardet.UniversalDetector;
 
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IRecordType;
@@ -29,13 +30,13 @@ import pt.iscte.paddle.model.javaparser.antlr.JavaParser.CompilationUnitContext;
 // TODO API for text
 public class Java2Paddle {
 
-//	private final String id;
+	//	private final String id;
 	private final File[] javaFiles;
 	boolean errors;
 	private ParserAux aux;
-	
+
 	private final IModule module;
-	
+
 	public Java2Paddle(File file) {
 		this(file, f -> false, IModule.create(file.getName()));
 	}
@@ -58,11 +59,17 @@ public class Java2Paddle {
 		for(File f : javaFiles) {
 			CharStream s;
 			try {
-				s = CharStreams.fromFileName(f.getAbsolutePath(), Charset.forName("UTF-8"));
-				JavaLexer lexer = new JavaLexer(s);
-				JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-				p.addErrorListener(l);
-				CompilationUnitContext cu = p.compilationUnit();
+				String charset = UniversalDetector.detectCharset(f);
+				if(charset != null && Charset.isSupported(charset)) {
+					s = CharStreams.fromFileName(f.getAbsolutePath(), Charset.forName(charset));
+					JavaLexer lexer = new JavaLexer(s);
+					JavaParser p = new JavaParser(new CommonTokenStream(lexer));
+					p.addErrorListener(l);
+					CompilationUnitContext cu = p.compilationUnit();
+				}
+				else {
+					l.errCount++;
+				}
 			} 
 			catch (IOException e) {
 				return false;
@@ -84,7 +91,8 @@ public class Java2Paddle {
 		}
 
 		for(Entry<IRecordType, File> e : types.entrySet()) {
-			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName("UTF-8"));
+			String charset = UniversalDetector.detectCharset(e.getValue());
+			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName(charset));
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
 			PreParserListener l = new PreParserListener(module, e.getKey(), e.getValue(), aux);
@@ -94,7 +102,8 @@ public class Java2Paddle {
 
 		for(Entry<IRecordType, File> e : types.entrySet()) {
 			System.out.println("parsing " + e.getKey().getId() + "  " + e.getValue());
-			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName("UTF-8"));
+			String charset = UniversalDetector.detectCharset(e.getValue());
+			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName(charset));
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
 			ParserListener l = new ParserListener(module, e.getKey(), e.getValue(), aux);
@@ -106,11 +115,6 @@ public class Java2Paddle {
 		return module;
 	}
 
-	
-
-	public boolean hasParseProblems() {
-		return false;
-	}
 
 	public List<Object> getUnsupported() {
 		return aux.unsupported;

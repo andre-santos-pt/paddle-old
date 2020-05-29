@@ -19,6 +19,10 @@ public interface IProgramElement {
 
 	Object getProperty(Object key);
 	
+	default boolean hasProperty(Class<?> key) {
+		return getProperty(key) != null;
+	}
+	
 	default boolean isSame(IProgramElement e) {
 		return this.equals(e);
 	}

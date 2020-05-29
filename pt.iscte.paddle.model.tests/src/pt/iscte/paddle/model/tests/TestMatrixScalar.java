@@ -33,10 +33,10 @@ public class TestMatrixScalar extends BaseTest {
 		IProcedure main = module.addProcedure(VOID);
 		IBlock mainBody = main.getBody();
 		m = mainBody.addVariable(INT.array2D());
-		mainBody.addAssignment(m, INT.array2D().stackAllocation(INT.literal(3)));
-		mainBody.addArrayElementAssignment(m, INT.array().stackAllocation(INT.literal(0)), INT.literal(0));
-		mainBody.addArrayElementAssignment(m, INT.array().stackAllocation(INT.literal(2)), INT.literal(1));
-		mainBody.addArrayElementAssignment(m, INT.array().stackAllocation(INT.literal(4)), INT.literal(2));
+		mainBody.addAssignment(m, INT.array2D().heapAllocation(INT.literal(3)));
+		mainBody.addArrayElementAssignment(m, INT.array().heapAllocation(INT.literal(0)), INT.literal(0));
+		mainBody.addArrayElementAssignment(m, INT.array().heapAllocation(INT.literal(2)), INT.literal(1));
+		mainBody.addArrayElementAssignment(m, INT.array().heapAllocation(INT.literal(4)), INT.literal(2));
 		mainBody.addArrayElementAssignment(m, INT.literal(2), INT.literal(1), INT.literal(1));
 		mainBody.addArrayElementAssignment(m, INT.literal(4), INT.literal(2), INT.literal(2));
 		mainBody.addArrayElementAssignment(m, INT.literal(6), INT.literal(2), INT.literal(3));

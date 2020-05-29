@@ -37,7 +37,7 @@ public class TestArrays {
 		IVariableDeclaration n = naturals.addParameter(INT);
 		IBlock body = naturals.getBody();
 		IVariableDeclaration v = body.addVariable(INT.array());
-		IVariableAssignment ass1 = body.addAssignment(v, INT.array().stackAllocation(n));
+		IVariableAssignment ass1 = body.addAssignment(v, INT.array().heapAllocation(n));
 		IVariableDeclaration i = body.addVariable(INT, INT.literal(0));
 		ILoop loop = body.addLoop(SMALLER.on(i, n));
 		IArrayElementAssignment ass2 = loop.addArrayElementAssignment(v, ADD.on(i, INT.literal(1)), i);

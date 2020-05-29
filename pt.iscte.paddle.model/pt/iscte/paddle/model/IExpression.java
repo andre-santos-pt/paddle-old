@@ -14,9 +14,6 @@ import pt.iscte.paddle.model.impl.Literal;
 public interface IExpression extends IProgramElement, IExpressionView<IExpression> {
 	IType getType();
 
-	// TODO concretize expression
-	//String concretize();
-	
 	//	ISourceElement getParent();
 
 	@Override
@@ -26,9 +23,11 @@ public interface IExpression extends IProgramElement, IExpressionView<IExpressio
 	
 	
 	IArrayLength length(List<IExpression> indexes);
+	
 	default IArrayLength length(IExpression ... indexes) {
 		return length(Arrays.asList(indexes));
 	}
+	
 	default IArrayLength length(IExpressionView ... views) {
 		return length(IExpressionView.toList(views));
 	}
@@ -43,9 +42,9 @@ public interface IExpression extends IProgramElement, IExpressionView<IExpressio
 
 	IRecordFieldExpression field(IVariableDeclaration field); 
 	
-	default IRecordFieldExpression field(String id) {
-		return field(new UnboundVariable(id));
-	}
+//	default IRecordFieldExpression field(String id) {
+//		return field(new UnboundVariable(id));
+//	}
 	
 	default boolean isSimple() {
 		return this instanceof ISimpleExpression;

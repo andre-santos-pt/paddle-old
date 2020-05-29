@@ -2,6 +2,7 @@ package pt.iscte.paddle.model.javaparser.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.List;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.javaparser.Java2Paddle;
 import pt.iscte.paddle.model.javaparser.Paddle2Java;
+import pt.iscte.paddle.model.validation.AsgSemanticChecks;
+import pt.iscte.paddle.model.validation.ISemanticProblem;
+import pt.iscte.paddle.model.validation.SemanticChecker;
 
 public class Test {
 
@@ -22,8 +26,8 @@ public class Test {
 		List<Integer> errorProjs = new ArrayList<>();
 		List<Integer> exceptions = new ArrayList<Integer>();
 		long time = System.currentTimeMillis();
-		final int FIRST = 2;
-		final int LAST = 2;
+		final int FIRST = 1;
+		final int LAST = 254;
 		for (int n = FIRST; n <= LAST; n++) {
 			File proj = new File(root, ""+n);
 			String projId = "Project" + proj.getName();
@@ -35,11 +39,11 @@ public class Test {
 				compilationOk.add(proj);
 				 try {
 					IModule m = p.parse();
-//					SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
+					SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
 //					List<ISemanticProblem> problems = checker.check(m);
 //				    System.err.println("semantics: " + problems);
-//				    System.err.println("unsupported: " + p.getUnsupported().size());
-					if(p.getUnsupported().size() == 0)
+				    System.err.println("unsupported: " + p.getUnsupported().size());
+//					if(p.getUnsupported().size() == 0)
 						parseOk.add(m);	
 					
 					String code = new Paddle2Java().translate(m);
@@ -52,8 +56,7 @@ public class Test {
 				 }
 				catch(Exception e) {
 					errorProjs.add(n);
-//					if(e instanceof NullPointerException)
-						exceptions.add(n);
+					exceptions.add(n);
 					if(FIRST == LAST)
 						e.printStackTrace();
 				}
@@ -76,16 +79,24 @@ public class Test {
 		try {
 			module.loadBuiltInProcedures(String.class.getMethod("length"));
 			module.loadBuiltInProcedures(String.class.getMethod("trim"));
+			module.loadBuiltInProcedures(String.class.getMethod("toCharArray"));
+			module.loadBuiltInProcedures(String.class.getMethod("concat", String.class));
+			module.loadBuiltInProcedures(String.class.getMethod("compareTo", String.class));
+			
+			module.loadBuiltInProcedures(IllegalArgumentException.class.getConstructors());
+			module.loadBuiltInProcedures(IllegalStateException.class.getConstructors());
+			module.loadBuiltInProcedures(NullPointerException.class.getConstructors());
+			
+			module.loadBuiltInProcedures(PrintStream.class.getMethod("println", String.class));
+		
 		} catch (NoSuchMethodException | SecurityException e) {
 			e.printStackTrace();
 		}
 		module.loadBuiltInProcedures(Math.class);
 		module.loadBuiltInProcedures(ImageUtil.class);
+				
+//		module.getProcedures().forEach(p -> System.out.println(p.getNamespace() + " :: " + p));
 	}
 }
-
-//		SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
-//		List<ISemanticProblem> problems = checker.check(module);
-//	    System.err.println(problems);
 
 

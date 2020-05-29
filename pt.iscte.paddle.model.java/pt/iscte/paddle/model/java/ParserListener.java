@@ -84,7 +84,6 @@ import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
-import pt.iscte.paddle.model.IProcedure.UnboundProcedure;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IReferenceType;
@@ -372,7 +371,7 @@ class ParserListener extends Java8ParserBaseListener {
 		}
 
 		if(p == null)
-			p = new IProcedure.UnboundProcedure("??" + methodId);
+			p = IProcedure.UnboundProcedure("??" + methodId);
 
 		if(argList != null) {
 			argList.children.forEach(c -> {

@@ -29,7 +29,7 @@ public class TestSum extends BaseTest {
 	
 	IProcedure main = module.addProcedure(INT);
 	IBlock mainBody = main.getBody();
-	IArrayAllocation allocation = INT.array().stackAllocation(INT.literal(3));
+	IArrayAllocation allocation = INT.array().heapAllocation(INT.literal(3));
 	IVariableDeclaration test = mainBody.addVariable(INT.array(), allocation);
 	IArrayElementAssignment ass3 = mainBody.addArrayElementAssignment(test, INT.literal(5), INT.literal(0));
 	IArrayElementAssignment ass4 = mainBody.addArrayElementAssignment(test, INT.literal(7), INT.literal(1));

@@ -1,10 +1,8 @@
 package pt.iscte.paddle.model;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import pt.iscte.paddle.model.impl.ArrayType;
 import pt.iscte.paddle.model.impl.Literal;
@@ -45,14 +43,23 @@ public interface IType extends INamespaceElement  {
 		return isReference() && ((IReferenceType) this).getTarget() instanceof IArrayType;
 	}
 	
+	default boolean isRecordReference() {
+		return isReference() && ((IReferenceType) this).getTarget() instanceof IRecordType;
+	}
+	
 	IReferenceType reference();
+	
+	IExpression getDefaultExpression();
+	
+	
+	
 	
 	IValueType INT = PrimitiveType.INT;
 	IValueType DOUBLE = PrimitiveType.DOUBLE;
 	IValueType BOOLEAN = PrimitiveType.BOOLEAN;
 	IValueType CHAR = PrimitiveType.CHAR;
 
-	List<IValueType> VALUE_TYPES = List.of(INT, DOUBLE, BOOLEAN);
+	List<IValueType> VALUE_TYPES = List.of(INT, DOUBLE, BOOLEAN, CHAR);
 
 	static IType match(String type) {		
 		for(IValueType t : VALUE_TYPES)
@@ -61,9 +68,6 @@ public interface IType extends INamespaceElement  {
 		return null;
 	}
 	
-	public static Set<IType> getAllTypes() {
-		return Collections.unmodifiableSet(Instances.mapArrayTypes.keySet());
-	}
 	
 	// TODO to impl
 	class Instances {
@@ -79,13 +83,20 @@ public interface IType extends INamespaceElement  {
 			Instances.mapArrayTypes.put(this, type);
 		}
 		return type;
+//		return new ArrayType(this);
 	}
 	
 	default IArrayType array2D() {
 		return array().array();
 	}
 	
-	IExpression getDefaultExpression();
+
+	
+	
+	
+	
+	
+	
 	
 	IType VOID = new IType() {
 		

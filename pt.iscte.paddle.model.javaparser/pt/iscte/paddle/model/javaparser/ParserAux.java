@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
@@ -30,6 +31,7 @@ class ParserAux {
 
 	final static String INSTANCE_FLAG = "INSTANCE";
 	final static String CONSTRUCTOR_FLAG = "CONSTRUCTOR";
+	final static String INITIALIZER_FLAG = "INITIALIZER";
 	
 	final static String FOR_FLAG = Keyword.FOR.name();
 	final static String EFOR_FLAG = "E" + Keyword.FOR.name();
@@ -52,11 +54,14 @@ class ParserAux {
 
 	private final IModule module;
 	List<Object> unsupported = new ArrayList<>();
-	private Map<String, IProcedure> methods = new HashMap<>();
-	private Map<String, IProcedure> constructors = new HashMap<>();
+	private Map<String, IProcedure> methodMap = new HashMap<>();
+	private Map<String, IProcedure> constructorMap = new HashMap<>();
 
 	public ParserAux(IModule module) {
 		this.module = module;
+		module.getProcedures().stream()
+		.filter(p -> p.isBuiltIn())
+		.forEach(p -> methodMap.put(p.getNamespace(), p) );
 	}
 
 	static boolean containedIn(RuleContext ctx, Class<?> parentType) {
@@ -172,39 +177,44 @@ class ParserAux {
 	}
 
 	public void addMethod(MethodDeclarationContext ctx, String namespace, IProcedure proc) {
-		methods.put(namespace + ctx.start.getTokenIndex(), proc);
+		methodMap.put(namespace + ctx.start.getTokenIndex(), proc);
 	}
 
 	public void addConstructor(ConstructorDeclarationContext ctx, String namespace, IProcedure proc) {
-		constructors.put(namespace + ctx.start.getTokenIndex(), proc);
+		constructorMap.put(namespace + ctx.start.getTokenIndex(), proc);
 	}
 
 	public IProcedure getMethod(MethodDeclarationContext ctx, String namespace) {
-		return methods.get(namespace + ctx.start.getTokenIndex());
+		return methodMap.get(namespace + ctx.start.getTokenIndex());
 	}
 
 	public IProcedure getMethod(String namespace, String methodId) {
-		for(IProcedure p : methods.values())
-			if(namespace.equals(p.getNamespace()) && methodId.equals(p.getId()))
-				return p;
-		return null;
+		Optional<IProcedure> find = module.getProcedures().stream()
+		.filter(p -> !p.is(CONSTRUCTOR_FLAG))
+		.filter(p -> p.getNamespace().equals(namespace) && p.getId().equals(methodId))
+		.findFirst();
+		return find.isPresent() ? find.get() : null;
 	}
 
 	public IProcedure getConstructor(ConstructorDeclarationContext ctx, String namespace) {
-		return constructors.get(namespace + ctx.start.getTokenIndex());
+		return constructorMap.get(namespace + ctx.start.getTokenIndex());
 	}
 
 	public IProcedure getConstructor(IType type, int nParams) {
-		for(IProcedure p : constructors.values())
-			if(p.getReturnType().getId().equals(type.getId()) && p.getParameters().size() == nParams)
-				return p;
+//		for(IProcedure p : constructorMap.values())
+//			if(p.getReturnType().getId().equals(type.getId()) && p.getParameters().size() == nParams)
+//				return p;
 
-		return null;
+		Optional<IProcedure> find = module.getProcedures().stream()
+				.filter(p -> p.is(CONSTRUCTOR_FLAG))
+				.filter(p -> p.getNamespace().equals(type.getId()) && p.getId().equals(type.getId()))
+				.findFirst();
+		return find.isPresent() ? find.get() : null;
 	}
 
 
 	public Iterable<IProcedure> allMethods() {
-		return methods.values();
+		return methodMap.values();
 	}
 
 

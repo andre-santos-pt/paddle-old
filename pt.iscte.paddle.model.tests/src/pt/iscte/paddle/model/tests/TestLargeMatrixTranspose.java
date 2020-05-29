@@ -37,7 +37,7 @@ public class TestLargeMatrixTranspose extends BaseTest {
 		IProcedure main = module.addProcedure(INT.array2D().reference());
 		IBlock body = main.getBody();
 		m = body.addVariable(INT.array2D());
-		body.addAssignment(m, INT.array2D().stackAllocation(INT.literal(2), INT.literal(3)));
+		body.addAssignment(m, INT.array2D().heapAllocation(INT.literal(2), INT.literal(3)));
 	
 		body.addArrayElementAssignment(m, INT.literal(1), INT.literal(0), INT.literal(0));
 		body.addArrayElementAssignment(m, INT.literal(2), INT.literal(0), INT.literal(1));

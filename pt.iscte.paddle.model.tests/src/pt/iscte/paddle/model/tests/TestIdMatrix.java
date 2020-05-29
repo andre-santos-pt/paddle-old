@@ -21,7 +21,7 @@ public class TestIdMatrix extends BaseTest {
 	IVariableDeclaration n = idMatrix.addParameter(INT);		
 	IBlock body = idMatrix.getBody();
 	IVariableDeclaration id = body.addVariable(INT.array2D());
-	IVariableAssignment assignment = body.addAssignment(id, INT.array2D().stackAllocation(n, n));
+	IVariableAssignment assignment = body.addAssignment(id, INT.array2D().heapAllocation(n, n));
 	IVariableDeclaration i = body.addVariable(INT);
 	IVariableAssignment iInit = body.addAssignment(i, INT.literal(0));
 	IExpression e = DIFFERENT.on(i, n);

@@ -40,10 +40,6 @@ public class ArrayType extends ProgramElement implements IArrayType {
 //		return id.equals(type.getId());
 //	}
 
-	@Override
-	public String toString() {
-		return id;
-	}
 
 	@Override
 	public Object getDefaultValue() {
@@ -72,11 +68,6 @@ public class ArrayType extends ProgramElement implements IArrayType {
 	@Override
 	public IReferenceType reference() {
 		return new ReferenceType(this);
-	}
-	
-	@Override
-	public IArrayAllocation stackAllocation(List<IExpression> dimensions) {
-		return ArrayAllocation.stack(this, dimensions);
 	}
 	
 	@Override

@@ -55,7 +55,7 @@ public class SemanticChecker {
 		}
 		
 		CompleteVisitor v = new CompleteVisitor();
-		program.getProcedures().forEach(p -> p.getBody().accept(v));
+		program.getProcedures().stream().filter(p -> !p.isBuiltIn()).forEach(p -> p.getBody().accept(v));
 		return v.getProblems();
 	}
 	

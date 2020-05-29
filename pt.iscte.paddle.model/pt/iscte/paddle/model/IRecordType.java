@@ -18,6 +18,9 @@ public interface IRecordType extends IType, Iterable<IVariableDeclaration>, ILis
 		default void fieldAdded(IVariableDeclaration field) { }
 		default void fieldRemoved(IVariableDeclaration field) { }
 	}
+
+
+	String BUILTIN = "BUILTIN";
 	
 	IModule getModule();
 	
@@ -31,6 +34,11 @@ public interface IRecordType extends IType, Iterable<IVariableDeclaration>, ILis
 		return null;
 	}
 	
+	default Iterator<IVariableDeclaration> iterator() {
+		return getFields().iterator();
+	}
+	
+
 	IVariableDeclaration addField(IType type);
 
 	IVariableDeclaration addField(IType type, String id, List<String> flags);
@@ -48,15 +56,13 @@ public interface IRecordType extends IType, Iterable<IVariableDeclaration>, ILis
 
 	IRecordAllocation heapAllocation();
 	
-//	TODO IRecordAllocation stackAllocation();
 
+	
 	default IExpression getDefaultExpression() {
 		return Literal.NULL;
 	}
 	
-	default Iterator<IVariableDeclaration> iterator() {
-		return getFields().iterator();
-	}
+	
 
 	class UnboundRecordType extends ProgramElement implements IRecordType {
 		public UnboundRecordType(String id) {
@@ -114,10 +120,6 @@ public interface IRecordType extends IType, Iterable<IVariableDeclaration>, ILis
 		@Override
 		public void removeListener(IListener listener) {
 			throw new UnsupportedOperationException();
-			
 		}
-		
 	}
-
-
 }

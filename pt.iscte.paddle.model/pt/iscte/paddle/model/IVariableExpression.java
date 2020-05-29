@@ -9,6 +9,10 @@ public interface IVariableExpression extends ISimpleExpression, ITargetExpressio
 	IVariableDereference dereference();
 
 	
+	default boolean isUnbound() {
+		return getVariable().isUnbound();
+	}
+	
 	@Override
 	default boolean includes(IVariableDeclaration variable) {
 		return getVariable() == variable;

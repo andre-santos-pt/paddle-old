@@ -10,6 +10,7 @@ import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IValueType;
 
 public enum PrimitiveType implements IValueType {
+	
 	INT {
 		public boolean matchesLiteral(String literal) {
 			try {
@@ -32,7 +33,8 @@ public enum PrimitiveType implements IValueType {
 
 		@Override
 		public boolean matchesPrimitiveType(Class<?> clazz) {
-			return clazz.equals(int.class);
+			return clazz.equals(int.class) || 
+					clazz.equals(long.class) || clazz.equals(byte.class) || clazz.equals(short.class);
 		}
 
 		public boolean matches(Object object) {
@@ -58,6 +60,7 @@ public enum PrimitiveType implements IValueType {
 			return literal(0);
 		}
 	}, 
+	
 	DOUBLE {
 		public boolean matchesLiteral(String literal) {
 			try {
@@ -71,7 +74,7 @@ public enum PrimitiveType implements IValueType {
 
 		@Override
 		public boolean matchesPrimitiveType(Class<?> clazz) {
-			return clazz.equals(double.class);
+			return clazz.equals(double.class) || clazz.equals(float.class);
 		}
 
 		public Object create(String literal) {
@@ -102,6 +105,7 @@ public enum PrimitiveType implements IValueType {
 			return literal(0.0);
 		}
 	}, 
+	
 	BOOLEAN {
 		public boolean matchesLiteral(String literal) {
 			return literal.matches("true|false");
@@ -141,6 +145,7 @@ public enum PrimitiveType implements IValueType {
 			return literal(false);
 		}
 	},
+	
 	CHAR {
 		@Override
 		public boolean matchesPrimitiveType(Class<?> clazz) {
@@ -182,13 +187,7 @@ public enum PrimitiveType implements IValueType {
 		public Object create(String literal) {
 			return Character.valueOf(literal.charAt(1));
 		}
-	}
-	;
-
-	@Override
-	public String toString() {
-		return name().toLowerCase();
-	}
+	};
 
 	@Override
 	public String getId() {
@@ -196,14 +195,10 @@ public enum PrimitiveType implements IValueType {
 	}
 
 	@Override
-	public abstract boolean matches(Object object);
-
-	@Override
-	public abstract boolean matchesLiteral(String literal);
-
-	@Override
-	public abstract Object create(String literal);
-
+	public IReferenceType reference() {
+		return new ReferenceType(this);
+	}
+	
 	@Override
 	public boolean isCompatible(IType type) {
 		return this.equals(type); // TODO number compatible
@@ -224,8 +219,5 @@ public enum PrimitiveType implements IValueType {
 		throw new UnsupportedOperationException();
 	}
 	
-	@Override
-	public IReferenceType reference() {
-		return new ReferenceType(this);
-	}
+	
 }

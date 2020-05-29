@@ -4,8 +4,13 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import pt.iscte.paddle.model.impl.BuiltinProcedureReflective;
+
 public interface IProcedureDeclaration extends INamespaceElement {
 
+	String INSTANCE_FLAG = "INSTANCE";
+	String CONSTRUCTOR_FLAG = "CONSTRUCTOR";
+	
 	List<IVariableDeclaration> getParameters();	
 
 	IType getReturnType();
@@ -14,6 +19,10 @@ public interface IProcedureDeclaration extends INamespaceElement {
 
 	IProcedureCallExpression expression(List<IExpression> args);
 
+	default boolean sameNamespace(IProcedureDeclaration p) {
+		return getNamespace().equals(p.getNamespace());
+	}
+	
 	default IProcedureCallExpression expression(IExpression ... args) {
 		return expression(Arrays.asList(args));
 	}
@@ -21,6 +30,11 @@ public interface IProcedureDeclaration extends INamespaceElement {
 	default IProcedureCallExpression expression(IExpressionView ... views) {
 		return expression(IExpressionView.toList(views));
 	}
+	
+	default boolean isBuiltIn() {
+		return this instanceof BuiltinProcedureReflective;
+	}
+	
 
 	default String shortSignature() {
 		return getId() + "(...)";

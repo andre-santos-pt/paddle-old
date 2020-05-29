@@ -1,13 +1,16 @@
 package pt.iscte.paddle.model;
 
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.commands.ICommand;
 import pt.iscte.paddle.model.impl.Module;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
@@ -73,9 +76,10 @@ public interface IModule extends IModuleView, IProgramElement, IListenable<IModu
 	
 	void loadBuiltInProcedures(Class<?> staticClass);
 	
-	void loadBuiltInProcedures(Method ... staticMethods);
+	void loadBuiltInProcedures(Executable ... staticMethods);
 	
-
+//	void loadBuiltInProcedure(Consumer<IValue> args, IType ... paramTypes);
+	
 	IProcedure getProcedure(String id);
 	
 	IProcedure resolveProcedure(String id, IType ... paramTypes);

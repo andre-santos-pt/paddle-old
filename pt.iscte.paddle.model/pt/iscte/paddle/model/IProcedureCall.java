@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import pt.iscte.paddle.model.impl.ProcedureCall;
+import pt.iscte.paddle.model.impl.UnboundProcedure;
 
 
 public interface IProcedureCall extends IStatement {
@@ -15,7 +16,7 @@ public interface IProcedureCall extends IStatement {
 	}
 	
 	default boolean isBound() {
-		return !(getProcedure() instanceof IProcedure.UnboundProcedure);
+		return !(getProcedure() instanceof UnboundProcedure);
 	}
 	
 	
