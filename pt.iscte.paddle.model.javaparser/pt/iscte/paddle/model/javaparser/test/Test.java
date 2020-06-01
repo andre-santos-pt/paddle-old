@@ -79,6 +79,7 @@ public class Test {
 		try {
 			module.loadBuiltInProcedures(String.class.getMethod("length"));
 			module.loadBuiltInProcedures(String.class.getMethod("trim"));
+			module.loadBuiltInProcedures(String.class.getMethod("charAt", int.class));
 			module.loadBuiltInProcedures(String.class.getMethod("toCharArray"));
 			module.loadBuiltInProcedures(String.class.getMethod("concat", String.class));
 			module.loadBuiltInProcedures(String.class.getMethod("compareTo", String.class));
