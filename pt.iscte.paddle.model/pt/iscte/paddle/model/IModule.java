@@ -99,7 +99,10 @@ public interface IModule extends IModuleView, IProgramElement, IListenable<IModu
 	}
 	
 	default IModuleView createNamespaceView(String namespace) {
-		return new View(this, e -> namespace.equals(e.getNamespace()));
+		if(namespace == null)
+			return new View(this, e -> true);
+		else
+			return new View(this, e -> namespace.equals(e.getNamespace()));
 	}
 	
 	class View implements IModuleView {
