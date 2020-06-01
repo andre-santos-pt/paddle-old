@@ -163,7 +163,7 @@ public interface IControlFlowGraph {
 	static void reachability(INode n, List<INode> list) {
 		if(!list.contains(n)) {
 			list.add(n);
-			if(n.getNext() != null) {
+			if(n != null && n.getNext() != null) {
 				if(n instanceof IBranchNode)
 					reachability(((IBranchNode) n).getAlternative(), list);
 
