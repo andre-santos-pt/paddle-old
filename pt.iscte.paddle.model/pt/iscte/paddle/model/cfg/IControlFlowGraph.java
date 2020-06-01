@@ -51,31 +51,36 @@ public interface IControlFlowGraph {
 			return nodes;
 		}
 	}
-	
+
 	default List<INode> generateSubCFG(INode source, INode destination){
 		List<INode> nodes = new ArrayList<INode>();
 		nodes.add(getEntryNode());
 		boolean start = false;
-		
+
 		for (INode node : getNodes()) {
 			if(node.equals(source)) start = true;
 			if(start) nodes.add(node);
 			if(node.equals(destination)) start = false;
 		}
-		
-//		List<Path> paths = pathsBetweenNodes(source, destination);
-//		
-//		for (Path path : paths) {
-//			path.nodes.forEach(node -> {
-//				if(!nodes.contains(node)) nodes.add(node);
-//			});
-//		}
+
+		//		List<Path> paths = pathsBetweenNodes(source, destination);
+		//		
+		//		for (Path path : paths) {
+		//			path.nodes.forEach(node -> {
+		//				if(!nodes.contains(node)) nodes.add(node);
+		//			});
+		//		}
 		nodes.add(getExitNode());
 		return nodes;
 	}
-	
+
 	default boolean usedOrChangedBetween(INode source, INode destiny, IVariableDeclaration variable) {
 		List<Path> paths = pathsBetweenNodes(source, destiny);
+		//		paths.forEach(path -> {
+		//			System.out.println("-------------------------");
+		//			path.nodes.forEach(n -> System.out.println(n));
+		//			System.out.println("-------------------------");
+		//		});
 		if(paths.isEmpty()) return true;
 		for (Path path : paths) {
 
@@ -84,15 +89,13 @@ public interface IControlFlowGraph {
 			for (INode node : generateSubCFG(source, destiny)) {
 
 				if(node.getElement() instanceof IArrayElementAssignment 
-						&& (((IArrayElementAssignment) node.getElement()).getTarget().isSame(variable.expression()) 
+						&& (((IArrayElementAssignment) node.getElement()).getTarget().isSame(variable) 
 								|| ((IArrayElementAssignment) node.getElement()).getExpression().includes(variable))) 
 					return true;
 				else if(node.getElement() instanceof IVariableAssignment
-						&& (((IVariableAssignment) node.getElement()).getTarget().isSame(variable.expression()) 
-								|| ((IVariableAssignment) node.getElement()).getExpression().includes(variable))) {
+						&& (((IVariableAssignment) node.getElement()).getTarget().isSame(variable) 
+								|| ((IVariableAssignment) node.getElement()).getExpression().includes(variable)))
 					return true;
-				}
-					
 
 				else if(node.getElement() instanceof IProcedureCall) 
 					for (IExpression argument : ((IProcedureCall) node.getElement()).getArguments()) 
@@ -104,7 +107,7 @@ public interface IControlFlowGraph {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Goes through the ControlFlowGraph nodes searching for all the possible paths between the supplied source and destination nodes.
 	 * @param source The source node where the search will start.
@@ -132,7 +135,7 @@ public interface IControlFlowGraph {
 		if(!path.existsInPath(source))
 			path.addNode(source);
 		else beenHere = true;
-		
+
 		if(source.isEquivalentTo(destination)) {
 			paths.add(path);
 			return;
