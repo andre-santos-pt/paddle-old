@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.List;
 
+
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.interpreter.impl.Value;
 import pt.iscte.paddle.model.IModule;
@@ -33,8 +34,13 @@ public class BuiltinProcedureReflective extends Procedure {
 			setId(e.getName());
 			if(!Modifier.isStatic(e.getModifiers())) {
 				setFlag(IProcedureDeclaration.INSTANCE_FLAG);
-				IRecordType t = module.addRecordType(e.getDeclaringClass().getSimpleName());
-				t.setFlag(IRecordType.BUILTIN);
+				IRecordType t = module.getRecordType(e.getDeclaringClass().getSimpleName());
+				if(t == null) {
+					t = module.addRecordType(e.getDeclaringClass().getSimpleName());
+					t.setFlag(IRecordType.BUILTIN);
+				}
+				IVariableDeclaration p = addParameter(t.reference());
+				p.setId("$this"); // TODO extract string
 			}
 		}
 		else {
@@ -69,7 +75,13 @@ public class BuiltinProcedureReflective extends Procedure {
 			if(t.matchesPrimitiveType(c))
 				return t;
 		
-		return module.getRecordType(c.getSimpleName());
+		IRecordType t = module.getRecordType(c.getSimpleName());
+		if(t == null) {
+			t = module.addRecordType(c.getSimpleName());
+			t.setNamespace(c.getSimpleName());
+			t.setFlag(IRecordType.BUILTIN);
+		}
+		return t;
 	}
 	
 	private static Object match(Object o, IType t) {

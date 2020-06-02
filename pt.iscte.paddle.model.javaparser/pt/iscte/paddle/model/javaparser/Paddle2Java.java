@@ -50,17 +50,20 @@ public class Paddle2Java implements IModuleTranslator {
 		String code = "class " + modId + " {\n";
 
 		for(String ns : m.getNamespaces()) {
+			if(ns.equals(m.getId()))
+				continue;
+
 			IModuleView view = m.createNamespaceView(ns);
 
 			IRecordType type = m.getRecordType(ns);
 
 			if(type != null && !type.is(IRecordType.BUILTIN)) {
-				code += "static class " + type.getId() + "{\n";
+				code += "static class " + type.getId() + " {\n";
 
 				for (IVariableDeclaration member : type.getFields()) {
 					code += "\t" + translate(member.getType()) + " " + member.getId() + ";\n";
 				}
-				
+
 				code += "\n";
 
 				for(IConstantDeclaration c : view.getConstants())
@@ -80,11 +83,11 @@ public class Paddle2Java implements IModuleTranslator {
 	public String translate(IType t) {
 		if(t instanceof IReferenceType) 
 			return ((IReferenceType) t).getTarget().getId();
-		
+
 		return t.getId();
 	}
 
-	
+
 	private String argsToString(List<IExpression> arguments) {
 		String args = "";
 		for(IExpression e : arguments) {
@@ -143,7 +146,10 @@ public class Paddle2Java implements IModuleTranslator {
 
 	public String translate(IBlockElement e) {
 		String ret = null;
-		if(e instanceof IVariableDeclaration) {
+		if(e instanceof IBlock) {
+			ret = "{\n" + statements((IBlock) e) + "}\n";
+		}
+		else if(e instanceof IVariableDeclaration) {
 			IVariableDeclaration v = (IVariableDeclaration) e;
 			ret = translate(v.getType()) + " " + v.getId() + ";";
 		}
@@ -186,7 +192,7 @@ public class Paddle2Java implements IModuleTranslator {
 			ret = "while(" + translate(l.getGuard()) + ") {\n" + statements(l.getBlock()) + 
 					tabs((IBlock) e.getParent()) + "}"; 
 		}
-		
+
 		else if(e instanceof IReturn) {
 			IExpression exp = ((IReturn) e).getExpression();
 			if(((IReturn) e).isError())
@@ -194,16 +200,16 @@ public class Paddle2Java implements IModuleTranslator {
 			else
 				ret = exp == null ? "return;" : "return " + translate(exp) + ";";
 		}
-		
+
 		else if(e instanceof IBreak)
 			ret = "break;";
-		
+
 		else if(e instanceof IContinue)
 			ret = "continue;";
-		
+
 		else if(e instanceof IProcedureCall)
 			ret = procedureCall((IProcedureCall) e) + ";";
-		
+
 		if(ret == null)
 			throw new RuntimeException("not supported: " + e);
 		else
@@ -211,20 +217,29 @@ public class Paddle2Java implements IModuleTranslator {
 	}
 
 	private String procedureCall(IProcedureCall call) {
-		if(call.getProcedure().isBuiltIn() && call.getProcedure().is(IProcedureDeclaration.INSTANCE_FLAG)) {
-			return translate(call.getArguments().get(0)) + "." + call.getProcedure().getId() + 
-					"(" + argsToString(call.getArguments().subList(1, call.getArguments().size())) + ")";
+		if(call.getProcedure().isBuiltIn()) {
+
+			if(call.getProcedure().is(IProcedureDeclaration.INSTANCE_FLAG))
+				return translate(call.getArguments().get(0)) + "." + call.getProcedure().getId() + 
+						"(" + argsToString(call.getArguments().subList(1, call.getArguments().size())) + ")";
+
+			else if(call.getProcedure().is(IProcedureDeclaration.CONSTRUCTOR_FLAG))
+				return "new " + call.getProcedure().getId() + 
+						"(" + argsToString(call.getArguments()) + ")";
+			else
+				return call.getProcedure().getNamespace() + "." + call.getProcedure().getId() + 
+						"(" + argsToString(call.getArguments()) + ")";
 		}
 		else {
-		String inv = call.getProcedure().isBuiltIn() && call.getProcedure().is(ParserAux.CONSTRUCTOR_FLAG) ?
-			"new " + call.getProcedure().getId() :
-//			call.getOwnerProcedure().sameNamespace(call.getProcedure()) ? call.getProcedure().getId() :
-			call.getProcedure().getNamespace() + "." + call.getProcedure().getId();
-	
-		return inv + "(" + argsToString(call.getArguments()) + ")";
+			String inv = call.getProcedure().isBuiltIn() && call.getProcedure().is(ParserAux.CONSTRUCTOR_FLAG) ?
+					"new " + call.getProcedure().getId() :
+						//			call.getOwnerProcedure().sameNamespace(call.getProcedure()) ? call.getProcedure().getId() :
+						call.getProcedure().getNamespace() + "." + call.getProcedure().getId();
+
+					return inv + "(" + argsToString(call.getArguments()) + ")";
 		}
-		}
-	
+	}
+
 	private String flags(IBlockElement e) {
 		Set<String> flags = e.getFlags();
 		if(flags.isEmpty())
@@ -241,20 +256,20 @@ public class Paddle2Java implements IModuleTranslator {
 	public String translate(IExpression e) {
 		if(e instanceof ILiteral)
 			return ((ILiteral) e).getStringValue();
-		
+
 		else if(e instanceof IVariableExpression)
 			return ((IVariableExpression) e).getVariable().getId();
-		
+
 		else if(e instanceof IConstantExpression)
 			return ((IConstantExpression) e).getConstant().getId();
-		
+
 		else if(e instanceof IVariableAddress)
 			return ((IVariableAddress) e).getTarget().getId();
-		
+
 		else if(e instanceof IVariableDereference)
 			return ((IVariableDereference) e).getTarget().getId();
-		
-		
+
+
 		// before allocation because it is subtype
 		else if(e instanceof IPredefinedArrayAllocation) {
 			IPredefinedArrayAllocation a = (IPredefinedArrayAllocation) e;
@@ -266,13 +281,13 @@ public class Paddle2Java implements IModuleTranslator {
 				return ret + "}";
 
 			ret += it.next();
-			
+
 			while(it.hasNext())
 				ret += ", " + translate(it.next());
-			
+
 			return ret + "}";
 		}
-		
+
 		else if(e instanceof IArrayAllocation) {
 			IArrayAllocation a = (IArrayAllocation) e;
 			String ret = "new " + ((IArrayType) ((IReferenceType) a.getType()).getTarget()).getRootComponentType().getId();
@@ -280,11 +295,11 @@ public class Paddle2Java implements IModuleTranslator {
 				ret += "[" + translate(d) + "]";
 			return ret;
 		}
-		
+
 		else if(e instanceof IArrayLength) {
 			return translate(((IArrayLength) e).getTarget()) + ".length";
 		}
-		
+
 		else if(e instanceof IRecordAllocation) {
 			IRecordType t = ((IRecordAllocation) e).getRecordType();
 			if(t.getId().equals(String.class.getName()) && ((IRecordAllocation) e).hasProperty(String.class))
@@ -292,7 +307,7 @@ public class Paddle2Java implements IModuleTranslator {
 			else
 				return "new " + translate(t) + "()";
 		}
-		
+
 		else if(e instanceof IArrayElement) {
 			IArrayElement el = (IArrayElement) e;
 			String text = translate(el.getTarget());
@@ -304,12 +319,12 @@ public class Paddle2Java implements IModuleTranslator {
 			IRecordFieldExpression r = (IRecordFieldExpression) e;
 			return translate(r.getTarget())  + "." + r.getField().getId();
 		}
-		
+
 		else if(e instanceof IConditionalExpression) {
 			IConditionalExpression c = (IConditionalExpression) e;
 			return translate(c.getConditional()) + " ? " + translate(c.getTrueExpression()) + " : " + translate(c.getFalseExpression());
 		}
-		
+
 		else if(e instanceof IProcedureCall)
 			return procedureCall((IProcedureCall) e);
 
@@ -317,11 +332,11 @@ public class Paddle2Java implements IModuleTranslator {
 			IUnaryExpression ue = (IUnaryExpression) e;
 			return ue.getOperator().getSymbol() + translate(ue.getOperand());
 		}
-		
+
 		else if(e instanceof IBinaryExpression) {
 			IBinaryExpression bi = (IBinaryExpression) e;
-			return translate(bi.getLeftOperand()) + " " + bi.getOperator().getSymbol() +
-					" " + translate(bi.getRightOperand());
+			return "(" + translate(bi.getLeftOperand()) + " " + bi.getOperator().getSymbol() +
+					" " + translate(bi.getRightOperand()) + ")";
 		}
 
 		throw new RuntimeException("not supported: " + e);

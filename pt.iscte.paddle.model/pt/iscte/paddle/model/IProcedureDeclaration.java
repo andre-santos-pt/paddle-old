@@ -50,6 +50,13 @@ public interface IProcedureDeclaration extends INamespaceElement {
 		return getReturnType() + " " + getId() + "(" + args + ")";
 	}
 
+	default boolean matchesSignature(String id, List<IExpression> args) {
+		IType[] types = new IType[args.size()];
+		for(int i = 0; i < types.length; i++)
+			types[i] = args.get(i).getType();
+		return matchesSignature(id, types);
+	}
+	
 	default boolean matchesSignature(String id, IType... paramTypes) {
 		if(!id.equals(getId()))
 			return false;

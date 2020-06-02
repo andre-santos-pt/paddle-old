@@ -4,12 +4,12 @@ package pt.iscte.paddle.model.javaparser;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Executable;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.antlr.v4.runtime.BaseErrorListener;
@@ -38,7 +38,7 @@ public class Java2Paddle {
 	private final IModule module;
 
 	public Java2Paddle(File file) {
-		this(file, f -> false, IModule.create(file.getName()));
+		this(file, f -> false, IModule.create(file.getName().replace(".java","")));
 	}
 
 	public Java2Paddle(File file, Predicate<File> exclude, IModule module) {
@@ -60,7 +60,9 @@ public class Java2Paddle {
 			CharStream s;
 			try {
 				String charset = UniversalDetector.detectCharset(f);
-				if(charset != null && Charset.isSupported(charset)) {
+				if(charset == null)
+					charset = "UTF-8";
+				if(Charset.isSupported(charset)) {
 					s = CharStreams.fromFileName(f.getAbsolutePath(), Charset.forName(charset));
 					JavaLexer lexer = new JavaLexer(s);
 					JavaParser p = new JavaParser(new CommonTokenStream(lexer));
@@ -95,7 +97,17 @@ public class Java2Paddle {
 			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName(charset));
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-			PreParserListener l = new PreParserListener(module, e.getKey(), e.getValue(), aux);
+			RecordParserListener l = new RecordParserListener(module, e.getKey(), e.getValue(), aux);
+			ParseTreeWalker w = new ParseTreeWalker();
+			w.walk(l, p.compilationUnit());
+		}
+		
+		for(Entry<IRecordType, File> e : types.entrySet()) {
+			String charset = UniversalDetector.detectCharset(e.getValue());
+			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName(charset));
+			JavaLexer lexer = new JavaLexer(s);
+			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
+			MemberParserListener l = new MemberParserListener(module, e.getKey(), e.getValue(), aux);
 			ParseTreeWalker w = new ParseTreeWalker();
 			w.walk(l, p.compilationUnit());
 		}
@@ -106,7 +118,7 @@ public class Java2Paddle {
 			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName(charset));
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-			ParserListener l = new ParserListener(module, e.getKey(), e.getValue(), aux);
+			BodyListener l = new BodyListener(module, e.getKey(), e.getValue(), aux);
 			ParseTreeWalker w = new ParseTreeWalker();
 			w.walk(l, p.compilationUnit());
 			System.out.println("done " + e.getKey().getId() + "\n blocks: " + l.blockStack + "\n exp stack: " + l.expStack);
@@ -120,5 +132,19 @@ public class Java2Paddle {
 		return aux.unsupported;
 	}
 
+	public void loadBuiltInProcedures(Executable ...executables) {
+		module.loadBuiltInProcedures(executables);
+	}
+
+	public void loadBuiltInProcedures(Class<?> clazz) {
+		module.loadBuiltInProcedures(clazz);
+	}
+
+	public IRecordType addBuiltInRecordType(String id) {
+		IRecordType t = module.addRecordType(id);
+		t.setNamespace(id);
+		t.setFlag(IRecordType.BUILTIN);
+		return t;
+	}
 }
 

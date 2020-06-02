@@ -3,7 +3,6 @@ package pt.iscte.paddle.model.javaparser.test;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,76 +13,50 @@ import java.util.List;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.javaparser.Java2Paddle;
-import pt.iscte.paddle.model.javaparser.Javac;
-import pt.iscte.paddle.model.javaparser.Paddle2Java;
 import pt.iscte.paddle.model.validation.AsgSemanticChecks;
+import pt.iscte.paddle.model.validation.ISemanticProblem;
 import pt.iscte.paddle.model.validation.SemanticChecker;
 
-public class Test {
+public class TestRedo {
 
 	public static void main(String[] args) throws IOException {
-		File genDest = new File("/Users/andresantos/EclipseWS/workspace-paddle/testgen/gen");
-		File genDest2 = new File("/Users/andresantos/EclipseWS/workspace-paddle/testgen/gen2");
-		File binDest = new File("/Users/andresantos/EclipseWS/workspace-paddle/testgen/genbin");
-
-		File root = new File("/Users/andresantos/Desktop/Trabalhos254");
-		//		File root = new File("/Users/andresantos/git/paddle-ui/pt.iscte.paddle.javardise.tests/src-gen/TestMax.java");
+		File binDest = new File("/Users/andresantos/EclipseWS/workspace-paddle/testgenok/genbin");
+		File redoDest = new File("/Users/andresantos/EclipseWS/workspace-paddle/testredo/src");
+		
 		List<File> compilationOk = new ArrayList<>();
-		List<IModule> parseOk = new ArrayList<>();
+		List<File> parseOk = new ArrayList<>();
 		List<IModule> reparseFail = new ArrayList<>();
-		List<Integer> errorProjs = new ArrayList<>();
+		List<File> errorProjs = new ArrayList<>();
 		List<Integer> exceptions = new ArrayList<Integer>();
 		long time = System.currentTimeMillis();
-		final int FIRST = 1;
-		final int LAST = 254;
-		for (int n = FIRST; n <= LAST; n++) {
-			File proj = new File(root, ""+n);
-			String projId = "Project" + proj.getName();
-			IModule module = IModule.create(root.isFile() ? "$" + root.getName().substring(0, root.getName().length()-5) : projId);
+		
+		for (File f : binDest.listFiles(f -> f.getName().endsWith(".java") && !f.getName().equals("ImageUtil.java"))) {
+			IModule module = IModule.create(f.getName().substring(0, f.getName().indexOf('.')));
 			addBuiltins(module);
 
-			Java2Paddle p = new Java2Paddle(root.isFile() ? root : proj, f -> false, module);
+			Java2Paddle p = new Java2Paddle(f, fi -> false, module);
 			if(p.checkSyntax()) {
-				compilationOk.add(proj);
+				compilationOk.add(f);
 				try {
 					IModule m = p.parse();
 					SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
-					//					List<ISemanticProblem> problems = checker.check(m);
+					List<ISemanticProblem> problems = checker.check(m);
 					//				    System.err.println("semantics: " + problems);
 					System.err.println("unsupported: " + p.getUnsupported().size());
-					//					if(p.getUnsupported().size() == 0)
-
-
-					String code = new Paddle2Java().translate(m);
-					PrintWriter w = new PrintWriter(new File(genDest, root.isFile() ? root.getName() : projId + ".java"));
-					w.write(code);
-					w.close();
-
-					if(Javac.compile(m, genDest2)) {
-						parseOk.add(m);	
-						File f = new File(genDest, projId + ".java");
-//						Java2Paddle p2 = new Java2Paddle(f);
-//						try {
-//							p2.parse();
-//						}
-//						catch(Exception e) {
-//							reparseFail.add(m);	
-//							e.printStackTrace();
-//						}
-						Path copied = Paths.get(new File(binDest, projId + ".java").getAbsolutePath());
+					if(p.getUnsupported().size() == 0) {
+						parseOk.add(f);
+						Path copied = Paths.get(new File(redoDest, f.getName()).getAbsolutePath());
 						Path originalPath = Paths.get(f.getAbsolutePath());
 						Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
 					}
+					else
+						errorProjs.add(f);
 
-
-					if(FIRST == LAST)
-						System.out.println(code);
+//					System.out.println(m);
 				}
 				catch(Exception e) {
-					errorProjs.add(n);
-					exceptions.add(n);
-					if(FIRST == LAST)
-						e.printStackTrace();
+					
+					errorProjs.add(f);
 				}
 			}
 			//					success.add(proj);
@@ -104,10 +77,8 @@ public class Test {
 		//		module.addRecordType(String.class.getSimpleName());
 
 		IRecordType system = module.addRecordType("System");
-		system.setFlag(IRecordType.BUILTIN);
 		IRecordType out = module.addRecordType("PrintStream");
 		out.setNamespace("System");
-		out.setFlag(IRecordType.BUILTIN);
 		system.addField(out, "out");
 
 		try {

@@ -12,7 +12,9 @@ public interface IArrayElement extends ICompositeExpression, ITargetExpression {
 		IType type = getTarget().getType();
 		if(type.isReference())
 			type = ((IReferenceType) type).getTarget();
-		return ((IArrayType) type).getComponentTypeAt(getIndexes().size());
+		
+		return type;
+//		return ((IArrayType) type).getComponentTypeAt(getIndexes().size());
 	}
 	
 	@Override

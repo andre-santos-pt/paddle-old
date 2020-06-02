@@ -5,6 +5,8 @@ module pt.iscte.paddle.model.javaparser {
 	requires org.antlr.v4.runtime;
 	requires transitive pt.iscte.paddle.model;
 	requires java.desktop;
+	requires java.compiler;
+	
 	requires com.github.albfernandez.juniversalchardet;
 	
 //	exports pt.iscte.paddle.model.java;

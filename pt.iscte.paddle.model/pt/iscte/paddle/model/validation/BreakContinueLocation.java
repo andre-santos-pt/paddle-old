@@ -5,7 +5,9 @@ import pt.iscte.paddle.model.IBreak;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProgramElement;
+import pt.iscte.paddle.model.ISelection;
 
+// TODO continue
 public class BreakContinueLocation extends Rule {
 
 	@Override
@@ -14,7 +16,10 @@ public class BreakContinueLocation extends Rule {
 		while(!(b instanceof IProcedure)) {
 			if(b instanceof ILoop)
 				return;
-			b = ((IBlock) b).getParent();
+			if(b instanceof ISelection)
+				b = ((ISelection) b).getParent();
+			else
+				b = ((IBlock) b).getParent();
 		}
 		addProblem(ISemanticProblem.create("break statement can only be used inside a loop", breakStatement));
 	}
