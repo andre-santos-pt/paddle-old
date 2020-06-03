@@ -199,4 +199,15 @@ class ParserAux {
 	public IProcedure getConstructor(ConstructorDeclarationContext ctx, String namespace) {
 		return constructorMap.get(namespace + ctx.start.getTokenIndex());
 	}
+
+	static IType handleRightBrackets(IType type, String varAndBrackets) {
+		IType t = type;
+		while(varAndBrackets.endsWith("[]")) {
+			varAndBrackets = varAndBrackets.substring(0, varAndBrackets.length()-2);
+			t = t.array();
+		}
+		if(t != type)
+			t = t.reference();
+		return t;
+	}
 }

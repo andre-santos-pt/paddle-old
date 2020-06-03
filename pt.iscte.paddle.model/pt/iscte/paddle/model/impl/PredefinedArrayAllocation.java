@@ -20,9 +20,9 @@ public class PredefinedArrayAllocation extends Expression implements IPredefined
 	private final boolean onHeap;
 	
 	PredefinedArrayAllocation(IArrayType arrayType, boolean onHeap, List<IExpression> elements) {
-		for(IExpression e : elements)
-			if(!e.getType().isSame(arrayType.getComponentTypeAt(1)))
-				assert false : "all elements must have type equal to array component type";
+//		for(IExpression e : elements)
+//			if(!e.getType().isSame(arrayType.getComponentTypeAt(1)) && !e.isNull())
+//				assert false : "all elements must have type equal to array component type";
 		this.type = arrayType;
 		this.elements = List.copyOf(elements);
 		this.onHeap = onHeap;

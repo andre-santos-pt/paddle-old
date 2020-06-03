@@ -60,7 +60,7 @@ class BodyListener extends JavaParserBaseListener {
 	Deque<IBlock> blockStack;
 	Deque<IExpression> expStack;
 
-	private final IRecordType toplevelType;
+	private IRecordType toplevelType;
 	private final File file;
 
 	private IRecordType currentType;
@@ -69,29 +69,29 @@ class BodyListener extends JavaParserBaseListener {
 
 	private final ParserAux aux;
 
-	public BodyListener(IModule module, IRecordType classType, File file, ParserAux aux) {
+	public BodyListener(IModule module, File file, ParserAux aux) {
 		assert module.getId() != null;
 		this.module = module;
-		this.toplevelType = classType;
 		this.aux = aux;
 		blockStack = new ArrayDeque<>();
 		expStack = new ArrayDeque<>();
 		this.file = file;
-		currentType = classType;
 	}
 
 	@Override
 	public void enterClassDeclaration(ClassDeclarationContext ctx) {
 		// nested class
-		if(ctx.getParent() instanceof MemberDeclarationContext)
-			currentType = module.getRecordType(ctx.IDENTIFIER().getText());
-
+//		if(ctx.getParent() instanceof MemberDeclarationContext)
+		
+		currentType = module.getRecordType(ctx.IDENTIFIER().getText());
+		if(toplevelType == null)
+			toplevelType = currentType;
 	}
 
 	@Override
 	public void exitClassDeclaration(ClassDeclarationContext ctx) {
 		// nested class
-		if(ctx.getParent() instanceof MemberDeclarationContext)
+//		if(ctx.getParent() instanceof MemberDeclarationContext)
 			currentType = toplevelType;
 	}
 
@@ -132,24 +132,13 @@ class BodyListener extends JavaParserBaseListener {
 		ret.setFlag(ParserAux.CONSTRUCTOR_FLAG);
 	}
 
-	static IType handleRightBrackets(IType type, String varAndBrackets) {
-		IType t = type;
-		while(varAndBrackets.endsWith("[]")) {
-			varAndBrackets = varAndBrackets.substring(0, varAndBrackets.length()-2);
-			t = t.array();
-		}
-		if(t != type)
-			t = t.reference();
-		return t;
-	}
-
 	@Override
 	public void exitLocalVariableDeclaration(LocalVariableDeclarationContext ctx) {
 		IType type = aux.matchType(ctx.typeType());
 		int n = 0;
 		for (VariableDeclaratorContext v : ctx.variableDeclarators().variableDeclarator())
 			if(v.variableInitializer() != null) {
-				IType t = handleRightBrackets(type, v.variableDeclaratorId().getText());
+				IType t = ParserAux.handleRightBrackets(type, v.variableDeclaratorId().getText());
 				n++;
 				if(v.variableInitializer().arrayInitializer() != null) {
 					int len = v.variableInitializer().arrayInitializer().variableInitializer().size();
@@ -162,7 +151,7 @@ class BodyListener extends JavaParserBaseListener {
 
 		AtomicInteger i = new AtomicInteger(0);
 		for (VariableDeclaratorContext v : ctx.variableDeclarators().variableDeclarator()) {
-			IType t = handleRightBrackets(type, v.variableDeclaratorId().getText());
+			IType t = ParserAux.handleRightBrackets(type, v.variableDeclaratorId().getText());
 			IVariableDeclaration var = addStatement(b -> b.addVariable(t), ctx);
 			var.setId(v.variableDeclaratorId().IDENTIFIER().getText());
 			if(v.variableInitializer() != null) {
@@ -269,6 +258,7 @@ class BodyListener extends JavaParserBaseListener {
 		else if(ctx.blockLabel != null && ctx.getParent() instanceof BlockStatementContext)
 			blockStack.pop();
 
+		
 		if(ctx.getParent() instanceof StatementContext) {
 			IBlock b = blockStack.pop();
 
@@ -427,7 +417,7 @@ class BodyListener extends JavaParserBaseListener {
 					if(var.isLocalVariable())
 						addStatement(b -> b.addAssignment(var, right), ctx);
 					else {
-						assert currentProcedure.is(ParserAux.INSTANCE_FLAG);
+//						assert currentProcedure.is(ParserAux.INSTANCE_FLAG);
 						IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
 						addStatement(b -> b.addRecordFieldAssignment(thisVar.field(var), right), ctx);
 					}
@@ -525,6 +515,10 @@ class BodyListener extends JavaParserBaseListener {
 			expStack.push(IOperator.TRUNCATE.on(expStack.pop()));
 		}
 
+		else if(ctx.prefix != null && is(ctx.prefix, "!")) {
+			expStack.push(IOperator.NOT.on(expStack.pop()));
+		}
+
 		else if(is(ctx.bop, "?")) {
 			aux.unsupported("conditional expression", ctx);
 		}
@@ -534,6 +528,9 @@ class BodyListener extends JavaParserBaseListener {
 			if(op != null)
 				pushBinaryOperation(op);
 		}
+		
+		else
+			aux.unsupported("unknown expression", ctx);
 
 
 		if(ctx.getParent() instanceof ForControlContext) {

@@ -30,13 +30,16 @@ import pt.iscte.paddle.model.javaparser.antlr.JavaParser.CompilationUnitContext;
 // TODO API for text
 public class Java2Paddle {
 
-	//	private final String id;
 	private final File[] javaFiles;
 	boolean errors;
 	private ParserAux aux;
 
 	private final IModule module;
 
+	public Java2Paddle(File file) {
+		this(file, file.getName().replace(".java", ""));
+	}
+	
 	public Java2Paddle(File file, String moduleId) {
 		this(file, f -> false, IModule.create(moduleId));
 	}
@@ -59,9 +62,7 @@ public class Java2Paddle {
 		for(File f : javaFiles) {
 			CharStream s;
 			try {
-				String charset = UniversalDetector.detectCharset(f);
-				if(charset == null)
-					charset = "UTF-8";
+				String charset = detectCharset(f);
 				if(Charset.isSupported(charset)) {
 					s = CharStreams.fromFileName(f.getAbsolutePath(), Charset.forName(charset));
 					JavaLexer lexer = new JavaLexer(s);
@@ -79,49 +80,61 @@ public class Java2Paddle {
 		}
 		return l.errCount == 0;
 	}
+	
+	
+	private String detectCharset(File f) throws IOException {
+		String charset = UniversalDetector.detectCharset(f);
+		if(charset == null || !Charset.isSupported(charset))
+			charset = "UTF-8";
+		
+		return charset;
+	}
+	
 
 	public IModule parse() throws IOException {
 		aux = new ParserAux(module);
 
 		Map<IRecordType, File> types = new HashMap<>();
+		Map<File, Charset> charsets = new HashMap<>();
+		
+//		for(File f : javaFiles) {
+//			IRecordType t = module.addRecordType();
+//			types.put(t, f);
+//		}
 
 		for(File f : javaFiles) {
-			String namespace = f.getName().substring(0, f.getName().lastIndexOf('.'));
-			IRecordType t = module.addRecordType(namespace);
-			t.setNamespace(namespace);
-			types.put(t, f);
-		}
-
-		for(Entry<IRecordType, File> e : types.entrySet()) {
-			String charset = UniversalDetector.detectCharset(e.getValue());
-			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName(charset));
+			Charset charset = Charset.forName(detectCharset(f));
+			charsets.put(f, charset);
+			
+			CharStream s = CharStreams.fromFileName(f.getAbsolutePath(), charset);
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-			RecordParserListener l = new RecordParserListener(module, e.getKey(), e.getValue(), aux);
+			RecordParserListener l = new RecordParserListener(module, aux);
 			ParseTreeWalker w = new ParseTreeWalker();
 			w.walk(l, p.compilationUnit());
 		}
 		
-		for(Entry<IRecordType, File> e : types.entrySet()) {
-			String charset = UniversalDetector.detectCharset(e.getValue());
-			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName(charset));
+		for(File f : javaFiles) {
+			CharStream s = CharStreams.fromFileName(f.getAbsolutePath(), charsets.get(f));
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-			MemberParserListener l = new MemberParserListener(module, e.getKey(), e.getValue(), aux);
+			MemberParserListener l = new MemberParserListener(module, f, aux);
 			ParseTreeWalker w = new ParseTreeWalker();
 			w.walk(l, p.compilationUnit());
 		}
 
-		for(Entry<IRecordType, File> e : types.entrySet()) {
-			System.out.println("parsing " + e.getKey().getId() + "  " + e.getValue());
-			String charset = UniversalDetector.detectCharset(e.getValue());
-			CharStream s = CharStreams.fromFileName(e.getValue().getAbsolutePath(), Charset.forName(charset));
+		for(File f : javaFiles) {
+			CharStream s = CharStreams.fromFileName(f.getAbsolutePath(), charsets.get(f));
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-			BodyListener l = new BodyListener(module, e.getKey(), e.getValue(), aux);
+			BodyListener l = new BodyListener(module, f, aux);
 			ParseTreeWalker w = new ParseTreeWalker();
 			w.walk(l, p.compilationUnit());
-			System.out.println("done " + e.getKey().getId() + "\n blocks: " + l.blockStack + "\n exp stack: " + l.expStack);
+			System.out.println("parsing done " + f);
+			if(!l.blockStack.isEmpty())
+				System.err.println("block stack: " + l.blockStack);
+			if(!l.expStack.isEmpty())
+				System.err.println("expression stack: " + l.expStack);
 		}
 
 		return module;

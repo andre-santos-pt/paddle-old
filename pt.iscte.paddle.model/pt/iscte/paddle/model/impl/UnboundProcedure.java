@@ -49,7 +49,7 @@ public class UnboundProcedure extends ProgramElement implements IProcedure {
 
 	@Override
 	public IBlock getBody() {
-		return null;
+		return new Block(this, false, -1);
 	}
 
 	@Override

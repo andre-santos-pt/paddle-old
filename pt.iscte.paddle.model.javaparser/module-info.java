@@ -7,7 +7,7 @@ module pt.iscte.paddle.model.javaparser {
 	requires java.desktop;
 	requires java.compiler;
 	
-	requires com.github.albfernandez.juniversalchardet;
+	requires org.mozilla.universalchardet;
 	
 //	exports pt.iscte.paddle.model.java;
 	exports pt.iscte.paddle.model.javaparser;

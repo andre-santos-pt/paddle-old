@@ -1,9 +1,12 @@
 package pt.iscte.paddle.model.tests;
 
+import static org.junit.Assert.assertFalse;
 import static pt.iscte.paddle.model.IOperator.EQUAL;
 import static pt.iscte.paddle.model.IOperator.MUL;
 import static pt.iscte.paddle.model.IOperator.SUB;
 import static pt.iscte.paddle.model.IType.INT;
+
+import org.junit.Test;
 
 import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.model.IBinaryExpression;
@@ -25,6 +28,11 @@ public class TestFactorial extends BaseTest {
 	IBinaryExpression retExp = MUL.on(n, recCall);
 	IBlock elseBlock = sel.getAlternativeBlock();
 	IReturn return2 = elseBlock.addReturn(retExp);
+	
+	@Test
+	public void test() {
+		assertFalse(factorial.isConstantTime());
+	}
 	
 	@Case("0")
 	public void testBaseCase(IExecutionData data) {

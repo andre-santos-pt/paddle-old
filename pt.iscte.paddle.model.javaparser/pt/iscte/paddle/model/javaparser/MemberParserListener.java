@@ -28,19 +28,17 @@ import pt.iscte.paddle.model.javaparser.antlr.JavaParserBaseListener;
 class MemberParserListener extends JavaParserBaseListener {
 
 	private final IModule module;
-	private final IRecordType toplevelType;
+	private IRecordType toplevelType;
 	private final ParserAux aux;
 	private IProcedure proc;
 	private File file;
 
 	private IRecordType currentType;
 
-	public MemberParserListener(IModule module, IRecordType selfType, File file, ParserAux aux) {
+	public MemberParserListener(IModule module, File file, ParserAux aux) {
 		this.module = module;
-		this.toplevelType = selfType;
 		this.aux = aux;
 		this.file = file;
-		currentType = selfType;
 	}
 
 
@@ -50,12 +48,18 @@ class MemberParserListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassDeclaration(ClassDeclarationContext ctx) {
-		if(ctx.EXTENDS() != null || ctx.IMPLEMENTS() != null)
-			aux.unsupported("extends/implements", ctx);
-
+			
+		currentType = module.getRecordType(ctx.IDENTIFIER().getText());
+		if(toplevelType == null)
+			toplevelType = currentType;
+		
+		assert currentType != null;
+		
 		// nested class
 		if(ctx.getParent() instanceof MemberDeclarationContext) {
-			currentType = module.getRecordType(ctx.IDENTIFIER().getText());
+			
+			if(ctx.EXTENDS() != null || ctx.IMPLEMENTS() != null)
+				aux.unsupported("extends/implements", ctx);
 		}
 
 	}
@@ -73,28 +77,30 @@ class MemberParserListener extends JavaParserBaseListener {
 		IType type = aux.matchType(ctx.typeType());
 		for (VariableDeclaratorContext varDec : ctx.variableDeclarators().variableDeclarator()) {
 			String varId = varDec.variableDeclaratorId().IDENTIFIER().getText();
+			IType t = ParserAux.handleRightBrackets(type, varDec.variableDeclaratorId().getText());
+			
 			boolean constant = 
 					varDec.variableInitializer() != null &&
 					aux.hasModifier(classMember.modifier(), Keyword.STATIC) && 
 					aux.hasModifier(classMember.modifier(), Keyword.FINAL);
 			if(constant) {
 				IConstantDeclaration con;
-				if(type instanceof IValueType) {
+				if(t instanceof IValueType) {
 					String val = varDec.variableInitializer().expression().getText();
 					Object obj = null;
-					if(type == IType.INT)
+					if(t == IType.INT)
 						obj = Integer.parseInt(val);
-					else if(type == IType.DOUBLE)
+					else if(t == IType.DOUBLE)
 						obj = Double.parseDouble(val);
-					else if(type == IType.BOOLEAN)
+					else if(t == IType.BOOLEAN)
 						obj = Boolean.parseBoolean(val);
 					else
 						aux.unsupported("constant type", ctx);
 
-					con = module.addConstant(type, ((IValueType) type).literal(obj));
+					con = module.addConstant(t, ((IValueType) t).literal(obj));
 				}
 				else {
-					con = module.addConstant(type, ILiteral.getNull());
+					con = module.addConstant(t, ILiteral.getNull());
 					aux.unsupported("constant type", varDec);
 				}
 				con.setId(varId);
@@ -104,7 +110,7 @@ class MemberParserListener extends JavaParserBaseListener {
 				//				if(ctx.variableInitializer() != null) {
 				//					aux.unsupported("field initializer", ctx.variableInitializer());
 				//				}
-				currentType.addField(type, varId);
+				currentType.addField(t, varId);
 			}
 		}
 	}
@@ -124,6 +130,7 @@ class MemberParserListener extends JavaParserBaseListener {
 			proc.setFlag(ParserAux.INSTANCE_FLAG);
 			IVariableDeclaration self = proc.addParameter(toplevelType.reference());
 			self.setId(ParserAux.THIS_VAR);
+			self.setFlag(ParserAux.INSTANCE_FLAG);
 		}
 		aux.addMethod(ctx, proc);
 	}
@@ -135,9 +142,9 @@ class MemberParserListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterConstructorDeclaration(ConstructorDeclarationContext ctx) {
-		proc = module.addProcedure(toplevelType.reference());
+		proc = module.addProcedure(currentType.reference());
 		proc.setFlag(ParserAux.CONSTRUCTOR_FLAG);
-		proc.setId(toplevelType.getId());
+		proc.setId(currentType.getId());
 		proc.setNamespace(currentType.getId());
 		aux.addConstructor(ctx, proc);
 	}
@@ -154,7 +161,7 @@ class MemberParserListener extends JavaParserBaseListener {
 		if( !ParserAux.containedIn(ctx, InterfaceMethodDeclarationContext.class)) {
 			String id = ctx.variableDeclaratorId().IDENTIFIER().getText();
 			IType t = aux.matchType(ctx.typeType());
-			t = BodyListener.handleRightBrackets(t, ctx.variableDeclaratorId().getText());
+			t = ParserAux.handleRightBrackets(t, ctx.variableDeclaratorId().getText());
 			IVariableDeclaration p = proc.addParameter(t);
 			p.setId(id);
 		}

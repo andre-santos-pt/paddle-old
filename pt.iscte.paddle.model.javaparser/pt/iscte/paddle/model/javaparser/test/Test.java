@@ -70,7 +70,8 @@ public class Test {
 							w2.close();
 						}
 						catch(Exception e) {
-							reparseFail.add(n);	
+							reparseFail.add(n);
+							e.printStackTrace();
 						}
 						
 						if(!Javac.compile(m, new File(outputDirBis.getParentFile(), "bin")))
