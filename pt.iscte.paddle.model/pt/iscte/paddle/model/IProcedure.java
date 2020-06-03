@@ -64,6 +64,7 @@ public interface IProcedure extends IProcedureDeclaration {
 	}
 
 	default boolean isConstantTime() {
+		if(getBody() == null) return false;
 		class LoopAndCallFind implements IVisitor {
 			boolean found = false;
 
