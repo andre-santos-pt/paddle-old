@@ -1,5 +1,6 @@
 package pt.iscte.paddle.model.impl;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.ArrayDeque;
@@ -33,7 +34,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	private final List<IProcedure> procedures;
 
 	private final History history;
-	
+
 	private class History {
 		private final ArrayDeque<ICommand<?>> commands = new ArrayDeque<>();
 		private final ArrayDeque<ICommand<?>> redo = new ArrayDeque<>();
@@ -58,8 +59,8 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		}
 	}
 
-	
-	
+
+
 	public Module(boolean recordHistory) {
 		constants = new ArrayList<>();
 		records = new ArrayList<>();
@@ -67,43 +68,45 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		history = recordHistory ? new History() : null;
 	}
 
-	public void loadBuiltInProcedures(Class<?> staticClass) {
-		for (Method method : staticClass.getDeclaredMethods()) {
+	public void loadBuiltInProcedures(Class<?> clazz) {
+		for (Method method : clazz.getDeclaredMethods())
 			if(BuiltinProcedureReflective.isValidForBuiltin(this, method))
 				procedures.add(new BuiltinProcedureReflective(this, method));
-//			else
-//				System.err.println("not valid for built-in procedure: " + method);
-		}
+
+		for (Constructor<?> cons : clazz.getConstructors())
+			if(BuiltinProcedureReflective.isValidForBuiltin(this, cons))
+				procedures.add(new BuiltinProcedureReflective(this, cons));
+
 	}
-	
+
 	@Override
-	public void loadBuiltInProcedures(Executable... staticMethods) {
-		for(Executable m : staticMethods)
+	public void loadBuiltInProcedures(Executable... executable) {
+		for(Executable m : executable)
 			if(BuiltinProcedureReflective.isValidForBuiltin(this, m))
 				procedures.add(new BuiltinProcedureReflective(this, m));
 	}
-	
-//	@Override
-//	public void loadBuiltInProcedure(Consumer<IValue> args, IType ... paramTypes) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-	
+
+	//	@Override
+	//	public void loadBuiltInProcedure(Consumer<IValue> args, IType ... paramTypes) {
+	//		// TODO Auto-generated method stub
+	//		
+	//	}
+
 	void executeCommand(ICommand<?> cmd) {
 		if(history == null)
 			cmd.execute();
 		else
 			history.executeCommand(cmd);
-		
-//		System.out.println("CMD: " + cmd.toText());
+
+		//		System.out.println("CMD: " + cmd.toText());
 		getListeners().forEachRemaining(l -> l.commandExecuted(cmd));
 	}
-	
+
 	public void undo() {
 		if(history != null)
 			history.undo();
 	}
-	
+
 	public void redo() {
 		if(history != null)
 			history.redo();
@@ -130,7 +133,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		final ILiteral literal;
 		IConstantDeclaration constant;
 		final String[] flags;
-		
+
 		AddConstant(String id, IType type, ILiteral literal, String ... flags) {
 			this.id = id;
 			this.type = type;
@@ -167,7 +170,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		}
 	}
 
-	
+
 	@Override
 	public IConstantDeclaration addConstant(String id, IType type, ILiteral value, String ... flags) {
 		assert type != null;
@@ -180,11 +183,11 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	private class AddRecord implements IAddCommand<IRecordType> {
 		final String id;
 		private IRecordType type;
-		
+
 		AddRecord(String id) {
 			this.id = id;
 		}
-		
+
 		@Override
 		public void execute() {
 			type = new RecordType(Module.this);
@@ -207,7 +210,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 			return Module.this;
 		}
 	}
-	
+
 	@Override
 	public IRecordType addRecordType() {
 		return addRecordType(null);
@@ -219,7 +222,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		executeCommand(add);
 		return add.getElement();
 	}
-	
+
 	@Override
 	public IRecordType getRecordType(String id) {
 		for(IRecordType t : records)
@@ -227,14 +230,14 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 				return t;
 		return null;
 	}
-	
+
 	private class AddProcedure implements IAddCommand<IProcedure> {
 		final String id;
 		final IType returnType;
 		IProcedure procedure;
 		String[] flags;
 		int index;
-		
+
 		AddProcedure(String id, IType returnType, int index, String ... flags) {
 			this.id = id;
 			this.returnType = returnType;
@@ -248,7 +251,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 			this.id = procedure.getId();
 			this.index = index;
 		}
-		
+
 		@Override
 		public void execute() {
 			assert index == -1 || index >= 0 && index <= procedures.size();
@@ -262,7 +265,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 				procedures.add(procedure);
 			else
 				procedures.add(index, procedure);
-			
+
 			getListeners().forEachRemaining(l -> l.procedureAdded(procedure));
 		}
 
@@ -288,14 +291,14 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	public IProcedure addProcedure(String id, IType returnType, String ... flags) {
 		return addProcedureAt(id, returnType, -1, flags);
 	}
-	
+
 	@Override
 	public IProcedure addProcedureAt(String id, IType returnType, int index, String... flags) {
 		AddProcedure proc = new AddProcedure(id, returnType, index, flags);
 		executeCommand(proc);
 		return proc.getElement();
 	}
-	
+
 	@Override
 	public IProcedure getProcedure(String id) {
 		for(IProcedure p : procedures)
@@ -335,22 +338,22 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	public void addProcedure(IProcedure p) {
 		procedures.add(p);
 	}
-	
-	
+
+
 	@Override
 	public void removeProcedure(IProcedure procedure) {
 		assert procedures.contains(procedure);
 		executeCommand(new RemoveProcedure(procedure));
 	}
-	
+
 	private class RemoveProcedure implements IDeleteCommand<IProcedure> {
 		final IProcedure procedure;
 		int index;
-		
+
 		public RemoveProcedure(IProcedure procedure) {
 			this.procedure = procedure;
 		}
-		
+
 		@Override
 		public void execute() {
 			index = procedures.indexOf(procedure);
@@ -367,6 +370,6 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 		public IProcedure getElement() {
 			return procedure;
 		}
-		
+
 	}
 }

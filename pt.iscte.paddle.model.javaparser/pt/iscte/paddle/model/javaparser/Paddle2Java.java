@@ -45,6 +45,8 @@ import pt.iscte.paddle.model.IVariableExpression;
 
 public class Paddle2Java implements IModuleTranslator {
 
+	private IRecordType currentType;
+
 	public String translate(IModule m) {
 		String modId = m.getId() + ""; // for null
 		String code = "class " + modId + " {\n";
@@ -55,12 +57,12 @@ public class Paddle2Java implements IModuleTranslator {
 
 			IModuleView view = m.createNamespaceView(ns);
 
-			IRecordType type = m.getRecordType(ns);
+			currentType = m.getRecordType(ns);
 
-			if(type != null && !type.is(IRecordType.BUILTIN)) {
-				code += "static class " + type.getId() + " {\n";
+			if(currentType != null && !currentType.is(IRecordType.BUILTIN)) {
+				code += "static class " + currentType.getId() + " {\n";
 
-				for (IVariableDeclaration member : type.getFields()) {
+				for (IVariableDeclaration member : currentType.getFields()) {
 					code += "\t" + translate(member.getType()) + " " + member.getId() + ";\n";
 				}
 
@@ -231,10 +233,13 @@ public class Paddle2Java implements IModuleTranslator {
 						"(" + argsToString(call.getArguments()) + ")";
 		}
 		else {
-			String inv = call.getProcedure().isBuiltIn() && call.getProcedure().is(ParserAux.CONSTRUCTOR_FLAG) ?
-					"new " + call.getProcedure().getId() :
+			
+			String inv =  
+					//call.getProcedure().is(ParserAux.CONSTRUCTOR_FLAG) ?
+					//"new " + call.getProcedure().getId() :
 						//			call.getOwnerProcedure().sameNamespace(call.getProcedure()) ? call.getProcedure().getId() :
-						call.getProcedure().getNamespace() + "." + call.getProcedure().getId();
+						
+					call.getProcedure().getNamespace() + "." + call.getProcedure().getId();
 
 					return inv + "(" + argsToString(call.getArguments()) + ")";
 		}
@@ -275,7 +280,6 @@ public class Paddle2Java implements IModuleTranslator {
 			IPredefinedArrayAllocation a = (IPredefinedArrayAllocation) e;
 			IType aType = ((IReferenceType) a.getType()).getTarget();
 			Iterator<IExpression> it = a.getElements().iterator();
-			System.err.println("T " + a.getType());
 			String ret = "new " + translate(a.getType()) + " {";
 			if(!it.hasNext())
 				return ret + "}";

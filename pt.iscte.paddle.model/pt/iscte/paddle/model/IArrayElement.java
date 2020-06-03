@@ -13,8 +13,13 @@ public interface IArrayElement extends ICompositeExpression, ITargetExpression {
 		if(type.isReference())
 			type = ((IReferenceType) type).getTarget();
 		
-		return type;
-//		return ((IArrayType) type).getComponentTypeAt(getIndexes().size());
+		if(type instanceof IArrayType)
+			return ((IArrayType) type).getComponentTypeAt(getIndexes().size());
+		else {
+			System.err.println("on IArrayElement " + type);
+			return type;
+		}
+			
 	}
 	
 	@Override

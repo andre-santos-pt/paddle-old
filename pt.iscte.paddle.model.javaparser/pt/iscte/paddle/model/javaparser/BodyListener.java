@@ -7,6 +7,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -206,7 +207,7 @@ class BodyListener extends JavaParserBaseListener {
 	public void exitForControl(ForControlContext ctx) {
 		// TODO check guard
 		for(IBlockElement e : blockStack.peek())
-			e.setFlag(ParserAux.FOR_FLAG);
+			e.setFlag(ParserAux.FOR_PROG_FLAG);
 	}
 
 
@@ -244,7 +245,14 @@ class BodyListener extends JavaParserBaseListener {
 	public void exitStatement(StatementContext ctx) {
 		if(ctx.RETURN() != null) {
 			if(ctx.expression().isEmpty())
-				addStatement(b -> b.addReturn(), ctx);
+				if(currentProcedure.is(ParserAux.CONSTRUCTOR_FLAG)) {
+					if(blockStack.peek().getParent() != currentProcedure) {
+						IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
+						addStatement(b -> b.addReturn(thisVar.expression()), ctx);
+					}
+				}
+				else
+					addStatement(b -> b.addReturn(), ctx);
 			else 
 				addStatement(b -> b.addReturn(expStack.pop()), ctx);
 		}
@@ -260,7 +268,7 @@ class BodyListener extends JavaParserBaseListener {
 
 		else if(ctx.blockLabel != null && ctx.getParent() instanceof BlockStatementContext)
 			blockStack.pop();
-			
+
 		if(ctx.getParent() instanceof StatementContext) {
 			IBlock b = blockStack.pop();
 
@@ -280,10 +288,10 @@ class BodyListener extends JavaParserBaseListener {
 
 				int n = 0;
 				for(IBlockElement e : b)
-					if(e.is(ParserAux.FOR_FLAG))
+					if(e.is(ParserAux.FOR_PROG_FLAG))
 						n++;
 
-				while(n-- > 0 && !b.getLast().is(ParserAux.FOR_FLAG))
+				while(n-- > 0 && !b.getLast().is(ParserAux.FOR_PROG_FLAG))
 					b.moveAfter(b.getChildren().get(iFirst), b.getLast());
 
 				blockStack.pop();
@@ -498,15 +506,17 @@ class BodyListener extends JavaParserBaseListener {
 			else {
 				ArgumentsContext arguments = ctx.creator().classCreatorRest().arguments();
 				int n = arguments.expressionList() == null ? 0 : arguments.expressionList().expression().size();
-				IProcedure constructor = aux.getConstructor(type, n);
+				List<IExpression> args = getStackTop(n);
+				IRecordType t = (IRecordType) ((IReferenceType) type).getTarget();
+				IProcedure constructor = getConstructor(t, args);
 				if(constructor == null && n == 0)
 					expStack.push(((IRecordType) ((IReferenceType) type).getTarget()).heapAllocation());
 				else if(constructor != null)
-					expStack.push(constructor.expression(getStackTop(n)));
+					expStack.push(constructor.expression(args));
 				else {
 					constructor = IProcedure.createUnbound(type.getId());
 					constructor.setFlag(IProcedure.CONSTRUCTOR_FLAG);
-					expStack.push(constructor.expression(getStackTop(n)));
+					expStack.push(constructor.expression(args));
 				}
 			}
 		}
@@ -565,7 +575,7 @@ class BodyListener extends JavaParserBaseListener {
 		itAss.setFlag(ParserAux.EFOR_FLAG);
 
 		IVariableAssignment inc = loop.addIncrement(itVar);
-		inc.setFlag(ParserAux.FOR_FLAG);
+		inc.setFlag(ParserAux.FOR_PROG_FLAG);
 	}
 
 
@@ -589,23 +599,29 @@ class BodyListener extends JavaParserBaseListener {
 		if(ctx.SUPER() != null) 
 			aux.unsupported("super call", ctx);
 		else if(ctx.THIS() != null)
-			p = aux.getConstructor(currentType, n);
+			p = getConstructor(currentType, args);
 		else {
 			if(dotCall) {
 				if(args.get(0) instanceof IVariableExpression &&
 						((IVariableExpression) args.get(0)).isUnbound()) {
 					String namespace = args.remove(0).getId();
-					p = aux.getMethod(namespace, methodId, args);
+					p = getMethod(namespace, methodId, args);
 					if(p == null)
 						p = IProcedure.createUnbound(namespace, methodId);
 				}
 				else {
 					String namespace = args.get(0).getType().getId();
-					p = aux.getMethod(namespace, methodId, args);
+					p = getMethod(namespace, methodId, args);
 				}
 			}
 			else {
-				p = aux.getMethod(currentType.getId(), methodId, args);
+				p = getMethod(currentType.getId(), methodId, args);
+
+				if(p != null && p.is(ParserAux.INSTANCE_FLAG)) {
+					IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
+					IExpression exp = thisVar == null ? ILiteral.getNull() : thisVar.expression();
+					args.add(0, exp);
+				}
 			}
 		}
 
@@ -614,11 +630,11 @@ class BodyListener extends JavaParserBaseListener {
 			System.err.println("unbound loose proc+: " + methodId);
 		}
 
-		if(!dotCall &&  p.is(ParserAux.INSTANCE_FLAG)) {
-			IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
-			IExpression exp = thisVar == null ? ILiteral.getNull() : thisVar.expression();
-			args.add(0, exp);
-		}
+		//		if(!dotCall &&  p.is(ParserAux.INSTANCE_FLAG)) {
+		//			IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
+		//			IExpression exp = thisVar == null ? ILiteral.getNull() : thisVar.expression();
+		//			args.add(0, exp);
+		//		}
 
 		IProcedure pp = p;
 		if(ctx.getParent().getParent() instanceof StatementContext &&
@@ -628,6 +644,26 @@ class BodyListener extends JavaParserBaseListener {
 			expStack.push(p.expression(args));
 	}
 
+
+	private IProcedure getMethod(String namespace, String methodId, List<IExpression> args) {
+		Optional<IProcedure> find = module.getProcedures().stream()
+				.filter(p -> p.getNamespace().equals(namespace))
+				.filter(p -> !p.is(ParserAux.CONSTRUCTOR_FLAG))
+				.filter(p -> p.getId().equals(methodId))
+				//		.filter(p -> p.matchesSignature(methodId, args)) // TODO sig match
+				.findFirst();
+
+		return find.isPresent() ? find.get() : null;
+	}
+
+	private IProcedure getConstructor(IRecordType type, List<IExpression> args) {
+		Optional<IProcedure> find = module.getProcedures().stream()
+				.filter(p -> p.is(ParserAux.CONSTRUCTOR_FLAG))
+				.filter(p -> p.getParameters().size() == args.size()) // TODO sig match
+				.filter(p -> p.getNamespace().equals(type.getId()) && p.getId().equals(type.getId()))
+				.findFirst();
+		return find.isPresent() ? find.get() : null;
+	}
 
 	private void pushBinaryOperation(IBinaryOperator op) {
 		IExpression r = expStack.pop();

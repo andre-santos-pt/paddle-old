@@ -81,7 +81,7 @@ public class BuiltinProcedureReflective extends Procedure {
 			t.setNamespace(c.getSimpleName());
 			t.setFlag(IRecordType.BUILTIN);
 		}
-		return t;
+		return t.reference();
 	}
 	
 	private static Object match(Object o, IType t) {

@@ -37,8 +37,8 @@ public class Java2Paddle {
 
 	private final IModule module;
 
-	public Java2Paddle(File file) {
-		this(file, f -> false, IModule.create(file.getName().replace(".java","")));
+	public Java2Paddle(File file, String moduleId) {
+		this(file, f -> false, IModule.create(moduleId));
 	}
 
 	public Java2Paddle(File file, Predicate<File> exclude, IModule module) {

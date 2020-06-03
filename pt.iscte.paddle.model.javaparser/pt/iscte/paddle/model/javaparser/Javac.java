@@ -1,13 +1,10 @@
 package pt.iscte.paddle.model.javaparser;
 
-import static javax.tools.JavaFileObject.Kind.SOURCE;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 
-import javax.lang.model.SourceVersion;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
@@ -26,12 +23,6 @@ public class Javac {
 		return compile(module.getId(), code, outputDir);
 	}
 	
-	public static boolean compile(IModule module, File destFile, File outputDir) throws IOException {
-		Paddle2Java p2j = new Paddle2Java();
-		String code = p2j.translate(module);
-		return compile(module.getId(), code, outputDir);
-	}
-	
 	
 	public static boolean compile(String className, String src, File outputDir) throws IOException {
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -43,8 +34,7 @@ public class Javac {
 		JavaCompiler.CompilationTask task = compiler.getTask(null,
 				fileManager, diagnostics, null, null, Arrays.asList(stringObject));
 		boolean call =  task.call();
-		
-		System.err.println("comp: " + diagnostics.getDiagnostics());
+		System.err.println(diagnostics.getDiagnostics());
 		return call;
 	}
 	

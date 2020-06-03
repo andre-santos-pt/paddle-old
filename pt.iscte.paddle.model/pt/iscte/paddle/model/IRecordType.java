@@ -62,6 +62,9 @@ public interface IRecordType extends IType, Iterable<IVariableDeclaration>, ILis
 		return Literal.NULL;
 	}
 	
+	default boolean isUnbound() {
+		return this instanceof UnboundRecordType;
+	}
 	
 
 	class UnboundRecordType extends ProgramElement implements IRecordType {

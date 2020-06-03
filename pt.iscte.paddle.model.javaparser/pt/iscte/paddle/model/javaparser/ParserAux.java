@@ -36,6 +36,7 @@ class ParserAux {
 	final static String INITIALIZER_FLAG = "INITIALIZER";
 	
 	final static String FOR_FLAG = Keyword.FOR.name();
+	final static String FOR_PROG_FLAG = Keyword.FOR.name() + "_PROG";
 	final static String EFOR_FLAG = "E" + Keyword.FOR.name();
 	final static String DO_FLAG = Keyword.DO.name();
 	
@@ -195,38 +196,7 @@ class ParserAux {
 		return methodMap.get(namespace + ctx.start.getTokenIndex());
 	}
 
-	public IProcedure getMethod(String namespace, String methodId, List<IExpression> args) {
-		Optional<IProcedure> find = module.getProcedures().stream()
-		.filter(p -> p.getNamespace().equals(namespace))
-		.filter(p -> !p.is(CONSTRUCTOR_FLAG))
-		.filter(p -> p.getId().equals(methodId))
-//		.filter(p -> p.matchesSignature(methodId, args)) // TODO sig match
-				.findFirst();
-		return find.isPresent() ? find.get() : null;
-	}
-
 	public IProcedure getConstructor(ConstructorDeclarationContext ctx, String namespace) {
 		return constructorMap.get(namespace + ctx.start.getTokenIndex());
 	}
-
-	public IProcedure getConstructor(IType type, int nParams) {
-//		for(IProcedure p : constructorMap.values())
-//			if(p.getReturnType().getId().equals(type.getId()) && p.getParameters().size() == nParams)
-//				return p;
-
-		Optional<IProcedure> find = module.getProcedures().stream()
-				.filter(p -> p.is(CONSTRUCTOR_FLAG))
-				.filter(p -> p.getNamespace().equals(type.getId()) && p.getId().equals(type.getId()))
-				.findFirst();
-		return find.isPresent() ? find.get() : null;
-	}
-
-
-	public Iterable<IProcedure> allMethods() {
-		return methodMap.values();
-	}
-
-
-
-
 }
