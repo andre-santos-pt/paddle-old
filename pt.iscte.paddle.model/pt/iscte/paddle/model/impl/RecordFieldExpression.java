@@ -10,16 +10,17 @@ import pt.iscte.paddle.model.IArrayElement;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IReferenceType;
+import pt.iscte.paddle.model.ITargetExpression;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableExpression;
 
 public class RecordFieldExpression extends Expression implements IRecordFieldExpression {
 
-	private final IExpression target;
+	private final ITargetExpression target;
 	private final IVariableDeclaration field;
 	
-	public RecordFieldExpression(IExpression target, IVariableDeclaration field) {
+	public RecordFieldExpression(ITargetExpression target, IVariableDeclaration field) {
 		assert target != null;
 		assert field != null;
 		this.target = target;
@@ -27,7 +28,7 @@ public class RecordFieldExpression extends Expression implements IRecordFieldExp
 	}
 
 	@Override
-	public IExpression getTarget() {
+	public ITargetExpression getTarget() {
 		return target;
 	}
 

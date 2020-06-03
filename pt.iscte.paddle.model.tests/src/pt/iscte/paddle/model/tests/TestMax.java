@@ -1,6 +1,9 @@
 package pt.iscte.paddle.model.tests;
+import static org.junit.Assert.assertTrue;
 import static pt.iscte.paddle.model.IOperator.GREATER;
 import static pt.iscte.paddle.model.IType.INT;
+
+import org.junit.Test;
 
 import pt.iscte.paddle.interpreter.IExecutionData;
 import pt.iscte.paddle.model.IProcedure;
@@ -15,6 +18,11 @@ public class TestMax extends BaseTest {
 	ISelection ifstat = max.getBody().addSelectionWithAlternative(GREATER.on(a, b));
 	IReturn ra = ifstat.addReturn(a);
 	IReturn rb = ifstat.getAlternativeBlock().addReturn(b);
+	
+	@Test
+	public void test() {
+		assertTrue(max.isConstantTime());
+	}
 	
 	@Case({"10", "8"})
 	public void testFirst(IExecutionData data) {

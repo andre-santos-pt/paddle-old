@@ -25,7 +25,8 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 	
 	@Override
 	public IRecordFieldExpression field(IVariableDeclaration field) {
-		return new RecordFieldExpression(this, field);
+		assert this instanceof ITargetExpression;
+		return new RecordFieldExpression((ITargetExpression)this, field);
 	}	
 	
 	@Override

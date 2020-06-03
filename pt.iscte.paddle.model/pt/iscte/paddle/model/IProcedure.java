@@ -63,6 +63,34 @@ public interface IProcedure extends IProcedureDeclaration {
 		return r.foundRecursiveCall;
 	}
 
+	default boolean isConstantTime() {
+		class LoopAndCallFind implements IVisitor {
+			boolean found = false;
+
+			@Override
+			public boolean visit(ILoop loop) {
+				found = true;
+				return false;
+			}
+			
+			public boolean visit(IProcedureCall call) {
+				if(!((IProcedure) call.getProcedure()).isConstantTime())
+					found = true;
+				return true;
+			}
+			
+			@Override
+			public boolean visit(IProcedureCallExpression exp) {
+				if(!((IProcedure) exp.getProcedure()).isConstantTime())
+					found = true;
+				return true;
+			}
+		};
+		LoopAndCallFind v = new LoopAndCallFind();
+		getBody().accept(v);
+		return !v.found;
+	}
+	
 	default IVariableDeclaration getVariable(String id) {
 		for(IVariableDeclaration v : getVariables())
 			if(id.equals(v.getId()))

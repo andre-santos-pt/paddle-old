@@ -595,12 +595,16 @@ class BodyListener extends JavaParserBaseListener {
 
 		List<IExpression> args = dotCall ? getStackTop(n+1) : getStackTop(n);
 
-		IProcedure p = null;
 		if(ctx.SUPER() != null) 
 			aux.unsupported("super call", ctx);
-		else if(ctx.THIS() != null)
-			p = getConstructor(currentType, args);
+		else if(ctx.THIS() != null) {
+			blockStack.peek().removeElement(blockStack.peek().getLast());
+			IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
+			IProcedure constructor = getConstructor(currentType, args);
+			addStatement(b -> b.addAssignment(thisVar, constructor.expression(args)), ctx);
+		}
 		else {
+			IProcedure p = null;
 			if(dotCall) {
 				if(args.get(0) instanceof IVariableExpression &&
 						((IVariableExpression) args.get(0)).isUnbound()) {
@@ -623,25 +627,19 @@ class BodyListener extends JavaParserBaseListener {
 					args.add(0, exp);
 				}
 			}
+			
+			if(p == null) {
+				p = IProcedure.createUnbound(methodId);
+				System.err.println("unbound loose proc+: " + methodId);
+			}
+			
+			IProcedure pp = p;
+			if(ctx.getParent().getParent() instanceof StatementContext &&
+					((StatementContext) ctx.getParent().getParent()).statementExpression != null)
+				addStatement(b -> b.addCall(pp, args), ctx);
+			else
+				expStack.push(p.expression(args));
 		}
-
-		if(p == null) {
-			p = IProcedure.createUnbound(methodId);
-			System.err.println("unbound loose proc+: " + methodId);
-		}
-
-		//		if(!dotCall &&  p.is(ParserAux.INSTANCE_FLAG)) {
-		//			IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
-		//			IExpression exp = thisVar == null ? ILiteral.getNull() : thisVar.expression();
-		//			args.add(0, exp);
-		//		}
-
-		IProcedure pp = p;
-		if(ctx.getParent().getParent() instanceof StatementContext &&
-				((StatementContext) ctx.getParent().getParent()).statementExpression != null)
-			addStatement(b -> b.addCall(pp, args), ctx);
-		else
-			expStack.push(p.expression(args));
 	}
 
 
