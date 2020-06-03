@@ -36,18 +36,25 @@ public class Handler {
 		this.setLastLoopNext(statement);
 
 		INode lastNode = visitor.getLastNode();
+		
+		
 		if(lastNode == null) 
 			this.cfg.getEntryNode().setNext(statement);
 		else if(lastNode instanceof IBranchNode && !((IBranchNode) lastNode).hasBranch()) {
-			if(visitor.getCurrentBranchType() != null && visitor.getCurrentBranchType().equals(BranchType.ALTERNATIVE)) ((IBranchNode) lastNode).setNext(statement); 
-			else ((IBranchNode) lastNode).setBranch(statement);
+			
+//			if(visitor.getCurrentBranchType() != null && visitor.getCurrentBranchType().equals(BranchType.ALTERNATIVE)) ((IBranchNode) lastNode).setNext(statement); 
+//			else {
+				((IBranchNode) lastNode).setBranch(statement);
+//			}
 		}
+		
 			
 		/* The middle condition is duo to the possibility of having an assignment inside an else, that can't be set as the lastNode's next.*/
 		else if(lastNode != null && !(lastNode instanceof IBranchNode) 
 				&& (visitor.getSelectionNodeStack().size() == 0 || !visitor.getSelectionNodeStack().peek().orphans.contains(lastNode)) 
 				&& lastNode.getNext() == null)
 			lastNode.setNext(statement);
+		
 	}
 
 	/**

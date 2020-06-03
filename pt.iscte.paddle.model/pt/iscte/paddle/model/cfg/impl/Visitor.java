@@ -1,6 +1,7 @@
 package pt.iscte.paddle.model.cfg.impl;
 import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IRecordFieldAssignment;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IVariableAssignment;
@@ -73,6 +74,14 @@ public class Visitor implements IVisitor {
 		return true;
 	}
 	
+	@Override
+	public boolean visit(IRecordFieldAssignment assignment) {
+		IStatementNode assignment_statement = cfg.newStatement(assignment);
+
+		handler.handleStatementVisit(assignment_statement);
+		setLastNode(assignment_statement);
+		return false;
+	}
 	
 
 	@Override
