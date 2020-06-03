@@ -14,6 +14,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import pt.iscte.paddle.model.IArrayType;
 import pt.iscte.paddle.model.IBinaryOperator;
+import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IRecordType;
@@ -23,6 +24,7 @@ import pt.iscte.paddle.model.javaparser.antlr.JavaParser.MethodDeclarationContex
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ModifierContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.PrimitiveTypeContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.TypeTypeContext;
+import pt.iscte.paddle.model.javaparser.antlr.JavaParser.VariableDeclaratorIdContext;
 
 class ParserAux {
 	final static String THIS_VAR = "$" + Keyword.THIS.keyword();
@@ -34,6 +36,7 @@ class ParserAux {
 	final static String INITIALIZER_FLAG = "INITIALIZER";
 	
 	final static String FOR_FLAG = Keyword.FOR.name();
+	final static String FOR_PROG_FLAG = Keyword.FOR.name() + "_PROG";
 	final static String EFOR_FLAG = "E" + Keyword.FOR.name();
 	final static String DO_FLAG = Keyword.DO.name();
 	
@@ -124,6 +127,8 @@ class ParserAux {
 			return null;
 		}
 	}
+	
+	
 
 	IType matchType(TypeTypeContext ctx) {
 		int arrayDims = 0;
@@ -133,6 +138,9 @@ class ParserAux {
 			arrayDims++;
 		}
 		
+		if(ctx.getText().equals("Object"))
+			unsupported("class Object", ctx);
+		
 		IType t = null;
 		if(ctx.primitiveType() != null)
 			t = matchPrimitiveType(ctx.primitiveType());
@@ -140,7 +148,7 @@ class ParserAux {
 			t = matchRecordType(ctx.classOrInterfaceType().IDENTIFIER().get(0).getText()); // TODO support qualified name
 		
 		if(t == null)
-			return new IRecordType.UnboundRecordType("?" + ctx.getText());
+			return new IRecordType.UnboundRecordType(ctx.getText());
 		
 		while(arrayDims-- > 0)
 			t = t.array();
@@ -176,48 +184,19 @@ class ParserAux {
 		return recType.reference();
 	}
 
-	public void addMethod(MethodDeclarationContext ctx, String namespace, IProcedure proc) {
-		methodMap.put(namespace + ctx.start.getTokenIndex(), proc);
+	public void addMethod(MethodDeclarationContext ctx, IProcedure proc) {
+		methodMap.put(proc.getNamespace() + ctx.start.getTokenIndex(), proc);
 	}
 
-	public void addConstructor(ConstructorDeclarationContext ctx, String namespace, IProcedure proc) {
-		constructorMap.put(namespace + ctx.start.getTokenIndex(), proc);
+	public void addConstructor(ConstructorDeclarationContext ctx, IProcedure proc) {
+		constructorMap.put(proc.getNamespace() + ctx.start.getTokenIndex(), proc);
 	}
 
 	public IProcedure getMethod(MethodDeclarationContext ctx, String namespace) {
 		return methodMap.get(namespace + ctx.start.getTokenIndex());
 	}
 
-	public IProcedure getMethod(String namespace, String methodId) {
-		Optional<IProcedure> find = module.getProcedures().stream()
-		.filter(p -> !p.is(CONSTRUCTOR_FLAG))
-		.filter(p -> p.getNamespace().equals(namespace) && p.getId().equals(methodId))
-		.findFirst();
-		return find.isPresent() ? find.get() : null;
-	}
-
 	public IProcedure getConstructor(ConstructorDeclarationContext ctx, String namespace) {
 		return constructorMap.get(namespace + ctx.start.getTokenIndex());
 	}
-
-	public IProcedure getConstructor(IType type, int nParams) {
-//		for(IProcedure p : constructorMap.values())
-//			if(p.getReturnType().getId().equals(type.getId()) && p.getParameters().size() == nParams)
-//				return p;
-
-		Optional<IProcedure> find = module.getProcedures().stream()
-				.filter(p -> p.is(CONSTRUCTOR_FLAG))
-				.filter(p -> p.getNamespace().equals(type.getId()) && p.getId().equals(type.getId()))
-				.findFirst();
-		return find.isPresent() ? find.get() : null;
-	}
-
-
-	public Iterable<IProcedure> allMethods() {
-		return methodMap.values();
-	}
-
-
-
-
 }

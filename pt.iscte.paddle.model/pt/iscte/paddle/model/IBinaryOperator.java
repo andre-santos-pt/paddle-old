@@ -33,4 +33,5 @@ public interface IBinaryOperator extends IOperator {
 	default boolean isArithmetic() {
 		return this instanceof ArithmeticOperator;
 	}
+	
 }

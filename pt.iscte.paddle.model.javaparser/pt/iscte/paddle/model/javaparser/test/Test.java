@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.iscte.paddle.model.IModule;
+import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.javaparser.Java2Paddle;
+import pt.iscte.paddle.model.javaparser.Javac;
 import pt.iscte.paddle.model.javaparser.Paddle2Java;
 import pt.iscte.paddle.model.validation.AsgSemanticChecks;
 import pt.iscte.paddle.model.validation.ISemanticProblem;
@@ -17,87 +19,108 @@ import pt.iscte.paddle.model.validation.SemanticChecker;
 public class Test {
 
 	public static void main(String[] args) throws IOException {
-		File genDest = new File("/Users/andresantos/EclipseWS/workspace-paddle/testgen/gen");
-		
-		File root = new File("/Users/andresantos/Desktop/Trabalhos254");
-//		File root = new File("/Users/andresantos/git/paddle-ui/pt.iscte.paddle.javardise.tests/src-gen/TestMax.java");
-		List<File> compilationOk = new ArrayList<>();
-		List<IModule> parseOk = new ArrayList<>();
-		List<Integer> errorProjs = new ArrayList<>();
+		File projectsRoot = new File("/Users/andresantos/Desktop/Trabalhos254");
+
+		File outputDir = new File("/Users/andresantos/EclipseWS/workspace-paddle/trabalhos2paddle/src");
+
+		File outputDirBis = new File("/Users/andresantos/EclipseWS/workspace-paddle/trabalhos4paddle/src");
+
+		List<File> projsCompilationOk = new ArrayList<>();
+		List<IModule> paddleParseOk = new ArrayList<>();		
 		List<Integer> exceptions = new ArrayList<Integer>();
+		List<Integer> recompileFail = new ArrayList<>();
+		List<Integer> reparseFail = new ArrayList<>();
+
 		long time = System.currentTimeMillis();
 		final int FIRST = 1;
 		final int LAST = 254;
 		for (int n = FIRST; n <= LAST; n++) {
-			File proj = new File(root, ""+n);
+			File proj = new File(projectsRoot, ""+n);
 			String projId = "Project" + proj.getName();
-			IModule module = IModule.create(root.isFile() ? "$" + root.getName().substring(0, root.getName().length()-5) : projId);
-			addBuiltins(module);
-			
-			Java2Paddle p = new Java2Paddle(root.isFile() ? root : proj, f -> f.getName().equals("ImageUtil.java"), module);
+
+			Java2Paddle p = new Java2Paddle(proj, projId);
+			addBuiltins(p);
+
 			if(p.checkSyntax()) {
-				compilationOk.add(proj);
-				 try {
+				projsCompilationOk.add(proj);
+				try {
 					IModule m = p.parse();
 					SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
-//					List<ISemanticProblem> problems = checker.check(m);
-//				    System.err.println("semantics: " + problems);
-				    System.err.println("unsupported: " + p.getUnsupported().size());
-//					if(p.getUnsupported().size() == 0)
-						parseOk.add(m);	
-					
+					List<ISemanticProblem> problems = checker.check(m);
+					System.err.println("semantics: " + problems);
+					System.err.println("unsupported: " + p.getUnsupported().size());
+
 					String code = new Paddle2Java().translate(m);
-					PrintWriter w = new PrintWriter(new File(genDest, root.isFile() ? root.getName() : projId + ".java"));
+
+					File fileOut = new File(outputDir, projId + ".java");
+					PrintWriter w = new PrintWriter(fileOut);
 					w.write(code);
 					w.close();
-					
-					if(FIRST == LAST)
-						System.out.println(code);
-				 }
+
+					if(Javac.compile(m, new File(outputDir.getParentFile(), "bin"))) {
+						paddleParseOk.add(m);	
+
+						Java2Paddle p2 = new Java2Paddle(fileOut, projId);
+						addBuiltins(p2);
+						try {
+							String code2 = new Paddle2Java().translate(p2.parse());
+							File fileOut2 = new File(outputDirBis, projId + ".java");
+							PrintWriter w2 = new PrintWriter(fileOut2);
+							w2.write(code2);
+							w2.close();
+						}
+						catch(Exception e) {
+							reparseFail.add(n);	
+						}
+						
+						if(!Javac.compile(m, new File(outputDirBis.getParentFile(), "bin")))
+							reparseFail.add(n);	
+							
+						//						Path copied = Paths.get(new File(binDest, projId + ".java").getAbsolutePath());
+						//						Path originalPath = Paths.get(f.getAbsolutePath());
+						//						Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
+					}
+					else
+						recompileFail.add(n);
+				}
 				catch(Exception e) {
-					errorProjs.add(n);
 					exceptions.add(n);
-					if(FIRST == LAST)
-						e.printStackTrace();
+					e.printStackTrace();
 				}
 			}
-			//					success.add(proj);
-			//			System.out.println(proj + " : " + (m == null ? "fail" : "ok"));
 		}
-		System.out.println("comp " + compilationOk.size());
-		System.out.println("parse " + parseOk.size());
-		System.out.println(errorProjs);
-		System.out.println("nulls " + exceptions);
+		System.out.println("projs ok: " + projsCompilationOk.size());
+		System.out.println("paddle parse: " + paddleParseOk.size());
+
+		System.out.println("exceptions: " + exceptions.size() + " -- " + exceptions);
+		System.out.println("recompile fail: " + recompileFail.size() + " -- " + recompileFail);
+		System.out.println("reparse fail: " + reparseFail.size() + " -- " + reparseFail);
+
 		System.out.println("time " + (System.currentTimeMillis() - time));
-		//		if(m == null)
-		//			System.err.println("file errors on " + path);
-		//		System.out.println(m);
 	}
-	
-	private static void addBuiltins(IModule module) {
-//		module.addRecordType(String.class.getSimpleName());
-		try {
-			module.loadBuiltInProcedures(String.class.getMethod("length"));
-			module.loadBuiltInProcedures(String.class.getMethod("trim"));
-			module.loadBuiltInProcedures(String.class.getMethod("charAt", int.class));
-			module.loadBuiltInProcedures(String.class.getMethod("toCharArray"));
-			module.loadBuiltInProcedures(String.class.getMethod("concat", String.class));
-			module.loadBuiltInProcedures(String.class.getMethod("compareTo", String.class));
-			
-			module.loadBuiltInProcedures(IllegalArgumentException.class.getConstructors());
-			module.loadBuiltInProcedures(IllegalStateException.class.getConstructors());
-			module.loadBuiltInProcedures(NullPointerException.class.getConstructors());
-			
-			module.loadBuiltInProcedures(PrintStream.class.getMethod("println", String.class));
+
+
+
+
+
+	static void addBuiltins(Java2Paddle j2p) {
 		
-		} catch (NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-		}
-		module.loadBuiltInProcedures(Math.class);
-		module.loadBuiltInProcedures(ImageUtil.class);
-				
-//		module.getProcedures().forEach(p -> System.out.println(p.getNamespace() + " :: " + p));
+		j2p.loadBuiltInProcedures(Object.class);
+		j2p.loadBuiltInProcedures(String.class);
+		j2p.loadBuiltInProcedures(Math.class);
+		j2p.loadBuiltInProcedures(ImageUtil.class);
+		j2p.loadBuiltInProcedures(IllegalArgumentException.class);
+		j2p.loadBuiltInProcedures(IllegalStateException.class);
+		j2p.loadBuiltInProcedures(NullPointerException.class);
+		
+		j2p.loadBuiltInProcedures(PrintStream.class);
+		IRecordType system = j2p.addBuiltInRecordType("System");
+		IRecordType out = j2p.addBuiltInRecordType("PrintStream");
+		out.setNamespace("System");
+		system.addField(out, "out");
+		
 	}
+
 }
 
 

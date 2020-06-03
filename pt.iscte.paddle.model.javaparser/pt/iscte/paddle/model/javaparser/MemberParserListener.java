@@ -11,34 +11,61 @@ import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IValueType;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ClassBodyDeclarationContext;
+import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ClassDeclarationContext;
+import pt.iscte.paddle.model.javaparser.antlr.JavaParser.CompilationUnitContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ConstructorDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.FieldDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.FormalParameterContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.FormalParameterListContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.InterfaceDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.InterfaceMethodDeclarationContext;
+import pt.iscte.paddle.model.javaparser.antlr.JavaParser.MemberDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.MethodDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.TypeTypeOrVoidContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.VariableDeclaratorContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParserBaseListener;
 
-class PreParserListener extends JavaParserBaseListener {
+class MemberParserListener extends JavaParserBaseListener {
 
 	private final IModule module;
-	private final IRecordType selfType;
+	private final IRecordType toplevelType;
 	private final ParserAux aux;
 	private IProcedure proc;
 	private File file;
 
-	public PreParserListener(IModule module, IRecordType selfType, File file, ParserAux aux) {
+	private IRecordType currentType;
+
+	public MemberParserListener(IModule module, IRecordType selfType, File file, ParserAux aux) {
 		this.module = module;
-		this.selfType = selfType;
+		this.toplevelType = selfType;
 		this.aux = aux;
 		this.file = file;
+		currentType = selfType;
 	}
+
 
 	// TODO global vars
 	// TODO init fields before constructor
+
+
+	@Override
+	public void enterClassDeclaration(ClassDeclarationContext ctx) {
+		if(ctx.EXTENDS() != null || ctx.IMPLEMENTS() != null)
+			aux.unsupported("extends/implements", ctx);
+
+		// nested class
+		if(ctx.getParent() instanceof MemberDeclarationContext) {
+			currentType = module.getRecordType(ctx.IDENTIFIER().getText());
+		}
+
+	}
+
+	@Override
+	public void exitClassDeclaration(ClassDeclarationContext ctx) {
+		// nested class
+		if(ctx.getParent() instanceof MemberDeclarationContext)
+			currentType = toplevelType;
+	}
 
 	@Override
 	public void exitFieldDeclaration(FieldDeclarationContext ctx) {
@@ -71,13 +98,13 @@ class PreParserListener extends JavaParserBaseListener {
 					aux.unsupported("constant type", varDec);
 				}
 				con.setId(varId);
-				con.setNamespace(selfType.getId());
+				con.setNamespace(currentType.getId());
 			}
 			else {
 				//				if(ctx.variableInitializer() != null) {
 				//					aux.unsupported("field initializer", ctx.variableInitializer());
 				//				}
-				selfType.addField(type, varId);
+				currentType.addField(type, varId);
 			}
 		}
 	}
@@ -90,15 +117,15 @@ class PreParserListener extends JavaParserBaseListener {
 		IType type = typeTypeOrVoid.VOID() != null ? 
 				IType.VOID : aux.matchType(typeTypeOrVoid.typeType());
 		proc = module.addProcedure(id, type);
-		proc.setNamespace(selfType.getId());
+		proc.setNamespace(currentType.getId());
 		proc.setProperty(SourceLocation.class, new SourceLocation(file, ctx.getStart().getLine()));
 		ClassBodyDeclarationContext classMember = (ClassBodyDeclarationContext) ctx.getParent().getParent();
 		if(!aux.hasModifier(classMember.modifier(), Keyword.STATIC)) {
 			proc.setFlag(ParserAux.INSTANCE_FLAG);
-			IVariableDeclaration self = proc.addParameter(selfType.reference());
+			IVariableDeclaration self = proc.addParameter(toplevelType.reference());
 			self.setId(ParserAux.THIS_VAR);
 		}
-		aux.addMethod(ctx, selfType.getId(), proc);
+		aux.addMethod(ctx, proc);
 	}
 
 	@Override
@@ -108,11 +135,11 @@ class PreParserListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterConstructorDeclaration(ConstructorDeclarationContext ctx) {
-		proc = module.addProcedure(selfType.reference());
+		proc = module.addProcedure(toplevelType.reference());
 		proc.setFlag(ParserAux.CONSTRUCTOR_FLAG);
-		proc.setId(selfType.getId());
-		proc.setNamespace(selfType.getId());
-		aux.addConstructor(ctx, selfType.getId(), proc);
+		proc.setId(toplevelType.getId());
+		proc.setNamespace(currentType.getId());
+		aux.addConstructor(ctx, proc);
 	}
 
 
@@ -127,6 +154,7 @@ class PreParserListener extends JavaParserBaseListener {
 		if( !ParserAux.containedIn(ctx, InterfaceMethodDeclarationContext.class)) {
 			String id = ctx.variableDeclaratorId().IDENTIFIER().getText();
 			IType t = aux.matchType(ctx.typeType());
+			t = BodyListener.handleRightBrackets(t, ctx.variableDeclaratorId().getText());
 			IVariableDeclaration p = proc.addParameter(t);
 			p.setId(id);
 		}
