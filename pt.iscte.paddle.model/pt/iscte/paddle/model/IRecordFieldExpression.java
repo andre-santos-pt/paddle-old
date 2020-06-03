@@ -13,7 +13,7 @@ import pt.iscte.paddle.interpreter.NullPointerError;
 
 public interface IRecordFieldExpression extends ISimpleExpression, ITargetExpression {
 
-	IExpression getTarget();
+	ITargetExpression getTarget();
 	IVariableDeclaration getField();
 	
 	IRecordFieldExpression field(IVariableDeclaration field);

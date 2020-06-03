@@ -3,9 +3,13 @@ package pt.iscte.paddle.model.tests;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static pt.iscte.paddle.model.IOperator.ADD;
 import static pt.iscte.paddle.model.IOperator.SMALLER;
 import static pt.iscte.paddle.model.IType.INT;
+
+import org.junit.Test;
 
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.IExecutionData;
@@ -28,6 +32,11 @@ public class TestNaturals extends BaseTest  {
 	IArrayElementAssignment ass2 = loop.addArrayElementAssignment(array, ADD.on(i, INT.literal(1)), i);
 	IVariableAssignment ass3 = loop.addAssignment(i, ADD.on(i, INT.literal(1)));
 	IReturn addReturn = body.addReturn(array);
+	
+	@Test
+	public void test() {
+		assertFalse(naturals.isConstantTime());
+	}
 	
 	@Case("0")
 	public void testEmpty(IExecutionData data) {

@@ -1,8 +1,12 @@
 package pt.iscte.paddle.model.tests;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static pt.iscte.paddle.model.IOperator.EQUAL;
 import static pt.iscte.paddle.model.IOperator.SMALLER;
 import static pt.iscte.paddle.model.IType.INT;
+
+import org.junit.Test;
 
 import pt.iscte.paddle.interpreter.IArray;
 import pt.iscte.paddle.interpreter.IExecutionData;
@@ -85,6 +89,11 @@ public class TestArrayCount extends BaseTest {
 	}
 
 
+	@Test
+	public void test() {
+		assertFalse(count.isConstantTime());
+	}
+	
 	@Case
 	public void test(IExecutionData data) {
 		equal(element, data.getReturnValue());
