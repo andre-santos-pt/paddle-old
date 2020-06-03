@@ -28,10 +28,12 @@ public interface IProcedure extends IProcedureDeclaration {
 		IVisitor visitor = new Visitor(cfg);
 
 		this.accept(visitor);
-
+		
+		// When cfg is empty.
+		if(cfg.getNodes().size() == 2) cfg.getEntryNode().setNext(cfg.getExitNode());
 		if(getReturnType() == IType.VOID)
 			cfg.getNodes().forEach(node -> {
-			
+				
 				if(node.getNext() == null && !node.isExit()) node.setNext(cfg.getExitNode());
 				if(node instanceof IBranchNode && !((IBranchNode) node).hasBranch() && !node.isExit()) ((IBranchNode) node).setBranch(cfg.getExitNode());
 			});

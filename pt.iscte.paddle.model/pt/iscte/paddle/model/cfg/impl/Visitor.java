@@ -138,7 +138,7 @@ public class Visitor implements IVisitor {
 		else setCurrentBranchType(null);
 
 		handler.updateOrphansList(lastNode);
-
+		
 		/* Because of else's after selection, that needs to be set as next.*/
 		setlastSelectionNode(selectionNodeStack.peek());
 	}
@@ -277,6 +277,7 @@ public class Visitor implements IVisitor {
 		else return null;
 	}
 	protected void setlastSelectionNode(SelectionNode newSelectionNode) {
+		if(lastSelectionNode != null && lastSelectionNode.node.getNext() == null) newSelectionNode.orphans.add(lastSelectionNode.node);
 		if(newSelectionNode != null && lastSelectionNode != null && lastSelectionNode.orphans.size() > 0)
 			newSelectionNode.orphans.addAll(lastSelectionNode.orphans);
 		this.lastSelectionNode = newSelectionNode;
