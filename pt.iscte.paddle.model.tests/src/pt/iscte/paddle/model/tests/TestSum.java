@@ -35,7 +35,7 @@ public class TestSum extends BaseTest {
 	protected IProcedure main() {
 		IProcedure test = module 	.addProcedure(DOUBLE);
 		IBlock body = test.getBody();
-		a = body.addVariable(DOUBLE.array(), DOUBLE.array().heapAllocation(INT.literal(5)));
+		a = body.addVariable(DOUBLE.array().reference(), DOUBLE.array().heapAllocation(INT.literal(5)));
 		body.addArrayElementAssignment(a, DOUBLE.literal(2.3), INT.literal(0));
 		body.addArrayElementAssignment(a, DOUBLE.literal(3.1), INT.literal(1));
 		body.addArrayElementAssignment(a, DOUBLE.literal(0.1), INT.literal(3));

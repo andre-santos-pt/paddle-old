@@ -82,14 +82,14 @@ class ArrayElementAssignment extends Statement implements IArrayElementAssignmen
 		for(int i = 0; i < indexes.size()-1; i++) {
 			int index = ((Number) values.get(i).getValue()).intValue();
 			if(index < 0 || index >= ((IArray)v).getLength()) {
-				throw new ArrayIndexError(this, index, target, indexes.get(i), i);
+				throw new ArrayIndexError(this, index, indexes.get(i), i);
 			}
 			v = array.getElement(index);
 		}
 		
 		int index = ((Number) values.get(indexes.size()-1).getValue()).intValue();
 		if(index < 0 || index >= ((IArray)v).getLength())			
-			throw new ArrayIndexError(this, index, target, indexes.get(indexes.size()-1), indexes.size()-1);
+			throw new ArrayIndexError(this, index, indexes.get(indexes.size()-1), indexes.size()-1);
 
 		
 		IValue val = values.get(values.size()-1);

@@ -307,7 +307,11 @@ public class Paddle2Java implements IModuleTranslator {
 		}
 
 		else if(e instanceof IArrayLength) {
-			return translate(((IArrayLength) e).getTarget()) + ".length";
+			IArrayLength l = (IArrayLength) e;
+			String text = translate(l.getTarget());
+			for(IExpression ex : l.getIndexes())
+				text += "[" + translate(ex) + "]";
+			return text + ".length";
 		}
 
 		else if(e instanceof IRecordAllocation) {
