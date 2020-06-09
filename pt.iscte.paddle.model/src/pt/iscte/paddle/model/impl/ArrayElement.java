@@ -65,13 +65,15 @@ class ArrayElement extends Expression implements IArrayElement {
 		if(vTarget instanceof IReference)
 			vTarget = ((IReference) vTarget).getTarget();
 		
+		IExpression errorTarget = target;
 		for(int i = 1; i < values.size(); i++) {
 			IValue v = values.get(i);
 			int index = ((Number) v.getValue()).intValue();
 			if(index < 0 || index >= ((IArray) vTarget).getLength())
-				throw new ArrayIndexError(this, index, target, indexes.get(i - 1), i - 1);
+				throw new ArrayIndexError(this, index, errorTarget, indexes.get(i - 1), i - 1);
 				
 			vTarget = ((IArray) vTarget).getElement(index);
+			errorTarget = errorTarget.element(indexes.get(i-1));
 		}
 		return vTarget;
 	}

@@ -67,12 +67,14 @@ class ArrayLength extends Expression implements IArrayLength {
 		if(array.isNull())
 			throw new NullPointerError(target);
 		
+		IExpression errorTarget = target;
 		IValue v = array;
 		for(int i = 1; i < values.size(); i++) {
 			int index = ((Number) values.get(i).getValue()).intValue();
 			if(index < 0 || index >= ((IArray) v).getLength())
-				throw new ArrayIndexError(this, index, target, indexes.get(i - 1), i - 1);
+				throw new ArrayIndexError(this, index, errorTarget, indexes.get(i - 1), i - 1);
 			v = ((IArray) v).getElement(index);
+			errorTarget = errorTarget.element(indexes.get(i-1));
 		}
 		return stack.getTopFrame().getValue(((IArray) v).getLength());
 	}
