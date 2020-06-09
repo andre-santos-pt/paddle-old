@@ -6,6 +6,7 @@ import java.util.ServiceLoader;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IModuleTranslator;
+import pt.iscte.paddle.model.IModuleView;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IType;
 
@@ -25,7 +26,7 @@ public enum Translator implements IModuleTranslator {
 	}
 
 	@Override
-	public String translate(IModule module) {
+	public String translate(IModuleView module) {
 		return translator == null ? defaultString(module) : translator.translate(module);
 	}
 

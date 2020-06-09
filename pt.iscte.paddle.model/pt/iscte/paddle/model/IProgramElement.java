@@ -67,5 +67,6 @@ public interface IProgramElement {
 		return Collections.emptySet();
 	}
 	
+	void cloneProperties(IProgramElement e);
 	
 }

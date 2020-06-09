@@ -56,4 +56,8 @@ public class ProgramElement implements IProgramElement {
 		return flags;
 	}
 	
+	@Override
+	public void cloneProperties(IProgramElement e) {
+		properties.putAll(((ProgramElement) e).properties);
+	}
 }

@@ -16,7 +16,7 @@ import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class TestMatrixScalar extends BaseTest {
 	IProcedure scale = module.addProcedure(VOID);
-	IVariableDeclaration matrix = scale.addParameter(INT.array2D());
+	IVariableDeclaration matrix = scale.addParameter(INT.array2D().reference());
 	IVariableDeclaration s = scale.addParameter(INT);
 	IBlock body = scale.getBody();
 	IVariableDeclaration i = body.addVariable(INT, INT.literal(0));
@@ -32,7 +32,7 @@ public class TestMatrixScalar extends BaseTest {
 	public IProcedure main() {
 		IProcedure main = module.addProcedure(VOID);
 		IBlock mainBody = main.getBody();
-		m = mainBody.addVariable(INT.array2D());
+		m = mainBody.addVariable(INT.array2D().reference());
 		mainBody.addAssignment(m, INT.array2D().heapAllocation(INT.literal(3)));
 		mainBody.addArrayElementAssignment(m, INT.array().heapAllocation(INT.literal(0)), INT.literal(0));
 		mainBody.addArrayElementAssignment(m, INT.array().heapAllocation(INT.literal(2)), INT.literal(1));
@@ -57,5 +57,6 @@ public class TestMatrixScalar extends BaseTest {
 		equal(0, r2.getElement(1));
 		equal(8, r2.getElement(2));
 		equal(12, r2.getElement(3));
+		System.out.println(scale);
 	}
 }

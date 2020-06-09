@@ -98,6 +98,8 @@ public interface IProcedure extends IProcedureDeclaration {
 				return v;
 		return null;
 	}
+	
+	
 
 	//	default boolean isFunction() {
 	//		if(getReturnType().isVoid())

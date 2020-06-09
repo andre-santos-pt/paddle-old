@@ -16,7 +16,7 @@ public class DemoVisitorProcedureCalls {
 		
 		IProcedure nats = Examples.createNaturalsFunction(module);
 		
-		IProcedure main = module.addProcedure("main", IType.VOID);
+		IProcedure main = module.addProcedure(IType.VOID, p -> p.setId("main"));
 		main.getBody().addCall(nats, IType.INT.literal(4));
 		main.getBody().addVariable(IType.INT, nats.expression(IType.INT.literal(5)));
 		

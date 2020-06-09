@@ -11,6 +11,7 @@ import pt.iscte.paddle.model.IArrayLength;
 import pt.iscte.paddle.model.IConditionalExpression;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProcedureDeclaration;
+import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.ISimpleExpression;
 import pt.iscte.paddle.model.IType;
@@ -67,5 +68,10 @@ class ProcedureReturnExpression implements ISimpleExpression, IEvaluable {
 	public IRecordFieldExpression field(IVariableDeclaration field) {
 		assert false;
 		return null;
+	}
+	
+	@Override
+	public void cloneProperties(IProgramElement e) {
+		assert false;
 	}
 }

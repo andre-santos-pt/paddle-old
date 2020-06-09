@@ -7,6 +7,7 @@ import pt.iscte.paddle.model.IBinaryExpression;
 import pt.iscte.paddle.model.IBinaryOperator;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IExpressionIterator;
+import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IType;
 
 // TODO step eval
@@ -96,6 +97,11 @@ public enum LogicalOperator implements IBinaryOperator {
 	@Override
 	public void addPropertyListener(IPropertyListener listener) {
 		programElement.addPropertyListener(listener);
+	}
+	
+	@Override
+	public void cloneProperties(IProgramElement e) {
+		programElement.cloneProperties(e);
 	}
 	
 	// TODO expression iterator?

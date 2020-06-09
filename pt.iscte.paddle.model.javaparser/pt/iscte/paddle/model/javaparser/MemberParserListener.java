@@ -122,7 +122,7 @@ class MemberParserListener extends JavaParserBaseListener {
 		TypeTypeOrVoidContext typeTypeOrVoid = ctx.typeTypeOrVoid();
 		IType type = typeTypeOrVoid.VOID() != null ? 
 				IType.VOID : aux.matchType(typeTypeOrVoid.typeType());
-		proc = module.addProcedure(id, type);
+		proc = module.addProcedure(type, p -> p.setId(id));
 		proc.setNamespace(currentType.getId());
 		proc.setProperty(SourceLocation.class, new SourceLocation(file, ctx.getStart().getLine()));
 		ClassBodyDeclarationContext classMember = (ClassBodyDeclarationContext) ctx.getParent().getParent();

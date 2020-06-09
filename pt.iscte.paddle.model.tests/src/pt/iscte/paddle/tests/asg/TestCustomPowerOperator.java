@@ -12,6 +12,7 @@ import pt.iscte.paddle.model.IBinaryOperator;
 import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IVariableDeclaration;
@@ -60,6 +61,12 @@ public class TestCustomPowerOperator extends BaseTest {
 		@Override
 		public Object getProperty(Object key) {
 			return null;
+		}
+		
+		@Override
+		public void cloneProperties(IProgramElement e) {
+			
+			
 		}
 	};
 

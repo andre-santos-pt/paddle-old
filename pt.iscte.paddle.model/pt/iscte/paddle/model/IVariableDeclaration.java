@@ -134,5 +134,10 @@ public interface IVariableDeclaration extends IInnocuousStatement, IExpressionVi
 		public IVariableExpression expression() {
 			return new VariableExpression(this);
 		}
+		
+		@Override
+		public void cloneProperties(IProgramElement e) {
+			throw new UnsupportedOperationException();
+		}
 	};
 }
