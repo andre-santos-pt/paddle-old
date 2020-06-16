@@ -144,6 +144,11 @@ public interface IType extends INamespaceElement  {
 		public IExpression getDefaultExpression() {
 			return Literal.NULL;
 		}
+
+		@Override
+		public void cloneProperties(IProgramElement e) {
+			throw new UnsupportedOperationException();
+		}
 	};
 
 
@@ -190,6 +195,11 @@ public interface IType extends INamespaceElement  {
 		@Override
 		public IExpression getDefaultExpression() {
 			return Literal.NULL;
+		}
+		
+		@Override
+		public void cloneProperties(IProgramElement e) {
+			throw new UnsupportedOperationException();
 		}
 	};
 }

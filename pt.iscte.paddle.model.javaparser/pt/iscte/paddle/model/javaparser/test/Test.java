@@ -50,7 +50,7 @@ public class Test {
 					System.err.println("semantics: " + problems);
 					System.err.println("unsupported: " + p.getUnsupported().size());
 
-					String code = new Paddle2Java().translate(m);
+					String code = new Paddle2Java(projId).translate(m);
 
 					File fileOut = new File(outputDir, projId + ".java");
 					PrintWriter w = new PrintWriter(fileOut);

@@ -150,8 +150,10 @@ public class BaseTest {
 					} catch (InvocationTargetException e) {
 						if (e.getCause() instanceof AssertionError)
 							throw e.getCause();
-						else
+						else {
 							e.printStackTrace();
+							throw e.getCause();
+						}
 					} catch (IllegalAccessException | IllegalArgumentException e) {
 						e.printStackTrace();
 					}
@@ -171,7 +173,7 @@ public class BaseTest {
 		try {
 			data = state.execute(main, args);	
 		} catch (ExecutionError e) {
-			e.printStackTrace();
+			throw e;
 		}
 		assertNotNull(data);
 		commonAsserts(data);

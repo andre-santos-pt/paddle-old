@@ -232,24 +232,22 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	}
 
 	private class AddProcedure implements IAddCommand<IProcedure> {
-		final String id;
 		final IType returnType;
 		IProcedure procedure;
-		String[] flags;
+		Consumer<IProcedure> configure;
 		int index;
 
-		AddProcedure(String id, IType returnType, int index, String ... flags) {
-			this.id = id;
+		AddProcedure(IType returnType, int index, Consumer<IProcedure> configure) {
 			this.returnType = returnType;
 			this.index = index;
-			this.flags = flags;
+			this.configure = configure;
 		}
 
-		AddProcedure(IProcedure procedure, int index) {
+		AddProcedure(IProcedure procedure, int index, Consumer<IProcedure> configure) {
 			this.procedure = procedure;
 			this.returnType = procedure.getReturnType();
-			this.id = procedure.getId();
 			this.index = index;
+			this.configure = configure;
 		}
 
 		@Override
@@ -257,9 +255,9 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 			assert index == -1 || index >= 0 && index <= procedures.size();
 			if(procedure == null) {
 				procedure = new Procedure(Module.this, returnType);
-				procedure.setId(id);
-				for(String f : flags)
-					procedure.setFlag(f);
+				configure.accept(procedure);
+//				for(String f : configure)
+//					procedure.setFlag(f);
 			}
 			if(index == -1)
 				procedures.add(procedure);
@@ -287,14 +285,14 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	}
 
 
-	@Override
-	public IProcedure addProcedure(String id, IType returnType, String ... flags) {
-		return addProcedureAt(id, returnType, -1, flags);
-	}
+//	@Override
+//	public IProcedure addProcedure(String id, IType returnType, String ... flags) {
+//		return addProcedureAt(id, returnType, -1, flags);
+//	}
 
 	@Override
-	public IProcedure addProcedureAt(String id, IType returnType, int index, String... flags) {
-		AddProcedure proc = new AddProcedure(id, returnType, index, flags);
+	public IProcedure addProcedureAt(IType returnType, int index, Consumer<IProcedure> configure) {
+		AddProcedure proc = new AddProcedure(returnType, index, configure);
 		executeCommand(proc);
 		return proc.getElement();
 	}
@@ -363,7 +361,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 
 		@Override
 		public void undo() {
-			new AddProcedure(procedure, index).execute();
+			new AddProcedure(procedure, index, p -> p.cloneProperties(procedure));
 		}
 
 		@Override

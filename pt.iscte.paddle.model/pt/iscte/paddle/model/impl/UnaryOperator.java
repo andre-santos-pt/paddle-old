@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.interpreter.impl.Value;
 import pt.iscte.paddle.model.IExpression;
+import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IUnaryExpression;
 import pt.iscte.paddle.model.IUnaryOperator;
@@ -135,5 +136,10 @@ public enum UnaryOperator implements IUnaryOperator {
 	@Override
 	public Object getProperty(Object key) {
 		return programElement.getProperty(key);
+	}
+	
+	@Override
+	public void cloneProperties(IProgramElement e) {
+		programElement.cloneProperties(e);
 	}
 }

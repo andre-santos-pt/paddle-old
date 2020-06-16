@@ -31,7 +31,8 @@ abstract class Expression extends ProgramElement implements IEvaluable, IExpress
 	
 	@Override
 	public IArrayLength length(List<IExpression> indexes) {
-		return new ArrayLength(this, indexes);
+		assert this instanceof ITargetExpression;
+		return new ArrayLength((ITargetExpression) this, indexes);
 	}
 	
 	@Override

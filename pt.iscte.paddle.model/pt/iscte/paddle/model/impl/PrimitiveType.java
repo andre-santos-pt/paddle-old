@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILiteral;
+import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IReferenceType;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IValueType;
@@ -219,5 +220,9 @@ public enum PrimitiveType implements IValueType {
 		throw new UnsupportedOperationException();
 	}
 	
+	@Override
+	public void cloneProperties(IProgramElement e) {
+		throw new UnsupportedOperationException();
+	}
 	
 }

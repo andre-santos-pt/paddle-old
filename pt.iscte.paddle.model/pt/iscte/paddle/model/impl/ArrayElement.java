@@ -53,7 +53,7 @@ class ArrayElement extends Expression implements IArrayElement {
 			IValue v = values.get(i);
 			int index = ((Number) v.getValue()).intValue();
 			if(index < 0 || index >= ((IArray) vTarget).getLength())
-				throw new ArrayIndexError(this, index, target, indexes.get(i - 1), i - 1);
+				throw new ArrayIndexError(this, index, indexes.get(i - 1), i - 1);
 				
 			vTarget = ((IArray) vTarget).getElement(index);
 		}

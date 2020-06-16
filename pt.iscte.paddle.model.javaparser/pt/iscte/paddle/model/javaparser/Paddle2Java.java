@@ -45,41 +45,47 @@ import pt.iscte.paddle.model.IVariableExpression;
 
 public class Paddle2Java implements IModuleTranslator {
 
+	private final String topLevelType;
 	private IRecordType currentType;
 
-	public String translate(IModule m) {
-		String modId = m.getId() + ""; // for null
-		String code = "class " + modId + " {\n";
+	public Paddle2Java() {
+		this(null);
+	}
 
-		for(String ns : m.getNamespaces()) {
-			if(ns.equals(m.getId()))
-				continue;
+	public Paddle2Java(String topLevelType) {
+		this.topLevelType = topLevelType;
+	}
 
-			IModuleView view = m.createNamespaceView(ns);
-
-			currentType = m.getRecordType(ns);
-
+	public String translate(IModuleView m) {
+		StringBuffer code = new StringBuffer();
+		for(IRecordType t : m.getRecordTypes()) {
+			currentType = t;
 			if(currentType != null && !currentType.is(IRecordType.BUILTIN)) {
-				code += "static class " + currentType.getId() + " {\n";
+				code.append((topLevelType == null ? "class " : "static class ") + currentType.getId() + " {\n");
 
 				for (IVariableDeclaration member : currentType.getFields()) {
-					code += "\t" + translate(member.getType()) + " " + member.getId() + ";\n";
+					code.append("\t" + translate(member.getType()) + " " + member.getId() + ";\n");
 				}
 
-				code += "\n";
+				code.append("\n");
 
-				for(IConstantDeclaration c : view.getConstants())
-					code += declaration(c);
+				m.getConstants().stream()
+				.filter(c -> t.getId().equals(c.getNamespace()))
+				.forEach(c -> code.append(declaration(c)));
 
-				for (IProcedure p : view.getProcedures())
-					if(!p.isBuiltIn()) 
-						code += header(p) + statements(p.getBody()) + "}\n\n";
+				m.getProcedures().stream()
+				.filter(p -> !p.isBuiltIn() && t.getId().equals(p.getNamespace()))
+				.forEach(p -> code.append(header(p) + statements(p.getBody()) + "}\n\n"));
 
-				code += "}\n\n";
+				code.append("}\n\n");
 			}
 		}
 
-		return code + "}\n";
+		if(topLevelType == null)
+			return code.toString();
+		else
+			return "class " + topLevelType + " {\n" + code + "}\n";
+		//		return code + "}\n";
 	}
 
 	public String translate(IType t) {
@@ -233,15 +239,15 @@ public class Paddle2Java implements IModuleTranslator {
 						"(" + argsToString(call.getArguments()) + ")";
 		}
 		else {
-			
+
 			String inv =  
 					//call.getProcedure().is(ParserAux.CONSTRUCTOR_FLAG) ?
 					//"new " + call.getProcedure().getId() :
-						//			call.getOwnerProcedure().sameNamespace(call.getProcedure()) ? call.getProcedure().getId() :
-						
+					//			call.getOwnerProcedure().sameNamespace(call.getProcedure()) ? call.getProcedure().getId() :
+
 					call.getProcedure().getNamespace() + "." + call.getProcedure().getId();
 
-					return inv + "(" + argsToString(call.getArguments()) + ")";
+			return inv + "(" + argsToString(call.getArguments()) + ")";
 		}
 	}
 
@@ -301,7 +307,11 @@ public class Paddle2Java implements IModuleTranslator {
 		}
 
 		else if(e instanceof IArrayLength) {
-			return translate(((IArrayLength) e).getTarget()) + ".length";
+			IArrayLength l = (IArrayLength) e;
+			String text = translate(l.getTarget());
+			for(IExpression ex : l.getIndexes())
+				text += "[" + translate(ex) + "]";
+			return text + ".length";
 		}
 
 		else if(e instanceof IRecordAllocation) {
@@ -319,6 +329,7 @@ public class Paddle2Java implements IModuleTranslator {
 				text += "[" + translate(ex) + "]";
 			return text;
 		}
+		
 		else if(e instanceof IRecordFieldExpression) {
 			IRecordFieldExpression r = (IRecordFieldExpression) e;
 			return translate(r.getTarget())  + "." + r.getField().getId();

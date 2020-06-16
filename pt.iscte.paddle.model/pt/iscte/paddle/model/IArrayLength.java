@@ -2,9 +2,9 @@ package pt.iscte.paddle.model;
 
 import java.util.List;
 
-public interface IArrayLength extends ICompositeExpression {
-	IExpression getTarget();
-	List<IExpression> getIndexes(); // size() >= 1
+public interface IArrayLength extends ICompositeExpression, IArrayAccess {
+//	IExpression getTarget();
+//	List<IExpression> getIndexes(); // size() >= 1
 	
 	@Override
 	default boolean includes(IVariableDeclaration variable) {

@@ -13,15 +13,16 @@ import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.interpreter.NullPointerError;
 import pt.iscte.paddle.model.IArrayLength;
 import pt.iscte.paddle.model.IExpression;
+import pt.iscte.paddle.model.ITargetExpression;
 import pt.iscte.paddle.model.IType;
 
 
 class ArrayLength extends Expression implements IArrayLength {
-	private final IExpression target;
+	private final ITargetExpression target;
 	private final List<IExpression> parts;
 	private final List<IExpression> indexes;
 
-	public ArrayLength(IExpression target, List<IExpression> indexes) {
+	public ArrayLength(ITargetExpression target, List<IExpression> indexes) {
 		this.target = target;
 		this.parts = new ArrayList<>(1 + indexes.size());
 		this.parts.add(target);
@@ -35,7 +36,7 @@ class ArrayLength extends Expression implements IArrayLength {
 	}
 
 	@Override
-	public IExpression getTarget() {
+	public ITargetExpression getTarget() {
 		return target;
 	}
 
@@ -64,7 +65,7 @@ class ArrayLength extends Expression implements IArrayLength {
 		for(int i = 1; i < values.size(); i++) {
 			int index = ((Number) values.get(i).getValue()).intValue();
 			if(index < 0 || index >= ((IArray) v).getLength())
-				throw new ArrayIndexError(this, index, target, indexes.get(i - 1), i - 1);
+				throw new ArrayIndexError(this, index, indexes.get(i - 1), i - 1);
 			v = ((IArray) v).getElement(index);
 		}
 		return stack.getTopFrame().getValue(((IArray) v).getLength());
