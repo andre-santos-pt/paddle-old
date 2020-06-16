@@ -86,18 +86,17 @@ public interface IControlFlowGraph {
 
 			path.getNodes().remove(0);
 			path.getNodes().remove(path.getNodes().size() - 1);
-			for (INode node : generateSubCFG(source, destiny)) {
+			for (INode node : path.getNodes()) {
 
 				if(node.getElement() instanceof IArrayElementAssignment 
-						&& (((IArrayElementAssignment) node.getElement()).getTarget().isSame(variable) 
+						&& (((IArrayElementAssignment) node.getElement()).getTarget().isSame(variable.expression()) 
 								|| ((IArrayElementAssignment) node.getElement()).getExpression().includes(variable))) 
 					return true;
 				else if(node.getElement() instanceof IVariableAssignment
-						&& (((IVariableAssignment) node.getElement()).getTarget().isSame(variable) 
+						&& (((IVariableAssignment) node.getElement()).getTarget().isSame(variable.expression()) 
 								|| ((IVariableAssignment) node.getElement()).getExpression().includes(variable)))
 					return true;
-
-				else if(node.getElement() instanceof IProcedureCall) 
+				else if(node.getElement() instanceof IProcedureCall)
 					for (IExpression argument : ((IProcedureCall) node.getElement()).getArguments()) 
 						if(argument.includes(variable)) return true;
 						else if((node.getElement() instanceof ISelection || node.getElement() instanceof ILoop) 

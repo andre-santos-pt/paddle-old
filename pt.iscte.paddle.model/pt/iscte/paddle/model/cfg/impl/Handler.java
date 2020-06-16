@@ -88,7 +88,7 @@ public class Handler {
 	}
 
 	public void setLastSelectionNext(INode node) {
-		if(visitor.getLastSelectionBranch() != null 
+		if(visitor.getLastSelectionBranch() != null
 //				&& visitor.getLastSelectionBranch().hasBranch()
 				&& visitor.getLastSelectionBranch().getNext() == null) {
 			visitor.getLastSelectionBranch().setNext(node);
@@ -138,6 +138,7 @@ public class Handler {
 		INode lastNode = visitor.getLastNode();
 		setLastSelectionNext(ret);
 		setLastLoopNext(ret);
+		handleOrphansAdoption(ret);
 		
 		if(lastNode instanceof IBranchNode && !((IBranchNode) lastNode).hasBranch()) ((IBranchNode) lastNode).setBranch(ret);
 		else if(lastNode != null && lastNode.getNext() == null) lastNode.setNext(ret);
