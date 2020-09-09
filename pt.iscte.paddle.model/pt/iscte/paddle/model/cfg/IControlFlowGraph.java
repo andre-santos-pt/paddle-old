@@ -84,16 +84,15 @@ public interface IControlFlowGraph {
 		if(paths.isEmpty()) return true;
 		for (Path path : paths) {
 
-			path.getNodes().remove(0);
-			path.getNodes().remove(path.getNodes().size() - 1);
+			path.getNodes().remove(0); // remove the beginning node.
+			INode end = path.getNodes().remove(path.getNodes().size() - 1);
 			for (INode node : path.getNodes()) {
-
 				if(node.getElement() instanceof IArrayElementAssignment 
 						&& (((IArrayElementAssignment) node.getElement()).getTarget().isSame(variable.expression()) 
 								|| ((IArrayElementAssignment) node.getElement()).getExpression().includes(variable))) 
 					return true;
 				else if(node.getElement() instanceof IVariableAssignment
-						&& (((IVariableAssignment) node.getElement()).getTarget().isSame(variable.expression()) 
+						&& ( (((IVariableAssignment) node.getElement()).getTarget().isSame(variable) || ((IVariableAssignment) node.getElement()).getTarget().isSame(variable.expression()))
 								|| ((IVariableAssignment) node.getElement()).getExpression().includes(variable)))
 					return true;
 				else if(node.getElement() instanceof IProcedureCall)
@@ -103,6 +102,10 @@ public interface IControlFlowGraph {
 								&& ((IControlStructure) node.getElement()).getGuard().includes(variable)) 
 							return true;
 			}
+			if(end.getElement() instanceof IVariableAssignment
+					&& ( (((IVariableAssignment) end.getElement()).getTarget().isSame(variable) || ((IVariableAssignment) end.getElement()).getTarget().isSame(variable.expression())) 
+							&& ((IVariableAssignment) end.getElement()).getExpression().includes(variable)))
+				return true;
 		}
 		return false;
 	}

@@ -36,6 +36,8 @@ public class Visitor implements IVisitor {
 	private Deque<IBranchNode> loopNodeStack;
 	private Deque<BreakNode> breakNodeStack;
 
+	SelectionNode currentSelectionNode;
+
 	public static class SelectionNode {
 		final IBranchNode node;
 
@@ -73,7 +75,7 @@ public class Visitor implements IVisitor {
 		setLastNode(assignment_statement);
 		return true;
 	}
-	
+
 	@Override
 	public boolean visit(IRecordFieldAssignment assignment) {
 		IStatementNode assignment_statement = cfg.newStatement(assignment);
@@ -82,7 +84,7 @@ public class Visitor implements IVisitor {
 		setLastNode(assignment_statement);
 		return false;
 	}
-	
+
 
 	@Override
 	public boolean visit(IProcedureCall call) {
@@ -116,7 +118,9 @@ public class Visitor implements IVisitor {
 		/* Checks if the previous node is a statement or a branch, and acts accordingly. */
 		handler.handleBranchVisit(if_branch);		
 
-		selectionNodeStack.push(new SelectionNode(if_branch));
+		SelectionNode sNode = new SelectionNode(if_branch);
+		this.selectionNodeStack.push(sNode);
+		this.currentSelectionNode = sNode;
 		setLastNode(if_branch);
 		return true;
 	}
@@ -129,7 +133,15 @@ public class Visitor implements IVisitor {
 		//		if(getLastSelectionBranch() != null && getLastSelectionBranch().getNext() == null) 
 		//			selectionNodeStack.peek().orphans.add(getLastSelectionBranch());
 
-		setlastSelectionNode(selectionNodeStack.pop());
+		if(!selectionNodeStack.isEmpty()) {
+			if(getLastSelectionNode() != null) 
+				handler.updateOrphansList(getLastSelectionNode().node); 
+			
+			SelectionNode n = selectionNodeStack.pop();
+			setlastSelectionNode(n);
+			this.currentSelectionNode = selectionNodeStack.peek();
+		}
+		else this.currentSelectionNode = null;
 	}
 
 	@Override
@@ -138,7 +150,7 @@ public class Visitor implements IVisitor {
 		else setCurrentBranchType(null);
 
 		handler.updateOrphansList(lastNode);
-		
+
 		/* Because of else's after selection, that needs to be set as next.*/
 		setlastSelectionNode(selectionNodeStack.peek());
 	}
@@ -174,6 +186,10 @@ public class Visitor implements IVisitor {
 
 	@Override
 	public void endVisit(ILoop loop) {
+		if(loopNodeStack.isEmpty()) return;
+
+		if(getLastLoopNode() != null)
+			handler.updateOrphansList(getLastLoopNode()); 
 
 		IBranchNode finishedLoopBranch = loopNodeStack.pop();
 
@@ -199,11 +215,12 @@ public class Visitor implements IVisitor {
 	public boolean visit(IReturn returnStatement) {
 		IStatementNode ret = cfg.newStatement(returnStatement);
 
+
 		handler.setReturnStatementNext(ret);
 
 		ret.setNext(cfg.getExitNode());
 		setLastNode(ret);
-		
+
 		return false;
 	}
 
