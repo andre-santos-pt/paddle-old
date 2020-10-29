@@ -3,6 +3,8 @@ package pt.iscte.paddle.model;
 import pt.iscte.paddle.interpreter.ExecutionError;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.impl.ArithmeticOperator;
+import pt.iscte.paddle.model.impl.LogicalOperator;
+import pt.iscte.paddle.model.impl.RelationalOperator;
 
 public interface IBinaryOperator extends IOperator {
 	
@@ -14,24 +16,20 @@ public interface IBinaryOperator extends IOperator {
 	
 	IBinaryExpression on(IExpression leftOperand, IExpression rightOperand);
 
-//	default IBinaryExpression on(IVariable leftOperand, IExpression rightOperand) {
-//		return on(leftOperand.expression(), rightOperand);
-//	}
-//	
-//	default IBinaryExpression on(IExpression leftOperand, IVariable rightOperand) {
-//		return on(leftOperand, rightOperand.expression());
-//	}
-//	
-//	default IBinaryExpression on(IVariable leftOperand, IVariable rightOperand) {
-//		return on(leftOperand.expression(), rightOperand.expression());
-//	}
-	
 	default IBinaryExpression on(IExpressionView leftOperand, IExpressionView rightOperand) {
 		return on(leftOperand.expression(), rightOperand.expression());
 	}
 	
 	default boolean isArithmetic() {
 		return this instanceof ArithmeticOperator;
+	}
+	
+	default boolean isRelational() {
+		return this instanceof RelationalOperator;
+	}
+
+	default boolean isLogical() {
+		return this instanceof LogicalOperator;
 	}
 	
 }

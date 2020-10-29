@@ -14,7 +14,7 @@ import pt.iscte.paddle.model.impl.UnboundProcedure;
 /**
  * Mutable
  */
-public interface IProcedure extends IProcedureDeclaration {
+public interface IProcedure extends IProcedureDeclaration, IStatementContainer {
 	IModule getModule();
 	List<IVariableDeclaration> getLocalVariables();
 	List<IVariableDeclaration> getVariables();
@@ -22,6 +22,9 @@ public interface IProcedure extends IProcedureDeclaration {
 
 	IBlock getBody();
 
+	default IBlock getBlock() {
+		return getBody();
+	}
 	
 	default IControlFlowGraph generateCFG(){
 		IControlFlowGraph cfg = IControlFlowGraph.create(this);

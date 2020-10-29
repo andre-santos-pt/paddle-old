@@ -83,7 +83,7 @@ public interface IStatementContainer {
 
 	default IVariableAssignment addDecrementAt(IVariableDeclaration var, int index) {
 		assert var.getType() == IType.INT;
-		return addAssignmentAt(var, IOperator.SUB.on(var.expression(), IType.INT.literal(1)), index);
+		return addAssignmentAt(var, IOperator.SUB.on(var.expression(), IType.INT.literal(1)), index, "DEC");
 	}
 	
 	

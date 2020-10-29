@@ -12,6 +12,7 @@ class Selection extends ControlStructure implements ISelection {
 		alternativeBlock = hasAlternative ? parent.addLooseBlock(this) : null;
 		if(hasAlternative)
 			setFlag("ELSE");
+		
 	}
 
 	@Override

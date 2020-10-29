@@ -8,5 +8,7 @@ module pt.iscte.paddle.model {
 	exports pt.iscte.paddle.model.cfg;
 	exports pt.iscte.paddle.interpreter;
 	
+	exports pt.iscte.paddle.asg.future;
+	
 	uses IModuleTranslator;
 }

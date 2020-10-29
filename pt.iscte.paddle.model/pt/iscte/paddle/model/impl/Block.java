@@ -103,9 +103,10 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 		}
 	}
 	
-	void addChild(IBlockElement e, int index) {
+	<T extends IBlockElement> T addChild(T e, int index) {
 		assert e != null;
 		((Module) getProcedure().getModule()).executeCommand(new AddChild(e, index));
+		return e;
 	}
 
 	private class RemoveChild implements IDeleteCommand<IBlockElement> {
@@ -198,7 +199,7 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	
 	@Override
 	public IBlock addBlockAt(int index, String ... flags) {
-		return new Block(this, true, index, flags); // TODO command
+		return new Block(this, true, index, flags);
 	}
 	
 	IBlock addLooseBlock(IProgramElement parent) {
@@ -274,8 +275,7 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 		IProcedure procedure = getProcedure();
 		((Procedure) procedure).addVariableDeclaration(var);
 		var.setId(id);
-		addChild(var, index);
-		return var;
+		return addChild(var, index);
 	}
 	
 	@Override
