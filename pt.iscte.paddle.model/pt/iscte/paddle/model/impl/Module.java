@@ -256,8 +256,6 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 			if(procedure == null) {
 				procedure = new Procedure(Module.this, returnType);
 				configure.accept(procedure);
-//				for(String f : configure)
-//					procedure.setFlag(f);
 			}
 			if(index == -1)
 				procedures.add(procedure);

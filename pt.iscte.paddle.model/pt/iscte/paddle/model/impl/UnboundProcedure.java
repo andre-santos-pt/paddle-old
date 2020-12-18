@@ -19,7 +19,7 @@ public class UnboundProcedure extends ProgramElement implements IProcedure {
 
 	@Override
 	public List<IVariableDeclaration> getParameters() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override

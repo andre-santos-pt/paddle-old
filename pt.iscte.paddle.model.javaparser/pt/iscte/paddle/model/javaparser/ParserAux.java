@@ -27,7 +27,7 @@ import pt.iscte.paddle.model.javaparser.antlr.JavaParser.TypeTypeContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.VariableDeclaratorIdContext;
 
 class ParserAux {
-	final static String THIS_VAR = "$" + Keyword.THIS.keyword();
+	final static String THIS_VAR = Keyword.THIS.keyword();
 	final static String EFOR_ITVAR = "$it";
 	final static String EFOR_SRCVAR = "$src";
 

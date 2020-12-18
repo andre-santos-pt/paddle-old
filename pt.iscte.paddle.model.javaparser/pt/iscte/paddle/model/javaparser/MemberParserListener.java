@@ -1,6 +1,8 @@
 package pt.iscte.paddle.model.javaparser;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.ILiteral;
@@ -12,7 +14,6 @@ import pt.iscte.paddle.model.IValueType;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ClassBodyDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ClassDeclarationContext;
-import pt.iscte.paddle.model.javaparser.antlr.JavaParser.CompilationUnitContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ConstructorDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.FieldDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.FormalParameterContext;
@@ -79,8 +80,10 @@ class MemberParserListener extends JavaParserBaseListener {
 			String varId = varDec.variableDeclaratorId().IDENTIFIER().getText();
 			IType t = ParserAux.handleRightBrackets(type, varDec.variableDeclaratorId().getText());
 			
+			String[] modifiers = getModifiers(classMember, Keyword.fieldModifiers());
+			
 			boolean constant = 
-					varDec.variableInitializer() != null &&
+					varDec.variableInitializer() != null && 
 					aux.hasModifier(classMember.modifier(), Keyword.STATIC) && 
 					aux.hasModifier(classMember.modifier(), Keyword.FINAL);
 			if(constant) {
@@ -110,22 +113,34 @@ class MemberParserListener extends JavaParserBaseListener {
 				//				if(ctx.variableInitializer() != null) {
 				//					aux.unsupported("field initializer", ctx.variableInitializer());
 				//				}
-				currentType.addField(t, varId);
+				currentType.addField(t, varId, modifiers);
 			}
 		}
 	}
 
 
+	private String[] getModifiers(ClassBodyDeclarationContext classMember, List<Keyword> mods) {
+		List<String> modifiers = new ArrayList<>();
+		for (Keyword fMod : mods)
+			if(aux.hasModifier(classMember.modifier(), fMod))
+				modifiers.add(fMod.keyword());
+		return modifiers.toArray(new String[modifiers.size()]);
+	}
+
+
 	@Override
 	public void enterMethodDeclaration(MethodDeclarationContext ctx) {
+		ClassBodyDeclarationContext classMember = (ClassBodyDeclarationContext) ctx.getParent().getParent();
 		String id = ctx.IDENTIFIER().getText();
 		TypeTypeOrVoidContext typeTypeOrVoid = ctx.typeTypeOrVoid();
 		IType type = typeTypeOrVoid.VOID() != null ? 
 				IType.VOID : aux.matchType(typeTypeOrVoid.typeType());
-		proc = module.addProcedure(type, p -> p.setId(id));
+		proc = module.addProcedure(type, p -> { 
+			p.setId(id); 
+			p.setFlag(getModifiers(classMember, Keyword.methodModifiers()));
+		});
 		proc.setNamespace(currentType.getId());
 		proc.setProperty(SourceLocation.class, new SourceLocation(file, ctx.getStart().getLine()));
-		ClassBodyDeclarationContext classMember = (ClassBodyDeclarationContext) ctx.getParent().getParent();
 		if(!aux.hasModifier(classMember.modifier(), Keyword.STATIC)) {
 			proc.setFlag(ParserAux.INSTANCE_FLAG);
 			IVariableDeclaration self = proc.addParameter(toplevelType.reference());

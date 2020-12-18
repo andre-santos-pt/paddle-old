@@ -35,8 +35,9 @@ public interface IProgramElement {
 		return key.cast(getProperty(key.getName()));
 	}
 	
-	default void setFlag(String key) {
-		setProperty(key, Boolean.TRUE);
+	default void setFlag(String ... keys) {
+		for(String k : keys)
+			setProperty(k, Boolean.TRUE);
 	}
 	
 	default void unsetFlag(String key) {

@@ -89,6 +89,7 @@ public class BaseTest {
 								main = (IProcedure) o;
 							
 							testproc = (IProcedure) o;
+							testproc.setNamespace(module.getId());
 						} 
 					}
 				}
