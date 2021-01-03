@@ -6,9 +6,9 @@ public interface IConstantDeclaration extends INamespaceElement, IExpressionView
 	
 	IType getType();
 	
-	ILiteral getValue();
+	IExpression getValue();
 	
-	void setValue(ILiteral value);
+	void setValue(IExpression value);
 	
 	IConstantExpression expression();
 }

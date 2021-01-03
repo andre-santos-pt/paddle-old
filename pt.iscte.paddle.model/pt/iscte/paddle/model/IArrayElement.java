@@ -1,12 +1,7 @@
 package pt.iscte.paddle.model;
 
-import java.util.List;
+public interface IArrayElement extends ICompositeExpression, IArrayAccess {
 
-public interface IArrayElement extends ICompositeExpression, ITargetExpression, IArrayAccess {
-
-//	ITargetExpression getTarget();
-	
-//	List<IExpression> getIndexes(); // size() >= 1
 	
 	default IType getType() {
 		IType type = getTarget().getType();

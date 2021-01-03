@@ -71,6 +71,7 @@ class MemberParserListener extends JavaParserBaseListener {
 		if(ctx.getParent() instanceof MemberDeclarationContext)
 			currentType = toplevelType;
 	}
+	
 
 	@Override
 	public void exitFieldDeclaration(FieldDeclarationContext ctx) {
@@ -80,52 +81,46 @@ class MemberParserListener extends JavaParserBaseListener {
 			String varId = varDec.variableDeclaratorId().IDENTIFIER().getText();
 			IType t = ParserAux.handleRightBrackets(type, varDec.variableDeclaratorId().getText());
 			
-			String[] modifiers = getModifiers(classMember, Keyword.fieldModifiers());
+			String[] modifiers = aux.getModifiers(classMember, Keyword.fieldModifiers());
 			
-			boolean constant = 
-					varDec.variableInitializer() != null && 
-					aux.hasModifier(classMember.modifier(), Keyword.STATIC) && 
-					aux.hasModifier(classMember.modifier(), Keyword.FINAL);
-			if(constant) {
-				IConstantDeclaration con;
-				if(t instanceof IValueType) {
-					String val = varDec.variableInitializer().expression().getText();
-					Object obj = null;
-					if(t == IType.INT)
-						obj = Integer.parseInt(val);
-					else if(t == IType.DOUBLE)
-						obj = Double.parseDouble(val);
-					else if(t == IType.BOOLEAN)
-						obj = Boolean.parseBoolean(val);
-					else
-						aux.unsupported("constant type", ctx);
-
-					con = module.addConstant(t, ((IValueType) t).literal(obj));
-				}
-				else {
-					con = module.addConstant(t, ILiteral.getNull());
-					aux.unsupported("constant type", varDec);
-				}
+			boolean global = 
+					//varDec.variableInitializer() != null && 
+					aux.hasModifier(classMember.modifier(), Keyword.STATIC);
+					//aux.hasModifier(classMember.modifier(), Keyword.FINAL);
+			if(global) {
+				IConstantDeclaration con = module.addConstant(t, null, modifiers);
 				con.setId(varId);
 				con.setNamespace(currentType.getId());
+//				if(t instanceof IValueType) {
+//					String val = varDec.variableInitializer().expression().getText();
+//					Object obj = null;
+//					if(t == IType.INT)
+//						obj = Integer.parseInt(val);
+//					else if(t == IType.DOUBLE)
+//						obj = Double.parseDouble(val);
+//					else if(t == IType.BOOLEAN)
+//						obj = Boolean.parseBoolean(val);
+//					else
+//						aux.unsupported("constant type", ctx);
+//
+//					con = module.addConstant(t, ((IValueType) t).literal(obj),modifiers);
+//				}
+//				else {
+//					con = module.addConstant(t, ILiteral.getNull(), modifiers);
+//					aux.unsupported("constant type", varDec);
+//				}
 			}
 			else {
-				//				if(ctx.variableInitializer() != null) {
-				//					aux.unsupported("field initializer", ctx.variableInitializer());
-				//				}
+				if (varDec.variableInitializer() != null) {
+					aux.unsupported("field initializer", varDec.variableInitializer());
+				}
 				currentType.addField(t, varId, modifiers);
 			}
 		}
 	}
 
 
-	private String[] getModifiers(ClassBodyDeclarationContext classMember, List<Keyword> mods) {
-		List<String> modifiers = new ArrayList<>();
-		for (Keyword fMod : mods)
-			if(aux.hasModifier(classMember.modifier(), fMod))
-				modifiers.add(fMod.keyword());
-		return modifiers.toArray(new String[modifiers.size()]);
-	}
+	
 
 
 	@Override
@@ -137,7 +132,7 @@ class MemberParserListener extends JavaParserBaseListener {
 				IType.VOID : aux.matchType(typeTypeOrVoid.typeType());
 		proc = module.addProcedure(type, p -> { 
 			p.setId(id); 
-			p.setFlag(getModifiers(classMember, Keyword.methodModifiers()));
+			p.setFlag(aux.getModifiers(classMember, Keyword.methodModifiers()));
 		});
 		proc.setNamespace(currentType.getId());
 		proc.setProperty(SourceLocation.class, new SourceLocation(file, ctx.getStart().getLine()));

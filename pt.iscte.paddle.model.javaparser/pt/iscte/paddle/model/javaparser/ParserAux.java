@@ -19,6 +19,7 @@ import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ClassBodyDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ConstructorDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.MethodDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ModifierContext;
@@ -53,6 +54,14 @@ class ParserAux {
 				unsupported("modifier", m);
 			}
 		return false;
+	}
+	
+	String[] getModifiers(ClassBodyDeclarationContext classMember, List<Keyword> mods) {
+		List<String> modifiers = new ArrayList<>();
+		for (Keyword fMod : mods)
+			if(hasModifier(classMember.modifier(), fMod))
+				modifiers.add(fMod.keyword());
+		return modifiers.toArray(new String[modifiers.size()]);
 	}
 
 	private final IModule module;

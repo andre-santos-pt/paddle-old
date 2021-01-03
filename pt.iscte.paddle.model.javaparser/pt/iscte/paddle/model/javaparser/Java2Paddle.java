@@ -46,7 +46,7 @@ public class Java2Paddle {
 
 	public Java2Paddle(File file, Predicate<File> exclude, IModule module) {
 		this.module = module;
-		this.module.addRecordType(module.getId());
+//		this.module.addRecordType(module.getId());
 		javaFiles = file.isFile() ? new File[] {file} : file.listFiles(f -> f.getName().endsWith(".java") && !exclude.test(f));
 	}
 

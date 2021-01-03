@@ -11,8 +11,8 @@ public interface IBlock extends IBlockElement, IStatementContainer, Iterable<IBl
 IListenable<IBlock.IListener> {
 	
 	interface IListener {
-		default void elementAdded(IProgramElement element, int index) { }
-		default void elementRemoved(IProgramElement element, int index) { }
+		default void elementAdded(IBlockElement element, int index) { }
+		default void elementRemoved(IBlockElement element, int index) { }
 	}
 	
 	IProcedure getProcedure();
@@ -92,7 +92,7 @@ IListenable<IBlock.IListener> {
 			else if(s instanceof IArrayElementAssignment) {
 				IArrayElementAssignment ass = (IArrayElementAssignment) s;
 				if(visitor.visit(ass)) {
-					ass.getIndexes().forEach(i -> i.accept(visitor));
+					ass.getArrayAccess().getIndexes().forEach(i -> i.accept(visitor));
 					ass.getExpression().accept(visitor);
 				}
 			}

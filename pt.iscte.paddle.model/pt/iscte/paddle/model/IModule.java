@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -47,11 +48,11 @@ public interface IModule extends IModuleView, IListenable<IModule.IListener> {
 	void redo();
 
 
-	default IConstantDeclaration addConstant(IType type, ILiteral value, String ... flags) {
+	default IConstantDeclaration addConstant(IType type, IExpression value, String ... flags) {
 		return addConstant(null, type, value, flags);
 	}
 
-	IConstantDeclaration addConstant(String id, IType type, ILiteral value, String ... flags);
+	IConstantDeclaration addConstant(String id, IType type, IExpression value, String ... flags);
 
 
 	IRecordType addRecordType();
@@ -85,6 +86,11 @@ public interface IModule extends IModuleView, IListenable<IModule.IListener> {
 
 	//	void loadBuiltInProcedure(Consumer<IValue> args, IType ... paramTypes);
 
+	default IConstantDeclaration getConstant(String id, String namespace) {
+		Optional<IConstantDeclaration> dec = getConstants().stream().filter(c -> c.getId().equals(id) && c.getNamespace().equals(namespace)).findFirst();
+		return dec.isPresent() ? dec.get() : null;
+	}
+	
 	IProcedure getProcedure(String id);
 
 	IProcedure resolveProcedure(String id, IType ... paramTypes);

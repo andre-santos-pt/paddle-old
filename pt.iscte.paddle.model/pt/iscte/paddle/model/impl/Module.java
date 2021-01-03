@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IConstantDeclaration;
+import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IModuleTranslator;
@@ -130,11 +131,11 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 	private class AddConstant implements IAddCommand<IConstantDeclaration> {
 		final String id;
 		final IType type;
-		final ILiteral literal;
+		final IExpression literal;
 		IConstantDeclaration constant;
 		final String[] flags;
 
-		AddConstant(String id, IType type, ILiteral literal, String ... flags) {
+		AddConstant(String id, IType type, IExpression literal, String ... flags) {
 			this.id = id;
 			this.type = type;
 			this.literal = literal;
@@ -172,7 +173,7 @@ public class Module extends ListenableProgramElement<IModule.IListener> implemen
 
 
 	@Override
-	public IConstantDeclaration addConstant(String id, IType type, ILiteral value, String ... flags) {
+	public IConstantDeclaration addConstant(String id, IType type, IExpression value, String ... flags) {
 		assert type != null;
 		assert value != null;
 		AddConstant add = new AddConstant(id, type, value, flags);

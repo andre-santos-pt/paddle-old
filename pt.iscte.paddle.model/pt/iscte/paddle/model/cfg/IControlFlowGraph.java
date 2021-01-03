@@ -88,7 +88,7 @@ public interface IControlFlowGraph {
 			INode end = path.getNodes().remove(path.getNodes().size() - 1);
 			for (INode node : path.getNodes()) {
 				if(node.getElement() instanceof IArrayElementAssignment 
-						&& (((IArrayElementAssignment) node.getElement()).getTarget().isSame(variable.expression()) 
+						&& (((IArrayElementAssignment) node.getElement()).getArrayAccess().getTarget().isSame(variable.expression()) 
 								|| ((IArrayElementAssignment) node.getElement()).getExpression().includes(variable))) 
 					return true;
 				else if(node.getElement() instanceof IVariableAssignment

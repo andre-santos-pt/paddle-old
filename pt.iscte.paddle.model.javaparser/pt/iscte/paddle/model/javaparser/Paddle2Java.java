@@ -27,6 +27,7 @@ import pt.iscte.paddle.model.IPredefinedArrayAllocation;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProcedureCall;
 import pt.iscte.paddle.model.IProcedureDeclaration;
+import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IRecordAllocation;
 import pt.iscte.paddle.model.IRecordFieldAssignment;
 import pt.iscte.paddle.model.IRecordFieldExpression;
@@ -75,7 +76,7 @@ public class Paddle2Java implements IModuleTranslator {
 
 				m.getProcedures().stream()
 				.filter(p -> !p.isBuiltIn() && t.getId().equals(p.getNamespace()))
-				.forEach(p -> code.append(header(p) + statements(p.getBody()) + "}\n\n"));
+				.forEach(p -> code.append(header(p) + statements(p.getBody()) + "}" + flags(p) +"\n\n"));
 
 				code.append("}\n\n");
 			}
@@ -107,7 +108,7 @@ public class Paddle2Java implements IModuleTranslator {
 	}
 
 	public String declaration(IConstantDeclaration c) {
-		return Keyword.STATIC + " final " + c.getType().getId() + " " + c.getId() + " = " + c.getValue().getStringValue() + ";\n";
+		return Keyword.STATIC + " final " + c.getType().getId() + " " + c.getId() + " = " + c.getValue() + ";\n";
 	}
 
 	public String declaration(IRecordType t) {
@@ -163,8 +164,8 @@ public class Paddle2Java implements IModuleTranslator {
 		}
 		else if(e instanceof IArrayElementAssignment) {
 			IArrayElementAssignment a = (IArrayElementAssignment) e;
-			String text = translate(a.getTarget());
-			for(IExpression i : a.getIndexes())
+			String text = translate(a.getArrayAccess().getTarget());
+			for(IExpression i : a.getArrayAccess().getIndexes())
 				text += "[" + translate(i) + "]";
 
 			text += " = " + translate(a.getExpression()) + ";";
@@ -251,8 +252,8 @@ public class Paddle2Java implements IModuleTranslator {
 		}
 	}
 
-	private String flags(IBlockElement e) {
-		Set<String> flags = e.getFlags();
+	private String flags(IProgramElement p) {
+		Set<String> flags = p.getFlags();
 		if(flags.isEmpty())
 			return "";
 		else
@@ -332,6 +333,8 @@ public class Paddle2Java implements IModuleTranslator {
 		
 		else if(e instanceof IRecordFieldExpression) {
 			IRecordFieldExpression r = (IRecordFieldExpression) e;
+			if(r.getField() == null)
+				System.out.println("??? " + r.getTarget());
 			return translate(r.getTarget())  + "." + r.getField().getId();
 		}
 

@@ -14,8 +14,6 @@ import pt.iscte.paddle.model.impl.Literal;
 public interface IExpression extends IProgramElement, IExpressionView<IExpression> {
 	IType getType();
 
-	//	ISourceElement getParent();
-
 	@Override
 	default IExpression expression() {
 		return this;
@@ -42,9 +40,6 @@ public interface IExpression extends IProgramElement, IExpressionView<IExpressio
 
 	IRecordFieldExpression field(IVariableDeclaration field); 
 	
-//	default IRecordFieldExpression field(String id) {
-//		return field(new UnboundVariable(id));
-//	}
 	
 	default boolean isSimple() {
 		return this instanceof ISimpleExpression;

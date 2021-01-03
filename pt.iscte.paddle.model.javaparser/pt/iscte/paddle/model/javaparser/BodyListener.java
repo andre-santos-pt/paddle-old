@@ -26,6 +26,8 @@ import pt.iscte.paddle.model.ILoop;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IOperator;
 import pt.iscte.paddle.model.IProcedure;
+import pt.iscte.paddle.model.IProcedureCall;
+import pt.iscte.paddle.model.IProcedureCallExpression;
 import pt.iscte.paddle.model.IRecordFieldExpression;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.IReferenceType;
@@ -33,16 +35,19 @@ import pt.iscte.paddle.model.IReturn;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.ITargetExpression;
 import pt.iscte.paddle.model.IType;
+import pt.iscte.paddle.model.IValueType;
 import pt.iscte.paddle.model.IVariableAssignment;
 import pt.iscte.paddle.model.IVariableDeclaration;
 import pt.iscte.paddle.model.IVariableExpression;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ArgumentsContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.BlockContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.BlockStatementContext;
+import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ClassBodyDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ClassDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ConstructorDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.EnhancedForControlContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ExpressionContext;
+import pt.iscte.paddle.model.javaparser.antlr.JavaParser.FieldDeclarationContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.ForControlContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.LiteralContext;
 import pt.iscte.paddle.model.javaparser.antlr.JavaParser.LocalVariableDeclarationContext;
@@ -82,9 +87,9 @@ class BodyListener extends JavaParserBaseListener {
 	public void enterClassDeclaration(ClassDeclarationContext ctx) {
 		// nested class
 //		if(ctx.getParent() instanceof MemberDeclarationContext)
-		
+
 		currentType = module.getRecordType(ctx.IDENTIFIER().getText());
-		if(toplevelType == null)
+		if (toplevelType == null)
 			toplevelType = currentType;
 	}
 
@@ -92,12 +97,12 @@ class BodyListener extends JavaParserBaseListener {
 	public void exitClassDeclaration(ClassDeclarationContext ctx) {
 		// nested class
 //		if(ctx.getParent() instanceof MemberDeclarationContext)
-			currentType = toplevelType;
+		currentType = toplevelType;
 	}
 
 	@Override
 	public void enterMethodDeclaration(MethodDeclarationContext ctx) {
-		currentProcedure =  aux.getMethod(ctx, currentType.getId());
+		currentProcedure = aux.getMethod(ctx, currentType.getId());
 		assert currentProcedure != null : ctx;
 		blockStack.push(currentProcedure.getBody());
 	}
@@ -116,7 +121,7 @@ class BodyListener extends JavaParserBaseListener {
 		body.addAssignment(thisVar, currentType.heapAllocation(), ParserAux.CONSTRUCTOR_FLAG);
 		thisVar.setId(ParserAux.THIS_VAR);
 		for (IVariableDeclaration f : currentType.getFields()) {
-			if(fieldInit.containsKey(f)) {
+			if (fieldInit.containsKey(f)) {
 				IExpression exp = fieldInit.get(f); // TODO field init to pre-parsing?
 				body.addRecordFieldAssignment(thisVar.field(f), exp);
 			}
@@ -137,10 +142,10 @@ class BodyListener extends JavaParserBaseListener {
 		IType type = aux.matchType(ctx.typeType());
 		int n = 0;
 		for (VariableDeclaratorContext v : ctx.variableDeclarators().variableDeclarator())
-			if(v.variableInitializer() != null) {
+			if (v.variableInitializer() != null) {
 				IType t = ParserAux.handleRightBrackets(type, v.variableDeclaratorId().getText());
 				n++;
-				if(v.variableInitializer().arrayInitializer() != null) {
+				if (v.variableInitializer().arrayInitializer() != null) {
 					int len = v.variableInitializer().arrayInitializer().variableInitializer().size();
 					IArrayType at = (IArrayType) ((IReferenceType) t).getTarget();
 					expStack.push(at.heapAllocationWith(getStackTop(len)));
@@ -154,7 +159,7 @@ class BodyListener extends JavaParserBaseListener {
 			IType t = ParserAux.handleRightBrackets(type, v.variableDeclaratorId().getText());
 			IVariableDeclaration var = addStatement(b -> b.addVariable(t), ctx);
 			var.setId(v.variableDeclaratorId().IDENTIFIER().getText());
-			if(v.variableInitializer() != null) {
+			if (v.variableInitializer() != null) {
 				addStatement(b -> {
 					IVariableAssignment ass = b.addAssignment(var, stackTop.get(i.getAndAdd(1)));
 					ass.setFlag(ParserAux.INITIALIZER_FLAG);
@@ -168,15 +173,14 @@ class BodyListener extends JavaParserBaseListener {
 	@Override
 	public void exitParExpression(ParExpressionContext ctx) {
 		StatementContext stat = (StatementContext) ctx.getParent();
-		if(stat.IF() != null) {
+		if (stat.IF() != null) {
 			ISelection sel;
-			if(stat.ELSE() == null)
+			if (stat.ELSE() == null)
 				sel = addStatement(b -> b.addSelection(expStack.pop()), ctx);
 			else
 				sel = addStatement(b -> b.addSelectionWithAlternative(expStack.pop()), ctx);
 			blockStack.push(sel.getBlock());
-		}
-		else if(stat.WHILE() != null && stat.DO() == null) {
+		} else if (stat.WHILE() != null && stat.DO() == null) {
 			ILoop loop = addStatement(b -> b.addLoop(expStack.pop()), ctx);
 			blockStack.push(loop.getBlock());
 		}
@@ -187,7 +191,7 @@ class BodyListener extends JavaParserBaseListener {
 		// create block
 		IBlock forBlock = blockStack.peek().addBlock();
 		forBlock.setFlag(ParserAux.FOR_FLAG);
-		if(ctx.enhancedForControl() != null)
+		if (ctx.enhancedForControl() != null)
 			forBlock.setFlag(ParserAux.EFOR_FLAG);
 		blockStack.push(forBlock);
 	}
@@ -195,18 +199,16 @@ class BodyListener extends JavaParserBaseListener {
 	@Override
 	public void exitForControl(ForControlContext ctx) {
 		// TODO check guard
-		for(IBlockElement e : blockStack.peek())
+		for (IBlockElement e : blockStack.peek())
 			e.setFlag(ParserAux.FOR_PROG_FLAG);
 	}
 
-
-
-	static boolean is(Token t, String ... tokens) {
-		if(t == null)
+	static boolean is(Token t, String... tokens) {
+		if (t == null)
 			return false;
 
-		for(String s : tokens)
-			if(t.getText().equals(s))
+		for (String s : tokens)
+			if (t.getText().equals(s))
 				return true;
 
 		return false;
@@ -220,11 +222,10 @@ class BodyListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterStatement(StatementContext ctx) {
-		if(ctx.DO() != null) {
+		if (ctx.DO() != null) {
 			blockStack.push(blockStack.peek().addBlock());
 			aux.unsupported("do-while", ctx);
-		}
-		else if(ctx.blockLabel != null && ctx.getParent() instanceof BlockStatementContext) {
+		} else if (ctx.blockLabel != null && ctx.getParent() instanceof BlockStatementContext) {
 			IBlock block = addStatement(b -> b.addBlock(), ctx);
 			blockStack.push(block);
 		}
@@ -232,56 +233,54 @@ class BodyListener extends JavaParserBaseListener {
 
 	@Override
 	public void exitStatement(StatementContext ctx) {
-		if(ctx.RETURN() != null) {
-			if(ctx.expression().isEmpty())
-				if(currentProcedure.is(ParserAux.CONSTRUCTOR_FLAG)) {
-					if(blockStack.peek().getParent() != currentProcedure) {
+		if (ctx.RETURN() != null) {
+			if (ctx.expression().isEmpty())
+				if (currentProcedure.is(ParserAux.CONSTRUCTOR_FLAG)) {
+					if (blockStack.peek().getParent() != currentProcedure) {
 						IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
 						addStatement(b -> b.addReturn(thisVar.expression()), ctx);
 					}
-				}
-				else
+				} else
 					addStatement(b -> b.addReturn(), ctx);
-			else 
+			else
 				addStatement(b -> b.addReturn(expStack.pop()), ctx);
 		}
 
-		else if(ctx.THROW() != null)
+		else if (ctx.THROW() != null)
 			addStatement(b -> b.addReturnError(expStack.pop()), ctx);
 
-		else if(ctx.BREAK() != null)
+		else if (ctx.BREAK() != null)
 			addStatement(b -> b.addBreak(), ctx);
 
-		else if(ctx.CONTINUE() != null)
+		else if (ctx.CONTINUE() != null)
 			addStatement(b -> b.addContinue(), ctx);
 
-		else if(ctx.blockLabel != null && ctx.getParent() instanceof BlockStatementContext)
+		else if (ctx.blockLabel != null && ctx.getParent() instanceof BlockStatementContext)
 			blockStack.pop();
 
-		
-		if(ctx.getParent() instanceof StatementContext) {
+		if (ctx.getParent() instanceof StatementContext) {
 			IBlock b = blockStack.pop();
 
-			if(((StatementContext) ctx.getParent()).IF() != null) {
+			if (((StatementContext) ctx.getParent()).IF() != null) {
 				ISelection sel = (ISelection) b.getParent();
-				if(sel.hasAlternativeBlock() && ((StatementContext) ctx.getParent()).statement(0) == ctx)
+				if (sel.hasAlternativeBlock() && ((StatementContext) ctx.getParent()).statement(0) == ctx)
 					blockStack.push(sel.getAlternativeBlock());
 			}
 
-			if(b.getParent().is(ParserAux.FOR_FLAG) && !b.isEmpty()) {
+			if (b.getParent().is(ParserAux.FOR_FLAG) && !b.isEmpty()) {
 				int iFirst = 0;
-				for(IBlockElement e : b)
-					if(e.is(ParserAux.EFOR_FLAG))
+				for (IBlockElement e : b)
+					if (e.is(ParserAux.EFOR_FLAG))
 						iFirst++;
 					else
 						break;
 
 				int n = 0;
-				for(IBlockElement e : b)
-					if(e.is(ParserAux.FOR_PROG_FLAG))
+				for (IBlockElement e : b)
+					if (e.is(ParserAux.FOR_PROG_FLAG))
 						n++;
 
-				while(n-- > 0 && !b.getLast().is(ParserAux.FOR_PROG_FLAG))
+				while (n-- > 0 && !b.getLast().is(ParserAux.FOR_PROG_FLAG))
 					b.moveAfter(b.getChildren().get(iFirst), b.getLast());
 
 				blockStack.pop();
@@ -299,23 +298,22 @@ class BodyListener extends JavaParserBaseListener {
 
 	private List<IExpression> getStackTop(int n) {
 		List<IExpression> expressions = new ArrayList<>(n);
-		while(n-- > 0)
+		while (n-- > 0)
 			expressions.add(0, expStack.pop());
 		return expressions;
 	}
 
-
 	private IVariableDeclaration findVariable(String id) {
 		// local
-		if(currentProcedure != null) {
-			for(IVariableDeclaration v : currentProcedure.getVariables())
-				if(v.getId().equals(id))
+		if (currentProcedure != null) {
+			for (IVariableDeclaration v : currentProcedure.getVariables())
+				if (v.getId().equals(id))
 					return v;
 
 			// fields
-			if(currentProcedure.is(ParserAux.INSTANCE_FLAG) || currentProcedure.is(ParserAux.CONSTRUCTOR_FLAG)) {
-				for(IVariableDeclaration v : currentType)
-					if(v.getId().equals(id))
+			if (currentProcedure.is(ParserAux.INSTANCE_FLAG) || currentProcedure.is(ParserAux.CONSTRUCTOR_FLAG)) {
+				for (IVariableDeclaration v : currentType)
+					if (v.getId().equals(id))
 						return v;
 			}
 		}
@@ -323,8 +321,8 @@ class BodyListener extends JavaParserBaseListener {
 	}
 
 	private IConstantDeclaration findConstant(String namespace, String id) {
-		for(IConstantDeclaration c : module.getConstants())
-			if(c.getNamespace().equals(namespace) && c.getId().equals(id))
+		for (IConstantDeclaration c : module.getConstants())
+			if (c.getNamespace().equals(namespace) && c.getId().equals(id))
 				return c;
 
 		return null;
@@ -332,176 +330,181 @@ class BodyListener extends JavaParserBaseListener {
 
 	@Override
 	public void exitExpression(ExpressionContext ctx) {
-		//		System.out.println("E " + ctx.getText());
-		if(ctx.primary() != null ) {
-			if(ctx.primary().THIS() != null) {
+//		System.out.println("E " + ctx.getText() + " " + ParserAux.containedIn(ctx,FieldDeclarationContext.class));
+		
+		if (ctx.primary() != null) {
+			if (ctx.primary().THIS() != null) {
 				IVariableDeclaration thisVar = findVariable(ParserAux.THIS_VAR);
-				if(thisVar == null)
+				if (thisVar == null)
 					System.err.println("no this param exists in " + currentProcedure.getId());
 				expStack.push(thisVar.expression());
-			}
-			else if(ctx.primary().IDENTIFIER() != null) {
+			} else if (ctx.primary().IDENTIFIER() != null) {
 				String id = ctx.primary().IDENTIFIER().getText();
 				IVariableDeclaration var = findVariable(id);
-				if(var != null) {
-					if(var.isRecordField()) {
+				if (var != null) {
+					if (var.isRecordField()) {
 						IVariableDeclaration thisVar = findVariable(ParserAux.THIS_VAR);
 						expStack.push(thisVar.field(var));
-					}
-					else
+					} else
 						expStack.push(var.expression());
-				}
-				else if(currentProcedure != null) {
+				} else if (currentProcedure != null) {
 					IConstantDeclaration con = findConstant(currentProcedure.getId(), id);
-					if(con != null)
+					if (con != null)
 						expStack.push(con.expression());
 					else {
-						//						System.err.println("unbound var " + id + "  " + classType.getId());
+//						System.err.println("unbound var " + id);
 						expStack.push(new IVariableDeclaration.UnboundVariable(id).expression());
 					}
 					// TODO constants in other namespaces
 				}
-			}
-			else if(ctx.primary().literal() != null)
+			} else if (ctx.primary().literal() != null)
 				expStack.push(matchLiteral(ctx.primary().literal()));
-
 
 			// TODO resolve this / implicit
 		}
 
-		else if(ctx.bop != null && ctx.bop.getText().equals(".")) {
-			if(ctx.IDENTIFIER() != null) {
+		else if (ctx.bop != null && ctx.bop.getText().equals(".")) {
+			if (ctx.IDENTIFIER() != null) {
 				IExpression left = expStack.pop();
 				String fieldId = ctx.IDENTIFIER().getText();
-				if(fieldId.equals("length") && 
-						(left.getType().isArrayReference() || left instanceof IArrayElement)) {
-					//						left instanceof IVariableExpression &&
-					//						((IVariableExpression) left).getVariable().getType().isArrayReference()) {
+				if (fieldId.equals("length") && (left.getType().isArrayReference() || left instanceof IArrayElement)) {
 					expStack.push(left.length());
-				}
-				else if(left.getType().isRecordReference()){
-					IVariableDeclaration field = ((IRecordType)((IReferenceType) left.getType()).getTarget()).getField(fieldId);
+				} else if (left.getType().isRecordReference()) {
+					IVariableDeclaration field = ((IRecordType) ((IReferenceType) left.getType()).getTarget()).getField(fieldId);
 					expStack.push(left.field(field));
+				} else if(left instanceof IVariableExpression && ((IVariableExpression) left).isUnbound()) {
+					IConstantDeclaration con = module.getConstant(fieldId, left.getId());
+					if(con != null)
+						expStack.push(con.expression());
+					else {
+						aux.unsupported("expression", ctx);
+						expStack.push(ILiteral.getNull());
+					}
 				}
-				else
+				else {
+					aux.unsupported("expression", ctx);
 					expStack.push(ILiteral.getNull());
-			}
-			else if(ctx.methodCall() != null)
+				}
+			} else if (ctx.methodCall() != null)
 				handleMethodCall(ctx.methodCall(), true);
 			else
 				aux.unsupported("dot access", ctx);
-			//			System.out.println("DOT " + ctx.getText() + "  " + expStack.peek());
+			// System.out.println("DOT " + ctx.getText() + " " + expStack.peek());
 		}
 
-		else if(ctx.methodCall() != null) {
+		else if (ctx.methodCall() != null) {
 			handleMethodCall(ctx.methodCall(), false);
 		}
 
-		else if(ctx.LBRACK() != null) {
+		else if (ctx.LBRACK() != null) {
 			IExpression index = expStack.pop();
 			IArrayElement arrEl = expStack.pop().element(index);
 			expStack.push(arrEl);
 		}
 
-		else if(is(ctx.bop, "=")) { 
-			if(ctx.getParent() instanceof StatementContext &&
-					((StatementContext) ctx.getParent()).statementExpression == null) {
+		else if (is(ctx.bop, "=")) {
+			if (ctx.getParent() instanceof StatementContext
+					&& ((StatementContext) ctx.getParent()).statementExpression == null) {
 				aux.unsupported("assignments as expressions", ctx);
 				expStack.push(ILiteral.getNull());
-			}
-			else {
+			} else {
 				IExpression right = expStack.pop();
 				IExpression left = expStack.pop();
-				if(left instanceof IVariableExpression) {
+				if (left instanceof IVariableExpression) {
 					IVariableDeclaration var = ((IVariableExpression) left).getVariable();
-					if(var.isLocalVariable())
+					if (var.isLocalVariable())
 						addStatement(b -> b.addAssignment(var, right), ctx);
 					else {
 //						assert currentProcedure.is(ParserAux.INSTANCE_FLAG);
 						IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
 						addStatement(b -> b.addRecordFieldAssignment(thisVar.field(var), right), ctx);
 					}
-				}
-				else if(left instanceof IArrayElement) {
+				} else if (left instanceof IArrayElement) {
 					IArrayElement e = (IArrayElement) left;
 					ITargetExpression t = e.getTarget();
 					List<IExpression> indexes = new ArrayList<IExpression>(e.getIndexes());
-					while(t instanceof IArrayElement) {
+					while (t instanceof IArrayElement) {
 						indexes.add(0, ((IArrayElement) t).getIndexes().get(0));
-						t = ((IArrayElement)t).getTarget();
+						t = ((IArrayElement) t).getTarget();
 					}
 					ITargetExpression tt = t;
 					addStatement(b -> b.addArrayElementAssignment(tt, right, indexes), ctx);
-				}
-				else if(left instanceof IRecordFieldExpression) {
-					addStatement(b -> b.addRecordFieldAssignment((IRecordFieldExpression)left, right), ctx);
+				} else if (left instanceof IRecordFieldExpression) {
+					addStatement(b -> b.addRecordFieldAssignment((IRecordFieldExpression) left, right), ctx);
 				}
 			}
 		}
 
-		else if(is(ctx.bop, "+=", "-=", "*=", "/=", "%=")) {
+		else if (is(ctx.bop, "+=", "-=", "*=", "/=", "%=")) {
 			IBinaryOperator op = aux.matchBinaryOperator(ctx.bop);
 			IExpression exp = expStack.pop();
 			IExpression left = expStack.pop();
-			if(left instanceof IVariableExpression) {
+			if (left instanceof IVariableExpression) {
 				IExpression expp = op.on((IVariableExpression) left, exp);
 				addStatement(b -> b.addAssignment(((IVariableExpression) left).getVariable(), expp), ctx);
+			}else if(left instanceof IRecordFieldExpression) {
+				addStatement(b -> b.addRecordFieldAssignment((IRecordFieldExpression) left,
+						op.on(left, exp)), ctx);
 			}
-			else 
+			else
 				aux.unsupported("+= on array", ctx);
 		}
 
-		else if(is(ctx.postfix, "++") || is(ctx.prefix, "++")) {
-			if(child(ctx, ExpressionContext.class))
+		else if (is(ctx.postfix, "++") || is(ctx.prefix, "++")) {
+			if (child(ctx, ExpressionContext.class))
 				aux.unsupported("incrementor as expression", ctx);
-			else {	
+			else {
 				IExpression left = expStack.pop();
-				if(left instanceof IVariableExpression)
+				if (left instanceof IVariableExpression)
 					addStatement(b -> b.addIncrement(((IVariableExpression) left).getVariable()), ctx);
+				else if (left instanceof IRecordFieldExpression)
+					addStatement(b -> b.addRecordFieldAssignment((IRecordFieldExpression) left,
+							IOperator.ADD.on(left, IType.INT.literal(1))), ctx);
 				else
 					aux.unsupported("++ on array", ctx);
 			}
 		}
 
-		else if(is(ctx.postfix, "--") || is(ctx.prefix, "--")) {
-			if(child(ctx, ExpressionContext.class))
+		else if (is(ctx.postfix, "--") || is(ctx.prefix, "--")) {
+			if (child(ctx, ExpressionContext.class))
 				aux.unsupported("decrementor as expression", ctx);
 			else {
 				IExpression left = expStack.pop();
-				if(left instanceof IVariableExpression)
+				if (left instanceof IVariableExpression)
 					addStatement(b -> b.addDecrement(((IVariableExpression) left).getVariable()), ctx);
+				else if (left instanceof IRecordFieldExpression)
+					addStatement(b -> b.addRecordFieldAssignment((IRecordFieldExpression) left,
+							IOperator.SUB.on(left, IType.INT.literal(1))), ctx);
 				else
 					aux.unsupported("-- on array", ctx);
 			}
 		}
 
-		else if(ctx.NEW() != null) {
+		else if (ctx.NEW() != null) {
 			IType type;
 
-			if(ctx.creator().createdName().IDENTIFIER().isEmpty())
+			if (ctx.creator().createdName().IDENTIFIER().isEmpty())
 				type = aux.matchPrimitiveType(ctx.creator().createdName().primitiveType());
 			else
 				type = aux.matchRecordType(ctx.creator().createdName().IDENTIFIER().get(0).getText());
 
-			if(ctx.creator().arrayCreatorRest() != null) {
-				if(ctx.creator().arrayCreatorRest().arrayInitializer() != null) {
+			if (ctx.creator().arrayCreatorRest() != null) {
+				if (ctx.creator().arrayCreatorRest().arrayInitializer() != null) {
 					int n = ctx.creator().arrayCreatorRest().arrayInitializer().variableInitializer().size();
 					expStack.push(type.array().heapAllocationWith(getStackTop(n)));
-				}
-				else {
+				} else {
 					int n = ctx.creator().arrayCreatorRest().expression().size();
 					expStack.push(type.array().heapAllocation(getStackTop(n)));
 				}
-			}
-			else {
+			} else {
 				ArgumentsContext arguments = ctx.creator().classCreatorRest().arguments();
 				int n = arguments.expressionList() == null ? 0 : arguments.expressionList().expression().size();
 				List<IExpression> args = getStackTop(n);
 				IRecordType t = (IRecordType) ((IReferenceType) type).getTarget();
 				IProcedure constructor = getConstructor(t, args);
-				if(constructor == null && n == 0)
+				if (constructor == null && n == 0)
 					expStack.push(((IRecordType) ((IReferenceType) type).getTarget()).heapAllocation());
-				else if(constructor != null)
+				else if (constructor != null)
 					expStack.push(constructor.expression(args));
 				else {
 					constructor = IProcedure.createUnbound(type.getId());
@@ -511,37 +514,54 @@ class BodyListener extends JavaParserBaseListener {
 			}
 		}
 
-		else if(ctx.typeType() != null && ctx.typeType().getText().equals(int.class.getName())) { // cast
+		else if (ctx.typeType() != null && ctx.typeType().getText().equals(int.class.getName())) { // cast
 			expStack.push(IOperator.TRUNCATE.on(expStack.pop()));
 		}
 
-		else if(ctx.prefix != null && is(ctx.prefix, "!")) {
+		else if (ctx.prefix != null && is(ctx.prefix, "!")) {
 			expStack.push(IOperator.NOT.on(expStack.pop()));
 		}
 
-		else if(is(ctx.bop, "?")) {
+		else if (is(ctx.bop, "?")) {
 			aux.unsupported("conditional expression", ctx);
 		}
 
-		else if(ctx.bop != null) {
+		else if (ctx.bop != null) {
 			IBinaryOperator op = aux.matchBinaryOperator(ctx.bop);
-			if(op != null)
+			if (op != null)
 				pushBinaryOperation(op);
 		}
-		
+
 		else
 			aux.unsupported("unknown expression", ctx);
 
-
-		if(ctx.getParent() instanceof ForControlContext) {
+		if (ctx.getParent() instanceof ForControlContext) {
 			ILoop loop = blockStack.peek().addLoop(expStack.pop(), ParserAux.FOR_FLAG);
 			blockStack.push(loop.getBlock());
-		}
-		else if (ctx.getParent() instanceof EnhancedForControlContext) {
+		} else if (ctx.getParent() instanceof EnhancedForControlContext) {
 			handleEnhancedFor((EnhancedForControlContext) ctx.getParent());
 		}
 	}
 
+	@Override
+	public void exitFieldDeclaration(FieldDeclarationContext ctx) {
+		ClassBodyDeclarationContext classMember = (ClassBodyDeclarationContext) ctx.getParent().getParent();
+		IType type = aux.matchType(ctx.typeType());
+		for (VariableDeclaratorContext varDec : ctx.variableDeclarators().variableDeclarator()) {
+			String varId = varDec.variableDeclaratorId().IDENTIFIER().getText();
+			IType t = ParserAux.handleRightBrackets(type, varDec.variableDeclaratorId().getText());
+			
+			String[] modifiers = aux.getModifiers(classMember, Keyword.fieldModifiers());
+			
+			if(aux.hasModifier(classMember.modifier(), Keyword.STATIC)) {
+				Optional<IConstantDeclaration> con = module.getConstants().stream().filter(c -> c.getId().equals(varId)).findFirst();
+				if(con.isPresent())
+					con.get().setValue(expStack.pop());
+			}
+			
+		}
+	}
+	
 	private void handleEnhancedFor(EnhancedForControlContext enFon) {
 		IBlock forBlock = blockStack.peek();
 		int depth = forBlock.getDepth();
@@ -575,88 +595,102 @@ class BodyListener extends JavaParserBaseListener {
 		inc.setFlag(ParserAux.FOR_PROG_FLAG);
 	}
 
-
-
 	private void handleMethodCall(MethodCallContext ctx, boolean dotCall) {
 		int n = ctx.expressionList() == null ? 0 : ctx.expressionList().expression().size();
 		// skip prints
-		if(ctx.getParent().getText().startsWith("System.out.print")) {
-			//			System.out.println("SYS " + ctx.getText());
-			//			getStackTop(3);
+		if (ctx.getParent().getText().startsWith("System.out.print")) {
+			// System.out.println("SYS " + ctx.getText());
+			// getStackTop(3);
 			expStack.clear();
 			return;
 		}
 
 		String methodId = ctx.IDENTIFIER() != null ? ctx.IDENTIFIER().getText() : null;
-		//		int n = ctx.expressionList() == null ? 0 : ctx.expressionList().expression().size();
+		// int n = ctx.expressionList() == null ? 0 :
+		// ctx.expressionList().expression().size();
 
-		List<IExpression> args = dotCall ? getStackTop(n+1) : getStackTop(n);
+		List<IExpression> args = dotCall ? getStackTop(n + 1) : getStackTop(n);
 
-		if(ctx.SUPER() != null) 
+		if (ctx.SUPER() != null)
 			aux.unsupported("super call", ctx);
-		else if(ctx.THIS() != null) {
+
+		// constructor this(...)
+		else if (ctx.THIS() != null) {
 			blockStack.peek().removeElement(blockStack.peek().getLast());
 			IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
 			IProcedure constructor = getConstructor(currentType, args);
 			addStatement(b -> b.addAssignment(thisVar, constructor.expression(args)), ctx);
-		}
-		else {
+		} else {
 			IProcedure p = null;
-			if(dotCall) {
-				if(args.get(0) instanceof IVariableExpression &&
-						((IVariableExpression) args.get(0)).isUnbound()) {
+			boolean isInstanceCall = false;
+
+			// ___.method(..)
+			if (dotCall) {
+				if (args.get(0) instanceof IVariableExpression && ((IVariableExpression) args.get(0)).isUnbound()) {
 					String namespace = args.remove(0).getId();
 					p = getMethod(namespace, methodId, args);
-					if(p == null)
+
+					if (p == null) {
 						p = IProcedure.createUnbound(namespace, methodId);
-				}
-				else {
+						System.err.println("unbound proc: " + methodId);
+					}
+				} else {
 					String namespace = args.get(0).getType().getId();
 					p = getMethod(namespace, methodId, args);
+					isInstanceCall = true;
 				}
 			}
+
+			// method(..)
 			else {
 				p = getMethod(currentType.getId(), methodId, args);
 
-				if(p != null && p.is(ParserAux.INSTANCE_FLAG)) {
+				// implicit this
+				if (p != null && p.is(ParserAux.INSTANCE_FLAG)) {
 					IVariableDeclaration thisVar = currentProcedure.getVariable(ParserAux.THIS_VAR);
 					IExpression exp = thisVar == null ? ILiteral.getNull() : thisVar.expression();
 					args.add(0, exp);
+					isInstanceCall = true;
 				}
 			}
-			
-			if(p == null) {
+
+			if (p == null) {
 				p = IProcedure.createUnbound(methodId);
-				System.err.println("unbound loose proc+: " + methodId);
+				System.err.println("unbound no namesapce proc: " + methodId);
 			}
-			
+
 			IProcedure pp = p;
-			if(ctx.getParent().getParent() instanceof StatementContext &&
-					((StatementContext) ctx.getParent().getParent()).statementExpression != null)
-				addStatement(b -> b.addCall(pp, args), ctx);
-			else
-				expStack.push(p.expression(args));
+			boolean isInstanceCallFinal = isInstanceCall;
+			if (ctx.getParent().getParent() instanceof StatementContext
+					&& ((StatementContext) ctx.getParent().getParent()).statementExpression != null)
+				addStatement(b -> {
+					IProcedureCall call = b.addCall(pp, args);
+					if (isInstanceCallFinal)
+						call.setFlag(ParserAux.INSTANCE_FLAG);
+					return call;
+				}, ctx);
+			else {
+				IProcedureCallExpression expression = p.expression(args);
+				if (isInstanceCallFinal)
+					expression.setFlag(ParserAux.INSTANCE_FLAG);
+				expStack.push(expression);
+			}
 		}
 	}
 
-
 	private IProcedure getMethod(String namespace, String methodId, List<IExpression> args) {
-		Optional<IProcedure> find = module.getProcedures().stream()
-				.filter(p -> p.getNamespace().equals(namespace))
-				.filter(p -> !p.is(ParserAux.CONSTRUCTOR_FLAG))
-				.filter(p -> p.getId().equals(methodId))
-				//		.filter(p -> p.matchesSignature(methodId, args)) // TODO sig match
+		Optional<IProcedure> find = module.getProcedures().stream().filter(p -> p.getNamespace().equals(namespace))
+				.filter(p -> !p.is(ParserAux.CONSTRUCTOR_FLAG)).filter(p -> p.getId().equals(methodId))
+				// .filter(p -> p.matchesSignature(methodId, args)) // TODO sig match
 				.findFirst();
 
 		return find.isPresent() ? find.get() : null;
 	}
 
 	private IProcedure getConstructor(IRecordType type, List<IExpression> args) {
-		Optional<IProcedure> find = module.getProcedures().stream()
-				.filter(p -> p.is(ParserAux.CONSTRUCTOR_FLAG))
+		Optional<IProcedure> find = module.getProcedures().stream().filter(p -> p.is(ParserAux.CONSTRUCTOR_FLAG))
 				.filter(p -> p.getParameters().size() == args.size()) // TODO sig match
-				.filter(p -> p.getNamespace().equals(type.getId()) && p.getId().equals(type.getId()))
-				.findFirst();
+				.filter(p -> p.getNamespace().equals(type.getId()) && p.getId().equals(type.getId())).findFirst();
 		return find.isPresent() ? find.get() : null;
 	}
 
@@ -667,31 +701,31 @@ class BodyListener extends JavaParserBaseListener {
 	}
 
 	private IExpression matchLiteral(LiteralContext ctx) {
-		if(ctx.integerLiteral() != null)
+		if (ctx.integerLiteral() != null)
 			return IType.INT.literal(Integer.parseInt(ctx.integerLiteral().getText()));
 
-		if(ctx.floatLiteral() != null)
+		if (ctx.floatLiteral() != null)
 			return IType.DOUBLE.literal(Double.parseDouble(ctx.floatLiteral().getText()));
 
-		if(ctx.BOOL_LITERAL() != null)
+		if (ctx.BOOL_LITERAL() != null)
 			return IType.BOOLEAN.literal(Boolean.parseBoolean(ctx.BOOL_LITERAL().getText()));
 
-		if(ctx.CHAR_LITERAL() != null)
+		if (ctx.CHAR_LITERAL() != null)
 			return IType.CHAR.literal(Character.valueOf(ctx.CHAR_LITERAL().getText().charAt(1)));
 
-		if(ctx.NULL_LITERAL() != null)
+		if (ctx.NULL_LITERAL() != null)
 			return ILiteral.getNull();
 
-		if(ctx.STRING_LITERAL() != null) {
-			IExpression e = ((IRecordType) ((IReferenceType) aux.matchRecordType(String.class.getName())).getTarget()).heapAllocation(); 
+		if (ctx.STRING_LITERAL() != null) {
+			IExpression e = ((IRecordType) ((IReferenceType) aux.matchRecordType(String.class.getName())).getTarget())
+					.heapAllocation();
 			int len = ctx.STRING_LITERAL().getText().length();
-			String content = ctx.STRING_LITERAL().getText().substring(1, len-1);
+			String content = ctx.STRING_LITERAL().getText().substring(1, len - 1);
 			e.setProperty(String.class, content);
 			return e;
 		}
 		aux.unsupported("literal", ctx);
 		return null;
 	}
-
 
 }

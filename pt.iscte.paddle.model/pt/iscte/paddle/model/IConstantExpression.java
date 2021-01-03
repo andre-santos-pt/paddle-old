@@ -8,9 +8,9 @@ public interface IConstantExpression extends ISimpleExpression {
 		return getConstant().getType();
 	}
 	
-	default String getStringValue() {
-		return getConstant().getValue().getStringValue();
-	}
+//	default String getStringValue() {
+//		return getConstant().getValue().getStringValue();
+//	}
 	
 	default boolean includes(IVariableDeclaration variable) {
 		return false;

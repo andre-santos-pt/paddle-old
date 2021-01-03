@@ -125,7 +125,7 @@ public class CheckTypes extends Rule {
 
 	@Override
 	public boolean visit(IArrayElementAssignment assignment) {
-		IExpression variable = assignment.getTarget();
+		IExpression variable = assignment.getArrayAccess().getTarget();
 		IType type = variable.getType();
 		if(type instanceof IReferenceType)
 			type = ((IReferenceType) type).resolveTarget();

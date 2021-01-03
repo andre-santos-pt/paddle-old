@@ -2,6 +2,7 @@ package pt.iscte.paddle.model.impl;
 
 import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.IConstantExpression;
+import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IType;
@@ -9,9 +10,9 @@ import pt.iscte.paddle.model.IType;
 class ConstantDeclaration extends ProgramElement implements IConstantDeclaration {
 	private final Module program;
 	private final IType type;
-	private ILiteral value;
+	private IExpression value;
 	
-	public ConstantDeclaration(Module program, IType type, ILiteral value) {
+	public ConstantDeclaration(Module program, IType type, IExpression value) {
 		this.program = program;
 		this.type = type;
 		this.value = value;
@@ -28,7 +29,7 @@ class ConstantDeclaration extends ProgramElement implements IConstantDeclaration
 	}
 
 	@Override
-	public ILiteral getValue() {
+	public IExpression getValue() {
 		return value;
 	}
 	
@@ -39,7 +40,7 @@ class ConstantDeclaration extends ProgramElement implements IConstantDeclaration
 
 
 	@Override
-	public void setValue(ILiteral value) {
+	public void setValue(IExpression value) {
 		assert value != null;
 		this.value = value;
 		setProperty("VALUE", value);
