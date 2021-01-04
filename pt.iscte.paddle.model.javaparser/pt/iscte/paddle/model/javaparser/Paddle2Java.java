@@ -20,7 +20,6 @@ import pt.iscte.paddle.model.IContinue;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.ILoop;
-import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IModuleTranslator;
 import pt.iscte.paddle.model.IModuleView;
 import pt.iscte.paddle.model.IPredefinedArrayAllocation;
@@ -88,7 +87,14 @@ public class Paddle2Java implements IModuleTranslator {
 			return "class " + topLevelType + " {\n" + code + "}\n";
 		//		return code + "}\n";
 	}
-
+	
+	@Override
+	public String translate(IProcedure p) {
+		StringBuffer code = new StringBuffer();
+		code.append(header(p) + statements(p.getBody()) + "}" + flags(p));
+		return code.toString();
+	}
+	
 	public String translate(IType t) {
 		if(t instanceof IReferenceType) 
 			return ((IReferenceType) t).getTarget().getId();
@@ -226,7 +232,7 @@ public class Paddle2Java implements IModuleTranslator {
 	}
 
 	private String procedureCall(IProcedureCall call) {
-		if(call.getProcedure().isBuiltIn()) {
+		//if(!call.getProcedure().isBuiltIn()) {
 
 			if(call.getProcedure().is(IProcedureDeclaration.INSTANCE_FLAG))
 				return translate(call.getArguments().get(0)) + "." + call.getProcedure().getId() + 
@@ -238,18 +244,13 @@ public class Paddle2Java implements IModuleTranslator {
 			else
 				return call.getProcedure().getNamespace() + "." + call.getProcedure().getId() + 
 						"(" + argsToString(call.getArguments()) + ")";
-		}
-		else {
-
-			String inv =  
-					//call.getProcedure().is(ParserAux.CONSTRUCTOR_FLAG) ?
-					//"new " + call.getProcedure().getId() :
-					//			call.getOwnerProcedure().sameNamespace(call.getProcedure()) ? call.getProcedure().getId() :
-
-					call.getProcedure().getNamespace() + "." + call.getProcedure().getId();
-
-			return inv + "(" + argsToString(call.getArguments()) + ")";
-		}
+//		}
+//		else {
+//
+//			String inv = call.getProcedure().getNamespace() + "." + call.getProcedure().getId();
+//
+//			return inv + "(" + argsToString(call.getArguments()) + ")";
+//		}
 	}
 
 	private String flags(IProgramElement p) {

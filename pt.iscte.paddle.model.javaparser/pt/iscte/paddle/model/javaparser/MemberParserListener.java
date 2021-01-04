@@ -91,6 +91,7 @@ class MemberParserListener extends JavaParserBaseListener {
 				IConstantDeclaration con = module.addConstant(t, null, modifiers);
 				con.setId(varId);
 				con.setNamespace(currentType.getId());
+				
 //				if(t instanceof IValueType) {
 //					String val = varDec.variableInitializer().expression().getText();
 //					Object obj = null;

@@ -84,14 +84,15 @@ class Procedure extends ProgramElement implements IProcedure {
 
 	@Override
 	public String toString() {
-		String params = "";
-		for(IVariableDeclaration p : paramsView) {
-			if(!params.isEmpty())
-				params += ", ";
-			params += p.getType() + " " + p.getId();
-		}
-
-		return returnType + " " + getId() + "(" + params + ") " + body.toString();
+		return Translator.INSTANCE.translate(this);
+//		String params = "";
+//		for(IVariableDeclaration p : paramsView) {
+//			if(!params.isEmpty())
+//				params += ", ";
+//			params += p.getType() + " " + p.getId();
+//		}
+//
+//		return returnType + " " + getId() + "(" + params + ") " + body.toString();
 	}
 
 	private class ParamsView extends AbstractList<IVariableDeclaration> {

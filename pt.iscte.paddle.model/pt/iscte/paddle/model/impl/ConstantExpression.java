@@ -7,8 +7,9 @@ import pt.iscte.paddle.interpreter.IExpressionEvaluator;
 import pt.iscte.paddle.interpreter.IValue;
 import pt.iscte.paddle.model.IConstantDeclaration;
 import pt.iscte.paddle.model.IConstantExpression;
+import pt.iscte.paddle.model.ITargetExpression;
 
-public class ConstantExpression extends Expression implements IConstantExpression {
+public class ConstantExpression extends Expression implements IConstantExpression, ITargetExpression {
 
 	private final IConstantDeclaration constant;
 

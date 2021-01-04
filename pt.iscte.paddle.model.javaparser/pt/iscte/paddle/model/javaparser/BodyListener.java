@@ -347,8 +347,8 @@ class BodyListener extends JavaParserBaseListener {
 						expStack.push(thisVar.field(var));
 					} else
 						expStack.push(var.expression());
-				} else if (currentProcedure != null) {
-					IConstantDeclaration con = findConstant(currentProcedure.getId(), id);
+				} else {
+					IConstantDeclaration con = findConstant(currentType.getId(), id);
 					if (con != null)
 						expStack.push(con.expression());
 					else {
@@ -371,6 +371,8 @@ class BodyListener extends JavaParserBaseListener {
 					expStack.push(left.length());
 				} else if (left.getType().isRecordReference()) {
 					IVariableDeclaration field = ((IRecordType) ((IReferenceType) left.getType()).getTarget()).getField(fieldId);
+					if(field == null)
+						field = new IVariableDeclaration.UnboundVariable(fieldId);
 					expStack.push(left.field(field));
 				} else if(left instanceof IVariableExpression && ((IVariableExpression) left).isUnbound()) {
 					IConstantDeclaration con = module.getConstant(fieldId, left.getId());
@@ -531,7 +533,6 @@ class BodyListener extends JavaParserBaseListener {
 			if (op != null)
 				pushBinaryOperation(op);
 		}
-
 		else
 			aux.unsupported("unknown expression", ctx);
 
@@ -554,11 +555,11 @@ class BodyListener extends JavaParserBaseListener {
 			String[] modifiers = aux.getModifiers(classMember, Keyword.fieldModifiers());
 			
 			if(aux.hasModifier(classMember.modifier(), Keyword.STATIC)) {
-				Optional<IConstantDeclaration> con = module.getConstants().stream().filter(c -> c.getId().equals(varId)).findFirst();
+				Optional<IConstantDeclaration> con = module.getConstants().stream().filter(c -> c.getId().equals(varId) && currentType.getNamespace().equals(c.getNamespace())).findFirst();
 				if(con.isPresent())
 					con.get().setValue(expStack.pop());
 			}
-			
+			else System.err.println("no field: " + varId);
 		}
 	}
 	

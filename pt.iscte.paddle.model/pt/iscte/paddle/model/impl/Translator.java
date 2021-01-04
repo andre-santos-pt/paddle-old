@@ -7,6 +7,7 @@ import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IModuleTranslator;
 import pt.iscte.paddle.model.IModuleView;
+import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.IProgramElement;
 import pt.iscte.paddle.model.IType;
 
@@ -38,6 +39,11 @@ public enum Translator implements IModuleTranslator {
 	@Override
 	public String translate(IType type) {
 		return translator == null ? defaultString(type) : translator.translate(type);
+	}
+	
+	@Override
+	public String translate(IProcedure procedure) {
+		return translator == null ? defaultString(procedure) : translator.translate(procedure);
 	}
 	
 	private String defaultString(IProgramElement e) {
