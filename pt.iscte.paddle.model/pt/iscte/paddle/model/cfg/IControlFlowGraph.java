@@ -76,31 +76,30 @@ public interface IControlFlowGraph {
 
 	default boolean usedOrChangedBetween(INode source, INode destiny, IVariableDeclaration variable) {
 		List<Path> paths = pathsBetweenNodes(source, destiny);
-		//		paths.forEach(path -> {
-		//			System.out.println("-------------------------");
-		//			path.nodes.forEach(n -> System.out.println(n));
-		//			System.out.println("-------------------------");
-		//		});
 		if(paths.isEmpty()) return true;
 		for (Path path : paths) {
 
 			path.getNodes().remove(0); // remove the beginning node.
 			INode end = path.getNodes().remove(path.getNodes().size() - 1);
 			for (INode node : path.getNodes()) {
+				System.out.println("NODE: " + node.getElement());
+
 				if(node.getElement() instanceof IArrayElementAssignment 
 						&& (((IArrayElementAssignment) node.getElement()).getArrayAccess().getTarget().isSame(variable.expression()) 
 								|| ((IArrayElementAssignment) node.getElement()).getExpression().includes(variable))) 
 					return true;
 				else if(node.getElement() instanceof IVariableAssignment
-						&& ( (((IVariableAssignment) node.getElement()).getTarget().isSame(variable) || ((IVariableAssignment) node.getElement()).getTarget().isSame(variable.expression()))
+						&& ( (((IVariableAssignment) node.getElement()).getTarget() == variable)
 								|| ((IVariableAssignment) node.getElement()).getExpression().includes(variable)))
 					return true;
 				else if(node.getElement() instanceof IProcedureCall)
 					for (IExpression argument : ((IProcedureCall) node.getElement()).getArguments()) 
 						if(argument.includes(variable)) return true;
 						else if((node.getElement() instanceof ISelection || node.getElement() instanceof ILoop) 
-								&& ((IControlStructure) node.getElement()).getGuard().includes(variable)) 
+								&& ((IControlStructure) node.getElement()).getGuard().includes(variable)) {
 							return true;
+						}
+
 			}
 			if(end.getElement() instanceof IVariableAssignment
 					&& ( (((IVariableAssignment) end.getElement()).getTarget().isSame(variable) || ((IVariableAssignment) end.getElement()).getTarget().isSame(variable.expression())) 
