@@ -145,6 +145,7 @@ public class Handler {
 	}
 
 	public void setLastSelectionNext(INode node) {
+		
 		//		System.out.println();
 		//		System.out.println("node: " + node.getElement());
 		//		System.out.println("lastLoop: " + visitor.getLastLoopNode());
@@ -166,7 +167,6 @@ public class Handler {
 		//				}
 		//		}
 		if(visitor.getLastSelectionBranch().getNext() == null) {
-			System.out.println("estou aqui: " + node.getElement() + " - " + visitor.getLastSelectionNode().node);
 			visitor.getLastSelectionNode().node.setNext(node);
 			if(visitor.getLastSelectionOrphans().isEmpty()) visitor.setlastSelectionNode(null);
 		}
@@ -176,6 +176,15 @@ public class Handler {
 		if(visitor.getLastSelectionBranch() != null && !visitor.getLastSelectionBranch().hasBranch()) {
 			visitor.getLastSelectionBranch().setBranch(node);
 		}
+	}
+	
+	static boolean containsNumber(int[] vector, int number) {
+		boolean contains = false;
+		for(int i = 0; i < vector.length; i++ ) {
+			if(vector[i] == number)
+				contains = true;
+		}
+		return contains;
 	}
 
 
@@ -229,9 +238,10 @@ public class Handler {
 		setLastSelectionNext(ret);
 		setLastLoopNext(ret);
 		handleOrphansAdoption(ret);
-
+		
 		if(lastNode instanceof IBranchNode && !((IBranchNode) lastNode).hasBranch()) ((IBranchNode) lastNode).setBranch(ret);
 		else if(lastNode != null && lastNode.getNext() == null) {
+			
 			if(visitor.getLastSelectionNode() != null) {
 				IControlStructure s =  visitor.getLastSelectionNode().node.getElement().getProperty(IControlStructure.class);
 				if(s != null && s instanceof ISelection) {

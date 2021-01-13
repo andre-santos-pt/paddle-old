@@ -68,9 +68,10 @@ public class Visitor implements IVisitor {
 		this.breakNodeStack = new ArrayDeque<>();
 	}
 
+
 	@Override
 	public boolean visit(IArrayElementAssignment assignment) {
-		IStatementNode assignment_statement = cfg.newStatement(assignment);
+		IStatementNode assignment_statement = cfg.newStatement(assignment);	
 		handler.handleStatementVisit(assignment_statement);
 		setLastNode(assignment_statement);
 		return true;
@@ -194,7 +195,7 @@ public class Visitor implements IVisitor {
 		IBranchNode finishedLoopBranch = loopNodeStack.pop();
 
 		/* When inside a loop and there isn't a statement after the selections. */
-		handler.setLastBreakNext(finishedLoopBranch);
+//		handler.setLastBreakNext(finishedLoopBranch);
 		handler.handleOrphansAdoption(finishedLoopBranch);
 
 		/* When a loop inside another loop finishes and there no statements of branches left before ending the wrapping loop, so
