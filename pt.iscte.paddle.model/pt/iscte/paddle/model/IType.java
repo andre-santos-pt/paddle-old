@@ -23,6 +23,10 @@ public interface IType extends INamespaceElement  {
 		return this == VOID;
 	}
 	
+	default boolean isUnbound() {
+		return this == UNBOUND;
+	}
+	
 	default boolean isValueType() {
 		return this instanceof IValueType;
 	}
@@ -161,12 +165,12 @@ public interface IType extends INamespaceElement  {
 
 		@Override
 		public String toString() {
-			return "unknown";
+			return "UnboundType";
 		}
 
 		@Override
 		public String getId() {
-			return "Type";
+			return "UnboundType";
 		}
 
 		@Override

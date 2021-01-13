@@ -66,7 +66,7 @@ class BodyListener extends JavaParserBaseListener {
 	Deque<IExpression> expStack;
 
 	private IRecordType toplevelType;
-	private final File file;
+	private final String location;
 
 	private IRecordType currentType;
 
@@ -74,13 +74,13 @@ class BodyListener extends JavaParserBaseListener {
 
 	private final ParserAux aux;
 
-	public BodyListener(IModule module, File file, ParserAux aux) {
+	public BodyListener(IModule module, String location, ParserAux aux) {
 		assert module.getId() != null;
 		this.module = module;
 		this.aux = aux;
 		blockStack = new ArrayDeque<>();
 		expStack = new ArrayDeque<>();
-		this.file = file;
+		this.location = location;
 	}
 
 	@Override
@@ -216,7 +216,7 @@ class BodyListener extends JavaParserBaseListener {
 
 	private <T extends IBlockElement> T addStatement(Function<IBlock, T> c, ParserRuleContext ctx) {
 		T s = c.apply(blockStack.peek());
-		s.setProperty(SourceLocation.class, new SourceLocation(file, ctx.getStart().getLine()));
+		s.setProperty(SourceLocation.class, new SourceLocation(location, ctx.getStart().getLine()));
 		return s;
 	}
 
@@ -509,7 +509,7 @@ class BodyListener extends JavaParserBaseListener {
 				else if (constructor != null)
 					expStack.push(constructor.expression(args));
 				else {
-					constructor = IProcedure.createUnbound(type.getId());
+					constructor = IProcedure.createUnbound(type.getId(), type.getId());
 					constructor.setFlag(IProcedure.CONSTRUCTOR_FLAG);
 					expStack.push(constructor.expression(args));
 				}
@@ -657,6 +657,8 @@ class BodyListener extends JavaParserBaseListener {
 
 			if (p == null) {
 				p = IProcedure.createUnbound(methodId);
+				if(isInstanceCall)
+					p.setFlag(ParserAux.INSTANCE_FLAG);
 				System.err.println("unbound no namesapce proc: " + methodId);
 			}
 

@@ -30,9 +30,10 @@ import pt.iscte.paddle.model.javaparser.antlr.JavaParser.CompilationUnitContext;
 // TODO API for text
 public class Java2Paddle {
 
-	private final File[] javaFiles;
-	boolean errors;
-	private ParserAux aux;
+	private File[] javaFiles;
+	private String[] javaSources;
+	private boolean errors;
+	private final ParserAux aux;
 
 	private final IModule module;
 
@@ -46,9 +47,16 @@ public class Java2Paddle {
 
 	public Java2Paddle(File file, Predicate<File> exclude, IModule module) {
 		this.module = module;
-//		this.module.addRecordType(module.getId());
 		javaFiles = file.isFile() ? new File[] {file} : file.listFiles(f -> f.getName().endsWith(".java") && !exclude.test(f));
+		aux = new ParserAux(module);
 	}
+	
+	public Java2Paddle(String moduleId, String ... javaSources) {
+		this.javaSources = javaSources;
+		this.module = IModule.create(moduleId);
+		aux = new ParserAux(module);
+	}
+	
 
 	public boolean checkSyntax() {
 		class Listener extends BaseErrorListener {
@@ -91,44 +99,33 @@ public class Java2Paddle {
 		return charset;
 	}
 	
-
 	public IModule parse() throws IOException {
-		aux = new ParserAux(module);
-
-		Map<IRecordType, File> types = new HashMap<>();
-		Map<File, Charset> charsets = new HashMap<>();
+		if(javaFiles != null)
+			return parseFiles();
+		else
+			return parseSources();
+	}
+	
+	private IModule parseFiles() throws IOException {
+		Map<File, Charset> charsets = new HashMap<>();		
 		
-//		for(File f : javaFiles) {
-//			IRecordType t = module.addRecordType();
-//			types.put(t, f);
-//		}
-
 		for(File f : javaFiles) {
 			Charset charset = Charset.forName(detectCharset(f));
 			charsets.put(f, charset);
-			
 			CharStream s = CharStreams.fromFileName(f.getAbsolutePath(), charset);
-			JavaLexer lexer = new JavaLexer(s);
-			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-			RecordParserListener l = new RecordParserListener(module, aux);
-			ParseTreeWalker w = new ParseTreeWalker();
-			w.walk(l, p.compilationUnit());
+			recordPass(s);
 		}
 		
 		for(File f : javaFiles) {
 			CharStream s = CharStreams.fromFileName(f.getAbsolutePath(), charsets.get(f));
-			JavaLexer lexer = new JavaLexer(s);
-			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-			MemberParserListener l = new MemberParserListener(module, f, aux);
-			ParseTreeWalker w = new ParseTreeWalker();
-			w.walk(l, p.compilationUnit());
+			memberPass(f.getName(), s);
 		}
 
 		for(File f : javaFiles) {
 			CharStream s = CharStreams.fromFileName(f.getAbsolutePath(), charsets.get(f));
 			JavaLexer lexer = new JavaLexer(s);
 			JavaParser p = new JavaParser(new CommonTokenStream(lexer));
-			BodyListener l = new BodyListener(module, f, aux);
+			BodyListener l = new BodyListener(module, f.getName(), aux);
 			ParseTreeWalker w = new ParseTreeWalker();
 			w.walk(l, p.compilationUnit());
 			System.out.println("parsing done " + f);
@@ -140,7 +137,57 @@ public class Java2Paddle {
 
 		return module;
 	}
+	
+	private IModule parseSources() throws IOException {
+		for(String src : javaSources) {
+			CharStream s = CharStreams.fromString(src);
+			recordPass(s);
+		}
+		
+		int i = 0;
+		for(String src : javaSources) {
+			CharStream s = CharStreams.fromString(src);
+			memberPass("source: " + i++, s);
+		}
 
+		i = 0;
+		for(String src : javaSources) {
+			CharStream s = CharStreams.fromString(src);
+			bodyPass("source: " + i++, s);
+		}
+		return module;
+	}
+
+	
+	private void recordPass(CharStream s) {
+		JavaLexer lexer = new JavaLexer(s);
+		JavaParser p = new JavaParser(new CommonTokenStream(lexer));
+		RecordParserListener l = new RecordParserListener(module, aux);
+		ParseTreeWalker w = new ParseTreeWalker();
+		w.walk(l, p.compilationUnit());
+	}
+	
+	private void memberPass(String loc, CharStream s) {
+		JavaLexer lexer = new JavaLexer(s);
+		JavaParser p = new JavaParser(new CommonTokenStream(lexer));
+		MemberParserListener l = new MemberParserListener(module, loc, aux);
+		ParseTreeWalker w = new ParseTreeWalker();
+		w.walk(l, p.compilationUnit());
+	}
+	
+	private void bodyPass(String loc, CharStream s) {
+		JavaLexer lexer = new JavaLexer(s);
+		JavaParser p = new JavaParser(new CommonTokenStream(lexer));
+		BodyListener l = new BodyListener(module, loc, aux);
+		ParseTreeWalker w = new ParseTreeWalker();
+		w.walk(l, p.compilationUnit());
+		System.out.println("parsing done " + loc);
+		if(!l.blockStack.isEmpty())
+			System.err.println("block stack: " + l.blockStack);
+		if(!l.expStack.isEmpty())
+			System.err.println("expression stack: " + l.expStack);
+	}
+	
 
 	public List<Object> getUnsupported() {
 		return aux.unsupported;

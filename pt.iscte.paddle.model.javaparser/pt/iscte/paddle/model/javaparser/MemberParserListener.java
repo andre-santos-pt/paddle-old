@@ -32,14 +32,15 @@ class MemberParserListener extends JavaParserBaseListener {
 	private IRecordType toplevelType;
 	private final ParserAux aux;
 	private IProcedure proc;
-	private File file;
-
+//	private File file;
+	private final String location;
+	
 	private IRecordType currentType;
 
-	public MemberParserListener(IModule module, File file, ParserAux aux) {
+	public MemberParserListener(IModule module, String location, ParserAux aux) {
 		this.module = module;
 		this.aux = aux;
-		this.file = file;
+		this.location = location;
 	}
 
 
@@ -83,33 +84,11 @@ class MemberParserListener extends JavaParserBaseListener {
 			
 			String[] modifiers = aux.getModifiers(classMember, Keyword.fieldModifiers());
 			
-			boolean global = 
-					//varDec.variableInitializer() != null && 
-					aux.hasModifier(classMember.modifier(), Keyword.STATIC);
-					//aux.hasModifier(classMember.modifier(), Keyword.FINAL);
+			boolean global = aux.hasModifier(classMember.modifier(), Keyword.STATIC);
 			if(global) {
 				IConstantDeclaration con = module.addConstant(t, null, modifiers);
 				con.setId(varId);
 				con.setNamespace(currentType.getId());
-				
-//				if(t instanceof IValueType) {
-//					String val = varDec.variableInitializer().expression().getText();
-//					Object obj = null;
-//					if(t == IType.INT)
-//						obj = Integer.parseInt(val);
-//					else if(t == IType.DOUBLE)
-//						obj = Double.parseDouble(val);
-//					else if(t == IType.BOOLEAN)
-//						obj = Boolean.parseBoolean(val);
-//					else
-//						aux.unsupported("constant type", ctx);
-//
-//					con = module.addConstant(t, ((IValueType) t).literal(obj),modifiers);
-//				}
-//				else {
-//					con = module.addConstant(t, ILiteral.getNull(), modifiers);
-//					aux.unsupported("constant type", varDec);
-//				}
 			}
 			else {
 				if (varDec.variableInitializer() != null) {
@@ -136,7 +115,7 @@ class MemberParserListener extends JavaParserBaseListener {
 			p.setFlag(aux.getModifiers(classMember, Keyword.methodModifiers()));
 		});
 		proc.setNamespace(currentType.getId());
-		proc.setProperty(SourceLocation.class, new SourceLocation(file, ctx.getStart().getLine()));
+		proc.setProperty(SourceLocation.class, new SourceLocation(location, ctx.getStart().getLine()));
 		if(!aux.hasModifier(classMember.modifier(), Keyword.STATIC)) {
 			proc.setFlag(ParserAux.INSTANCE_FLAG);
 			IVariableDeclaration self = proc.addParameter(toplevelType.reference());
