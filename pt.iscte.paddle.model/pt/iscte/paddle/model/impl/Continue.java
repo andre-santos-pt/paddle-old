@@ -14,10 +14,10 @@ class Continue extends Statement implements IContinue {
 		addToParent(index);
 	}
 
-	@Override
-	public String toString() {
-		return "continue";
-	}
+//	@Override
+//	public String toString() {
+//		return "continue";
+//	}
 
 	@Override
 	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {

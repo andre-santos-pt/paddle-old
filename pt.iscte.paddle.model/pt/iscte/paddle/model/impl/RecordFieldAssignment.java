@@ -39,15 +39,15 @@ class RecordFieldAssignment extends Statement implements IRecordFieldAssignment 
 		return expression;
 	}
 	
-	@Override
-	public String toString() {
-		IExpression target = getTarget();
-		IVariableDeclaration field = getField();
-		if(target.getType() instanceof IReferenceType)
-			return target.toString() + " = " + expression;
-		else
-			return target.toString() + " = " + expression;
-	}
+//	@Override
+//	public String toString() {
+//		IExpression target = getTarget();
+//		IVariableDeclaration field = getField();
+//		if(target.getType() instanceof IReferenceType)
+//			return target.toString() + " = " + expression;
+//		else
+//			return target.toString() + " = " + expression;
+//	}
 	
 	@Override
 	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {

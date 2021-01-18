@@ -11,4 +11,9 @@ public interface IBreak extends IStatement {
 		return List.of();
 	}
 	
+	
+	@Override
+	default boolean isSame(IProgramElement s) {
+		return s instanceof IBreak;
+	}
 }

@@ -33,4 +33,9 @@ abstract class Statement extends ProgramElement implements IStatement, IExecutab
 		assert parent != null;
 		((Block) parent).remove(this);
 	}
+	
+	@Override
+	public final String toString() {
+		return Translator.INSTANCE.translate(this);
+	}
 }

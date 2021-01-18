@@ -36,6 +36,9 @@ class ParserAux {
 	final static String CONSTRUCTOR_FLAG = "CONSTRUCTOR";
 	final static String INITIALIZER_FLAG = "INITIALIZER";
 	
+	final static String INC_FLAG = "INC";
+	final static String DEC_FLAG = "DEC";
+	
 	final static String FOR_FLAG = Keyword.FOR.name();
 	final static String FOR_PROG_FLAG = Keyword.FOR.name() + "_PROG";
 	final static String EFOR_FLAG = "E" + Keyword.FOR.name();

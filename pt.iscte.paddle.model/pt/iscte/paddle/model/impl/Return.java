@@ -34,10 +34,10 @@ class Return extends Statement implements IReturn {
 		return error;
 	}
 	
-	@Override
-	public String toString() {
-		return isVoid() ? "return" : "return " + expression;
-	}
+//	@Override
+//	public String toString() {
+//		return isVoid() ? "return" : "return " + expression;
+//	}
 	
 	@Override
 	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {

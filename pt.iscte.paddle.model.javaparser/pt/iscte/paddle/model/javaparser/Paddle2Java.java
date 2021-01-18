@@ -145,7 +145,7 @@ public class Paddle2Java implements IModuleTranslator {
 			if(c instanceof IBlock)
 				text += tabs + "{\n" + statements((IBlock) c) + tabs + "}\n";
 			else
-				text += tabs + translate(c);
+				text += tabs + translate(c) + flags(c) + "\n";
 		}
 		return text;
 	}
@@ -183,7 +183,12 @@ public class Paddle2Java implements IModuleTranslator {
 		}
 		else if(e instanceof IVariableAssignment) {
 			IVariableAssignment a = (IVariableAssignment) e;
-			ret = a.getTarget().getId() + " = " + translate(a.getExpression()) + ";";
+			if(a.is(ParserAux.INC_FLAG))
+				ret = a.getTarget().getId() + "++;";
+			else if(a.is(ParserAux.INC_FLAG))
+				ret = a.getTarget().getId() + "--;";
+			else
+				ret = a.getTarget().getId() + " = " + translate(a.getExpression()) + ";";
 		}
 		else if(e instanceof ISelection) {
 			ISelection s = (ISelection) e;
@@ -227,13 +232,11 @@ public class Paddle2Java implements IModuleTranslator {
 
 		if(ret == null)
 			throw new RuntimeException("not supported: " + e);
-		else
-			return ret + flags(e) + "\n";
+
+		return ret;
 	}
 
 	private String procedureCall(IProcedureCall call) {
-		//if(!call.getProcedure().isBuiltIn()) {
-
 			if(call.getProcedure().is(IProcedureDeclaration.INSTANCE_FLAG))
 				return translate(call.getArguments().get(0)) + "." + call.getProcedure().getId() + 
 						"(" + argsToString(call.getArguments().subList(1, call.getArguments().size())) + ")";
@@ -244,13 +247,6 @@ public class Paddle2Java implements IModuleTranslator {
 			else
 				return call.getProcedure().getNamespace() + "." + call.getProcedure().getId() + 
 						"(" + argsToString(call.getArguments()) + ")";
-//		}
-//		else {
-//
-//			String inv = call.getProcedure().getNamespace() + "." + call.getProcedure().getId();
-//
-//			return inv + "(" + argsToString(call.getArguments()) + ")";
-//		}
 	}
 
 	private String flags(IProgramElement p) {

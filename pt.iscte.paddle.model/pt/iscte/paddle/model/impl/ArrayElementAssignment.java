@@ -52,15 +52,15 @@ class ArrayElementAssignment extends Statement implements IArrayElementAssignmen
 		return expression;
 	}
 	
-	@Override
-	public String toString() {
-		String text = access.getTarget().getId();
-		for(IExpression e : access.getIndexes())
-			text += "[" + e + "]";
-		
-		text += " = " + getExpression();
-		return text;
-	}
+//	@Override
+//	public String toString() {
+//		String text = access.getTarget().getId();
+//		for(IExpression e : access.getIndexes())
+//			text += "[" + e + "]";
+//		
+//		text += " = " + getExpression();
+//		return text;
+//	}
 	
 	@Override
 	public void execute(ICallStack stack, List<IValue> values) throws ExecutionError {

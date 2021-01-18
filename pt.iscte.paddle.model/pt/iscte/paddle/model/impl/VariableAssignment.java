@@ -34,10 +34,10 @@ class VariableAssignment extends Statement implements IVariableAssignment {
 		return expression;
 	}
 	
-	@Override
-	public String toString() {
-		return (variable == null ? "NULL" : variable.getId()) + " = " + expression;
-	}
+//	@Override
+//	public String toString() {
+//		return (variable == null ? "NULL" : variable.getId()) + " = " + expression;
+//	}
 
 	@Override
 	public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {

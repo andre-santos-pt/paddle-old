@@ -15,10 +15,10 @@ class Break extends Statement implements IBreak {
 			addToParent(index);
 		}
 		
-		@Override
-		public String toString() {
-			return "break";
-		}
+//		@Override
+//		public String toString() {
+//			return "break";
+//		}
 		
 		@Override
 		public void execute(ICallStack stack, List<IValue> expressions) throws ExecutionError {

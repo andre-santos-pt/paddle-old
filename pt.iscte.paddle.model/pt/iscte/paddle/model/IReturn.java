@@ -23,4 +23,12 @@ public interface IReturn extends IStatement {
 		else
 			return List.of(getExpression());
 	}
+	
+	@Override
+	default boolean isSame(IProgramElement s) {
+		return s instanceof IReturn &&
+				(isVoid() && ((IReturn) s).isVoid() ||
+				getExpression().isSame(((IReturn) s).getExpression())
+				);
+	}
 }

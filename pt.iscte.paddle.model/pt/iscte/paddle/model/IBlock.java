@@ -33,6 +33,24 @@ IListenable<IBlock.IListener> {
 		return getChildren().get(getSize()-1);
 	}
 	
+	default IBlockElement getPrevious(IBlockElement e) {
+		List<IBlockElement> children = getChildren();
+		assert children.contains(e);
+		
+		int i = children.indexOf(e);
+		return i == 0 ? null : children.get(i-1);
+		
+	}
+	
+	default IBlockElement getNext(IBlockElement e) {
+		List<IBlockElement> children = getChildren();
+		assert children.contains(e);
+		
+		int i = children.indexOf(e);
+		return i == children.size()-1 ? null : children.get(i+1);
+		
+	}
+	
 	int getDepth();
 
 	void moveAfter(IBlockElement element, IBlockElement target);

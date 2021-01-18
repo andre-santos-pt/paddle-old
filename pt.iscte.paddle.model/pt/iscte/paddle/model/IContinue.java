@@ -9,4 +9,9 @@ public interface IContinue extends IStatement {
 	default List<IExpression> getExpressionParts() {
 		return List.of();
 	}
+	
+	@Override
+	default boolean isSame(IProgramElement s) {
+		return s instanceof IContinue;
+	}
 }

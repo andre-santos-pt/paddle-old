@@ -20,7 +20,14 @@ public interface IVariableAssignment extends IStatement {
 	default boolean isDecrement() {
 		return isModifiedByOne(this, IOperator.SUB);
 	}
-	
+
+	@Override
+	default boolean isSame(IProgramElement s) {
+		return s instanceof IVariableAssignment &&
+				getTarget().equals(((IVariableAssignment) s).getTarget()) &&
+				getExpression().isSame(((IVariableAssignment) s).getExpression());
+	}
+
 	private static boolean isModifiedByOne(IVariableAssignment ass, IBinaryOperator op) {
 		if(!(ass.getExpression() instanceof IBinaryExpression))
 			return false;

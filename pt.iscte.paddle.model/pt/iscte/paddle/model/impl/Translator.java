@@ -3,8 +3,8 @@ package pt.iscte.paddle.model.impl;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
+import pt.iscte.paddle.model.IBlockElement;
 import pt.iscte.paddle.model.IExpression;
-import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IModuleTranslator;
 import pt.iscte.paddle.model.IModuleView;
 import pt.iscte.paddle.model.IProcedure;
@@ -30,6 +30,11 @@ public enum Translator implements IModuleTranslator {
 	public String translate(IModuleView module) {
 		return translator == null ? defaultString(module) : translator.translate(module);
 	}
+	
+	@Override
+	public String translate(IBlockElement element) {
+		return translator == null ? defaultString(element) : translator.translate(element);
+	}
 
 	@Override
 	public String translate(IExpression expression) {
@@ -49,4 +54,6 @@ public enum Translator implements IModuleTranslator {
 	private String defaultString(IProgramElement e) {
 		return e.getClass().getSimpleName() + ":" + e.getId();
 	}
+
+	
 }
