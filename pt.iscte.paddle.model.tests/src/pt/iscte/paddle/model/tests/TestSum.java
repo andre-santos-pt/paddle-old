@@ -21,8 +21,10 @@ public class TestSum extends BaseTest {
 	IProcedure summation = module.addProcedure(DOUBLE);
 	IVariableDeclaration array = summation.addParameter(DOUBLE.array().reference());
 	IBlock sumBody = summation.getBody();
-	IVariableDeclaration sum = sumBody.addVariable(DOUBLE, DOUBLE.literal(0.0));
-	IVariableDeclaration i = sumBody.addVariable(INT, INT.literal(0));
+	IVariableDeclaration sum = sumBody.addVariable(DOUBLE);
+	IVariableAssignment sumAss = sumBody.addAssignment(sum, DOUBLE.literal(0.0));
+	IVariableDeclaration i = sumBody.addVariable(INT);
+	IVariableAssignment iAss = sumBody.addAssignment(i, INT.literal(0));
 	ILoop loop = sumBody.addLoop(DIFFERENT.on(i, array.dereference().length()));
 	IVariableAssignment ass1 = loop.addAssignment(sum, ADD.on(sum, array.dereference().element(i)));
 	IVariableAssignment ass2 = loop.addIncrement(i);
@@ -56,10 +58,10 @@ public class TestSum extends BaseTest {
 	protected IControlFlowGraph cfg() {
 		IControlFlowGraph cfg = IControlFlowGraph.create(summation);
 
-		IStatementNode s_sum = cfg.newStatement(sum);
+		IStatementNode s_sum = cfg.newStatement(sumAss);
 		cfg.getEntryNode().setNext(s_sum);
 
-		IStatementNode s_i = cfg.newStatement(i);
+		IStatementNode s_i = cfg.newStatement(iAss);
 		s_sum.setNext(s_i);
 
 		IBranchNode b_loop = cfg.newBranch(loop.getGuard());
