@@ -76,7 +76,6 @@ public class TestList extends BaseTest {
 		body.addCall(add, list, INT.literal(3));
 		body.addCall(add, list, INT.literal(5));
 		body.addCall(add, list, INT.literal(7));
-		
 		existsTrue = body.addVariable(BOOLEAN, exists.expression(list, INT.literal(7)));
 		existsFalse = body.addVariable(BOOLEAN, exists.expression(list, INT.literal(6)));
 		
