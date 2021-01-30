@@ -29,7 +29,7 @@ public interface IProcedureCall extends IStatement {
 
 	
 	static IProcedureCall unboundExpression(String id) {
-		ProcedureCall call = new ProcedureCall(null, null, -1, Collections.emptyList());
+		ProcedureCall call = new ProcedureCall(null, IProcedure.createUnbound(id), -1, Collections.emptyList());
 		call.setId(id);
 		return call;
 	}
