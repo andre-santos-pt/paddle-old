@@ -62,7 +62,8 @@ class Block extends ListenableProgramElement<IBlock.IListener> implements IBlock
 	
 	@Override
 	public List<IBlockElement> getChildren() {
-		return Collections.unmodifiableList(children);
+		return children;
+		//return Collections.unmodifiableList(children);
 	}
 	
 	@Override

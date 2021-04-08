@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Executable;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.mozilla.universalchardet.UniversalDetector;
 
+import pt.iscte.paddle.model.IBlock;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IRecordType;
 import pt.iscte.paddle.model.javaparser.antlr.JavaLexer;
@@ -100,10 +102,29 @@ public class Java2Paddle {
 	}
 	
 	public IModule parse() throws IOException {
-		if(javaFiles != null)
-			return parseFiles();
-		else
-			return parseSources();
+		IModule m = javaFiles != null ? parseFiles() : parseSources();
+		hackFor(m);
+		return m;
+	}
+	
+	private static void hackFor(IModule module) {
+		List<IBlock> blocks = new ArrayList<>();
+		module.getProcedures().forEach(proc ->
+			proc.accept(new IBlock.IVisitor() {
+				 public boolean visit(IBlock block) {
+					 blocks.add(block);
+					 return true;
+				 }
+			})
+		);
+		blocks.forEach(b -> {
+			IBlock pa = (IBlock) b.getParent();
+			 int i = pa.getChildren().indexOf(b);
+			 for(int j = b.getChildren().size()-1; j >= 0; j--)						
+				 pa.getChildren().add(i, b.getChildren().get(j));
+			 
+			b.remove();
+		});
 	}
 	
 	private IModule parseFiles() throws IOException {

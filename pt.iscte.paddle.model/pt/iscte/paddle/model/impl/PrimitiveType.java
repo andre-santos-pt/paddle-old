@@ -186,7 +186,7 @@ public enum PrimitiveType implements IValueType {
 
 		@Override
 		public Object create(String literal) {
-			return Character.valueOf(literal.charAt(1));
+			return Character.valueOf(literal.charAt(0));
 		}
 	};
 

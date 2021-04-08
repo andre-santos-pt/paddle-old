@@ -60,6 +60,7 @@ public class ProcedureExecutor {
 		assert !isOver();
 
 		IProgramElement current = stack.peek().current();
+		
 		if(current instanceof IStatement) {
 			IStatement s = (IStatement) current;
 			if(pendingEvaluations == null) {
