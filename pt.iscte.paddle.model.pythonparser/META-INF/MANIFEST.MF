@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Pythonparser
+Bundle-SymbolicName: pt.iscte.paddle.model.pythonparser
+Bundle-Version: 1.0.0.qualifier
+Export-Package: .
+Require-Bundle: pt.iscte.paddle.model;bundle-version="0.1.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-11
