@@ -20,7 +20,9 @@ public class TransposeTest extends TestCase {
 	public void testReadBubblesort() throws ParseException, TransposeException {
 		IModule module = Transpose.read(BUBBLESORT_JSON);
 		// TODO check structure
+
 		System.out.println(new Paddle2Java().translate(module));
+//		System.out.println(new Paddle2Java("TestBubble").translate(module));
 	}
 
 	public static String FUNCTION_JSON = """

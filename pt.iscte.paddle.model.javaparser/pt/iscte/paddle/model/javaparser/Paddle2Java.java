@@ -20,6 +20,7 @@ import pt.iscte.paddle.model.IContinue;
 import pt.iscte.paddle.model.IExpression;
 import pt.iscte.paddle.model.ILiteral;
 import pt.iscte.paddle.model.ILoop;
+import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.IModuleTranslator;
 import pt.iscte.paddle.model.IModuleView;
 import pt.iscte.paddle.model.IPredefinedArrayAllocation;
@@ -56,6 +57,14 @@ public class Paddle2Java implements IModuleTranslator {
 		this.topLevelType = topLevelType;
 	}
 
+	@Override
+	public String translate(IModule module) {
+		StringBuffer code = new StringBuffer();
+		module.getRecordTypes().forEach(t->code.append(translate(t)));
+		module.getProcedures().forEach(p->code.append(translate(p)));
+		return code.toString();
+	}
+	
 	public String translate(IModuleView m) {
 		StringBuffer code = new StringBuffer();
 		for(IRecordType t : m.getRecordTypes()) {
