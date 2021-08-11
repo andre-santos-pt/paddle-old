@@ -51,7 +51,7 @@ public class ProgramElement implements IProgramElement {
 	public Set<String> getFlags() {
 		Set<String> flags = new HashSet<String>();
 		for(Entry e : properties.entrySet())
-			if(e.getValue().equals(Boolean.TRUE))
+			if(Boolean.TRUE.equals(e.getValue()))
 				flags.add(e.getKey().toString());
 		return flags;
 	}

@@ -95,7 +95,15 @@ public interface IType extends INamespaceElement  {
 	}
 	
 
-	
+
+	default IArrayType array(int nDim) {
+		assert nDim >= 1;
+		IArrayType type  = new ArrayType(this);
+		for(int i = 1; i < nDim; i++)
+			type = type.array();
+		return type;
+//		return new ArrayType(this);
+	}
 	
 	
 	

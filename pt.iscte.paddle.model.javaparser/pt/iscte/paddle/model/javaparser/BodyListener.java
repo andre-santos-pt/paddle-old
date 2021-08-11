@@ -330,7 +330,7 @@ class BodyListener extends JavaParserBaseListener {
 
 	@Override
 	public void exitExpression(ExpressionContext ctx) {
-//		System.out.println("E " + ctx.getText() + " " + ParserAux.containedIn(ctx,FieldDeclarationContext.class));
+		//System.out.println("E " + ctx.getText() + " " + ParserAux.containedIn(ctx,FieldDeclarationContext.class));
 		
 		if (ctx.primary() != null) {
 			if (ctx.primary().THIS() != null) {
@@ -493,10 +493,10 @@ class BodyListener extends JavaParserBaseListener {
 			if (ctx.creator().arrayCreatorRest() != null) {
 				if (ctx.creator().arrayCreatorRest().arrayInitializer() != null) {
 					int n = ctx.creator().arrayCreatorRest().arrayInitializer().variableInitializer().size();
-					expStack.push(type.array().heapAllocationWith(getStackTop(n)));
+					expStack.push(type.array(n).heapAllocationWith(getStackTop(n)));
 				} else {
 					int n = ctx.creator().arrayCreatorRest().expression().size();
-					expStack.push(type.array().heapAllocation(getStackTop(n)));
+					expStack.push(type.array(n).heapAllocation(getStackTop(n)));
 				}
 			} else {
 				ArgumentsContext arguments = ctx.creator().classCreatorRest().arguments();

@@ -7,6 +7,7 @@ module pt.iscte.paddle.model {
 	exports pt.iscte.paddle.model.validation;
 	exports pt.iscte.paddle.model.cfg;
 	exports pt.iscte.paddle.interpreter;
+	exports pt.iscte.paddle.interpreter.impl;
 	
 	exports pt.iscte.paddle.asg.future;
 	
