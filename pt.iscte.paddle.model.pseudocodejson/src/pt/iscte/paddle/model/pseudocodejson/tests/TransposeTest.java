@@ -3,7 +3,8 @@ package pt.iscte.paddle.model.pseudocodejson.tests;
 import org.json.simple.parser.ParseException;
 
 import junit.framework.TestCase;
-import pt.iscte.paddle.model.IModel2CodeTranslator;
+import pt.iscte.paddle.model.IModuleTranslator;
+import pt.iscte.paddle.model.javaparser.Paddle2Java;
 import pt.iscte.paddle.model.IModule;
 import pt.iscte.paddle.model.pseudocodejson.Transpose;
 import pt.iscte.paddle.model.pseudocodejson.TransposeException;
@@ -13,13 +14,13 @@ public class TransposeTest extends TestCase {
 	public void testReadFunction() throws ParseException, TransposeException {
 		IModule module = Transpose.read(FUNCTION_JSON);
 		// TODO check structure
-		System.out.println(module.translate(new IModel2CodeTranslator.Java()));
+		System.out.println(new Paddle2Java().translate(module));
 	}
 
 	public void testReadBubblesort() throws ParseException, TransposeException {
 		IModule module = Transpose.read(BUBBLESORT_JSON);
 		// TODO check structure
-		System.out.println(module.translate(new IModel2CodeTranslator.Java()));
+		System.out.println(new Paddle2Java().translate(module));
 	}
 
 	public static String FUNCTION_JSON = """

@@ -21,6 +21,7 @@ import pt.iscte.paddle.model.IOperator;
 import pt.iscte.paddle.model.IProcedure;
 import pt.iscte.paddle.model.ISelection;
 import pt.iscte.paddle.model.IStatementContainer;
+import pt.iscte.paddle.model.ITargetExpression;
 import pt.iscte.paddle.model.IType;
 import pt.iscte.paddle.model.IUnaryOperator;
 import pt.iscte.paddle.model.IValueType;
@@ -114,7 +115,7 @@ public class Transpose {
 			}
 
 			else if (type.equals("Array Assignment")) {
-				body.addArrayElementAssignment(parseExpression(state, entry.requireObject("target")),
+				body.addArrayElementAssignment((ITargetExpression) parseExpression(state, entry.requireObject("target")),
 						parseExpression(state, entry.requireObject("expression")),
 						parseExpressions(state, entry.getArray("indexes")));
 			}
