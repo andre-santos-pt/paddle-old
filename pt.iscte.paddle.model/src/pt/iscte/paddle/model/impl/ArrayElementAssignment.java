@@ -77,21 +77,20 @@ class ArrayElementAssignment extends Statement implements IArrayElementAssignmen
 			throw new NullPointerError(target);
 		
 		IArray array = (IArray) valueArray;
-		IExpression errorTarget = target;
+		
 		List<IExpression> indexes = getIndexes();
 		IValue v = array;
 		for(int i = 0; i < indexes.size()-1; i++) {
 			int index = ((Number) values.get(i).getValue()).intValue();
 			if(index < 0 || index >= ((IArray)v).getLength()) {
-				throw new ArrayIndexError(this, index, errorTarget, indexes.get(i), i);
+				throw new ArrayIndexError(this, index, target, indexes.get(i), i);
 			}
 			v = array.getElement(index);
-			errorTarget = errorTarget.element(indexes.get(i));
 		}
 		
 		int index = ((Number) values.get(indexes.size()-1).getValue()).intValue();
 		if(index < 0 || index >= ((IArray)v).getLength())			
-			throw new ArrayIndexError(this, index, errorTarget, indexes.get(indexes.size()-1), indexes.size()-1);
+			throw new ArrayIndexError(this, index, target, indexes.get(indexes.size()-1), indexes.size()-1);
 
 		
 		IValue val = values.get(values.size()-1);
