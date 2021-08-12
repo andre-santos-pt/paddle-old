@@ -7,3 +7,5 @@ jar -c --file=lib/org-mozilla-universalchardet.jar -C /Users/andresantos/Eclipse
 jar -c --file=lib/pt-iscte-paddle-model-java.jar -C pt.iscte.paddle.model.javaparser/bin/ .
 
 jar -c --file=lib/paddle-roles.jar -C ../paddle-variable-roles/pt.iscte.paddle.model.roles/bin/ .
+
+jar -c --file=lib/pt-iscte-paddle-model-json.jar -C pt.iscte.paddle.model.pseudocodejson/bin/ .

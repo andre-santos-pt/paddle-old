@@ -169,11 +169,11 @@ public class ProgramState implements IProgramState {
 	}
 
 	public IExecutionData execute(IProcedure procedure, Object ... args) throws ExecutionError {
-		SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
-		List<ISemanticProblem> problems = checker.check(program, procedure);
-		problems.forEach(p -> System.err.println(p));
-		if(!problems.isEmpty())
-			return new ExecutionData();
+//		SemanticChecker checker = new SemanticChecker(new AsgSemanticChecks());
+//		List<ISemanticProblem> problems = checker.check(program, procedure);
+//		problems.forEach(p -> System.err.println(p));
+//		if(!problems.isEmpty())
+//			return new ExecutionData();
 
 		setupExecution(procedure, args);
 		while(!isOver())
