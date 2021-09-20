@@ -4,6 +4,6 @@ module pt.iscte.paddle.model.pseudocodejson {
 
 	requires json.simple;
 	requires junit;
-	requires pt.iscte.paddle.model;
+	requires transitive pt.iscte.paddle.model;
 	requires pt.iscte.paddle.model.javaparser;
 }
