@@ -60,8 +60,8 @@ public class Paddle2Java implements IModuleTranslator {
 	@Override
 	public String translate(IModule module) {
 		StringBuffer code = new StringBuffer();
-		module.getRecordTypes().forEach(t->code.append(translate(t)));
-		module.getProcedures().forEach(p->code.append(translate(p)));
+		module.getRecordTypes().forEach(t->code.append(translate(t)).append(System.lineSeparator()));
+		module.getProcedures().forEach(p->code.append(translate(p)).append(System.lineSeparator()));
 		return code.toString();
 	}
 	
@@ -100,6 +100,9 @@ public class Paddle2Java implements IModuleTranslator {
 	@Override
 	public String translate(IProcedure p) {
 		StringBuffer code = new StringBuffer();
+		if(p.isBuiltIn())
+			code.append("// builtin").append(System.lineSeparator());
+		
 		code.append(header(p) + statements(p.getBody()) + "}" + flags(p));
 		return code.toString();
 	}

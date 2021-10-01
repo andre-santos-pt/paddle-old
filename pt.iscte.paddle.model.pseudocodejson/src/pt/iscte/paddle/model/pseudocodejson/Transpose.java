@@ -29,22 +29,21 @@ import pt.iscte.paddle.model.IVariableDeclaration;
 
 public class Transpose {
 
-	public static IModule readFile(String path) throws IOException, ParseException, TransposeException {
-		return Transpose.readFile(Paths.get(path));
+	public static IModule readFile(String path, Class<?> ... builtins) throws IOException, ParseException, TransposeException {
+		return Transpose.readFile(Paths.get(path), builtins);
 	}
 
-	public static IModule readFile(File file) throws IOException, ParseException, TransposeException {
-		return Transpose.readFile(file.toPath());
+	public static IModule readFile(File file, Class<?> ... builtins) throws IOException, ParseException, TransposeException {
+		return Transpose.readFile(file.toPath(), builtins);
 	}
 
-	public static IModule readFile(Path path) throws IOException, ParseException, TransposeException {
-		return Transpose.read(Files.readString(path));
+	public static IModule readFile(Path path, Class<?> ... builtins) throws IOException, ParseException, TransposeException {
+		return Transpose.read(Files.readString(path), builtins);
 	}
 
-	public static IModule read(String json) throws ParseException, TransposeException {
+	public static IModule read(String json, Class<?> ... builtins) throws ParseException, TransposeException {
 		JSONParser parser = new JSONParser();
 		JSONObjectReader root = JSONObjectReader.from(parser.parse(json));
-		TransposeState state = new TransposeState();
 
 		if (!root.getString("format", "").equals("pseudocodejson")) {
 			throw new TransposeException("Source not recognized as pseudocodejson");
@@ -56,6 +55,15 @@ public class Transpose {
 
 		IModule module = IModule.create();
 		module.setId(root.getString("id"));
+	
+		for(Class<?> c : builtins) {
+			// loads static methods of Class c as builtin procedures;
+			// each will have the id of the method name
+			module.loadBuiltInProcedures(c);
+		}
+		
+		TransposeState state = new TransposeState(module);
+		
 
 		for (JSONObjectReader constantEntry : root.getArray("constants")) {
 			IConstantDeclaration constant = module.addConstant(parsePureType(constantEntry),

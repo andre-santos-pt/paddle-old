@@ -71,6 +71,9 @@ public class BuiltinProcedureReflective extends Procedure {
 	}
 	
 	private static IType matchType(IModule module, Class<?> c) {
+		if(IType.VOID.getId().equals(c.getSimpleName()))
+			return IType.VOID;
+		
 		for(IValueType t : IType.VALUE_TYPES)
 			if(t.matchesPrimitiveType(c))
 				return t;
